@@ -31,8 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LangProvider>
           <ToastProvider>
             <CartProvider>
-              <a
-               
               <Header />
               <main id="main" style={{ minHeight: 'calc(100vh - 280px)' }}>
                 {children}
