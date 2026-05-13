@@ -16,7 +16,7 @@ export default function OrderActions({ order }: { order: Order }) {
   const [busy, setBusy] = useState(false);
   const [showShip, setShowShip] = useState(false);
 
-  async function updateStatus(newStatus: string, sendEmail = false) {
+  async function updateStatus(newStatus: Order['status'], sendEmail = false) {
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/orders/${order.id}`, {
@@ -68,7 +68,7 @@ export default function OrderActions({ order }: { order: Order }) {
         <span className="serif" style={{ fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Status:</span>
         <select
           value={status}
-          onChange={(e) => updateStatus(e.target.value, false)}
+          onChange={(e) => updateStatus(e.target.value as Order['status'], false)}
           disabled={busy}
           className="input"
           style={{ width: 'auto', padding: '6px 10px', fontSize: 12, textTransform: 'capitalize' }}
