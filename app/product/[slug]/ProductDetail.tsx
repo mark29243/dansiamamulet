@@ -8,6 +8,7 @@ import { useCart } from '@/components/CartProvider';
 import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
+import { useLocalPrice } from '@/components/CurrencyProvider';
 import type { Product } from '@/lib/types';
 
 export default function ProductDetail({ product: p, related = [] }: { product: Product; related?: Product[] }) {
@@ -25,6 +26,8 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.short) : p.short;
 
   const displayPrice = p.sale_price ?? p.price;
+  const localPrice = useLocalPrice(displayPrice, lang);
+  const localOrigPrice = useLocalPrice(p.price, lang);
   const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
   const lowStock = p.stock > 0 && p.stock <= 3;
 
@@ -171,12 +174,12 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
                 <span className="serif" style={{ fontSize: 36, fontWeight: 600, color: 'var(--gold-dark)' }}>
-                  {formatPrice(displayPrice, lang)}
+                  {localPrice}
                 </span>
                 {hasDiscount && (
                   <>
                     <span style={{ fontSize: 16, color: 'var(--text-faint)', textDecoration: 'line-through' }}>
-                      {formatPrice(p.price, lang)}
+                      {localOrigPrice}
                     </span>
                     <span className="badge badge-sale" style={{ marginLeft: 4 }}>
                       -{Math.round((1 - p.sale_price! / p.price) * 100)}%
