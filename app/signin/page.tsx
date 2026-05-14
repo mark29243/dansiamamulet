@@ -80,4 +80,54 @@ export default function SignInPage() {
                 className="input"
                 type="text"
                 required
-                value​​​​​​​​​​​​​​​​
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoFocus
+              />
+              <button type="submit" disabled={loading} className="btn-gold" style={{ width: '100%', marginTop: 16 }}>
+                {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังส่ง...' : 'Sending...'}</> : (lang === 'th' ? '✉ ส่งรหัส OTP' : lang === 'zh' ? '✉ 发送验证码' : '✉ Send OTP Code')}
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8, lineHeight: 1.6 }}>
+              {lang === 'th' ? `ส่งรหัส 6 หลักไปที่ ${email} แล้วครับ` : `6-digit code sent to ${email}`}
+            </p>
+            <p style={{ fontSize: 12, color: 'var(--jade)', marginBottom: 24 }}>
+              {lang === 'th' ? '📧 เช็ค Gmail แล้วใส่รหัสด้านล่าง' : '📧 Check your email and enter the code below'}
+            </p>
+            <form onSubmit={verifyOtp} style={{ textAlign: 'left' }}>
+              <label className="label">
+                {lang === 'th' ? 'รหัส OTP 6 หลัก' : lang === 'zh' ? '6位验证码' : '6-digit OTP Code'}<span className="required">*</span>
+              </label>
+              <input
+                className="input"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                required
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                placeholder="123456"
+                autoFocus
+                style={{ fontSize: 24, letterSpacing: 8, textAlign: 'center' }}
+              />
+              <button type="submit" disabled={loading || otp.length < 6} className="btn-gold" style={{ width: '100%', marginTop: 16 }}>
+                {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังตรวจสอบ...' : 'Verifying...'}</> : (lang === 'th' ? '✓ เข้าสู่ระบบ' : lang === 'zh' ? '✓ 登录' : '✓ Sign In')}
+              </button>
+            </form>
+            <button onClick={() => { setSent(false); setOtp(''); }} className="btn-text" style={{ marginTop: 12 }}>
+              {lang === 'th' ? '← ใช้อีเมลอื่น' : '← Use different email'}
+            </button>
+          </>
+        )}
+        <p style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 24, lineHeight: 1.6 }}>
+          {lang === 'th' ? 'ไม่ต้องสมัครก็ซื้อได้' : 'You can also shop without an account'}<br />
+          <Link href="/shop" style={{ color: 'var(--gold-dark)' }}>→ {t.cart.browseShop}</Link>
+        </p>
+      </div>
+    </div>
+  );
+}
