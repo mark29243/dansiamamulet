@@ -115,7 +115,7 @@ export default function Footer() {
         </div>
 
         <div style={{ borderTop: '1px solid #1E1508', paddingTop: 20, display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#2A1A08', letterSpacing: 1, flexWrap: 'wrap', gap: 10 }}>
-          <span>© 2025 Dan Siam Amulets · All rights reserved</span>
+          <span>© 2026 Dan Siam Amulets · All rights reserved</span>
           <span>🇹🇭 Made in Thailand · 🌏 Worldwide Shipping · 🔒 Secure Payments</span>
         </div>
       </div>
