@@ -19,6 +19,11 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   const [qty, setQty] = useState(1);
   const [zoomOpen, setZoomOpen] = useState(false);
 
+  // ชื่อและรายละเอียดตามภาษา
+  const displayName = lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
+  const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
+  const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.short) : p.short;
+
   const displayPrice = p.sale_price ?? p.price;
   const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
   const lowStock = p.stock > 0 && p.stock <= 3;
@@ -78,7 +83,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
             <span style={{ color: 'var(--text)' }}>{p.category}</span>
             <span className="breadcrumb-sep">/</span>
             <span style={{ color: 'var(--text-muted)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {p.name}
+              {displayName}
             </span>
           </nav>
 
@@ -161,7 +166,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
               </div>
 
               <h1 className="serif" style={{ fontSize: 26, fontWeight: 600, lineHeight: 1.35, marginBottom: 20, color: 'var(--text)' }}>
-                {p.name}
+                {displayName}
               </h1>
 
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
@@ -200,7 +205,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
               {p.short && (
                 <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: 24, padding: '14px 16px', background: '#fff', borderLeft: '3px solid var(--gold)', borderRadius: '0 var(--radius) var(--radius) 0' }}>
-                  {p.short}
+                  {displayShort}
                 </p>
               )}
 
@@ -240,7 +245,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                     {t.product.description}
                   </h3>
                   <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.9, whiteSpace: 'pre-wrap' }}>
-                    {p.description}
+                    {displayDesc}
                   </p>
                 </div>
               )}
