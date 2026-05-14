@@ -32,23 +32,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LangProvider>
           <ToastProvider>
             <CurrencyProvider>
-            <CartProvider>
-              <a
-                href="#main"
-                className="sr-only"
-                style={{ position: 'absolute', top: 0, left: 0, padding: 12, background: 'var(--gold)', color: 'var(--deep)', zIndex: 9999 }}
-                onFocus={(e) => { e.currentTarget.classList.remove('sr-only'); }}
-                onBlur={(e) => { e.currentTarget.classList.add('sr-only'); }}
-              >
-                Skip to content
-              </a>
-              <Header />
-              <main id="main" style={{ minHeight: 'calc(100vh - 280px)' }}>
-                {children}
-              </main>
-              <Footer />
-              <QuickContact />
-            </CartProvider>
+              <CartProvider>
+                <a href="#main" className="sr-only">Skip to content</a>
+                <Header />
+                <main id="main" style={{ minHeight: 'calc(100vh - 280px)' }}>
+                  {children}
+                </main>
+                <Footer />
+                <QuickContact />
+              </CartProvider>
             </CurrencyProvider>
           </ToastProvider>
         </LangProvider>
