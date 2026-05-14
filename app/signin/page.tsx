@@ -25,7 +25,8 @@ export default function SignInPage() {
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: `https://dansiamamulet.vercel.app/auth/callback`
+ },
     });
     setLoading(false);
     if (error) {
