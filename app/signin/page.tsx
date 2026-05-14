@@ -87,7 +87,7 @@ export default function SignInPage() {
             </label>
             <input
               className="input"
-              type="email"
+              type="text"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
