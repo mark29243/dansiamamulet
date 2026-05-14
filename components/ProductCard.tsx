@@ -7,14 +7,9 @@ import { useCart } from './CartProvider';
 import { useToast } from './ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
-import { useLocalPrice } from './CurrencyProvider';
+import LocalPrice from './LocalPrice';
 import type { Product } from '@/lib/types';
 import { useState } from 'react';
-
-function LocalPrice({ satang, lang }: { satang: number; lang: 'th' | 'en' | 'zh' }) {
-  const price = useLocalPrice(satang, lang);
-  return <span className='serif' style={{ fontSize: 18, fontWeight: 600, color: 'var(--gold-dark)' }}>{price}</span>;
-}
 
 export default function ProductCard({ p, onQuickView }: { p: Product; onQuickView?: (p: Product) => void }) {
   const { lang } = useLang();
