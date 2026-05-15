@@ -197,7 +197,7 @@ export default function HomeShop({ products }: { products: Product[] }) {
             </div>
           ) : (
             <>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }} data-grid='products'>
                 {pageItems.map((p) => (
                   <ProductCard key={p.id} p={p} onQuickView={setQuickView} />
                 ))}
@@ -273,6 +273,9 @@ export default function HomeShop({ products }: { products: Product[] }) {
       <style>{`
         @media (max-width: 900px) {
           [data-grid="shop"] { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 640px) {
+          [data-grid="products"] { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
         }
       `}</style>
     </section>
