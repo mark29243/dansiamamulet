@@ -97,9 +97,9 @@ export const dict = {
       emailSent: 'รายละเอียดการสั่งซื้อถูกส่งไปที่อีเมลของคุณแล้ว',
     },
     trust: {
-      t1: 'จากวัดแท้', d1: 'ทุกองค์ผ่านการตรวจสอบจากวัด',
+      t1: 'จากวัดทั่วไทย', d1: 'คัดสรรจากวัดดังทั่วประเทศไทย',
       t2: 'ส่งทั่วโลก', d2: 'จัดส่งกว่า 150 ประเทศ',
-      t3: 'ใบรับรองแท้', d3: 'มีใบรับรองทุกองค์',
+      t3: 'รับประกันความแท้', d3: 'มีใบรับรองทุกองค์',
       t4: '3 ภาษา', d4: 'ไทย · อังกฤษ · จีน',
     },
     common: {
@@ -116,7 +116,7 @@ export const dict = {
       pre: '✦ AUTHENTIC CERTIFIED AMULETS ✦',
       title1: 'Authentic Thai Amulets',
       title2: 'from Sacred Temples',
-      sub: 'Sacred Amulets · Certificate Included · Worldwide Shipping',
+      sub: 'Sacred Amulets · Authenticity Guaranteed · Worldwide Shipping',
       desc: 'Every amulet in our collection is sourced directly from renowned Thai temples and authenticated by experts.',
       btn1: 'Browse Collection', btn2: 'Why Us',
     },
@@ -206,9 +206,9 @@ export const dict = {
       emailSent: 'A confirmation email has been sent to your inbox',
     },
     trust: {
-      t1: 'Temple Verified', d1: 'Every amulet verified by its temple',
+      t1: 'From Sacred Temples', d1: 'Every amulet verified by its temple',
       t2: 'Global Shipping', d2: 'Ships to 150+ countries',
-      t3: 'Certificate Included', d3: 'Authenticity card with every order',
+      t3: 'Authenticity Guaranteed', d3: 'Authenticity card with every order',
       t4: 'Trilingual Support', d4: 'Thai · English · Chinese',
     },
     common: {
