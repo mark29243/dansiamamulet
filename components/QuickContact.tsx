@@ -5,8 +5,8 @@ import { useLang } from './LangProvider';
 
 const CONTACTS = [
   { id: 'line', label: 'LINE', icon: '💬', color: '#06C755', href: 'https://line.me/R/ti/p/jarunpim', desc: { th: 'แชทผ่าน LINE', en: 'Chat on LINE', zh: 'LINE 聊天' } },
-  { id: 'wechat', label: 'WeChat', icon: '💬', color: '#7BB32E', href: 'weixin://dl/chat?dansiam', desc: { th: 'แชทผ่าน WeChat', en: 'Chat on WeChat', zh: '微信聊天' } },
-  { id: 'whatsapp', label: 'WhatsApp', icon: '📱', color: '#25D366', href: 'https://wa.me/66812345678', desc: { th: 'แชท WhatsApp', en: 'WhatsApp Chat', zh: 'WhatsApp' } },
+  { id: 'wechat', label: 'WeChat', icon: '💬', color: '#7BB32E', href: 'weixin://dl/chat?jarunpim', desc: { th: 'แชทผ่าน WeChat', en: 'Chat on WeChat', zh: '微信聊天' } },
+  { id: 'whatsapp', label: 'WhatsApp', icon: '📱', color: '#25D366', href: 'https://wa.me/66898157535', desc: { th: 'แชท WhatsApp', en: 'WhatsApp Chat', zh: 'WhatsApp' } },
   { id: 'email', label: 'Email', icon: '✉', color: '#8B6914', href: 'mailto:dansiamamulets2@gmail.com', desc: { th: 'ส่งอีเมล', en: 'Send Email', zh: '发邮件' } },
 ];
 
