@@ -96,10 +96,10 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
             👁 {t.product.quickView}
           </button>
         )}
-        <div style={{ width: '100%', aspectRatio: '1', overflow: 'hidden', background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        <div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           {!imgLoaded && p.images[0] && <div className="skeleton" style={{ position: 'absolute', inset: 0 }} />}
           {p.images[0] ? (
-            <Image src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'cover', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} unoptimized />
+            <Image src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'contain', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} unoptimized />
           ) : (
             <span style={{ fontSize: 56, opacity: 0.3 }}>🙏</span>
           )}
