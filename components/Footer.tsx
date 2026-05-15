@@ -104,10 +104,10 @@ export default function Footer() {
           </FooterCol>
 
           <FooterCol title="CONTACT">
-            <li>📞 +66 81 234 5678</li>
-            <li>✉ info@dansiam.com</li>
-            <li>💬 LINE: @dansiam</li>
-            <li>💬 WeChat: dansiam</li>
+            <li>📞 +66 89 815 7535</li>
+            <li>✉ dansiamamulets2@gmail.com</li>
+            <li>💬 LINE: jarunpim</li>
+            <li>💬 WeChat: jarunpim</li>
             <li style={{ marginTop: 10, color: '#3A2A10' }}>
               {lang === 'th' ? 'จ-ศ 9:00-18:00' : lang === 'zh' ? '周一至周五 9-18点' : 'Mon-Fri 9AM-6PM ICT'}
             </li>
