@@ -14,7 +14,7 @@ const FAQ = {
     { q: 'มีการประกันความเสียหายระหว่างการจัดส่งหรือไม่?', a: 'มีครับ ทุกชิ้นมีประกันการจัดส่ง หากเกิดความเสียหายเราจะเปลี่ยนสินค้าให้ทันที' },
     { q: 'ส่งของขวัญได้ไหม?', a: 'ได้ครับ เราบรรจุพระเครื่องในกล่องไม้สวยงามทุกองค์ มีบริการห่อของขวัญและการ์ดส่วนตัว' },
     { q: 'พระเครื่องนี้บูชาอย่างไร?', a: 'แต่ละองค์มาพร้อมคำแนะนำการบูชาภาษาไทย/อังกฤษ/จีน ทั้งคาถาและพิธีการเบื้องต้น' },
-    { q: 'ติดต่อสอบถามได้ที่ไหน?', a: 'LINE: @dansiam, WeChat: dansiam, อีเมล: info@dansiam.com หรือโทร +66 81 234 5678' },
+    { q: 'ติดต่อสอบถามได้ที่ไหน?', a: 'LINE: jarunpim, WeChat: jarunpim, อีเมล: dansiamamulets2@gmail.com หรือโทร +66 89 815 7535' },
   ],
   en: [
     { q: 'Are your amulets authentic?', a: 'Yes — every piece comes with a certificate of authenticity and is verified by experts with over 20 years of experience.' },
@@ -24,7 +24,7 @@ const FAQ = {
     { q: 'Is shipping insured?', a: 'Yes, every shipment is insured. If damage occurs in transit, we will replace your order immediately.' },
     { q: 'Can I send an amulet as a gift?', a: 'Absolutely. Every amulet ships in a beautiful wooden box. Gift wrapping and personalized cards are available on request.' },
     { q: 'How do I venerate this amulet?', a: 'Each amulet ships with a TH/EN/ZH veneration guide including the appropriate mantra and basic ceremony.' },
-    { q: 'How can I contact you?', a: 'LINE: @dansiam, WeChat: dansiam, email: info@dansiam.com, or phone: +66 81 234 5678' },
+    { q: 'How can I contact you?', a: 'LINE: jarunpim, WeChat: jarunpim, email: dansiamamulets2@gmail.com, or phone: +66 89 815 7535' },
   ],
   zh: [
     { q: '你们的佛牌是正品吗？', a: '是的——每件均附有真品证书，并由拥有20年以上经验的专家鉴定。' },
@@ -34,7 +34,7 @@ const FAQ = {
     { q: '运输有保险吗？', a: '是的，每批货物都有保险。如运输过程中发生损坏，我们将立即更换您的订单。' },
     { q: '可以作为礼物寄送吗？', a: '当然可以。每件佛牌都装在精美的木盒中。可根据要求提供礼品包装和个性化卡片。' },
     { q: '如何供奉此佛牌？', a: '每件佛牌均附泰/英/中三语供奉指南，包括适当的咒语和基本仪式。' },
-    { q: '如何联系你们？', a: 'LINE: @dansiam, 微信: dansiam, 邮箱: info@dansiam.com, 或电话: +66 81 234 5678' },
+    { q: '如何联系你们？', a: 'LINE: jarunpim, 微信: dansiam, 邮箱: dansiamamulets2@gmail.com, 或电话: +66 89 815 7535' },
   ],
 };
 
@@ -117,8 +117,8 @@ export default function FAQPage() {
           {lang === 'th' ? 'ติดต่อทีมงานของเรา ตอบทุกข้อสงสัยในภาษาของคุณ' : lang === 'zh' ? '联系我们的团队，用您的语言回答所有问题' : 'Our team is happy to answer in your language'}
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="mailto:info@dansiam.com" className="btn-gold">✉ Email Us</a>
-          <a href="https://line.me/R/ti/p/@dansiam" target="_blank" rel="noopener noreferrer" className="btn-outline">💬 LINE</a>
+          <a href="mailto:dansiamamulets2@gmail.com" className="btn-gold">✉ Email Us</a>
+          <a href="https://line.me/R/ti/p/jarunpim" target="_blank" rel="noopener noreferrer" className="btn-outline">💬 LINE</a>
         </div>
       </div>
     </div>
