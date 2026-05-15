@@ -11,7 +11,7 @@ const CONTENT = {
     sections: [
       {
         title: 'ความเป็นมา',
-        body: 'แดนสยามก่อตั้งขึ้นด้วยความตั้งใจที่จะเป็นสะพานเชื่อมระหว่างวัฒนธรรมพุทธไทยและผู้ศรัทธาทั่วโลก เราคัดสรรพระเครื่องแท้ทุกองค์ด้วยตัวเองจากวัดดังทั่วประเทศไทย ',
+        body: 'พระเครื่องแดนสยามก่อตั้งขึ้นด้วยความตั้งใจที่จะเป็นสะพานเชื่อมระหว่างวัฒนธรรมพุทธไทยและผู้ศรัทธาทั่วโลก เราคัดสรรพระเครื่องแท้ทุกองค์ด้วยตัวเองจากวัดดังทั่วประเทศไทย ',
       },
       {
         title: 'การรับรองความแท้',
@@ -29,7 +29,7 @@ const CONTENT = {
     sections: [
       {
         title: 'Heritage',
-        body: 'Dan Siam was founded to connect the rich tradition of Thai Buddhist amulets with devotees around the world. Every amulet in our collection is personally sourced from renowned temples across Thailand, working directly with master monks and their lineages.',
+        body: 'Dan Siam Amulets was founded to connect the rich tradition of Thai Buddhist amulets with devotees around the world. Every amulet in our collection is personally sourced from renowned temples across Thailand, working directly with master monks and their lineages.',
       },
       {
         title: 'Authentication',
