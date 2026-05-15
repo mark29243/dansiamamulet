@@ -96,7 +96,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 onClick={() => p.images[activeImg] && setZoomOpen(true)}
                 style={{
                   width: '100%',
-                  aspectRatio: '1',
+                  aspectRatio: '4/3',
                   background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))',
                   overflow: 'hidden',
                   marginBottom: 12,
@@ -111,7 +111,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                     alt={p.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 500px"
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'contain' }}
                     unoptimized
                     priority
                   />
@@ -263,7 +263,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
                 {related.slice(0, 4).map((r) => (
                   <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
-                    <div style={{ aspectRatio: '1', overflow: 'hidden', background: 'var(--cream-dark)' }}>
+                    <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
                       {r.images[0] && (
                         <Image src={r.images[0]} alt={r.name} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
                       )}
