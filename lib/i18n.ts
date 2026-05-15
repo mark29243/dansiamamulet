@@ -15,7 +15,7 @@ export const dict = {
       title: 'พระเครื่องทั้งหมด',
       search: 'ค้นหาพระเครื่อง...',
       all: 'ทั้งหมด',
-      instock: 'มีของ',
+      instock: 'มีสินค้า',
       sortBy: 'เรียงโดย',
       filterBy: 'กรอง',
       sortDefault: 'แนะนำ',
