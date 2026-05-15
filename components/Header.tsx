@@ -38,9 +38,9 @@ export default function Header() {
       {/* Top language bar */}
       <div style={{ background: 'var(--deep)', padding: '6px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #2A1E08' }}>
         <div style={{ display: 'flex', gap: 14, alignItems: 'center', fontSize: 11, color: '#6B5730', letterSpacing: 1 }} className="hide-mobile">
-          <span>📞 +66 81 234 5678</span>
+          <span>📞 +66 89 815 7535</span>
           <span style={{ color: '#3A2A10' }}>·</span>
-          <span>✉ info@dansiam.com</span>
+          <span>✉ dansiamamulets2@gmail.com</span>
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           <span style={{ color: '#6B5730', fontSize: 10, marginRight: 8, letterSpacing: 2 }} className="hide-mobile">LANG</span>
@@ -255,8 +255,8 @@ export default function Header() {
 
         <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #3A2A10' }}>
           <div style={{ fontSize: 10, color: '#6B5730', letterSpacing: 2, marginBottom: 12 }}>CONTACT</div>
-          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 8 }}>📞 +66 81 234 5678</div>
-          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 16 }}>✉ info@dansiam.com</div>
+          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 8 }}>📞 +66 89 815 7535</div>
+          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 16 }}>✉ dansiamamulets2@gmail.com</div>
           <div style={{ display: 'flex', gap: 8 }}>
             {langs.map((l) => (
               <button
