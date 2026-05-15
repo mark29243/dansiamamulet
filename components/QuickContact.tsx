@@ -13,7 +13,7 @@ const CONTACTS = [
 export default function QuickContact() {
   const { lang } = useLang();
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(true);
+  const [hidden, setHidden] = useState(true);  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     // Show after small delay to avoid hydration jank
@@ -25,7 +25,7 @@ export default function QuickContact() {
 
   return (
     <>
-      {/* Contact options */}
+      {showQR && (<div onClick={()=>setShowQR(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.6)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center'}}><div onClick={e=>e.stopPropagation()} style={{background:'#fff',borderRadius:16,padding:24,textAlign:'center',maxWidth:280,width:'90%'}}><div style={{fontSize:22,marginBottom:8}}>💬 WeChat</div><p style={{fontSize:13,color:'#666',marginBottom:16}}>{lang==='th'?'สแกน QR เพื่อเพิ่มเป็นเพื่อน':lang==='zh'?'扫描二维码添加好友':'Scan QR to add as friend'}</p><img src="/wechat-qr.jpg" alt="WeChat QR" style={{width:'100%',borderRadius:8,marginBottom:12}} /><p style={{fontSize:12,color:'#888',marginBottom:16}}>ID: jarunpim</p><button onClick={()=>setShowQR(false)} style={{background:'#7BB32E',color:'#fff',border:'none',padding:'10px 24px',borderRadius:100,cursor:'pointer',fontSize:13}}>{lang==='th'?'ปิด':lang==='zh'?'关闭':'Close'}</button></div></div>)}      {/* Contact options */}
       <div
         style={{
           position: 'fixed',
