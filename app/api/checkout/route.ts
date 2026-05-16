@@ -20,12 +20,13 @@ type Body = {
   };
   shipping_cost: number;
   lang: 'th' | 'en' | 'zh';
+  payment_method?: 'card' | 'alipay' | 'wechat_pay';
 };
 
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as Body;
-    const { items, customer, shipping_cost, lang } = body;
+    const { items, customer, shipping_cost, lang, payment_method = 'card' } = body;
 
     if (!items?.length) {
       return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
@@ -68,20 +69,23 @@ export async function POST(req: Request) {
     const subtotal = canonicalItems.reduce((s, i) => s + i.price * i.qty, 0);
     const total = subtotal + shipping_cost;
 
+    const isChinesePay = payment_method === 'alipay' || payment_method === 'wechat_pay';
+    const cnyRate = parseFloat(process.env.CNY_RATE || '0.20');
+    const currency = isChinesePay ? 'cny' : 'thb';
+    const toUnit = (satang: number) => isChinesePay ? Math.round(satang * cnyRate) : satang;
+
     // Get current logged-in user (if any)
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    // Build Stripe line items (THB is zero-decimal currency variant — Stripe accepts amount in satang as 'thb' with 2dp)
-    // Stripe THB: 2 decimal places, so price * 100 = satang IS the amount.
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = canonicalItems.map((i) => ({
       price_data: {
-        currency: 'thb',
+        currency,
         product_data: {
           name: i.name.slice(0, 250),
           ...(i.image ? { images: [i.image] } : {}),
         },
-        unit_amount: i.price,
+        unit_amount: toUnit(i.price),
       },
       quantity: i.qty,
     }));
@@ -89,11 +93,11 @@ export async function POST(req: Request) {
     if (shipping_cost > 0) {
       line_items.push({
         price_data: {
-          currency: 'thb',
+          currency,
           product_data: {
             name: lang === 'th' ? 'ค่าจัดส่ง' : lang === 'zh' ? '运费' : 'Shipping',
           },
-          unit_amount: shipping_cost,
+          unit_amount: toUnit(shipping_cost),
         },
         quantity: 1,
       });
@@ -132,17 +136,18 @@ export async function POST(req: Request) {
     }
 
     // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       line_items,
       customer_email: customer.email,
       locale: lang === 'th' ? 'th' : lang === 'zh' ? 'zh' : 'en',
       success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/cart`,
-      metadata: {
-        order_id: order.id,
-      },
-    });
+      metadata: { order_id: order.id },
+      ...(isChinesePay && { payment_method_types: [payment_method as 'alipay' | 'wechat_pay'] }),
+      ...(payment_method === 'wechat_pay' && { payment_method_options: { wechat_pay: { client: 'web' } } }),
+    };
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     // Save the Stripe session id back on the order
     await admin

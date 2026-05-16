@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'alipay' | 'wechat_pay'>('card');
 
   const [form, setForm] = useState({
     name: '',
@@ -72,7 +73,7 @@ export default function CheckoutPage() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, customer: form, shipping_cost: shipping, lang }),
+        body: JSON.stringify({ items, customer: form, shipping_cost: shipping, lang, payment_method: paymentMethod }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Checkout failed');
@@ -265,7 +266,49 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <button type="submit" className="btn-gold" disabled={loading} style={{ width: '100%', marginTop: 20 }}>
+          {/* Payment method selector */}
+          <div style={{ marginTop: 20, marginBottom: 4 }}>
+            <div style={{ fontSize: 10, letterSpacing: 2, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 10 }}>
+              {lang === 'zh' ? '支付方式' : lang === 'th' ? 'วิธีชำระเงิน' : 'Payment Method'}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+              {([
+                { id: 'card', label: lang === 'zh' ? '银行卡' : lang === 'th' ? 'บัตร' : 'Card', sub: 'Visa / MC' },
+                { id: 'alipay', label: '支付宝', sub: 'Alipay' },
+                { id: 'wechat_pay', label: '微信支付', sub: 'WeChat' },
+              ] as const).map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setPaymentMethod(m.id)}
+                  style={{
+                    padding: '8px 4px',
+                    border: `2px solid ${paymentMethod === m.id ? 'var(--gold)' : 'var(--cream-dark)'}`,
+                    background: paymentMethod === m.id ? 'rgba(201,168,76,0.08)' : '#fff',
+                    borderRadius: 6,
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    color: paymentMethod === m.id ? 'var(--gold-dark)' : 'var(--text-muted)',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{m.label}</div>
+                  <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>{m.sub}</div>
+                </button>
+              ))}
+            </div>
+            {paymentMethod !== 'card' && (
+              <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-faint)', background: 'var(--cream)', padding: '6px 10px', borderRadius: 4, lineHeight: 1.6 }}>
+                {lang === 'zh'
+                  ? '将以人民币 (CNY) 结算，汇率约 1฿ ≈ 0.20¥'
+                  : lang === 'th'
+                  ? 'ชำระเป็นหยวน (CNY) อัตราประมาณ 1฿ ≈ 0.20¥'
+                  : 'Charged in CNY — rate approx. 1฿ ≈ 0.20¥'}
+              </div>
+            )}
+          </div>
+
+          <button type="submit" className="btn-gold" disabled={loading} style={{ width: '100%', marginTop: 16 }}>
             {loading ? (
               <>
                 <span className="spinner" /> {t.common.loading}
@@ -283,7 +326,8 @@ export default function CheckoutPage() {
             <PaymentLogo>Stripe</PaymentLogo>
             <PaymentLogo>Visa</PaymentLogo>
             <PaymentLogo>MC</PaymentLogo>
-            <PaymentLogo>Amex</PaymentLogo>
+            <PaymentLogo>Alipay</PaymentLogo>
+            <PaymentLogo>WeChat</PaymentLogo>
           </div>
         </aside>
       </form>
