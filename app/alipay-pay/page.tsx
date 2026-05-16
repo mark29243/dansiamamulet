@@ -91,28 +91,28 @@ function AlipayInner() {
       </div>
 
       {/* Steps */}
-      <div className="card" style={{ padding: 20, marginBottom: 20, textAlign: 'left' }}>
-        <div style={{ fontSize: 11, letterSpacing: 2, color: 'var(--gold-dark)', textTransform: 'uppercase', marginBottom: 14 }}>ขั้นตอน / 操作步骤</div>
+      <div style={{ display: 'flex', gap: 0, marginBottom: 20 }}>
         {[
-          { th: 'สแกน QR Code ด้านบน', zh: '扫描上方二维码' },
-          { th: `โอนยอด ¥${amount} พอดี`, zh: `转账 ¥${amount}` },
-          { th: `ใส่หมายเลขคำสั่งซื้อ #${shortId} ในช่องหมายเหตุ`, zh: `备注订单号 #${shortId}` },
-          { th: 'อัพโหลดสลิปด้านล่างนี้', zh: '上传付款截图' },
+          { icon: '📱', th: 'สแกน QR', zh: '扫码' },
+          { icon: '→', th: '', zh: '' },
+          { icon: '💸', th: `โอน ¥${amount}`, zh: `转账` },
+          { icon: '→', th: '', zh: '' },
+          { icon: '📤', th: 'ส่งสลิป', zh: '上传截图' },
         ].map((s, i) => (
-          <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 12 }}>
-            <span style={{ background: '#0070ba', color: '#fff', width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
-            <div>
-              <div style={{ fontSize: 13, color: 'var(--text)' }}>{s.th}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-faint)' }}>{s.zh}</div>
-            </div>
-          </div>
+          s.icon === '→'
+            ? <div key={i} style={{ display: 'flex', alignItems: 'center', color: 'var(--text-faint)', fontSize: 18, flex: 0, padding: '0 4px' }}>→</div>
+            : <div key={i} style={{ flex: 1, textAlign: 'center', padding: '14px 8px', background: 'var(--cream)', borderRadius: 10 }}>
+                <div style={{ fontSize: 28, marginBottom: 4 }}>{s.icon}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{s.th}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{s.zh}</div>
+              </div>
         ))}
       </div>
 
       {/* Upload slip */}
       <div className="card" style={{ padding: 24, marginBottom: 24, textAlign: 'left' }}>
-        <div style={{ fontSize: 11, letterSpacing: 2, color: 'var(--gold-dark)', textTransform: 'uppercase', marginBottom: 14 }}>
-          อัพโหลดสลิป / 上传截图
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 14 }}>
+          📤 ส่งสลิปการโอนเงิน <span style={{ fontSize: 12, color: 'var(--text-faint)', fontWeight: 400 }}>/ 上传付款截图</span>
         </div>
 
         <input
