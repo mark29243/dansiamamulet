@@ -52,6 +52,7 @@ from auth.users where email = '${user.email}';`}
             <Link href="/admin" style={adminNavStyle}>Dashboard</Link>
             <Link href="/admin/orders" style={adminNavStyle}>Orders</Link>
             <Link href="/admin/products" style={adminNavStyle}>Products</Link>
+            <Link href="/admin/import" style={adminNavStyle}>Import</Link>
           </nav>
           <div style={{ marginLeft: 'auto', fontSize: 11, color: '#6B5730' }}>
             {admin.email} · <span className="serif" style={{ color: 'var(--gold)', letterSpacing: 1, textTransform: 'uppercase' }}>{admin.role}</span>
