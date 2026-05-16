@@ -110,6 +110,40 @@ export async function sendOrderConfirmation(order: Order): Promise<EmailResult> 
   return send(order.customer_email, `Order #${orderNo} confirmed — Dan Siam Amulets`, html);
 }
 
+export async function sendAdminOrderNotification(order: Order): Promise<EmailResult> {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) return { ok: false, error: 'ADMIN_EMAIL not set' };
+
+  const orderNo = order.id.slice(0, 8).toUpperCase();
+  const itemsHtml = order.items
+    .map((i) => `<tr><td style="padding:8px 0;border-bottom:1px solid #EDE0C4;color:#2A1E06;">${escapeHtml(i.name)} ×${i.qty}</td><td style="padding:8px 0;border-bottom:1px solid #EDE0C4;text-align:right;color:#8B6914;font-weight:600;">${formatPrice(i.price * i.qty)}</td></tr>`)
+    .join('');
+
+  const addr = order.shipping_address;
+  const html = baseEmail(
+    'New Order!',
+    `
+    <p style="color:#2A1E06;font-size:18px;font-weight:600;">🛒 New Order #${orderNo}</p>
+    <p style="color:#6B5730;font-size:14px;">
+      <strong>${escapeHtml(order.customer_name || '')}</strong><br>
+      ${escapeHtml(order.customer_email)}<br>
+      ${order.customer_phone ? escapeHtml(order.customer_phone) : ''}
+    </p>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+      ${itemsHtml}
+      <tr><td style="padding:10px 0;border-top:2px solid #C9A84C;font-weight:600;color:#2A1E06;">Total</td><td style="padding:10px 0;border-top:2px solid #C9A84C;text-align:right;color:#8B6914;font-weight:600;font-size:18px;">${formatPrice(order.total)}</td></tr>
+    </table>
+    <p style="color:#6B5730;font-size:14px;line-height:1.7;">
+      <strong>Ship to:</strong><br>
+      ${escapeHtml(addr.line1)}${addr.line2 ? ', ' + escapeHtml(addr.line2) : ''}<br>
+      ${escapeHtml(addr.city)} ${escapeHtml(addr.postal_code)}, ${escapeHtml(addr.country)}
+    </p>
+    `
+  );
+
+  return send(adminEmail, `🛒 New Order #${orderNo} — ฿${(order.total / 100).toLocaleString()}`, html);
+}
+
 export async function sendOrderShipped(order: Order, tracking: string, carrier: string): Promise<EmailResult> {
   const orderNo = order.id.slice(0, 8).toUpperCase();
   const html = baseEmail(

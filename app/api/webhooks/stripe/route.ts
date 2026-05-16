@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/server';
-import { sendOrderConfirmation } from '@/lib/email';
+import { sendOrderConfirmation, sendAdminOrderNotification } from '@/lib/email';
 import type { Order } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -59,11 +59,13 @@ export async function POST(req: Request) {
           console.error('[webhook] Stock decrement failed:', stockErr);
         }
 
-        // 3. Send confirmation email (non-blocking — failure logged but doesn't fail webhook)
-        const emailRes = await sendOrderConfirmation(order as Order);
-        if (!emailRes.ok) {
-          console.warn('[webhook] Email send skipped/failed:', emailRes.error);
-        }
+        // 3. Send emails (non-blocking)
+        const [emailRes, adminEmailRes] = await Promise.all([
+          sendOrderConfirmation(order as Order),
+          sendAdminOrderNotification(order as Order),
+        ]);
+        if (!emailRes.ok) console.warn('[webhook] Customer email failed:', emailRes.error);
+        if (!adminEmailRes.ok) console.warn('[webhook] Admin email failed:', adminEmailRes.error);
 
         console.log(`[webhook] ✓ Order ${orderId.slice(0, 8)} marked paid`);
         break;
