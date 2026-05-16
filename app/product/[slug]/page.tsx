@@ -122,7 +122,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <ProductDetail product={p} related={related ?? []} />
+      <ProductDetail product={p} related={(related ?? []) as unknown as Product[]} />
     </>
   );
 }
