@@ -336,3 +336,18 @@ export const langNames = { th: 'ไทย', en: 'EN', zh: '中文' };
 export function getDict(lang: Lang) {
   return dict[lang] ?? dict.en;
 }
+
+export const categoryNames: Record<string, { th: string; en: string; zh: string }> = {
+  'เหรียญ':     { th: 'เหรียญ',     en: 'Coin Amulet',   zh: '圣币' },
+  'พระสมเด็จ':  { th: 'พระสมเด็จ',  en: 'Somdej',        zh: '颂德佛牌' },
+  'พระปิดตา':   { th: 'พระปิดตา',   en: 'Pidta',         zh: '闭眼佛' },
+  'รูปหล่อ':    { th: 'รูปหล่อ',    en: 'Cast Image',    zh: '铸造佛像' },
+  'พระกริ่ง':   { th: 'พระกริ่ง',   en: 'Kring',         zh: '铃铛佛牌' },
+  'เครื่องราง': { th: 'เครื่องราง', en: 'Talisman',      zh: '护身符' },
+  'พระผง':      { th: 'พระผง',      en: 'Powder Amulet', zh: '粉末佛牌' },
+  'พระนางพญา':  { th: 'พระนางพญา',  en: 'Nang Phaya',    zh: '南帕雅' },
+};
+
+export function getCatName(cat: string, lang: Lang): string {
+  return categoryNames[cat]?.[lang] ?? cat;
+}

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useLang } from '@/components/LangProvider';
 import { useCart } from '@/components/CartProvider';
 import { useToast } from '@/components/ToastProvider';
-import { getDict } from '@/lib/i18n';
+import { getDict, getCatName } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import LocalPrice from '@/components/LocalPrice';
 import type { Product } from '@/lib/types';
@@ -82,7 +82,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
             <span className="breadcrumb-sep">/</span>
             <Link href="/shop">{t.nav.shop}</Link>
             <span className="breadcrumb-sep">/</span>
-            <span style={{ color: 'var(--text)' }}>{p.category}</span>
+            <span style={{ color: 'var(--text)' }}>{getCatName(p.category, lang)}</span>
             <span className="breadcrumb-sep">/</span>
             <span style={{ color: 'var(--text-muted)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {displayName}
@@ -155,7 +155,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
             <div className="animate-fade-up">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10, gap: 12 }}>
                 <div className="serif" style={{ fontSize: 11, color: 'var(--gold-dark)', letterSpacing: 3, textTransform: 'uppercase' }}>
-                  {p.category}
+                  {getCatName(p.category, lang)}
                 </div>
                 <button
                   onClick={handleShare}

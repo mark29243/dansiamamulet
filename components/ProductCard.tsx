@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
 import { useToast } from './ToastProvider';
-import { getDict } from '@/lib/i18n';
+import { getDict, getCatName } from '@/lib/i18n';
 import type { Product } from '@/lib/types';
 import { useState, useEffect } from 'react';
 
@@ -104,7 +104,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
           )}
         </div>
         <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div className="serif" style={{ fontSize: 10, color: 'var(--gold-dark)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6 }}>{p.category}</div>
+          <div className="serif" style={{ fontSize: 10, color: 'var(--gold-dark)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6 }}>{getCatName(p.category, lang)}</div>
           <h3 className="serif" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 39 }}>
             {displayName}
           </h3>

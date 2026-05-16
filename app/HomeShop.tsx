@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
 import QuickView from '@/components/QuickView';
 import { useLang } from '@/components/LangProvider';
-import { getDict } from '@/lib/i18n';
+import { getDict, getCatName } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import type { Product } from '@/lib/types';
 
@@ -20,10 +20,18 @@ export default function HomeShop({ products }: { products: Product[] }) {
   const [quickView, setQuickView] = useState<Product | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  const CAT_ORDER = ['เหรียญ', 'พระสมเด็จ', 'พระปิดตา', 'รูปหล่อ', 'พระกริ่ง', 'เครื่องราง', 'พระผง', 'พระนางพญา'];
+
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
     products.forEach((p) => counts.set(p.category, (counts.get(p.category) || 0) + 1));
-    return Array.from(counts.entries()).map(([name, count]) => ({ name, count }));
+    return Array.from(counts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => {
+        const ia = CAT_ORDER.indexOf(a.name);
+        const ib = CAT_ORDER.indexOf(b.name);
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+      });
   }, [products]);
 
   const [selectedCats, setSelectedCats] = useState<string[]>([]);
@@ -173,7 +181,7 @@ export default function HomeShop({ products }: { products: Product[] }) {
           {hasActiveFilters && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
               {selectedCats.map((c) => (
-                <Chip key={c} onRemove={() => toggleCat(c)}>{c}</Chip>
+                <Chip key={c} onRemove={() => toggleCat(c)}>{getCatName(c, lang)}</Chip>
               ))}
               {filter === 'instock' && <Chip onRemove={() => setFilter('all')}>{t.shop.instock}</Chip>}
               {search && <Chip onRemove={() => setSearch('')}>"{search}"</Chip>}
@@ -322,7 +330,7 @@ function FilterPanel({
                 onChange={() => toggleCat(c.name)}
                 style={checkboxStyle}
               />
-              <span style={{ flex: 1 }}>{c.name}</span>
+              <span style={{ flex: 1 }}>{getCatName(c.name, lang)}</span>
               <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{c.count}</span>
             </label>
           ))}
