@@ -17,6 +17,11 @@ type ProductData = {
   images: string[];
 };
 
+const BLANK: ProductData = {
+  name: '', name_th: '', slug: '', price: 0, stock: 1,
+  description: '', description_th: '', short: '', images: [],
+};
+
 export default function ImportPage() {
   const [url, setUrl] = useState('');
   const [fetching, setFetching] = useState(false);
@@ -26,12 +31,25 @@ export default function ImportPage() {
   const [data, setData] = useState<ProductData | null>(null);
   const [category, setCategory] = useState('เหรียญ');
   const [salePrice, setSalePrice] = useState('');
+  const [tab, setTab] = useState<'shopee' | 'manual'>('shopee');
+  const [imageUrlInput, setImageUrlInput] = useState('');
+
+  function autoCategory(nameLower: string) {
+    if (nameLower.includes('เหรียญ')) return 'เหรียญ';
+    if (nameLower.includes('สมเด็จ')) return 'พระสมเด็จ';
+    if (nameLower.includes('ปิดตา')) return 'พระปิดตา';
+    if (nameLower.includes('กริ่ง')) return 'พระกริ่ง';
+    if (nameLower.includes('นางพญา')) return 'พระนางพญา';
+    if (nameLower.includes('ผง')) return 'พระผง';
+    if (nameLower.includes('รูปหล่อ') || nameLower.includes('พระพุทธ') || nameLower.includes('นาคปรก')) return 'รูปหล่อ';
+    return 'เครื่องราง';
+  }
 
   async function handleFetch() {
     setError('');
     setSuccess('');
     setData(null);
-    if (!url.includes('shopee.co.th')) {
+    if (!url.includes('shopee')) {
       setError('กรุณาใส่ URL จาก shopee.co.th');
       return;
     }
@@ -45,16 +63,7 @@ export default function ImportPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
       setData(json);
-      // Auto-detect category from name
-      const nameLower = json.name_th.toLowerCase();
-      if (nameLower.includes('เหรียญ')) setCategory('เหรียญ');
-      else if (nameLower.includes('สมเด็จ')) setCategory('พระสมเด็จ');
-      else if (nameLower.includes('ปิดตา')) setCategory('พระปิดตา');
-      else if (nameLower.includes('กริ่ง')) setCategory('พระกริ่ง');
-      else if (nameLower.includes('นางพญา')) setCategory('พระนางพญา');
-      else if (nameLower.includes('ผง')) setCategory('พระผง');
-      else if (nameLower.includes('รูปหล่อ') || nameLower.includes('พระพุทธ') || nameLower.includes('นาคปรก')) setCategory('รูปหล่อ');
-      else setCategory('เครื่องราง');
+      setCategory(autoCategory(json.name_th.toLowerCase()));
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -90,30 +99,64 @@ export default function ImportPage() {
     }
   }
 
+  function addImageUrl() {
+    const trimmed = imageUrlInput.trim();
+    if (!trimmed || !data) return;
+    setData({ ...data, images: [...data.images, trimmed] });
+    setImageUrlInput('');
+  }
+
+  function removeImage(i: number) {
+    if (!data) return;
+    setData({ ...data, images: data.images.filter((_, idx) => idx !== i) });
+  }
+
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '32px 24px' }}>
-      <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 6 }}>นำเข้าสินค้าจาก Shopee</h1>
-      <p style={{ fontSize: 13, color: '#666', marginBottom: 24 }}>วาง URL สินค้าจาก shopee.co.th แล้วกด ดึงข้อมูล</p>
+      <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 6 }}>นำเข้าสินค้า</h1>
 
-      {/* URL input */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        <input
-          className="input"
-          style={{ flex: 1, fontSize: 13 }}
-          placeholder="https://shopee.co.th/..."
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleFetch()}
-        />
-        <button
-          className="btn-gold"
-          onClick={handleFetch}
-          disabled={fetching || !url}
-          style={{ whiteSpace: 'nowrap', padding: '0 20px' }}
-        >
-          {fetching ? '⏳ กำลังดึง...' : '🔍 ดึงข้อมูล'}
-        </button>
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: 0, marginBottom: 24, borderBottom: '1px solid #E5E7EB' }}>
+        {(['shopee', 'manual'] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => { setTab(t); setData(t === 'manual' ? { ...BLANK } : null); setError(''); setSuccess(''); }}
+            style={{
+              padding: '10px 20px', fontSize: 13, border: 'none', cursor: 'pointer',
+              background: 'transparent', fontWeight: tab === t ? 600 : 400,
+              color: tab === t ? 'var(--gold-dark)' : '#6B7280',
+              borderBottom: tab === t ? '2px solid var(--gold-dark)' : '2px solid transparent',
+              marginBottom: -1,
+            }}
+          >
+            {t === 'shopee' ? '🔍 นำเข้าจาก Shopee' : '✏ กรอกข้อมูลเอง'}
+          </button>
+        ))}
       </div>
+
+      {tab === 'shopee' && (
+        <>
+          <p style={{ fontSize: 13, color: '#666', marginBottom: 16 }}>วาง URL สินค้าจาก shopee.co.th แล้วกด ดึงข้อมูล</p>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            <input
+              className="input"
+              style={{ flex: 1, fontSize: 13 }}
+              placeholder="https://shopee.co.th/..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleFetch()}
+            />
+            <button
+              className="btn-gold"
+              onClick={handleFetch}
+              disabled={fetching || !url}
+              style={{ whiteSpace: 'nowrap', padding: '0 20px' }}
+            >
+              {fetching ? '⏳ กำลังดึง...' : '🔍 ดึงข้อมูล'}
+            </button>
+          </div>
+        </>
+      )}
 
       {error && (
         <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16 }}>
@@ -128,23 +171,37 @@ export default function ImportPage() {
 
       {data && (
         <div style={{ border: '1px solid #E5E7EB', borderRadius: 8, overflow: 'hidden' }}>
-          {/* Header */}
           <div style={{ background: '#F9FAFB', padding: '12px 16px', borderBottom: '1px solid #E5E7EB', fontSize: 12, color: '#6B7280', letterSpacing: 1, textTransform: 'uppercase' }}>
-            ตรวจสอบข้อมูลก่อนบันทึก
+            {tab === 'shopee' ? 'ตรวจสอบข้อมูลก่อนบันทึก' : 'กรอกข้อมูลสินค้า'}
           </div>
 
           <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {/* Images preview */}
-            {data.images.length > 0 && (
-              <div>
-                <div style={labelStyle}>รูปภาพ ({data.images.length} รูป)</div>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {data.images.map((img, i) => (
-                    <img key={i} src={img} alt="" style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4, border: '1px solid #E5E7EB' }} />
-                  ))}
-                </div>
+            {/* Images */}
+            <div>
+              <div style={labelStyle}>รูปภาพ ({data.images.length} รูป)</div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+                {data.images.map((img, i) => (
+                  <div key={i} style={{ position: 'relative' }}>
+                    <img src={img} alt="" style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4, border: '1px solid #E5E7EB' }} />
+                    <button
+                      onClick={() => removeImage(i)}
+                      style={{ position: 'absolute', top: -6, right: -6, width: 18, height: 18, borderRadius: '50%', background: '#EF4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >×</button>
+                  </div>
+                ))}
               </div>
-            )}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  className="input"
+                  style={{ flex: 1, fontSize: 12 }}
+                  placeholder="วาง URL รูปภาพ แล้วกด +"
+                  value={imageUrlInput}
+                  onChange={(e) => setImageUrlInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && addImageUrl()}
+                />
+                <button className="btn-gold" onClick={addImageUrl} style={{ padding: '0 14px' }}>+</button>
+              </div>
+            </div>
 
             <Field label="ชื่อสินค้า (EN)">
               <input className="input" value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} />
@@ -189,7 +246,7 @@ export default function ImportPage() {
             <button
               className="btn-gold"
               onClick={handleSave}
-              disabled={saving}
+              disabled={saving || !data.name || !data.slug}
               style={{ width: '100%', padding: '13px' }}
             >
               {saving ? '⏳ กำลังบันทึก...' : '✓ บันทึกสินค้าลงเว็บ'}
