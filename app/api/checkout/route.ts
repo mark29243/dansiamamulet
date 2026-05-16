@@ -3,6 +3,7 @@ import type Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import type { CartItem } from '@/lib/types';
+import { rateLimit, getIp } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -25,6 +26,10 @@ type Body = {
 
 export async function POST(req: Request) {
   try {
+    if (!rateLimit(getIp(req), 10, 60_000)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const body = (await req.json()) as Body;
     const { items, customer, shipping_cost, lang, payment_method = 'card' } = body;
 

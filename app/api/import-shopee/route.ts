@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
+
+async function requireAdmin() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+  const admin = createAdminClient();
+  const { data } = await admin.from('admins').select('role').eq('user_id', user.id).single();
+  return !!data;
+}
 
 function extractIds(url: string): { shopId: string; itemId: string } | null {
   const match = url.match(/i\.(\d+)\.(\d+)/);
@@ -102,6 +112,8 @@ async function trySellerCenterUrl(url: string) {
 }
 
 export async function POST(req: Request) {
+  if (!await requireAdmin()) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   const { url } = await req.json();
   if (!url) return NextResponse.json({ error: 'URL required' }, { status: 400 });
 

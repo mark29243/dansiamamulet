@@ -31,9 +31,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             Ask an existing admin to add you, or run this SQL in Supabase:
           </p>
           <pre style={{ fontSize: 11, background: 'var(--cream-dark)', padding: 12, borderRadius: 'var(--radius)', textAlign: 'left', overflow: 'auto' }}>
-{`insert into public.admins (user_id, email, role)
-select id, email, 'owner'
-from auth.users where email = '${user.email}';`}
+{`insert into public.admins (user_id, email, role)\nselect id, email, 'owner'\nfrom auth.users where email = '${user.email.replace(/'/g, "''")}'`}
           </pre>
         </div>
       </div>

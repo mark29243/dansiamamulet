@@ -5,8 +5,8 @@ export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const q = searchParams.get('q')?.trim() ?? '';
-  const limit = Math.min(parseInt(searchParams.get('limit') ?? '24'), 60);
+  const q = (searchParams.get('q')?.trim() ?? '').slice(0, 100).replace(/[%_\\]/g, '\\$&');
+  const limit = Math.max(1, Math.min(parseInt(searchParams.get('limit') ?? '24') || 24, 60));
   const category = searchParams.get('category') ?? '';
   const instock = searchParams.get('instock') === '1';
   const sort = searchParams.get('sort') ?? 'default';

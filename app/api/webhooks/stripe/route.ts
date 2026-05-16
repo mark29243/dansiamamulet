@@ -37,7 +37,7 @@ export async function POST(req: Request) {
           break;
         }
 
-        // 1. Mark order as paid
+        // 1. Mark order as paid — idempotency: only update if still pending
         const { data: order, error: updateErr } = await admin
           .from('orders')
           .update({
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
             stripe_payment_id: typeof session.payment_intent === 'string' ? session.payment_intent : null,
           })
           .eq('id', orderId)
+          .in('status', ['pending', 'pending_alipay'])
           .select('*')
           .single();
 

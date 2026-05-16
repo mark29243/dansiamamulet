@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { rateLimit, getIp } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
+    if (!rateLimit(getIp(req), 5, 60_000)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const form = await req.formData();
     const orderId = form.get('orderId') as string;
     const file = form.get('file') as File;
@@ -28,6 +33,9 @@ export async function POST(req: Request) {
 
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+    if (!['pending_alipay', 'pending'].includes(order.status)) {
+      return NextResponse.json({ error: 'Order is not awaiting payment' }, { status: 400 });
     }
 
     // Upload to Supabase Storage

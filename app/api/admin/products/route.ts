@@ -48,6 +48,15 @@ export async function POST(req: Request) {
   if (!name || !slug || typeof price !== 'number') {
     return NextResponse.json({ error: 'Missing required fields: name, slug, price' }, { status: 400 });
   }
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    return NextResponse.json({ error: 'Slug must be lowercase letters, numbers and hyphens only' }, { status: 400 });
+  }
+  if (price < 0 || price > 100_000_000) {
+    return NextResponse.json({ error: 'Invalid price' }, { status: 400 });
+  }
+  if (name.length > 500 || slug.length > 200) {
+    return NextResponse.json({ error: 'Name or slug too long' }, { status: 400 });
+  }
 
   // Rehost all images from Shopee CDN → Supabase Storage
   const rehostedImages = await Promise.all(
