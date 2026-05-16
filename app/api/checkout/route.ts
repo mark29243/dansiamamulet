@@ -4,6 +4,7 @@ import { stripe } from '@/lib/stripe';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import type { CartItem } from '@/lib/types';
 import { rateLimit, getIp } from '@/lib/rate-limit';
+import { checkOrigin } from '@/lib/csrf';
 
 export const runtime = 'nodejs';
 
@@ -26,6 +27,9 @@ type Body = {
 
 export async function POST(req: Request) {
   try {
+    if (!checkOrigin(req)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
     if (!rateLimit(getIp(req), 10, 60_000)) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
@@ -38,6 +42,9 @@ export async function POST(req: Request) {
     }
     if (!customer?.email || !customer?.name || !customer?.address) {
       return NextResponse.json({ error: 'Missing required customer fields' }, { status: 400 });
+    }
+    if (typeof shipping_cost !== 'number' || shipping_cost < 0 || shipping_cost > 100_000_00) {
+      return NextResponse.json({ error: 'Invalid shipping cost' }, { status: 400 });
     }
 
     // Re-validate inventory + prices from DB (don't trust client)
@@ -76,6 +83,10 @@ export async function POST(req: Request) {
 
     const isAlipay = payment_method === 'alipay';
     const cnyRate = parseFloat(process.env.NEXT_PUBLIC_CNY_RATE || '0.20');
+    if (isNaN(cnyRate) || cnyRate <= 0 || cnyRate > 10) {
+      console.error('[checkout] Invalid CNY_RATE env:', process.env.NEXT_PUBLIC_CNY_RATE);
+      return NextResponse.json({ error: 'Payment configuration error' }, { status: 500 });
+    }
     const currency = isAlipay ? 'cny' : 'thb';
     const toUnit = (satang: number) => isAlipay ? Math.round(satang * cnyRate) : satang;
 

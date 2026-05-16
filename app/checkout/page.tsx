@@ -78,7 +78,7 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Checkout failed');
       if (data.type === 'alipay') {
-        router.push(`/alipay-pay?order=${data.orderId}&amount=${data.cnyAmount}`);
+        router.push(`/alipay-pay?order=${data.orderId}&amount=${data.cnyAmount}&email=${encodeURIComponent(form.email)}`);
         return;
       }
       window.location.href = data.url;

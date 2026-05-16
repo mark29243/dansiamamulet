@@ -38,6 +38,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: error?.message || 'Update failed' }, { status: 500 });
   }
 
+  console.log('[audit] order-update', { admin: ctx.user.id, orderId: params.id, updates });
+
   // Send shipping email if requested
   if (sendEmail && status === 'shipped' && tracking_number && carrier) {
     const emailRes = await sendOrderShipped(data as Order, tracking_number, carrier);

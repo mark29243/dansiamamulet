@@ -40,5 +40,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  console.log('[audit] product-update', { admin: ctx.user.id, productId: params.id, updates: allowed });
+
   return NextResponse.json({ product: data });
 }

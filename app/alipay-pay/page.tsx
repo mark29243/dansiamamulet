@@ -10,6 +10,7 @@ function AlipayInner() {
   const sp = useSearchParams();
   const orderId = sp.get('order') ?? '';
   const amount = sp.get('amount') ?? '0';
+  const email = sp.get('email') ?? '';
   const shortId = orderId.slice(0, 8).toUpperCase();
 
   const [file, setFile] = useState<File | null>(null);
@@ -33,6 +34,7 @@ function AlipayInner() {
       const fd = new FormData();
       fd.append('orderId', orderId);
       fd.append('file', file);
+      if (email) fd.append('email', email);
       const res = await fetch('/api/upload-slip', { method: 'POST', body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Upload failed');

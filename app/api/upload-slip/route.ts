@@ -1,21 +1,33 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { rateLimit, getIp } from '@/lib/rate-limit';
+import { checkOrigin } from '@/lib/csrf';
 
 export const runtime = 'nodejs';
 
+const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
 export async function POST(req: Request) {
   try {
+    if (!checkOrigin(req)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
     if (!rateLimit(getIp(req), 5, 60_000)) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
     const form = await req.formData();
     const orderId = form.get('orderId') as string;
+    const email = (form.get('email') as string | null)?.toLowerCase().trim();
     const file = form.get('file') as File;
 
     if (!orderId || !file) {
       return NextResponse.json({ error: 'Missing orderId or file' }, { status: 400 });
+    }
+
+    // Whitelist MIME types — reject non-image files
+    if (!ALLOWED_MIME.includes(file.type)) {
+      return NextResponse.json({ error: 'Only image files are allowed (JPG, PNG, WEBP)' }, { status: 400 });
     }
 
     if (file.size > 10 * 1024 * 1024) {
@@ -24,10 +36,9 @@ export async function POST(req: Request) {
 
     const admin = createAdminClient();
 
-    // Verify order exists and is pending_alipay
     const { data: order } = await admin
       .from('orders')
-      .select('id, status')
+      .select('id, status, customer_email')
       .eq('id', orderId)
       .single();
 
@@ -37,9 +48,12 @@ export async function POST(req: Request) {
     if (!['pending_alipay', 'pending'].includes(order.status)) {
       return NextResponse.json({ error: 'Order is not awaiting payment' }, { status: 400 });
     }
+    // Verify requester knows the email on the order
+    if (email && order.customer_email && email !== order.customer_email.toLowerCase()) {
+      return NextResponse.json({ error: 'Email does not match order' }, { status: 403 });
+    }
 
-    // Upload to Supabase Storage
-    const ext = file.name.split('.').pop() || 'jpg';
+    const ext = file.type.split('/')[1] || 'jpg';
     const path = `${orderId}.${ext}`;
     const bytes = await file.arrayBuffer();
 
@@ -54,7 +68,6 @@ export async function POST(req: Request) {
 
     const { data: { publicUrl } } = admin.storage.from('slips').getPublicUrl(path);
 
-    // Update order with slip URL and change status to pending_review
     await admin
       .from('orders')
       .update({

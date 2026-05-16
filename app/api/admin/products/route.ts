@@ -86,5 +86,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  console.log('[audit] product-create', { admin: ctx.user.id, productId: data.id, slug: data.slug });
+
   return NextResponse.json({ id: data.id, slug: data.slug });
 }
