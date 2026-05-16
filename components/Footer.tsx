@@ -100,7 +100,8 @@ export default function Footer() {
             <li><Link href="/about">{lang === 'th' ? 'เกี่ยวกับเรา' : lang === 'zh' ? '关于我们' : 'About Us'}</Link></li>
             <li><Link href="/faq">{lang === 'th' ? 'คำถามที่พบบ่อย' : lang === 'zh' ? '常见问题' : 'FAQ'}</Link></li>
             <li><Link href="/shipping">{lang === 'th' ? 'การจัดส่ง' : lang === 'zh' ? '配送信息' : 'Shipping'}</Link></li>
-            <li>{lang === 'th' ? 'คืนสินค้า' : lang === 'zh' ? '退货' : 'Returns'}</li>
+            <li><Link href="/payment">{lang === 'th' ? 'วิธีชำระเงิน' : lang === 'zh' ? '支付方式' : 'Payment Methods'}</Link></li>
+            <li><Link href="/returns">{lang === 'th' ? 'คืนสินค้า' : lang === 'zh' ? '退货' : 'Returns'}</Link></li>
           </FooterCol>
 
           <FooterCol title="CONTACT">

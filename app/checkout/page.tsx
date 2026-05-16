@@ -325,6 +325,11 @@ export default function CheckoutPage() {
           <div style={{ marginTop: 14, fontSize: 11, color: 'var(--text-faint)', textAlign: 'center', lineHeight: 1.6 }}>
             🔒 {t.checkout.secureNotice}
           </div>
+          <div style={{ textAlign: 'center', marginTop: 8 }}>
+            <a href="/payment" target="_blank" style={{ fontSize: 11, color: 'var(--gold-dark)', textDecoration: 'underline' }}>
+              {lang === 'th' ? 'ดูวิธีชำระเงินทั้งหมด' : lang === 'zh' ? '查看所有支付方式' : 'View all payment methods'}
+            </a>
+          </div>
 
           <div style={{ display: 'flex', gap: 8, marginTop: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
             <PaymentLogo>Stripe</PaymentLogo>
