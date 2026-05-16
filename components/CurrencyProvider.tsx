@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const FALLBACK: Record<string, number> = { USD: 0.028, CNY: 0.20 };
+const ENV_CNY = parseFloat(process.env.NEXT_PUBLIC_CNY_RATE || '0');
+const FALLBACK: Record<string, number> = { USD: 0.028, CNY: ENV_CNY > 0 ? ENV_CNY : 0.20 };
 
 type CurrencyCtx = { rates: Record<string, number> };
 const Ctx = createContext<CurrencyCtx>({ rates: FALLBACK });
@@ -11,6 +12,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [rates, setRates] = useState(FALLBACK);
 
   useEffect(() => {
+    if (ENV_CNY > 0) return; // use fixed rate from env var — same as checkout
     fetch('https://open.er-api.com/v6/latest/THB')
       .then((r) => r.json())
       .then((d) => { if (d?.rates) setRates(d.rates); })

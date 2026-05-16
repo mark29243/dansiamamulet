@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     const total = subtotal + shipping_cost;
 
     const isChinesePay = payment_method === 'alipay' || payment_method === 'wechat_pay';
-    const cnyRate = parseFloat(process.env.CNY_RATE || '0.20');
+    const cnyRate = parseFloat(process.env.NEXT_PUBLIC_CNY_RATE || '0.20');
     const currency = isChinesePay ? 'cny' : 'thb';
     const toUnit = (satang: number) => isChinesePay ? Math.round(satang * cnyRate) : satang;
 
