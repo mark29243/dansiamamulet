@@ -5,7 +5,7 @@ import ProductDetail from './ProductDetail';
 
 export const revalidate = 60;
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulet.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const supabase = createClient();
