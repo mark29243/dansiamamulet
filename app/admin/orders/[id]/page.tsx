@@ -102,6 +102,30 @@ export default async function AdminOrderPage({ params }: { params: { id: string 
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{o.customer_phone}</div>
           </div>
 
+          {/* Alipay slip */}
+          {o.payment_slip_url && (
+            <div className="card" style={{ padding: 18, marginBottom: 16, border: '1px solid rgba(0,164,233,0.3)', background: 'rgba(0,164,233,0.04)' }}>
+              <h3 className="serif" style={{ fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: '#0070ba', marginBottom: 10 }}>
+                Alipay Slip
+              </h3>
+              <a href={o.payment_slip_url} target="_blank" rel="noopener noreferrer">
+                <Image
+                  src={o.payment_slip_url}
+                  alt="Payment slip"
+                  width={280}
+                  height={200}
+                  style={{ width: '100%', height: 'auto', objectFit: 'contain', borderRadius: 6, border: '1px solid var(--cream-dark)' }}
+                  unoptimized
+                />
+              </a>
+              {o.payment_slip_uploaded_at && (
+                <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 8 }}>
+                  ส่งเมื่อ {new Date(o.payment_slip_uploaded_at).toLocaleString('th-TH')}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="card" style={{ padding: 18 }}>
             <h3 className="serif" style={{ fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 10 }}>
               Stripe

@@ -42,8 +42,10 @@ export type Order = {
   currency: string;
   stripe_session_id: string | null;
   stripe_payment_id: string | null;
-  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+  status: 'pending' | 'pending_alipay' | 'pending_review' | 'paid' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
   notes: string | null;
+  payment_slip_url: string | null;
+  payment_slip_uploaded_at: string | null;
   tracking_number: string | null;
   carrier: string | null;
   created_at: string;
