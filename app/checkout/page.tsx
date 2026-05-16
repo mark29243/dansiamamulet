@@ -19,7 +19,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'alipay' | 'wechat_pay'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'alipay'>('card');
 
   const [form, setForm] = useState({
     name: '',
@@ -275,11 +275,10 @@ export default function CheckoutPage() {
             <div style={{ fontSize: 10, letterSpacing: 2, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 10 }}>
               {lang === 'zh' ? '支付方式' : lang === 'th' ? 'วิธีชำระเงิน' : 'Payment Method'}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
               {([
                 { id: 'card', label: lang === 'zh' ? '银行卡' : lang === 'th' ? 'บัตร' : 'Card', sub: 'Visa / MC' },
                 { id: 'alipay', label: '支付宝', sub: 'Alipay' },
-                { id: 'wechat_pay', label: '微信支付', sub: 'WeChat' },
               ] as const).map((m) => (
                 <button
                   key={m.id}
@@ -336,7 +335,6 @@ export default function CheckoutPage() {
             <PaymentLogo>Visa</PaymentLogo>
             <PaymentLogo>MC</PaymentLogo>
             <PaymentLogo>Alipay</PaymentLogo>
-            <PaymentLogo>WeChat</PaymentLogo>
           </div>
         </aside>
       </form>

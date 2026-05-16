@@ -20,7 +20,7 @@ type Body = {
   };
   shipping_cost: number;
   lang: 'th' | 'en' | 'zh';
-  payment_method?: 'card' | 'alipay' | 'wechat_pay';
+  payment_method?: 'card' | 'alipay';
 };
 
 export async function POST(req: Request) {
@@ -69,10 +69,10 @@ export async function POST(req: Request) {
     const subtotal = canonicalItems.reduce((s, i) => s + i.price * i.qty, 0);
     const total = subtotal + shipping_cost;
 
-    const isChinesePay = payment_method === 'alipay' || payment_method === 'wechat_pay';
+    const isAlipay = payment_method === 'alipay';
     const cnyRate = parseFloat(process.env.NEXT_PUBLIC_CNY_RATE || '0.20');
-    const currency = isChinesePay ? 'cny' : 'thb';
-    const toUnit = (satang: number) => isChinesePay ? Math.round(satang * cnyRate) : satang;
+    const currency = isAlipay ? 'cny' : 'thb';
+    const toUnit = (satang: number) => isAlipay ? Math.round(satang * cnyRate) : satang;
 
     // Get current logged-in user (if any)
     const supabase = createClient();
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
         subtotal,
         shipping_cost,
         total,
-        currency: isChinesePay ? 'cny' : 'thb',
+        currency: isAlipay ? 'cny' : 'thb',
         status: payment_method === 'alipay' ? 'pending_alipay' : 'pending',
       })
       .select('id')
@@ -150,8 +150,6 @@ export async function POST(req: Request) {
       success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/cart`,
       metadata: { order_id: order.id },
-      ...(isChinesePay && { payment_method_types: [payment_method as 'alipay' | 'wechat_pay'] }),
-      ...(payment_method === 'wechat_pay' && { payment_method_options: { wechat_pay: { client: 'web' } } }),
     };
     const session = await stripe.checkout.sessions.create(sessionParams);
 
