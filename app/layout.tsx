@@ -8,13 +8,58 @@ import Footer from '@/components/Footer';
 import QuickContact from '@/components/QuickContact';
 import { CurrencyProvider } from '@/components/CurrencyProvider';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulet.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'Dan Siam Amulets · พระเครื่องแท้ · 丹暹罗佛牌',
-  description: 'Authentic Thai amulets from sacred temples. Worldwide shipping with certificate of authenticity.',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Dan Siam Amulets · พระเครื่องแท้ · 丹暹罗佛牌',
+    template: '%s · Dan Siam Amulets',
+  },
+  description: 'Authentic Thai amulets from sacred temples. Worldwide shipping with certificate of authenticity. พระเครื่องแท้จากวัดดัง จัดส่งทั่วโลก พร้อมใบรับรองความแท้.',
+  keywords: ['Thai amulet', 'พระเครื่อง', '泰国佛牌', 'Buddhist amulet', 'amulet Thailand', 'Dan Siam', 'พระเครื่องแท้', 'sacred amulet', 'Luang Pho', 'Somdej'],
+  authors: [{ name: 'Dan Siam Amulets', url: siteUrl }],
+  creator: 'Dan Siam Amulets',
+  publisher: 'Dan Siam Amulets',
+  alternates: {
+    canonical: siteUrl,
+  },
   openGraph: {
-    title: 'Dan Siam Amulets',
-    description: 'Authentic Thai amulets from sacred temples',
     type: 'website',
+    url: siteUrl,
+    siteName: 'Dan Siam Amulets',
+    title: 'Dan Siam Amulets · พระเครื่องแท้ · 丹暹罗佛牌',
+    description: 'Authentic Thai amulets from sacred temples. Worldwide shipping with certificate of authenticity.',
+    locale: 'en_US',
+    images: [
+      {
+        url: '/og-image.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Dan Siam Amulets — Authentic Thai Buddhist Amulets',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dan Siam Amulets · พระเครื่องแท้',
+    description: 'Authentic Thai amulets from sacred temples. Worldwide shipping with certificate of authenticity.',
+    images: ['/og-image.svg'],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Dan Siam',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -25,10 +70,55 @@ export const viewport: Viewport = {
   themeColor: '#1A1208',
 };
 
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'Dan Siam Amulets',
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/icon.svg`,
+      },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'dansiamamulets2@gmail.com',
+        telephone: '+66898157535',
+        contactType: 'customer service',
+        availableLanguage: ['English', 'Thai', 'Chinese'],
+      },
+      sameAs: [
+        'https://line.me/R/ti/p/jarunpim',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'Dan Siam Amulets',
+      publisher: { '@id': `${siteUrl}/#organization` },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${siteUrl}/search?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         <LangProvider>
           <ToastProvider>
             <CurrencyProvider>
