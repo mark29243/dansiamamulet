@@ -8,7 +8,7 @@ import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 
-function SuccessContent() {
+function SuccessInner() {
   const sp = useSearchParams();
   const sessionId = sp.get('session_id');
   const { clear } = useCart();
@@ -117,7 +117,7 @@ function SuccessContent() {
 export default function SuccessContent() {
   return (
     <Suspense fallback={<div style={{ padding: 80, textAlign: 'center' }}><div className="spinner" /></div>}>
-      <SuccessContent />
+      <SuccessInner />
     </Suspense>
   );
 }
