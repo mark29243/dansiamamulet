@@ -89,7 +89,6 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
         <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 3, display: 'flex', flexDirection: 'column', gap: 6 }}>
           {p.stock === 0 && <span className="badge badge-oos">{t.product.oos}</span>}
           {hasDiscount && p.stock > 0 && <span className="badge badge-sale">SALE</span>}
-          {lowStock && <span className="badge badge-warning">{t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}</span>}
         </div>
         {onQuickView && (
           <button onClick={handleQuickView} className="quick-view-btn serif" aria-label={t.product.quickView} style={{ position: 'absolute', top: 12, right: 12, zIndex: 3, background: 'rgba(255,255,255,0.95)', border: '1px solid var(--cream-dark)', padding: '6px 12px', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text)', borderRadius: 3, opacity: 0, transform: 'translateY(-4px)', transition: 'all var(--transition)' }}>
@@ -106,9 +105,14 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
         </div>
         <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' }}>
           <div className="serif" style={{ fontSize: 10, color: 'var(--gold-dark)', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 6 }}>{p.category}</div>
-          <h3 className="serif" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 39 }}>
+          <h3 className="serif" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 39 }}>
             {displayName}
           </h3>
+          {lowStock && (
+            <span className="badge badge-warning" style={{ marginBottom: 8, alignSelf: 'flex-start', fontSize: 10 }}>
+              ⚠ {t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}
+            </span>
+          )}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--cream-dark)', paddingTop: 12, marginTop: 'auto' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
