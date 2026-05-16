@@ -185,7 +185,6 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                     </span>
                   </>
                 )}
-                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t.product.baht}</span>
               </div>
 
               <div style={{ marginBottom: 24, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
