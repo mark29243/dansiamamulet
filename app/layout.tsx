@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Dan Siam Amulets', url: siteUrl }],
   creator: 'Dan Siam Amulets',
   publisher: 'Dan Siam Amulets',
+  verification: {
+    google: 'VOLTZvoeRJPKv_XPdhGTTWAzrTwWbzGMUy5BnhWAPZI',
+  },
   alternates: {
     canonical: siteUrl,
   },
