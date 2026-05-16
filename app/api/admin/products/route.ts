@@ -13,6 +13,31 @@ async function requireAdmin() {
   return { user, admin };
 }
 
+async function rehostImage(url: string, admin: ReturnType<typeof createAdminClient>): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: { 'Referer': 'https://shopee.co.th/', 'User-Agent': 'Mozilla/5.0' },
+    });
+    if (!res.ok) return url;
+
+    const contentType = res.headers.get('content-type') || 'image/jpeg';
+    const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const buffer = await res.arrayBuffer();
+
+    const { error } = await admin.storage
+      .from('products')
+      .upload(filename, buffer, { contentType, upsert: false });
+
+    if (error) return url;
+
+    const { data } = admin.storage.from('products').getPublicUrl(filename);
+    return data.publicUrl;
+  } catch {
+    return url;
+  }
+}
+
 export async function POST(req: Request) {
   const ctx = await requireAdmin();
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -23,6 +48,11 @@ export async function POST(req: Request) {
   if (!name || !slug || typeof price !== 'number') {
     return NextResponse.json({ error: 'Missing required fields: name, slug, price' }, { status: 400 });
   }
+
+  // Rehost all images from Shopee CDN → Supabase Storage
+  const rehostedImages = await Promise.all(
+    (images ?? []).map((url: string) => rehostImage(url, ctx.admin))
+  );
 
   const { data, error } = await ctx.admin
     .from('products')
@@ -37,7 +67,7 @@ export async function POST(req: Request) {
       description: description || '',
       description_th: description_th || '',
       short: short || '',
-      images: images ?? [],
+      images: rehostedImages,
       published: published ?? false,
     })
     .select('id, slug')
