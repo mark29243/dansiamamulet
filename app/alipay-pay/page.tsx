@@ -34,7 +34,7 @@ function AlipayInner() {
 
       {/* QR Code */}
       <div className="card" style={{ padding: 24, marginBottom: 20, display: 'inline-block' }}>
-        <img src="/alipay-qr.png" alt="Alipay QR Code" style={{ width: 220, height: 220, objectFit: 'contain', borderRadius: 8 }} />
+        <img src="/alipay-qr.jpg" alt="Alipay QR Code" style={{ width: 220, height: 220, objectFit: 'contain', borderRadius: 8 }} />
         <div style={{ marginTop: 12, fontSize: 13, color: 'var(--text-muted)' }}>
           收款方 / บัญชีผู้รับ: <strong style={{ color: 'var(--text)' }}>{ALIPAY_NAME}</strong>
         </div>
