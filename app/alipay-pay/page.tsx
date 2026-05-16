@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-const ALIPAY_NAME = process.env.NEXT_PUBLIC_ALIPAY_NAME || 'Dan Siam Amulets';
+const ALIPAY_NAME = process.env.NEXT_PUBLIC_ALIPAY_NAME || 'jacky(* JARUN)';
 const CONTACT_LINE = process.env.NEXT_PUBLIC_LINE_ID || '@dansiam';
 const CONTACT_EMAIL = 'dansiamamulets2@gmail.com';
 
@@ -34,12 +34,7 @@ function AlipayInner() {
 
       {/* QR Code */}
       <div className="card" style={{ padding: 24, marginBottom: 20, display: 'inline-block' }}>
-        <div style={{ width: 200, height: 200, margin: '0 auto', border: '2px dashed var(--cream-dark)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8 }}>
-          {/* Replace with: <img src="/alipay-qr.png" alt="Alipay QR" style={{ width: 200, height: 200, objectFit: 'contain' }} /> */}
-          <span style={{ fontSize: 32 }}>📱</span>
-          <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>อัพโหลด alipay-qr.png</span>
-          <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>ใน /public</span>
-        </div>
+        <img src="/alipay-qr.png" alt="Alipay QR Code" style={{ width: 220, height: 220, objectFit: 'contain', borderRadius: 8 }} />
         <div style={{ marginTop: 12, fontSize: 13, color: 'var(--text-muted)' }}>
           收款方 / บัญชีผู้รับ: <strong style={{ color: 'var(--text)' }}>{ALIPAY_NAME}</strong>
         </div>
