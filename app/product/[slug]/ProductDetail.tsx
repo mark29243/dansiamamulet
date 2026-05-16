@@ -21,7 +21,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   const [zoomOpen, setZoomOpen] = useState(false);
 
   // ชื่อและรายละเอียดตามภาษา
-  const displayName = lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
+  const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
   const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
   const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.short) : p.short;
 
