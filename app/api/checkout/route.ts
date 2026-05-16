@@ -124,8 +124,8 @@ export async function POST(req: Request) {
         subtotal,
         shipping_cost,
         total,
-        currency: 'thb',
-        status: 'pending',
+        currency: isChinesePay ? 'cny' : 'thb',
+        status: payment_method === 'alipay' ? 'pending_alipay' : 'pending',
       })
       .select('id')
       .single();
@@ -133,6 +133,12 @@ export async function POST(req: Request) {
     if (orderErr || !order) {
       console.error('Order create failed:', orderErr);
       return NextResponse.json({ error: 'Could not create order' }, { status: 500 });
+    }
+
+    // Alipay manual payment — skip Stripe, return CNY amount for QR page
+    if (payment_method === 'alipay') {
+      const totalCny = ((total / 100) * cnyRate).toFixed(2);
+      return NextResponse.json({ type: 'alipay', orderId: order.id, cnyAmount: totalCny });
     }
 
     // Create Stripe Checkout Session

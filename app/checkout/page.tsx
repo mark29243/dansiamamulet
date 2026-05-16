@@ -77,6 +77,10 @@ export default function CheckoutPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Checkout failed');
+      if (data.type === 'alipay') {
+        router.push(`/alipay-pay?order=${data.orderId}&amount=${data.cnyAmount}`);
+        return;
+      }
       window.location.href = data.url;
     } catch (err: any) {
       toast(err.message || t.common.error, 'error');
