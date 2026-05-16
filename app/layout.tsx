@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import QuickContact from '@/components/QuickContact';
 import { CurrencyProvider } from '@/components/CurrencyProvider';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulet.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
