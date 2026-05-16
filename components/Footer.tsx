@@ -82,11 +82,9 @@ export default function Footer() {
                 : 'Authentic Thai amulets of the finest quality, sourced from leading temples nationwide with a certificate of authenticity. Trilingual customer service.'}
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-              <SocialIcon label="Facebook" href="#">f</SocialIcon>
-              <SocialIcon label="Instagram" href="#">📷</SocialIcon>
-              <SocialIcon label="LINE" href="#">L</SocialIcon>
+              <SocialIcon label="Facebook" href="https://www.facebook.com/Jackyamulet999">f</SocialIcon>
+              <SocialIcon label="LINE" href="https://lin.ee/reGR6nC">L</SocialIcon>
               <SocialIcon label="WeChat" href="#">💬</SocialIcon>
-              <SocialIcon label="YouTube" href="#">▶</SocialIcon>
             </div>
           </div>
 
