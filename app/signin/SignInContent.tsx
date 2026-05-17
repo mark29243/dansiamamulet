@@ -44,7 +44,7 @@ export default function SignInContent() {
     if (!otp || otp.length < 6) return;
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.verifyOtp({
+    const { data, error } = await supabase.auth.verifyOtp({
       email,
       token: otp,
       type: 'email',
@@ -54,7 +54,14 @@ export default function SignInContent() {
       toast(error.message, 'error');
     } else {
       toast(lang === 'th' ? 'เข้าสู่ระบบสำเร็จ!' : 'Signed in!', 'success');
-      router.push('/admin');
+      // Check if user is admin → go to /admin, otherwise → /orders
+      const uid = data.user?.id;
+      if (uid) {
+        const { data: adminRow } = await supabase.from('admins').select('user_id').eq('user_id', uid).maybeSingle();
+        router.push(adminRow ? '/admin' : '/orders');
+      } else {
+        router.push('/orders');
+      }
     }
   }
 
