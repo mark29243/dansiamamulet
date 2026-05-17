@@ -2,6 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "regions": ["sin1"],
+  "crons": [
+    {
+      "path": "/api/cron/process-drafts",
+      "schedule": "0 18 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
