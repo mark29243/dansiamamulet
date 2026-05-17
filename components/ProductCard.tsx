@@ -58,7 +58,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
   const { toast } = useToast();
   const t = getDict(lang);
   const [loading, setLoading] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(true);
 
   const displayPrice = p.sale_price ?? p.price;
   const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
