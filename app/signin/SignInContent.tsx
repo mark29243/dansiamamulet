@@ -55,12 +55,13 @@ export default function SignInContent() {
     } else {
       toast(lang === 'th' ? 'เข้าสู่ระบบสำเร็จ!' : 'Signed in!', 'success');
       // Check if user is admin → go to /admin, otherwise → /orders
+      // Use window.location for full reload so server picks up the new session cookie
       const uid = data.user?.id;
       if (uid) {
         const { data: adminRow } = await supabase.from('admins').select('user_id').eq('user_id', uid).maybeSingle();
-        router.push(adminRow ? '/admin' : '/orders');
+        window.location.href = adminRow ? '/admin' : '/orders';
       } else {
-        router.push('/orders');
+        window.location.href = '/orders';
       }
     }
   }
