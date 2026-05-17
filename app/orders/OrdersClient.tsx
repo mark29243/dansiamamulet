@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
-import type { Order } from '@/lib/types';
+import type { Order, Address } from '@/lib/types';
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   paid:      { bg: 'rgba(45,90,61,0.12)',    color: '#2D5A3D' },
@@ -18,16 +18,78 @@ const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
   refunded:  { bg: 'rgba(168,152,104,0.15)', color: '#6B5730' },
 };
 
+const LABELS = ['Home', 'Work', 'Other', 'Holiday'];
+
+const emptyForm = { label: 'Home', name: '', phone: '', address: '', city: '', province: '', postal_code: '', country: 'Thailand', is_default: false };
+
 export default function OrdersClient({ orders, userEmail }: { orders: Order[] | null; userEmail: string | null }) {
   const { lang } = useLang();
   const t = getDict(lang);
   const [signingOut, setSigningOut] = useState(false);
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addrLoading, setAddrLoading] = useState(false);
+  const [editingId, setEditingId] = useState<number | 'new' | null>(null);
+  const [form, setForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
+  const [addrError, setAddrError] = useState('');
+
+  const fetchAddresses = useCallback(async () => {
+    setAddrLoading(true);
+    const res = await fetch('/api/addresses');
+    if (res.ok) setAddresses(await res.json());
+    setAddrLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (orders !== null) fetchAddresses();
+  }, [orders, fetchAddresses]);
 
   async function signOut() {
     setSigningOut(true);
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = '/';
+  }
+
+  function startEdit(addr: Address) {
+    setEditingId(addr.id);
+    setForm({ label: addr.label, name: addr.name, phone: addr.phone ?? '', address: addr.address, city: addr.city ?? '', province: addr.province ?? '', postal_code: addr.postal_code ?? '', country: addr.country, is_default: addr.is_default });
+    setAddrError('');
+  }
+
+  function startNew() {
+    setEditingId('new');
+    setForm(emptyForm);
+    setAddrError('');
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setAddrError('');
+  }
+
+  async function saveAddress() {
+    setSaving(true);
+    setAddrError('');
+    const isNew = editingId === 'new';
+    const url = isNew ? '/api/addresses' : `/api/addresses/${editingId}`;
+    const method = isNew ? 'POST' : 'PUT';
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+    if (res.ok) {
+      await fetchAddresses();
+      setEditingId(null);
+    } else {
+      const d = await res.json();
+      setAddrError(d.error || 'Error saving');
+    }
+    setSaving(false);
+  }
+
+  async function deleteAddress(id: number) {
+    if (!confirm(lang === 'th' ? 'ลบที่อยู่นี้?' : 'Delete this address?')) return;
+    await fetch(`/api/addresses/${id}`, { method: 'DELETE' });
+    setAddresses((prev) => prev.filter((a) => a.id !== id));
+    if (editingId === id) setEditingId(null);
   }
 
   // Not logged in
@@ -47,6 +109,8 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
       </div>
     );
   }
+
+  const labelTh: Record<string, string> = { Home: 'บ้าน', Work: 'ที่ทำงาน', Other: 'อื่นๆ', Holiday: 'บ้านพัก' };
 
   return (
     <div className="container" style={{ padding: '24px 24px 80px', maxWidth: 900 }}>
@@ -73,84 +137,241 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
         </button>
       </div>
 
-      {orders.length === 0 ? (
-        <div className="empty-state">
-          <div className="icon">📦</div>
-          <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', marginBottom: 8 }}>
-            {lang === 'th' ? 'ยังไม่มีคำสั่งซื้อ' : lang === 'zh' ? '暂无订单' : 'No orders yet'}
+      {/* ─── Saved Addresses ─── */}
+      <section style={{ marginBottom: 48 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
+          <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)' }}>
+            {lang === 'th' ? '📍 ที่อยู่ของฉัน' : lang === 'zh' ? '📍 我的地址' : '📍 Saved Addresses'}
           </h2>
-          <p style={{ fontSize: 13, marginBottom: 20 }}>
-            {lang === 'th' ? 'เริ่มเลือกซื้อพระเครื่องของเรา' : lang === 'zh' ? '开始浏览我们的佛牌' : 'Start browsing our collection'}
-          </p>
-          <Link href="/shop" className="btn-gold">🛍️ {t.cart.browseShop}</Link>
+          {addresses.length < 4 && editingId === null && (
+            <button onClick={startNew} className="btn-outline" style={{ fontSize: 12, padding: '6px 14px' }}>
+              + {lang === 'th' ? 'เพิ่มที่อยู่' : lang === 'zh' ? '添加地址' : 'Add Address'}
+            </button>
+          )}
         </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {orders.map((o) => {
-            const statusColor = STATUS_COLORS[o.status] || STATUS_COLORS.pending;
-            return (
-              <article key={o.id} className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                {/* Header */}
-                <div style={{ background: 'var(--cream-dark)', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-                  <div>
-                    <div className="serif" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 2, marginBottom: 2 }}>
-                      {t.success.orderNo}
-                    </div>
-                    <div className="serif" style={{ fontSize: 14, fontWeight: 600, color: 'var(--gold-dark)', letterSpacing: 1 }}>
-                      #{o.id.slice(0, 8).toUpperCase()}
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                      📅 {new Date(o.created_at).toLocaleDateString(lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                    </span>
-                    <span style={{
-                      fontSize: 10,
-                      letterSpacing: 2,
-                      textTransform: 'uppercase',
-                      padding: '4px 10px',
-                      background: statusColor.bg,
-                      color: statusColor.color,
-                      borderRadius: 999,
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontWeight: 600,
-                    }}>
-                      {o.status}
-                    </span>
-                  </div>
-                </div>
 
-                {/* Body */}
-                <div style={{ padding: 20 }}>
-                  <ul style={{ listStyle: 'none', marginBottom: 14 }}>
-                    {o.items.map((i, k) => (
-                      <li key={k} style={{ display: 'flex', gap: 12, padding: '8px 0', alignItems: 'center' }}>
-                        {i.image && (
-                          <div style={{ width: 48, height: 48, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
-                            <Image src={i.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+        {addrLoading ? (
+          <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Loading…</div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
+            {addresses.map((addr) => (
+              <div key={addr.id} className="card" style={{ padding: 18, position: 'relative', borderLeft: addr.is_default ? '3px solid var(--gold)' : undefined }}>
+                {addr.is_default && (
+                  <span className="serif" style={{ fontSize: 9, letterSpacing: 2, color: 'var(--gold-dark)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                    ★ {lang === 'th' ? 'ที่อยู่หลัก' : 'Default'}
+                  </span>
+                )}
+                <div className="serif" style={{ fontSize: 10, letterSpacing: 2, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 6 }}>
+                  {lang === 'th' ? (labelTh[addr.label] ?? addr.label) : addr.label}
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>{addr.name}</div>
+                {addr.phone && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>📞 {addr.phone}</div>}
+                <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.6 }}>
+                  {addr.address}
+                  {addr.city && <>, {addr.city}</>}
+                  {addr.province && <>, {addr.province}</>}
+                  {addr.postal_code && <> {addr.postal_code}</>}
+                  <br />{addr.country}
+                </div>
+                <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+                  <button onClick={() => startEdit(addr)} className="btn-text" style={{ fontSize: 12, padding: '4px 0' }}>
+                    ✏️ {lang === 'th' ? 'แก้ไข' : 'Edit'}
+                  </button>
+                  <button onClick={() => deleteAddress(addr.id)} className="btn-text" style={{ fontSize: 12, padding: '4px 0', color: 'var(--burgundy)' }}>
+                    🗑 {lang === 'th' ? 'ลบ' : 'Delete'}
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {addresses.length === 0 && editingId === null && (
+              <div style={{ color: 'var(--text-muted)', fontSize: 13, gridColumn: '1/-1' }}>
+                {lang === 'th' ? 'ยังไม่มีที่อยู่ที่บันทึกไว้' : lang === 'zh' ? '暂无保存的地址' : 'No saved addresses yet'}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Add / Edit form */}
+        {editingId !== null && (
+          <div className="card" style={{ marginTop: 16, padding: 24 }}>
+            <h3 className="serif" style={{ fontSize: 15, fontWeight: 600, marginBottom: 18, color: 'var(--text)' }}>
+              {editingId === 'new'
+                ? (lang === 'th' ? 'เพิ่มที่อยู่ใหม่' : 'New Address')
+                : (lang === 'th' ? 'แก้ไขที่อยู่' : 'Edit Address')}
+            </h3>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {/* Label */}
+              <div style={{ gridColumn: '1/-1' }}>
+                <label style={labelStyle}>{lang === 'th' ? 'ประเภท' : 'Label'}</label>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {LABELS.map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, label: l }))}
+                      style={{
+                        padding: '5px 14px', fontSize: 12, borderRadius: 4, cursor: 'pointer',
+                        border: '1px solid ' + (form.label === l ? 'var(--gold)' : 'var(--cream-dark)'),
+                        background: form.label === l ? 'var(--gold)' : 'transparent',
+                        color: form.label === l ? 'var(--deep)' : 'var(--text)',
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
+                    >
+                      {lang === 'th' ? (labelTh[l] ?? l) : l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Name */}
+              <div>
+                <label style={labelStyle}>{lang === 'th' ? 'ชื่อ-นามสกุล *' : 'Full Name *'}</label>
+                <input style={inputStyle} value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder={lang === 'th' ? 'ชื่อผู้รับ' : 'Recipient name'} />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label style={labelStyle}>{lang === 'th' ? 'เบอร์โทร' : 'Phone'}</label>
+                <input style={inputStyle} value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="08x-xxx-xxxx" />
+              </div>
+
+              {/* Address */}
+              <div style={{ gridColumn: '1/-1' }}>
+                <label style={labelStyle}>{lang === 'th' ? 'ที่อยู่ *' : 'Address *'}</label>
+                <textarea style={{ ...inputStyle, resize: 'vertical', minHeight: 64 }} value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} placeholder={lang === 'th' ? 'บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ' : 'Street, district, sub-district'} />
+              </div>
+
+              {/* City */}
+              <div>
+                <label style={labelStyle}>{lang === 'th' ? 'เมือง/จังหวัด' : 'City'}</label>
+                <input style={inputStyle} value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} placeholder={lang === 'th' ? 'กรุงเทพฯ' : 'Bangkok'} />
+              </div>
+
+              {/* Postal */}
+              <div>
+                <label style={labelStyle}>{lang === 'th' ? 'รหัสไปรษณีย์' : 'Postal Code'}</label>
+                <input style={inputStyle} value={form.postal_code} onChange={(e) => setForm((f) => ({ ...f, postal_code: e.target.value }))} placeholder="10100" />
+              </div>
+
+              {/* Country */}
+              <div>
+                <label style={labelStyle}>{lang === 'th' ? 'ประเทศ' : 'Country'}</label>
+                <input style={inputStyle} value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))} placeholder="Thailand" />
+              </div>
+
+              {/* Default */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input type="checkbox" id="is_default" checked={form.is_default} onChange={(e) => setForm((f) => ({ ...f, is_default: e.target.checked }))} />
+                <label htmlFor="is_default" style={{ fontSize: 13, color: 'var(--text)', cursor: 'pointer' }}>
+                  {lang === 'th' ? 'ตั้งเป็นที่อยู่หลัก' : 'Set as default'}
+                </label>
+              </div>
+            </div>
+
+            {addrError && <div style={{ color: '#C0392B', fontSize: 12, marginTop: 10 }}>{addrError}</div>}
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
+              <button onClick={saveAddress} disabled={saving} className="btn-gold" style={{ fontSize: 13 }}>
+                {saving ? '…' : (lang === 'th' ? 'บันทึก' : 'Save')}
+              </button>
+              <button onClick={cancelEdit} className="btn-outline" style={{ fontSize: 13 }}>
+                {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ─── Orders ─── */}
+      <section>
+        <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', marginBottom: 16 }}>
+          {lang === 'th' ? '📦 คำสั่งซื้อ' : lang === 'zh' ? '📦 订单' : '📦 Orders'}
+        </h2>
+
+        {orders.length === 0 ? (
+          <div className="empty-state">
+            <div className="icon">📦</div>
+            <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', marginBottom: 8 }}>
+              {lang === 'th' ? 'ยังไม่มีคำสั่งซื้อ' : lang === 'zh' ? '暂无订单' : 'No orders yet'}
+            </h2>
+            <p style={{ fontSize: 13, marginBottom: 20 }}>
+              {lang === 'th' ? 'เริ่มเลือกซื้อพระเครื่องของเรา' : lang === 'zh' ? '开始浏览我们的佛牌' : 'Start browsing our collection'}
+            </p>
+            <Link href="/shop" className="btn-gold">🛍️ {t.cart.browseShop}</Link>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {orders.map((o) => {
+              const statusColor = STATUS_COLORS[o.status] || STATUS_COLORS.pending;
+              return (
+                <article key={o.id} className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                  <div style={{ background: 'var(--cream-dark)', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                    <div>
+                      <div className="serif" style={{ fontSize: 10, color: 'var(--text-muted)', letterSpacing: 2, marginBottom: 2 }}>
+                        {t.success.orderNo}
+                      </div>
+                      <div className="serif" style={{ fontSize: 14, fontWeight: 600, color: 'var(--gold-dark)', letterSpacing: 1 }}>
+                        #{o.id.slice(0, 8).toUpperCase()}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                        📅 {new Date(o.created_at).toLocaleDateString(lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </span>
+                      <span style={{
+                        fontSize: 10, letterSpacing: 2, textTransform: 'uppercase',
+                        padding: '4px 10px', background: statusColor.bg, color: statusColor.color,
+                        borderRadius: 999, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600,
+                      }}>
+                        {o.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ padding: 20 }}>
+                    <ul style={{ listStyle: 'none', marginBottom: 14 }}>
+                      {o.items.map((i, k) => (
+                        <li key={k} style={{ display: 'flex', gap: 12, padding: '8px 0', alignItems: 'center' }}>
+                          {i.image && (
+                            <div style={{ width: 48, height: 48, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
+                              <Image src={i.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                            </div>
+                          )}
+                          <div style={{ flex: 1, fontSize: 13 }}>
+                            <div style={{ color: 'var(--text)' }}>{i.name}</div>
+                            <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 2 }}>{t.cart.qty}: {i.qty}</div>
                           </div>
-                        )}
-                        <div style={{ flex: 1, fontSize: 13 }}>
-                          <div style={{ color: 'var(--text)' }}>{i.name}</div>
-                          <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 2 }}>{t.cart.qty}: {i.qty}</div>
-                        </div>
-                        <div className="serif" style={{ color: 'var(--gold-dark)', fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>
-                          {formatPrice(i.price * i.qty, lang)}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                          <div className="serif" style={{ color: 'var(--gold-dark)', fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>
+                            {formatPrice(i.price * i.qty, lang)}
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
 
-                  <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <span className="serif" style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)' }}>{t.cart.total}</span>
-                    <span className="serif" style={{ fontSize: 20, fontWeight: 600, color: 'var(--gold-dark)' }}>{formatPrice(o.total, lang)}</span>
+                    <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <span className="serif" style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)' }}>{t.cart.total}</span>
+                      <span className="serif" style={{ fontSize: 20, fontWeight: 600, color: 'var(--gold-dark)' }}>{formatPrice(o.total, lang)}</span>
+                    </div>
                   </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      )}
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
+
+const labelStyle: React.CSSProperties = {
+  display: 'block', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase',
+  color: 'var(--text-muted)', marginBottom: 6, fontFamily: "'Cormorant Garamond', serif",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: '100%', padding: '10px 12px', fontSize: 13, border: '1px solid var(--cream-dark)',
+  borderRadius: 4, background: '#fff', color: 'var(--text)', outline: 'none',
+  fontFamily: 'inherit', boxSizing: 'border-box',
+};

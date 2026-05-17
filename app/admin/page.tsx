@@ -8,10 +8,11 @@ export default async function AdminDashboard() {
   const admin = createAdminClient();
 
   // Fetch stats in parallel
-  const [productsRes, ordersRes, recentOrdersRes] = await Promise.all([
+  const [productsRes, ordersRes, recentOrdersRes, usersRes] = await Promise.all([
     admin.from('products').select('id, stock', { count: 'exact', head: false }),
     admin.from('orders').select('id, total, status, created_at', { count: 'exact' }),
     admin.from('orders').select('id, customer_email, customer_name, total, status, created_at, items').order('created_at', { ascending: false }).limit(5),
+    admin.auth.admin.listUsers({ page: 1, perPage: 1 }),
   ]);
 
   const totalProducts = productsRes.count ?? 0;
@@ -30,6 +31,7 @@ export default async function AdminDashboard() {
   const monthRevenue = monthOrders.reduce((s, o) => s + o.total, 0);
 
   const recentOrders = recentOrdersRes.data ?? [];
+  const totalMembers = (usersRes.data as any)?.total ?? 0;
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
@@ -43,6 +45,7 @@ export default async function AdminDashboard() {
         <StatCard label="This Month" value={formatPrice(monthRevenue)} sub={`${monthOrders.length} orders this month`} accent="var(--gold-dark)" />
         <StatCard label="Pending Orders" value={String(pendingOrders.length)} sub="Awaiting payment" accent="var(--burgundy)" warn={pendingOrders.length > 0} />
         <StatCard label="Products" value={String(totalProducts)} sub={`${outOfStock} out of stock, ${lowStock} low`} accent="var(--gold-dark)" warn={outOfStock > 0 || lowStock > 0} />
+        <StatCard label="Members" value={String(totalMembers)} sub="Registered accounts" accent="var(--jade)" />
       </div>
 
       {/* Quick actions */}

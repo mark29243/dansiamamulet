@@ -62,3 +62,18 @@ export type ShippingAddress = {
 };
 
 export type Lang = 'th' | 'en' | 'zh';
+
+export type Address = {
+  id: number;
+  user_id: string;
+  label: string;
+  name: string;
+  phone: string | null;
+  address: string;
+  city: string | null;
+  province: string | null;
+  postal_code: string | null;
+  country: string;
+  is_default: boolean;
+  created_at: string;
+};
