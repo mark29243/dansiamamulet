@@ -53,8 +53,41 @@ RETURNING id, slug;
 - บอก URL สินค้า: `/product/[slug]`
 - ถามว่ามีรูปเพิ่มเติมหรือต้องการแก้ไขอะไรอีกไหม
 
+## วิธีเติม SEO ให้ draft ที่ผู้ใช้อัพโหลดจากโทรศัพท์
+
+เมื่อผู้ใช้บอกว่า "เพิ่มสินค้าใหม่แล้ว" ให้ทำดังนี้:
+
+1. ดึง draft ที่ยังไม่ publish จาก Supabase:
+```sql
+SELECT id, name_th, description_th, images, category
+FROM products
+WHERE published = false
+ORDER BY id DESC
+LIMIT 5;
+```
+
+2. สำหรับแต่ละ draft ให้สร้าง:
+   - **name** (EN): แปลชื่อไทยเป็นอังกฤษ เหมาะกับ SEO
+   - **slug**: lowercase, เชื่อมด้วย `-` ไม่ซ้ำกับที่มีอยู่
+   - **short**: คำอธิบายสั้น 1 ประโยค (EN)
+   - **description**: รายละเอียดเต็ม (EN) สำหรับ SEO
+   - **description_th**: รายละเอียดเต็ม (TH)
+
+3. UPDATE ข้อมูลและ publish:
+```sql
+UPDATE products SET
+  name = '[EN name]',
+  slug = '[slug]',
+  short = '[short EN]',
+  description = '[description EN]',
+  description_th = '[description TH]',
+  published = true
+WHERE id = [id];
+```
+
 ## หมายเหตุสำคัญ
 
 - Shopee บล็อก automated fetch ทุกวิธี (API, WebFetch, Chrome MCP) — ต้องให้ผู้ใช้ copy ข้อมูลมาเองเสมอ
 - รูปจาก Shopee CDN: `https://down-th.img.susercontent.com/file/[hash]`
 - images column เป็น jsonb ต้องใส่ `'[...]'::jsonb` เสมอ
+- Draft slug จะมีรูปแบบ `draft-[timestamp]` — ต้องเปลี่ยนเสมอก่อน publish
