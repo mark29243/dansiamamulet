@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
 import { getDict, langNames, langs } from '@/lib/i18n';
+import { createBrowserClient } from '@supabase/ssr';
 
 export default function Header() {
   const { lang, setLang } = useLang();
@@ -12,6 +13,19 @@ export default function Header() {
   const t = getDict(lang);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -146,9 +160,15 @@ export default function Header() {
           >
             🔍
           </Link>
-          <Link href="/signin" style={{ ...navLinkStyle, fontSize: 11 }} className="hide-mobile">
-            {t.nav.signin}
-          </Link>
+          {userEmail ? (
+            <Link href="/orders" style={{ ...navLinkStyle, fontSize: 11, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className="hide-mobile" title={userEmail}>
+              👤 {userEmail.split('@')[0]}
+            </Link>
+          ) : (
+            <Link href="/signin" style={{ ...navLinkStyle, fontSize: 11 }} className="hide-mobile">
+              {t.nav.signin}
+            </Link>
+          )}
           <Link
             href="/cart"
             aria-label={`${t.nav.cart} (${count})`}
