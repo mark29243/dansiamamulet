@@ -5,7 +5,7 @@
   "crons": [
     {
       "path": "/api/cron/process-drafts",
-      "schedule": "0 1-18 * * *"
+      "schedule": "0 18 * * *"
     }
   ],
   "headers": [
