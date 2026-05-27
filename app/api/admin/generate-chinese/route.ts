@@ -15,27 +15,31 @@ async function requireAdmin() {
   return admin;
 }
 
-async function translateToZh(nameTh: string, nameEn: string): Promise<{ name_zh: string; description_zh: string }> {
+async function translateToZh(nameTh: string, descTh: string): Promise<{ name_zh: string; description_zh: string }> {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const msg = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 200,
+    max_tokens: 400,
     messages: [{
       role: 'user',
-      content: `Translate this Thai Buddhist amulet name to Chinese (Simplified). Translate names, places, and years literally only. No marketing words, no added claims.
+      content: `Translate this Thai Buddhist amulet listing to Chinese (Simplified). Rules:
+- Monk names, temple names, and place names: keep as English romanization (e.g. หลวงปู่ทวด → Luang Pu Tuad, วัดช้างให้ → Wat Chang Hai)
+- Years, Buddhist era (พ.ศ./ปี): translate as-is (e.g. ปี 2507 → 2507年)
+- Material/type descriptions: translate to Chinese
+- No marketing words, no added claims
 
 Thai name: ${nameTh}
-English name: ${nameEn}
+Thai description: ${descTh || nameTh}
 
 Return ONLY valid JSON:
-{"name_zh": "Chinese translation of the name only"}`,
+{"name_zh": "translation of name", "description_zh": "translation of description"}`,
     }],
   });
 
   const raw = (msg.content[0] as { type: string; text: string }).text.trim();
   const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
   const parsed = JSON.parse(cleaned);
-  return { name_zh: parsed.name_zh, description_zh: parsed.name_zh };
+  return { name_zh: parsed.name_zh, description_zh: parsed.description_zh || parsed.name_zh };
 }
 
 export async function POST() {
@@ -44,7 +48,7 @@ export async function POST() {
 
   const { data: products } = await admin
     .from('products')
-    .select('id, name_th, name')
+    .select('id, name_th, description_th')
     .or('name_zh.is.null,name_zh.eq.')
     .eq('published', true);
 
@@ -53,7 +57,7 @@ export async function POST() {
   const results = [];
   for (const p of products) {
     try {
-      const zh = await translateToZh(p.name_th, p.name);
+      const zh = await translateToZh(p.name_th, p.description_th);
       await admin.from('products').update({ name_zh: zh.name_zh, description_zh: zh.description_zh }).eq('id', p.id);
       results.push({ id: p.id, name_zh: zh.name_zh });
     } catch (e: any) {
