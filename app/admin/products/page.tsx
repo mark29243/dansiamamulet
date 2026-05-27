@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import StockEditor from './StockEditor';
+import PublishButton from './PublishButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         {[
           { v: 'all', label: 'All' },
           { v: 'oos', label: 'Out of Stock' },
-          { v: 'low', label: 'Low Stock (≤3)' },
+          { v: 'low', label: 'Low Stock (โค3)' },
           { v: 'unpublished', label: 'Unpublished' },
         ].map((f) => (
           <Link
@@ -85,7 +86,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   </Td>
                   <Td>
                     <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
-                      {p.name.slice(0, 50)}{p.name.length > 50 ? '…' : ''}
+                      {p.name.slice(0, 50)}{p.name.length > 50 ? 'โ€ฆ' : ''}
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
@@ -101,7 +102,10 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     {!p.published && <span className="badge" style={{ background: 'var(--text-faint)', color: '#fff', marginLeft: 4 }}>HIDDEN</span>}
                   </Td>
                   <Td>
-                    <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View ↗</Link>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      {!p.published && <PublishButton productId={p.id} />}
+                      {p.published && <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View โ—</Link>}
+                    </div>
                   </Td>
                 </tr>
               ))}
@@ -111,7 +115,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       </div>
 
       <p style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 16, textAlign: 'center' }}>
-        💡 Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
+        ๐’ก Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
       </p>
     </div>
   );
