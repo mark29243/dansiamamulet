@@ -86,7 +86,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   </Td>
                   <Td>
                     <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
-                      {p.name.slice(0, 50)}{p.name.length > 50 ? 'โ€ฆ' : ''}
+                      {(p.name_th || p.name).slice(0, 50)}{(p.name_th || p.name).length > 50 ? 'โ€ฆ' : ''}
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
@@ -104,7 +104,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   <Td>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       {!p.published && <PublishButton productId={p.id} />}
-                      {p.published && <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View โ—</Link>}
+                      {p.published && <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View</Link>}
                     </div>
                   </Td>
                 </tr>
