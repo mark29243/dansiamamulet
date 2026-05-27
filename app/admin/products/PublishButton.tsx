@@ -20,7 +20,7 @@ export default function PublishButton({ productId }: { productId: number }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
       toast('Published!', 'success');
-      router.refresh();
+      setTimeout(() => window.location.reload(), 800);
     } catch (e: any) {
       toast(e.message, 'error');
     } finally {
