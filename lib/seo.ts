@@ -24,25 +24,26 @@ export type SeoResult = {
 export async function generateSeo(nameTh: string, descTh: string, _category: string): Promise<SeoResult> {
   const msg = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 400,
+    max_tokens: 600,
     messages: [{
       role: 'user',
-      content: `Translate this Thai Buddhist amulet name to English and create a URL slug. DO NOT add adjectives, claims, marketing words, or any information not present in the original (no "authentic", "rare", "valuable", "sacred", "blessed", "collectible", etc.). Translate names/places/years literally only.
+      content: `Translate this Thai Buddhist amulet listing to English and create a URL slug. Translate literally — do NOT add adjectives, claims, or marketing words not present in the original (no "authentic", "rare", "sacred", "blessed", "collectible", etc.). Translate names, places, and years as-is.
 
 Thai name: ${nameTh}
+Thai description: ${descTh || nameTh}
 
 Return ONLY valid JSON:
 {
-  "name": "Direct English translation, no added words",
-  "slug": "url-slug-lowercase-hyphens-only-from-key-terms"
+  "name": "Direct English translation of the name only",
+  "slug": "url-slug-lowercase-hyphens-only-from-key-terms",
+  "description": "Direct English translation of the Thai description"
 }`,
     }],
   });
 
   const raw = (msg.content[0] as { type: string; text: string }).text.trim();
-  // Strip ```json fences if Claude wraps the output
   const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-  let parsed: { name: string; slug: string };
+  let parsed: { name: string; slug: string; description: string };
   try {
     parsed = JSON.parse(cleaned);
   } catch (e) {
@@ -53,7 +54,7 @@ Return ONLY valid JSON:
     name: parsed.name,
     slug: parsed.slug,
     short: nameTh,
-    description: parsed.name,
+    description: parsed.description || parsed.name,
     description_th: descTh || nameTh,
   };
 }
