@@ -23,7 +23,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   // ชื่อและรายละเอียดตามภาษา
   const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
   const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
-  const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.short) : p.short;
+  const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.description || p.short) : (p.description ? p.description.slice(0, 200) : p.short);
 
   const displayPrice = p.sale_price ?? p.price;
 
@@ -260,23 +260,26 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 {t.product.relatedProducts}
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
-                {related.slice(0, 4).map((r) => (
+                {related.slice(0, 4).map((r) => {
+                  const rName = lang === 'th' ? (r.name_th || r.name) : r.name;
+                  return (
                   <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
                     <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
                       {r.images[0] && (
-                        <Image src={r.images[0]} alt={r.name} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                        <Image src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
                       )}
                     </div>
                     <div style={{ padding: 14 }}>
                       <h4 className="serif" style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 36 }}>
-                        {r.name}
+                        {rName}
                       </h4>
                       <div className="serif" style={{ fontSize: 16, fontWeight: 600, color: 'var(--gold-dark)' }}>
                         {formatPrice(r.sale_price ?? r.price, lang)}
                       </div>
                     </div>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             </section>
           )}
