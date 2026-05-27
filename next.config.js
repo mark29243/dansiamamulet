@@ -7,6 +7,8 @@ const nextConfig = {
       // Supabase Storage
       { protocol: 'https', hostname: '*.supabase.co' },
       { protocol: 'https', hostname: '*.supabase.in' },
+      // Cloudflare R2
+      { protocol: 'https', hostname: 'pub-37c44db5189443e5945025e6f5b8855f.r2.dev' },
       // Common image CDNs
       { protocol: 'https', hostname: '*.cloudinary.com' },
       { protocol: 'https', hostname: '*.imgix.net' },
