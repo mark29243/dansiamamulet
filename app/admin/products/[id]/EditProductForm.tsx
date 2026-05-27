@@ -29,6 +29,7 @@ export default function EditProductForm({ product }: { product: any }) {
   async function handleSave() {
     setBusy(true);
     try {
+      // Step 1: save basic fields
       const body: any = {
         name_th: form.name_th,
         description_th: form.description_th,
@@ -44,8 +45,19 @@ export default function EditProductForm({ product }: { product: any }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
-      toast('บันทึกแล้ว', 'success');
-      setTimeout(() => router.push('/admin/products'), 600);
+
+      // Step 2: regenerate SEO via Claude
+      toast('🤖 Claude กำลังอัพเดท SEO...', 'success');
+      const seoRes = await fetch('/api/admin/process-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: product.id }),
+      });
+      const seoData = await seoRes.json();
+      if (!seoRes.ok) throw new Error(seoData.error || 'SEO failed');
+
+      toast('บันทึกและอัพเดท SEO เรียบร้อยแล้ว', 'success');
+      setTimeout(() => router.push('/admin/products'), 800);
     } catch (e: any) {
       toast(e.message, 'error');
     } finally {
@@ -138,7 +150,7 @@ export default function EditProductForm({ product }: { product: any }) {
             className="btn-primary"
             style={{ padding: '10px 24px', opacity: busy ? 0.7 : 1 }}
           >
-            {busy ? 'กำลังบันทึก...' : 'บันทึก'}
+            {busy ? '🤖 กำลังบันทึก + SEO...' : 'บันทึก'}
           </button>
         </div>
       </div>
