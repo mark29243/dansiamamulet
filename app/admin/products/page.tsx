@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/server';
-import { formatPrice } from '@/lib/utils';
 import StockEditor from './StockEditor';
 import PublishButton from './PublishButton';
-import AdminProductName from './AdminProductName';
+import { AdminProductName, AdminProductCategory, AdminProductPrice } from './AdminProductName';
 
 export const dynamic = 'force-dynamic';
 
@@ -91,9 +90,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
-                  <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>
+                  <Td style={{ color: 'var(--text-muted)' }}><AdminProductCategory category={p.category} /></Td>
                   <Td className="serif" style={{ color: 'var(--gold-dark)', fontWeight: 600 }}>
-                    {formatPrice(p.sale_price ?? p.price)}
+                    <AdminProductPrice satang={p.sale_price ?? p.price} />
                   </Td>
                   <Td>
                     <StockEditor productId={p.id} stock={p.stock} />
