@@ -39,7 +39,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         {[
           { v: 'all', label: 'All' },
           { v: 'oos', label: 'Out of Stock' },
-          { v: 'low', label: 'Low Stock (โค3)' },
+          { v: 'low', label: 'Low Stock (≤3)' },
           { v: 'unpublished', label: 'Unpublished' },
         ].map((f) => (
           <Link
@@ -86,7 +86,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   </Td>
                   <Td>
                     <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
-                      {(p.name_th || p.name).slice(0, 50)}{(p.name_th || p.name).length > 50 ? 'โ€ฆ' : ''}
+                      {(p.name_th || p.name).slice(0, 50)}{(p.name_th || p.name).length > 50 ? '...' : ''}
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
@@ -115,7 +115,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       </div>
 
       <p style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 16, textAlign: 'center' }}>
-        ๐’ก Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
+        💡 Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
       </p>
     </div>
   );
