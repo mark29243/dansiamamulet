@@ -24,6 +24,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (typeof body.price === 'number') allowed.price = body.price;
   if (typeof body.sale_price === 'number' || body.sale_price === null) allowed.sale_price = body.sale_price;
   if (typeof body.is_featured === 'boolean') allowed.is_featured = body.is_featured;
+  if (typeof body.name_th === 'string') allowed.name_th = body.name_th.trim();
+  if (typeof body.description_th === 'string') allowed.description_th = body.description_th.trim();
+  if (typeof body.category === 'string') allowed.category = body.category.trim();
 
   if (Object.keys(allowed).length === 0) {
     return NextResponse.json({ error: 'No valid fields' }, { status: 400 });
@@ -43,4 +46,20 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   console.log('[audit] product-update', { admin: ctx.user.id, productId: params.id, updates: allowed });
 
   return NextResponse.json({ product: data });
+}
+
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  const ctx = await requireAdmin();
+  if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  const { error } = await ctx.admin
+    .from('products')
+    .delete()
+    .eq('id', parseInt(params.id));
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  console.log('[audit] product-delete', { admin: ctx.user.id, productId: params.id });
+
+  return NextResponse.json({ ok: true });
 }
