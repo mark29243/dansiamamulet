@@ -4,14 +4,14 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import StockEditor from './StockEditor';
 import PublishButton from './PublishButton';
+import AdminProductName from './AdminProductName';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminProductsPage({ searchParams }: { searchParams: { q?: string; filter?: string; lang?: string } }) {
+export default async function AdminProductsPage({ searchParams }: { searchParams: { q?: string; filter?: string } }) {
   const admin = createAdminClient();
   const q = searchParams.q?.trim() || '';
   const filter = searchParams.filter || 'all';
-  const lang = searchParams.lang || 'th';
 
   let query = admin.from('products').select('*').order('id', { ascending: true });
   if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
@@ -29,25 +29,11 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
           Products <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 300 }}>({list.length})</span>
         </h1>
 
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          {(['th', 'en', 'zh'] as const).map((l) => (
-            <Link key={l} href={`/admin/products?filter=${filter}${q ? `&q=${q}` : ''}&lang=${l}`}
-              style={{
-                padding: '6px 14px', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase',
-                border: '1px solid ' + (l === lang ? 'var(--gold)' : 'var(--cream-dark)'),
-                background: l === lang ? 'var(--gold)' : 'transparent',
-                color: l === lang ? 'var(--deep)' : 'var(--text-muted)',
-                borderRadius: 100, fontFamily: "'Cormorant Garamond', serif", fontWeight: l === lang ? 600 : 400,
-              }}
-            >{l === 'th' ? 'ไทย' : l === 'en' ? 'EN' : '中文'}</Link>
-          ))}
-          <form action="/admin/products" method="GET" style={{ display: 'flex', gap: 8 }}>
-            {filter !== 'all' && <input type="hidden" name="filter" value={filter} />}
-            <input type="hidden" name="lang" value={lang} />
-            <input name="q" className="input" placeholder="Search products..." defaultValue={q} style={{ minWidth: 240 }} />
-            <button type="submit" className="btn-outline" style={{ padding: '10px 18px' }}>Search</button>
-          </form>
-        </div>
+        <form action="/admin/products" method="GET" style={{ display: 'flex', gap: 8 }}>
+          {filter !== 'all' && <input type="hidden" name="filter" value={filter} />}
+          <input name="q" className="input" placeholder="Search products..." defaultValue={q} style={{ minWidth: 240 }} />
+          <button type="submit" className="btn-outline" style={{ padding: '10px 18px' }}>Search</button>
+        </form>
       </div>
 
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, overflowX: 'auto', paddingBottom: 4 }}>
@@ -101,7 +87,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   </Td>
                   <Td>
                     <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
-                      {(() => { const n = lang === 'en' ? (p.name || p.name_th) : lang === 'zh' ? (p.name_zh || p.name_th) : (p.name_th || p.name); return n.slice(0, 50) + (n.length > 50 ? '...' : ''); })()}
+                      <AdminProductName name_th={p.name_th || p.name} name={p.name || p.name_th} />
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
