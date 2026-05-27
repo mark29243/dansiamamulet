@@ -17,8 +17,8 @@ export default function EditProductForm({ product }: { product: any }) {
     name_th: product.name_th || '',
     description_th: product.description_th || '',
     category: product.category || '',
-    price: product.price ?? 0,
-    sale_price: product.sale_price ?? '',
+    price: ((product.price ?? 0) / 100).toFixed(2),
+    sale_price: product.sale_price ? (product.sale_price / 100).toFixed(2) : '',
     stock: product.stock ?? 0,
   });
 
@@ -33,8 +33,8 @@ export default function EditProductForm({ product }: { product: any }) {
         name_th: form.name_th,
         description_th: form.description_th,
         category: form.category,
-        price: Number(form.price),
-        sale_price: form.sale_price === '' ? null : Number(form.sale_price),
+        price: Math.round(Number(form.price) * 100),
+        sale_price: form.sale_price === '' ? null : Math.round(Number(form.sale_price) * 100),
         stock: Number(form.stock),
       };
       const res = await fetch(`/api/admin/products/${product.id}`, {
