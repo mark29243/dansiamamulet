@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import ProductDetail from './ProductDetail';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
