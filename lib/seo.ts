@@ -19,31 +19,45 @@ export type SeoResult = {
   short: string;
   description: string;
   description_th: string;
+  name_zh: string;
+  description_zh: string;
 };
 
 export async function generateSeo(nameTh: string, descTh: string, _category: string): Promise<SeoResult> {
   const msg = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 600,
+    max_tokens: 800,
     messages: [{
       role: 'user',
-      content: `Translate this Thai Buddhist amulet listing to English and create a URL slug. Translate literally — do NOT add adjectives, claims, or marketing words not present in the original (no "authentic", "rare", "sacred", "blessed", "collectible", etc.). Translate names, places, and years as-is.
+      content: `Translate this Thai Buddhist amulet listing to English and Chinese (Simplified), and create a URL slug.
+
+Rules for English:
+- Translate literally, no added adjectives or marketing words
+- Monk names, temple names, places: keep as romanization (e.g. หลวงปู่ทวด → Luang Pu Tuad)
+
+Rules for Chinese:
+- Monk names, temple names, place names: keep as English romanization (e.g. หลวงปู่ทวด → Luang Pu Tuad, วัดช้างให้ → Wat Chang Hai)
+- Years (พ.ศ./ปี): translate as-is (e.g. ปี 2507 → 2507年)
+- Material/type descriptions: translate to Chinese
+- No marketing words, no added claims
 
 Thai name: ${nameTh}
 Thai description: ${descTh || nameTh}
 
 Return ONLY valid JSON:
 {
-  "name": "Direct English translation of the name only",
-  "slug": "url-slug-lowercase-hyphens-only-from-key-terms",
-  "description": "Direct English translation of the Thai description"
+  "name": "English translation of name",
+  "slug": "url-slug-lowercase-hyphens-key-terms-only",
+  "description": "English translation of description",
+  "name_zh": "Chinese translation of name",
+  "description_zh": "Chinese translation of description"
 }`,
     }],
   });
 
   const raw = (msg.content[0] as { type: string; text: string }).text.trim();
   const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-  let parsed: { name: string; slug: string; description: string };
+  let parsed: { name: string; slug: string; description: string; name_zh: string; description_zh: string };
   try {
     parsed = JSON.parse(cleaned);
   } catch (e) {
@@ -56,6 +70,8 @@ Return ONLY valid JSON:
     short: nameTh,
     description: parsed.description || parsed.name,
     description_th: descTh || nameTh,
+    name_zh: parsed.name_zh || '',
+    description_zh: parsed.description_zh || parsed.name_zh || '',
   };
 }
 
@@ -82,6 +98,8 @@ export async function processDraft(
       short: seo.short,
       description: seo.description,
       description_th: seo.description_th,
+      name_zh: seo.name_zh,
+      description_zh: seo.description_zh,
       published: true,
     })
     .eq('id', draft.id);
