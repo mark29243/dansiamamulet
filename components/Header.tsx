@@ -145,7 +145,7 @@ export default function Header() {
             {lang === 'th' ? 'พระเครื่อง แดนสยาม' : lang === 'zh' ? '丹暹罗佛牌' : 'Dan Siam Amulets'}
           </div>
           {!scrolled && (
-            <div className="serif" style={{ fontSize: 10, color: '#6B5730', letterSpacing: 3, fontStyle: 'italic', marginTop: 4 }}>
+            <div style={{ fontSize: 10, color: '#6B5730', letterSpacing: 1, marginTop: 4, fontFamily: "'Sarabun', sans-serif" }}>
               {lang === 'th' ? 'พระเครื่องแท้ รับรองคุณภาพ' : lang === 'zh' ? '正品泰国佛牌' : 'AUTHENTIC SACRED THAI AMULETS'}
             </div>
           )}

@@ -55,10 +55,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   color: var(--deep);
   border: none;
   padding: 13px 32px;
-  font-size: 12px;
-  letter-spacing: 3px;
-  font-family: 'Playfair Display', 'Noto Serif Thai', serif;
-  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-family: 'Sarabun', sans-serif;
+  font-weight: 700;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
@@ -75,9 +75,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   color: var(--gold-dark);
   border: 1px solid var(--gold-dark);
   padding: 12px 28px;
-  font-size: 12px;
-  letter-spacing: 3px;
-  font-family: 'Playfair Display', 'Noto Serif Thai', serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-family: 'Sarabun', sans-serif;
+  font-weight: 600;
   text-transform: uppercase;
   border-radius: var(--radius);
   display: inline-flex;
@@ -92,9 +93,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
   color: var(--gold);
   border: 1px solid var(--gold);
   padding: 12px 28px;
-  font-size: 12px;
-  letter-spacing: 3px;
-  font-family: 'Playfair Display', 'Noto Serif Thai', serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-family: 'Sarabun', sans-serif;
+  font-weight: 600;
   text-transform: uppercase;
   border-radius: var(--radius);
 }
