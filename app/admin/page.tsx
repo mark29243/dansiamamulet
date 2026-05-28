@@ -8,11 +8,13 @@ export default async function AdminDashboard() {
   const admin = createAdminClient();
 
   // Fetch stats in parallel
-  const [productsRes, ordersRes, recentOrdersRes, usersRes] = await Promise.all([
+  const [productsRes, ordersRes, recentOrdersRes, usersRes, topViewedRes, allViewsRes] = await Promise.all([
     admin.from('products').select('id, stock', { count: 'exact', head: false }),
     admin.from('orders').select('id, total, status, created_at', { count: 'exact' }),
     admin.from('orders').select('id, customer_email, customer_name, total, status, created_at, items').order('created_at', { ascending: false }).limit(5),
     admin.auth.admin.listUsers({ page: 1, perPage: 1 }),
+    admin.from('products').select('id, name, name_th, slug, views, images').eq('published', true).order('views', { ascending: false }).limit(5),
+    admin.from('products').select('views').eq('published', true),
   ]);
 
   const totalProducts = productsRes.count ?? 0;
@@ -32,6 +34,8 @@ export default async function AdminDashboard() {
 
   const recentOrders = recentOrdersRes.data ?? [];
   const totalMembers = (usersRes.data as any)?.total ?? 0;
+  const topViewed = topViewedRes.data ?? [];
+  const totalViews = (allViewsRes.data ?? []).reduce((s: number, p: any) => s + (p.views ?? 0), 0);
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
@@ -46,6 +50,7 @@ export default async function AdminDashboard() {
         <StatCard label="Pending Orders" value={String(pendingOrders.length)} sub="Awaiting payment" accent="var(--burgundy)" warn={pendingOrders.length > 0} />
         <StatCard label="Products" value={String(totalProducts)} sub={`${outOfStock} out of stock, ${lowStock} low`} accent="var(--gold-dark)" warn={outOfStock > 0 || lowStock > 0} />
         <StatCard label="Members" value={String(totalMembers)} sub="Registered accounts" accent="var(--jade)" />
+        <StatCard label="Product Views" value={String(totalViews)} sub="Total across all products" accent="var(--gold-dark)" />
       </div>
 
       {/* Quick actions */}
@@ -54,6 +59,43 @@ export default async function AdminDashboard() {
         <Link href="/admin/products" className="btn-outline">📦 Manage Products</Link>
         <Link href="/admin/orders?status=pending" className="btn-outline">⏳ Pending Orders</Link>
       </div>
+
+      {/* Top viewed products */}
+      <section style={{ marginBottom: 36 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
+          <h2 className="serif" style={{ fontSize: 18, fontWeight: 500, color: 'var(--text)' }}>Top Viewed Products</h2>
+          <Link href="/admin/products" className="btn-text">View all →</Link>
+        </div>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: 'var(--cream-dark)', textAlign: 'left' }}>
+                <Th>Product</Th>
+                <Th>Views</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {topViewed.length === 0 ? (
+                <tr><td colSpan={2} style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>No views yet</td></tr>
+              ) : topViewed.map((p: any) => (
+                <tr key={p.id} style={{ borderTop: '1px solid var(--cream-dark)' }}>
+                  <Td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {p.images?.[0] && (
+                        <img src={p.images[0]} alt="" width={36} height={36} style={{ borderRadius: 'var(--radius)', objectFit: 'cover', flexShrink: 0 }} />
+                      )}
+                      <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
+                        {(p.name || p.name_th || '').slice(0, 60)}{(p.name || p.name_th || '').length > 60 ? '…' : ''}
+                      </Link>
+                    </div>
+                  </Td>
+                  <Td style={{ fontWeight: 600, color: 'var(--gold-dark)' }}>👁 {p.views ?? 0}</Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* Recent orders */}
       <section>
