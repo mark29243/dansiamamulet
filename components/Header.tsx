@@ -1,7 +1,7 @@
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
 import { getDict, langNames, langs } from '@/lib/i18n';
@@ -239,13 +239,13 @@ export default function Header() {
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {[
-            { href: '/', label: t.nav.home, icon: '🏠' },
-            { href: '/shop', label: t.nav.shop, icon: '🛍️' },
-            { href: '/about', label: t.nav.about, icon: '✦' },
-            { href: '/faq', label: 'FAQ', icon: '?' },
-            { href: '/cart', label: `${t.nav.cart}${count > 0 ? ` (${count})` : ''}`, icon: '🛒' },
-            { href: '/orders', label: t.nav.orders, icon: '📦' },
-            { href: '/signin', label: t.nav.signin, icon: '👤' },
+            { href: '/', label: t.nav.home, icon: <NavIconHome /> },
+            { href: '/shop', label: t.nav.shop, icon: <NavIconShop /> },
+            { href: '/about', label: t.nav.about, icon: <NavIconAbout /> },
+            { href: '/faq', label: 'FAQ', icon: <NavIconFaq /> },
+            { href: '/cart', label: `${t.nav.cart}${count > 0 ? ` (${count})` : ''}`, icon: <NavIconCart /> },
+            { href: '/orders', label: t.nav.orders, icon: <NavIconOrders /> },
+            { href: '/signin', label: t.nav.signin, icon: <NavIconUser /> },
           ].map((item) => (
             <Link
               key={item.href}
@@ -267,7 +267,7 @@ export default function Header() {
               onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(201,168,76,0.08)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
-              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{ color: 'var(--gold)', display: 'flex', alignItems: 'center', flexShrink: 0 }}>{item.icon}</span>
               {item.label}
             </Link>
           ))}
@@ -304,6 +304,16 @@ export default function Header() {
     </>
   );
 }
+
+const NI = 20;
+const ni = { width: NI, height: NI, fill: 'none' as const, stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+function NavIconHome() { return <svg {...ni} viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>; }
+function NavIconShop() { return <svg {...ni} viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>; }
+function NavIconAbout() { return <svg {...ni} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>; }
+function NavIconFaq() { return <svg {...ni} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>; }
+function NavIconCart() { return <svg {...ni} viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>; }
+function NavIconOrders() { return <svg {...ni} viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>; }
+function NavIconUser() { return <svg {...ni} viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>; }
 
 const navLinkStyle: React.CSSProperties = {
   color: 'var(--gold)',
