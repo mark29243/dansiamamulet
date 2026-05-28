@@ -40,13 +40,13 @@ export default function HomeHero({ productCount, products }: { productCount: num
           pointerEvents: 'none',
         }} />
 
-        <div className="container animate-fade-up" style={{
+        <div className="container animate-fade-up" data-hero-inner="" style={{
           position: 'relative', zIndex: 2, padding: '72px 24px',
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           textAlign: 'center',
         }}>
           {/* tag pill */}
-          <div style={{
+          <div data-tag-pill="" style={{
             display: 'inline-flex', gap: 6, marginBottom: 24,
             background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
             padding: '7px 18px', borderRadius: 100,
@@ -109,7 +109,7 @@ export default function HomeHero({ productCount, products }: { productCount: num
       </div>
 
       {/* ─── Popular categories ───────────────────────────────── */}
-      <div style={{ background: 'var(--deep)', padding: '56px 24px' }}>
+      <div data-cats-section="" style={{ background: 'var(--deep)', padding: '56px 24px' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div className="serif" style={{ fontSize: 10, letterSpacing: 5, color: 'var(--gold-dark)', textTransform: 'uppercase', marginBottom: 10 }}>
@@ -149,7 +149,7 @@ export default function HomeHero({ productCount, products }: { productCount: num
         <div className="container" style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '24px 24px', gap: 20, flexWrap: 'wrap',
-        }}>
+        }} data-guarantee="">
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <div style={{
               width: 48, height: 48, flexShrink: 0,
@@ -167,7 +167,7 @@ export default function HomeHero({ productCount, products }: { productCount: num
               </div>
             </div>
           </div>
-          <Link href="/returns" className="btn-outline-light" style={{ fontSize: 12, padding: '10px 20px', whiteSpace: 'nowrap' }}>
+          <Link href="/returns" data-guarantee-btn="" className="btn-outline-light" style={{ fontSize: 12, padding: '10px 20px', whiteSpace: 'nowrap' }}>
             {lang === 'th' ? 'ดูเงื่อนไขการรับประกัน' : lang === 'zh' ? '查看保证条款' : 'View Guarantee Terms'}
           </Link>
         </div>
@@ -186,6 +186,17 @@ export default function HomeHero({ productCount, products }: { productCount: num
       <style>{`
         @media (max-width: 768px) {
           [data-grid="trust-bar"], [data-grid="cats"] { grid-template-columns: repeat(2,1fr) !important; }
+          [data-hero-inner] { padding: 48px 20px !important; }
+          [data-cats-section] { padding: 40px 16px !important; }
+          [data-tag-pill] { font-size: 10px !important; padding: 6px 12px !important; text-align: center !important; }
+          [data-guarantee] { flex-direction: column !important; align-items: flex-start !important; }
+          [data-guarantee-btn] { width: 100% !important; text-align: center !important; }
+          [data-trust-item]:nth-child(2n) { border-right: none !important; }
+          [data-trust-item]:nth-child(1),
+          [data-trust-item]:nth-child(2) { border-bottom: 1px solid #1E1508 !important; }
+        }
+        @media (max-width: 400px) {
+          [data-tag-pill] { font-size: 9px !important; }
         }
       `}</style>
     </>
@@ -194,7 +205,7 @@ export default function HomeHero({ productCount, products }: { productCount: num
 
 function TrustItem({ icon, t1, t2 }: { icon: string; t1: string; t2: string }) {
   return (
-    <div style={{
+    <div data-trust-item="" style={{
       padding: '20px 16px', textAlign: 'center',
       borderRight: '1px solid #1E1508',
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
