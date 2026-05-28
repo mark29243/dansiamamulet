@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useLang } from '@/components/LangProvider';
 
 export default function HomeHero({ productCount }: { productCount: number }) {
@@ -12,86 +11,64 @@ export default function HomeHero({ productCount }: { productCount: number }) {
       {/* ─── Hero ─────────────────────────────────────────────── */}
       <section style={{
         background: 'linear-gradient(135deg, #0D0804 0%, #1A1208 55%, #201608 100%)',
-        minHeight: 520, display: 'flex', alignItems: 'center',
+        minHeight: 480, display: 'flex', alignItems: 'center',
         position: 'relative', overflow: 'hidden',
       }}>
-        {/* glow behind image */}
+        {/* center glow */}
         <div style={{
-          position: 'absolute', right: '10%', top: '50%', transform: 'translateY(-50%)',
-          width: 420, height: 420, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%)',
+          position: 'absolute', left: '50%', top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 600, height: 400, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(201,168,76,0.10) 0%, transparent 70%)',
           pointerEvents: 'none',
         }} />
 
         <div className="container animate-fade-up" style={{
-          position: 'relative', zIndex: 2, padding: '60px 24px',
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'center',
-        }} data-hero-grid="">
-          {/* Left: text */}
-          <div>
-            {/* tag pill */}
-            <div style={{
-              display: 'inline-flex', gap: 6, marginBottom: 20,
-              background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
-              padding: '6px 14px', borderRadius: 100,
-              fontSize: 11, color: 'var(--gold-light)', letterSpacing: 0.5,
-            }}>
-              {lang === 'th' ? 'พระแท้ · รับประกันทุกองค์ · ส่งรวดเร็ว 100%'
-                : lang === 'zh' ? '正品佛牌 · 全件保证 · 快速配送'
-                : 'Authentic · Certified · Fast Worldwide Shipping'}
-            </div>
-
-            <h1 className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'} style={{
-              fontSize: 'clamp(30px, 4.5vw, 50px)', fontWeight: 700,
-              color: '#fff', lineHeight: 1.15, marginBottom: 16,
-            }}>
-              {lang === 'th' ? (
-                <>พระเครื่องไทยแท้<br /><span style={{ color: 'var(--gold)' }}>จากเกจิชั้นนำ</span></>
-              ) : lang === 'zh' ? (
-                <>正品泰国佛牌<br /><span style={{ color: 'var(--gold)' }}>源自著名高僧</span></>
-              ) : (
-                <><span style={{ fontStyle: 'italic', fontWeight: 300 }}>Authentic Thai</span><br />
-                  <span style={{ color: 'var(--gold)', fontStyle: 'italic' }}>Sacred Amulets</span></>
-              )}
-            </h1>
-
-            <p style={{ fontSize: 14, color: '#9A8060', lineHeight: 1.8, marginBottom: 32, maxWidth: 400 }}>
-              {lang === 'th'
-                ? 'คัดสรรพระแท้จากเกจิดังทั่วประเทศไทย ทุกองค์รับประกันความแท้'
-                : lang === 'zh'
-                ? '精选自泰国著名高僧的正品佛牌，每件均提供真品保证'
-                : 'Authentic amulets sourced from Thailand\'s most revered monks, every piece certified genuine.'}
-            </p>
-
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link href="/shop" className="btn-gold">
-                🎁 {lang === 'th' ? 'ดูสินค้าทั้งหมด' : lang === 'zh' ? '查看全部' : 'Browse All'}
-              </Link>
-              <Link href="/about" className="btn-outline-light">
-                {lang === 'th' ? 'เกี่ยวกับเรา' : lang === 'zh' ? '关于我们' : 'About Us'}
-              </Link>
-            </div>
+          position: 'relative', zIndex: 2, padding: '72px 24px',
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          textAlign: 'center',
+        }}>
+          {/* tag pill */}
+          <div style={{
+            display: 'inline-flex', gap: 6, marginBottom: 24,
+            background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
+            padding: '7px 18px', borderRadius: 100,
+            fontSize: 12, color: 'var(--gold-light)', letterSpacing: 1,
+          }}>
+            {lang === 'th' ? 'พระแท้ · รับประกันทุกองค์ · ส่งรวดเร็ว 100%'
+              : lang === 'zh' ? '正品佛牌 · 全件保证 · 快速配送'
+              : 'Authentic · Certified · Fast Worldwide Shipping'}
           </div>
 
-          {/* Right: hero image */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <div style={{
-              position: 'relative',
-              width: 260, height: 320,
-              borderRadius: 'var(--radius-lg)',
-              overflow: 'hidden',
-              boxShadow: '0 0 40px rgba(201,168,76,0.15), 0 20px 60px rgba(0,0,0,0.4)',
-              border: '1px solid rgba(201,168,76,0.2)',
-            }}>
-              <Image
-                src="/hero-amulet.jpg"
-                alt="พระเครื่องแท้"
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'center' }}
-                priority
-                unoptimized
-              />
-            </div>
+          <h1 className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'} style={{
+            fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700,
+            color: '#fff', lineHeight: 1.2, marginBottom: 20,
+          }}>
+            {lang === 'th' ? (
+              <>พระเครื่องไทยแท้<br /><span style={{ color: 'var(--gold)' }}>จากเกจิชั้นนำ</span></>
+            ) : lang === 'zh' ? (
+              <>正品泰国佛牌<br /><span style={{ color: 'var(--gold)' }}>源自著名高僧</span></>
+            ) : (
+              <><span style={{ fontStyle: 'italic', fontWeight: 300 }}>Authentic Thai</span><br />
+                <span style={{ color: 'var(--gold)', fontStyle: 'italic' }}>Sacred Amulets</span></>
+            )}
+          </h1>
+
+          <p style={{ fontSize: 15, color: '#9A8060', lineHeight: 1.8, marginBottom: 36, maxWidth: 480 }}>
+            {lang === 'th'
+              ? 'คัดสรรพระแท้จากเกจิดังทั่วประเทศไทย ทุกองค์รับประกันความแท้'
+              : lang === 'zh'
+              ? '精选自泰国著名高僧的正品佛牌，每件均提供真品保证'
+              : 'Authentic amulets sourced from Thailand\'s most revered monks, every piece certified genuine.'}
+          </p>
+
+          <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Link href="/shop" className="btn-gold">
+              🎁 {lang === 'th' ? 'ดูสินค้าทั้งหมด' : lang === 'zh' ? '查看全部' : 'Browse All'}
+            </Link>
+            <Link href="/about" className="btn-outline-light">
+              {lang === 'th' ? 'เกี่ยวกับเรา' : lang === 'zh' ? '关于我们' : 'About Us'}
+            </Link>
           </div>
         </div>
       </section>
@@ -192,10 +169,6 @@ export default function HomeHero({ productCount }: { productCount: number }) {
       <style>{`
         @media (max-width: 768px) {
           [data-grid="trust-bar"], [data-grid="cats"] { grid-template-columns: repeat(2,1fr) !important; }
-        }
-        @media (max-width: 540px) {
-          [data-hero-grid] { grid-template-columns: 1fr !important; }
-          [data-hero-grid] > div:last-child { display: none !important; }
         }
       `}</style>
     </>
