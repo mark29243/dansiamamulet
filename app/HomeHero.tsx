@@ -129,9 +129,9 @@ export default function HomeHero({ productCount }: { productCount: number }) {
               sub={lang === 'th' ? 'ยอดนิยม' : lang === 'zh' ? '最受欢迎' : 'Most Popular'}
               cat="พระสมเด็จ" />
             <CatCard
-              name={lang === 'th' ? 'หลวงพ่อทวด' : 'Luang Pu Tuad'}
+              name={lang === 'th' ? 'หลวงพ่อทวด' : lang === 'zh' ? '龙普托' : 'Luang Pu Tuad'}
               sub={lang === 'th' ? 'นิยมสะสม' : lang === 'zh' ? '收藏热门' : "Collector's Choice"}
-              cat="รูปหล่อ" />
+              cat="หลวงพ่อทวด" />
             <CatCard
               name={lang === 'th' ? 'เหรียญยอดนิยม' : lang === 'zh' ? '热门圣币' : 'Popular Coins'}
               sub={lang === 'th' ? 'หายาก' : lang === 'zh' ? '稀有' : 'Rare Pieces'}
@@ -139,7 +139,7 @@ export default function HomeHero({ productCount }: { productCount: number }) {
             <CatCard
               name={lang === 'th' ? 'พระเกจิอาจารย์' : lang === 'zh' ? '高僧佛牌' : 'Monk Amulets'}
               sub={lang === 'th' ? 'ทั่วประเทศ' : lang === 'zh' ? '全国各地' : 'Nationwide'}
-              cat="พระผง" />
+              cat="พระเกจิอาจารย์" />
           </div>
         </div>
       </div>

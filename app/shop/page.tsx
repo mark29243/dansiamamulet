@@ -29,7 +29,7 @@ async function getProducts(): Promise<Product[]> {
   return (data ?? []) as Product[];
 }
 
-export default async function ShopPage() {
+export default async function ShopPage({ searchParams }: { searchParams?: { category?: string } }) {
   const products = await getProducts();
-  return <HomeShop products={products} />;
+  return <HomeShop products={products} defaultCategory={searchParams?.category} />;
 }

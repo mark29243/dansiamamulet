@@ -20,12 +20,12 @@ async function getProducts(): Promise<Product[]> {
   return (data ?? []) as Product[];
 }
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: { searchParams?: { category?: string } }) {
   const products = await getProducts();
   return (
     <>
       <HomeHero productCount={products.length} />
-      <HomeShop products={products} />
+      <HomeShop products={products} defaultCategory={searchParams?.category} />
     </>
   );
 }

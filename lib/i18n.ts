@@ -346,6 +346,8 @@ export const categoryNames: Record<string, { th: string; en: string; zh: string 
   'เครื่องราง': { th: 'เครื่องราง', en: 'Talisman',      zh: '护身符' },
   'พระผง':      { th: 'พระผง',      en: 'Powder Amulet', zh: '粉末佛牌' },
   'พระนางพญา':  { th: 'พระนางพญา',  en: 'Nang Phaya',    zh: '南帕雅' },
+  'หลวงพ่อทวด': { th: 'หลวงพ่อทวด', en: 'Luang Pu Tuad', zh: '龙普托' },
+  'พระเกจิอาจารย์': { th: 'พระเกจิอาจารย์', en: 'Monk Amulets', zh: '高僧佛牌' },
 };
 
 export function getCatName(cat: string, lang: Lang): string {

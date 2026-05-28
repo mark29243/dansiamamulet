@@ -10,7 +10,7 @@ import type { Product } from '@/lib/types';
 
 const PER_PAGE = 12;
 
-export default function HomeShop({ products }: { products: Product[] }) {
+export default function HomeShop({ products, defaultCategory }: { products: Product[]; defaultCategory?: string }) {
   const { lang } = useLang();
   const t = getDict(lang);
   const [search, setSearch] = useState('');
@@ -20,7 +20,7 @@ export default function HomeShop({ products }: { products: Product[] }) {
   const [quickView, setQuickView] = useState<Product | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  const CAT_ORDER = ['เหรียญ', 'พระสมเด็จ', 'พระปิดตา', 'รูปหล่อ', 'พระกริ่ง', 'เครื่องราง', 'พระผง', 'พระนางพญา'];
+  const CAT_ORDER = ['พระสมเด็จ', 'หลวงพ่อทวด', 'เหรียญ', 'พระเกจิอาจารย์', 'พระปิดตา', 'รูปหล่อ', 'พระกริ่ง', 'เครื่องราง', 'พระผง', 'พระนางพญา'];
 
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
@@ -34,7 +34,7 @@ export default function HomeShop({ products }: { products: Product[] }) {
       });
   }, [products]);
 
-  const [selectedCats, setSelectedCats] = useState<string[]>([]);
+  const [selectedCats, setSelectedCats] = useState<string[]>(defaultCategory ? [defaultCategory] : []);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, Infinity]);
 
   const maxPrice = useMemo(() => Math.max(...products.map((p) => p.sale_price ?? p.price)) / 100, [products]);
