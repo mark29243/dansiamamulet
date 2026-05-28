@@ -76,7 +76,7 @@ export default function Footer() {
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.8, color: '#A08868', marginBottom: 16 }}>
               {lang === 'th'
-                ? 'จำหน่ายพระเครื่องแท้คุณภาพสูง คัดสรรจากวัดชั้นนำทั่วประเทศไทย พร้อมใบรับรองความแท้ทุกองค์ บริการ 3 ภาษา'
+                ? 'จำหน่ายพระเครื่องแท้ คัดสรรจากเกจิชั้นนำทั่วประเทศไทย พร้อมรับรองความแท้ทุกองค์ บริการ 3 ภาษา'
                 : lang === 'zh'
                 ? '精选自泰国各大著名寺庙的高品质正品佛牌，每件均附真品证书，提供三语客户服务。'
                 : 'Authentic Thai amulets of the finest quality, sourced from leading temples nationwide with a certificate of authenticity. Trilingual customer service.'}
