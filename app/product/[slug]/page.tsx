@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import ProductDetail from './ProductDetail';
+import ViewTracker from './ViewTracker';
 
 export const dynamic = 'force-dynamic';
 
@@ -122,6 +123,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <ViewTracker productId={p.id} />
       <ProductDetail product={p} related={(related ?? []) as unknown as Product[]} />
     </>
   );

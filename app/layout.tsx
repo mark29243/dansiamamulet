@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { LangProvider } from '@/components/LangProvider';
 import { CartProvider } from '@/components/CartProvider';
 import { ToastProvider } from '@/components/ToastProvider';
@@ -142,6 +143,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </CurrencyProvider>
           </ToastProvider>
         </LangProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -70,6 +70,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                 <Th>Category</Th>
                 <Th>Price</Th>
                 <Th>Stock</Th>
+                <Th>Views</Th>
                 <Th>Status</Th>
                 <Th></Th>
               </tr>
@@ -96,6 +97,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   </Td>
                   <Td>
                     <StockEditor productId={p.id} stock={p.stock} />
+                  </Td>
+                  <Td style={{ color: 'var(--text-muted)', fontSize: 12 }}>
+                    👁 {p.views ?? 0}
                   </Td>
                   <Td>
                     {p.stock === 0 ? <span className="badge badge-oos">OOS</span> : p.stock <= 3 ? <span className="badge badge-warning">LOW</span> : <span className="badge badge-success">OK</span>}
