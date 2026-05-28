@@ -1,8 +1,8 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMemo } from 'react';
 import { useLang } from '@/components/LangProvider';
 
 type MinProduct = { category: string; images?: string[] | null };
@@ -93,16 +93,16 @@ export default function HomeHero({ productCount, products }: { productCount: num
       {/* ─── Trust bar ────────────────────────────────────────── */}
       <div style={{ background: '#0F0B04', borderTop: '1px solid #2A1E08', borderBottom: '1px solid #2A1E08' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }} data-grid="trust-bar">
-          <TrustItem icon="🛡"
+          <TrustItem icon={<IconShieldCheck />}
             t1={lang === 'th' ? 'รับประกันพระแท้' : lang === 'zh' ? '正品保证' : 'Authenticity'}
             t2={lang === 'th' ? 'คืนเงินเต็มจำนวน' : lang === 'zh' ? '全额退款' : 'Full Refund'} />
-          <TrustItem icon="🚚"
+          <TrustItem icon={<IconTruck />}
             t1={lang === 'th' ? 'จัดส่งเร็ว ปลอดภัย' : lang === 'zh' ? '快速安全配送' : 'Fast & Safe'}
             t2={lang === 'th' ? 'แพ็คอย่างดี' : lang === 'zh' ? '精心包装' : 'Well Packed'} />
-          <TrustItem icon="✅"
+          <TrustItem icon={<IconAward />}
             t1={lang === 'th' ? 'เชื่อถือได้' : lang === 'zh' ? '值得信赖' : 'Trusted'}
             t2={lang === 'th' ? 'ประสบการณ์กว่า 20 ปี' : lang === 'zh' ? '20年以上经验' : '20+ Years Exp.'} />
-          <TrustItem icon="💬"
+          <TrustItem icon={<IconChat />}
             t1={lang === 'th' ? 'บริการลูกค้า' : lang === 'zh' ? '客户服务' : 'Customer Service'}
             t2={lang === 'th' ? 'ตอบไว เป็นกันเอง' : lang === 'zh' ? '快速友善回复' : 'Quick & Friendly'} />
         </div>
@@ -176,9 +176,9 @@ export default function HomeHero({ productCount, products }: { productCount: num
       {/* ─── Stats ────────────────────────────────────────────── */}
       <div style={{ background: 'var(--deep)', borderBottom: '1px solid #2A1E08' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)' }}>
-          <StatItem icon="📿" num={String(productCount)}
+          <StatItem icon={<IconAmulet />} num={String(productCount)}
             label={lang === 'th' ? 'พระเครื่อง\nรายการทั้งหมด' : lang === 'zh' ? '在售佛牌总数' : 'Total Amulets'} />
-          <StatItem icon="🏆" num="100%"
+          <StatItem icon={<IconStar />} num="100%"
             label={lang === 'th' ? 'ความพึงพอใจ\nจากลูกค้า' : lang === 'zh' ? '客户满意度' : 'Customer Satisfaction'} />
         </div>
       </div>
@@ -203,14 +203,14 @@ export default function HomeHero({ productCount, products }: { productCount: num
   );
 }
 
-function TrustItem({ icon, t1, t2 }: { icon: string; t1: string; t2: string }) {
+function TrustItem({ icon, t1, t2 }: { icon: React.ReactNode; t1: string; t2: string }) {
   return (
     <div data-trust-item="" style={{
       padding: '20px 16px', textAlign: 'center',
       borderRight: '1px solid #1E1508',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
     }}>
-      <span style={{ fontSize: 26 }}>{icon}</span>
+      <div style={{ color: 'var(--gold)', marginBottom: 2 }}>{icon}</div>
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--gold-light)' }}>{t1}</div>
       <div style={{ fontSize: 11, color: '#6B5730' }}>{t2}</div>
     </div>
@@ -253,16 +253,70 @@ function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: st
   );
 }
 
-function StatItem({ icon, num, label }: { icon: string; num: string; label: string }) {
+function StatItem({ icon, num, label }: { icon: React.ReactNode; num: string; label: string }) {
   return (
     <div style={{
       padding: '28px 16px', textAlign: 'center',
       borderRight: '1px solid #2A1E08',
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
     }}>
-      <span style={{ fontSize: 26, marginBottom: 4 }}>{icon}</span>
+      <div style={{ color: 'var(--gold)', marginBottom: 4 }}>{icon}</div>
       <div className="serif" style={{ fontSize: 30, fontWeight: 600, color: 'var(--gold)', lineHeight: 1 }}>{num}</div>
       <div style={{ fontSize: 11, color: '#6B5730', marginTop: 6, lineHeight: 1.5, whiteSpace: 'pre-line' }}>{label}</div>
     </div>
+  );
+}
+
+const S = 28;
+function IconShieldCheck() {
+  return (
+    <svg width={S} height={S} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+      <polyline points="9 12 11 14 15 10"/>
+    </svg>
+  );
+}
+function IconTruck() {
+  return (
+    <svg width={S} height={S} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="3" width="15" height="13" rx="1"/>
+      <path d="M16 8h4l3 5v4h-7V8z"/>
+      <circle cx="5.5" cy="18.5" r="2.5"/>
+      <circle cx="18.5" cy="18.5" r="2.5"/>
+    </svg>
+  );
+}
+function IconAward() {
+  return (
+    <svg width={S} height={S} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="9" r="7"/>
+      <polyline points="9 9 11 11 15 7"/>
+      <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>
+    </svg>
+  );
+}
+function IconChat() {
+  return (
+    <svg width={S} height={S} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      <circle cx="9" cy="11" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  );
+}
+function IconAmulet() {
+  return (
+    <svg width={S} height={S} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
+      <circle cx="12" cy="9" r="2.5"/>
+    </svg>
+  );
+}
+function IconStar() {
+  return (
+    <svg width={S} height={S} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
   );
 }
