@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLang } from '@/components/LangProvider';
 
 export default function HomeHero({ productCount }: { productCount: number }) {
@@ -72,19 +73,24 @@ export default function HomeHero({ productCount }: { productCount: number }) {
             </div>
           </div>
 
-          {/* Right: hero image (add later) */}
+          {/* Right: hero image */}
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{
+              position: 'relative',
               width: 260, height: 320,
-              background: 'rgba(201,168,76,0.04)',
-              border: '1px dashed rgba(201,168,76,0.2)',
               borderRadius: 'var(--radius-lg)',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              gap: 10, color: 'rgba(201,168,76,0.25)', fontSize: 12,
+              overflow: 'hidden',
+              boxShadow: '0 0 40px rgba(201,168,76,0.15), 0 20px 60px rgba(0,0,0,0.4)',
+              border: '1px solid rgba(201,168,76,0.2)',
             }}>
-              <span style={{ fontSize: 52 }}>🙏</span>
-              <span>เพิ่มรูปพระได้ภายหลัง</span>
+              <Image
+                src="/hero-amulet.jpg"
+                alt="พระเครื่องแท้"
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+                priority
+                unoptimized
+              />
             </div>
           </div>
         </div>
