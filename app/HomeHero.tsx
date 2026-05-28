@@ -1,10 +1,27 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { useMemo } from 'react';
 import { useLang } from '@/components/LangProvider';
 
-export default function HomeHero({ productCount }: { productCount: number }) {
+type MinProduct = { category: string; images?: string[] | null };
+
+function pickImage(products: MinProduct[], cat: string): string | null {
+  const pool = products.filter((p) => p.category === cat && p.images?.[0]);
+  if (!pool.length) return null;
+  return pool[Math.floor(Math.random() * pool.length)].images![0];
+}
+
+export default function HomeHero({ productCount, products }: { productCount: number; products: MinProduct[] }) {
   const { lang } = useLang();
+
+  const catImages = useMemo(() => ({
+    'พระสมเด็จ': pickImage(products, 'พระสมเด็จ'),
+    'หลวงพ่อทวด': pickImage(products, 'หลวงพ่อทวด'),
+    'เหรียญ': pickImage(products, 'เหรียญ'),
+    'พระเกจิอาจารย์': pickImage(products, 'พระเกจิอาจารย์'),
+  }), [products]);
 
   return (
     <>
@@ -110,19 +127,19 @@ export default function HomeHero({ productCount }: { productCount: number }) {
             <CatCard
               name={lang === 'th' ? 'พระสมเด็จ' : lang === 'zh' ? '崇迪佛牌' : 'Phra Somdej'}
               sub={lang === 'th' ? 'ยอดนิยม' : lang === 'zh' ? '最受欢迎' : 'Most Popular'}
-              cat="พระสมเด็จ" />
+              cat="พระสมเด็จ" image={catImages['พระสมเด็จ']} />
             <CatCard
               name={lang === 'th' ? 'หลวงพ่อทวด' : lang === 'zh' ? '龙普托' : 'Luang Pu Tuad'}
               sub={lang === 'th' ? 'นิยมสะสม' : lang === 'zh' ? '收藏热门' : "Collector's Choice"}
-              cat="หลวงพ่อทวด" />
+              cat="หลวงพ่อทวด" image={catImages['หลวงพ่อทวด']} />
             <CatCard
               name={lang === 'th' ? 'เหรียญยอดนิยม' : lang === 'zh' ? '热门圣币' : 'Popular Coins'}
               sub={lang === 'th' ? 'หายาก' : lang === 'zh' ? '稀有' : 'Rare Pieces'}
-              cat="เหรียญ" />
+              cat="เหรียญ" image={catImages['เหรียญ']} />
             <CatCard
               name={lang === 'th' ? 'พระเกจิอาจารย์' : lang === 'zh' ? '高僧佛牌' : 'Monk Amulets'}
               sub={lang === 'th' ? 'ทั่วประเทศ' : lang === 'zh' ? '全国各地' : 'Nationwide'}
-              cat="พระเกจิอาจารย์" />
+              cat="พระเกจิอาจารย์" image={catImages['พระเกจิอาจารย์']} />
           </div>
         </div>
       </div>
@@ -189,7 +206,7 @@ function TrustItem({ icon, t1, t2 }: { icon: string; t1: string; t2: string }) {
   );
 }
 
-function CatCard({ name, sub, cat }: { name: string; sub: string; cat: string }) {
+function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: string; image?: string | null }) {
   return (
     <Link href={`/shop?category=${encodeURIComponent(cat)}`} style={{ textDecoration: 'none' }}>
       <div
@@ -208,8 +225,13 @@ function CatCard({ name, sub, cat }: { name: string; sub: string; cat: string })
           background: 'rgba(201,168,76,0.03)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           borderBottom: '1px solid #2A1E08',
+          position: 'relative', overflow: 'hidden',
         }}>
-          <span style={{ fontSize: 44, opacity: 0.25 }}>🙏</span>
+          {image ? (
+            <Image src={image} alt={name} fill style={{ objectFit: 'cover' }} unoptimized />
+          ) : (
+            <span style={{ fontSize: 44, opacity: 0.25 }}>🙏</span>
+          )}
         </div>
         <div style={{ padding: '12px 14px' }}>
           <div className="serif" style={{ fontSize: 13, fontWeight: 600, color: 'var(--gold-light)', marginBottom: 2 }}>{name}</div>

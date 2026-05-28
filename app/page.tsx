@@ -24,7 +24,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { cate
   const products = await getProducts();
   return (
     <>
-      <HomeHero productCount={products.length} />
+      <HomeHero productCount={products.length} products={products} />
       <HomeShop products={products} defaultCategory={searchParams?.category} />
     </>
   );
