@@ -80,8 +80,8 @@ export default function HomeHero({ productCount, products }: { productCount: num
           </p>
 
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link href="/shop" className="btn-gold">
-              🎁 {lang === 'th' ? 'ดูสินค้าทั้งหมด' : lang === 'zh' ? '查看全部' : 'Browse All'}
+            <Link href="/shop" className="btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <IconShop /> {lang === 'th' ? 'ดูสินค้าทั้งหมด' : lang === 'zh' ? '查看全部' : 'Browse All'}
             </Link>
             <Link href="/about" className="btn-outline-light">
               {lang === 'th' ? 'เกี่ยวกับเรา' : lang === 'zh' ? '关于我们' : 'About Us'}
@@ -154,8 +154,8 @@ export default function HomeHero({ productCount, products }: { productCount: num
             <div style={{
               width: 48, height: 48, flexShrink: 0,
               background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
-              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
-            }}>🛡</div>
+              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--gold)',
+            }}><IconShieldCheck /></div>
             <div>
               <div className="serif" style={{ fontSize: 15, fontWeight: 600, color: 'var(--gold)', marginBottom: 2 }}>
                 {lang === 'th' ? 'รับประกันความแท้ 100%' : lang === 'zh' ? '100%正品保证' : '100% Authenticity Guarantee'}
@@ -302,6 +302,15 @@ function IconChat() {
       <circle cx="9" cy="11" r="1" fill="currentColor" stroke="none"/>
       <circle cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
       <circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  );
+}
+function IconShop() {
+  return (
+    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
     </svg>
   );
 }
