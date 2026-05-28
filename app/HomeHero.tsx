@@ -101,7 +101,7 @@ export default function HomeHero({ productCount }: { productCount: number }) {
             t2={lang === 'th' ? 'แพ็คอย่างดี' : lang === 'zh' ? '精心包装' : 'Well Packed'} />
           <TrustItem icon="✅"
             t1={lang === 'th' ? 'เชื่อถือได้' : lang === 'zh' ? '值得信赖' : 'Trusted'}
-            t2={lang === 'th' ? 'ประสบการณ์กว่า 10 ปี' : lang === 'zh' ? '10年以上经验' : '10+ Years Exp.'} />
+            t2={lang === 'th' ? 'ประสบการณ์กว่า 20 ปี' : lang === 'zh' ? '20年以上经验' : '20+ Years Exp.'} />
           <TrustItem icon="💬"
             t1={lang === 'th' ? 'บริการลูกค้า' : lang === 'zh' ? '客户服务' : 'Customer Service'}
             t2={lang === 'th' ? 'ตอบไว เป็นกันเอง' : lang === 'zh' ? '快速友善回复' : 'Quick & Friendly'} />
