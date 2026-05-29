@@ -18,10 +18,10 @@ const CONTENT = {
       title: '↩ เงื่อนไขการคืนสินค้า',
       items: [
         { icon: <IcoClock size={22} />, title: 'ระยะเวลา', text: 'แจ้งคืนภายใน 7 วันหลังได้รับสินค้า' },
-        { icon: <IcoCheck size={22} />, title: 'เงื่อนไขสินค้า', text: 'สินค้าต้องอยู่ในสภาพเดิม ไม่มีร่องรอยการใช้งาน ครบพร้อมใบรับรอง' },
+        { icon: <IcoCheck size={22} />, title: 'เงื่อนไขสินค้า', text: 'สินค้าต้องอยู่ในสภาพเดิม ไม่มีร่องรอยการใช้งาน' },
         { icon: <IcoSearch size={22} />, title: 'เหตุผล', text: 'รับคืนเฉพาะกรณีที่พิสูจน์ได้ว่าสินค้าไม่แท้เท่านั้น' },
         { icon: <IcoMoney size={22} />, title: 'การคืนเงิน', text: 'คืนเงินเต็มจำนวนภายใน 5-7 วันทำการ หลังได้รับสินค้าคืน' },
-        { icon: <IcoPackage size={22} />, title: 'ค่าส่งคืน', text: 'ลูกค้าเป็นผู้รับผิดชอบค่าส่งสินค้าคืน ยกเว้นกรณีที่ร้านส่งผิด' },
+        { icon: <IcoPackage size={22} />, title: 'ค่าส่งคืน', text: 'ทางร้านเป็นผู้รับผิดชอบค่าส่งสินค้าคืน' },
       ] as ReturnItem[],
     },
     process: {
@@ -46,10 +46,10 @@ const CONTENT = {
       title: '↩ Return Policy',
       items: [
         { icon: <IcoClock size={22} />, title: 'Time Limit', text: 'Contact us within 7 days of receiving your order' },
-        { icon: <IcoCheck size={22} />, title: 'Condition', text: 'Item must be in original condition with no signs of use, including certificate' },
+        { icon: <IcoCheck size={22} />, title: 'Condition', text: 'Item must be in original condition with no signs of use' },
         { icon: <IcoSearch size={22} />, title: 'Reason', text: 'Returns accepted only if the item is proven to be inauthentic' },
         { icon: <IcoMoney size={22} />, title: 'Refund', text: 'Full refund within 5-7 business days after we receive the item back' },
-        { icon: <IcoPackage size={22} />, title: 'Return Shipping', text: 'Buyer covers return shipping costs, unless the wrong item was sent' },
+        { icon: <IcoPackage size={22} />, title: 'Return Shipping', text: 'We cover all return shipping costs' },
       ] as ReturnItem[],
     },
     process: {
@@ -74,10 +74,10 @@ const CONTENT = {
       title: '↩ 退货政策',
       items: [
         { icon: <IcoClock size={22} />, title: '时限', text: '收到商品后7天内联系我们' },
-        { icon: <IcoCheck size={22} />, title: '商品状态', text: '商品必须保持原始状态，无使用痕迹，附真品证书' },
+        { icon: <IcoCheck size={22} />, title: '商品状态', text: '商品必须保持原始状态，无使用痕迹' },
         { icon: <IcoSearch size={22} />, title: '原因', text: '仅接受经证明为非正品的退货' },
         { icon: <IcoMoney size={22} />, title: '退款', text: '收到退货后5-7个工作日内全额退款' },
-        { icon: <IcoPackage size={22} />, title: '退货运费', text: '买家承担退货运费，除非发错商品' },
+        { icon: <IcoPackage size={22} />, title: '退货运费', text: '店铺承担退货运费' },
       ] as ReturnItem[],
     },
     process: {
