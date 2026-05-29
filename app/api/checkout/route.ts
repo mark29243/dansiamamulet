@@ -99,7 +99,7 @@ export async function POST(req: Request) {
     const subtotal = canonicalItems.reduce((s, i) => s + i.price * i.qty, 0);
 
     // Re-verify free shipping eligibility using server-computed subtotal
-    if (customer.country === 'TH' && shipping_cost === 0 && subtotal < 500_000) {
+    if (customer.country === 'TH' && shipping_cost === 0 && subtotal < 70_000) {
       return NextResponse.json({ error: 'Order does not qualify for free shipping' }, { status: 400 });
     }
 

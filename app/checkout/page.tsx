@@ -11,7 +11,7 @@ import { formatPrice } from '@/lib/utils';
 import type { ShippingOption, CarrierCode } from '@/lib/shipping';
 import { IcoLock, IcoWarning } from '@/components/icons';
 
-const FREE_SHIPPING_THRESHOLD = 500000; // ฿5,000 domestic only
+const FREE_SHIPPING_THRESHOLD = 70000; // ฿700 domestic only
 
 export default function CheckoutPage() {
   const { items, subtotal } = useCart();
