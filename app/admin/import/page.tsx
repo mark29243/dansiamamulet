@@ -124,7 +124,6 @@ export default function ImportPage() {
     if (!nameTh || !price) { setError('กรุณากรอกชื่อสินค้าและราคา'); return; }
     setSaving(true); setError('');
     const tempSlug = `draft-${Date.now()}`;
-    const cat = autoCategory(nameTh.toLowerCase());
     try {
       const res = await fetch('/api/admin/products', {
         method: 'POST',
@@ -136,7 +135,7 @@ export default function ImportPage() {
           price: parseFloat(price) * 100,
           sale_price: null,
           stock: 1,
-          category: cat,
+          category,
           description: note,
           description_th: note,
           short: '',
@@ -262,6 +261,21 @@ export default function ImportPage() {
               value={nameTh}
               onChange={(e) => setNameTh(e.target.value)}
             />
+          </div>
+
+          {/* Category */}
+          <div>
+            <div style={labelStyle}>หมวดหมู่ *</div>
+            <select
+              className="input"
+              style={{ fontSize: 15 }}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
           </div>
 
           {/* Price */}
