@@ -40,23 +40,27 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 200px)', background: 'var(--cream)', paddingTop: 44 }}>
-      {/* Admin nav — fixed at very top */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: 'var(--deep)', borderBottom: '1px solid #2A1E08', overflowX: 'auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '10px 20px', minWidth: 'max-content' }}>
-          <div className="serif" style={{ color: 'var(--gold)', fontSize: 14, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', fontStyle: 'italic', flexShrink: 0 }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoSettings size={14} /> Admin</span>
+    <div style={{ minHeight: 'calc(100vh - 200px)', background: 'var(--cream)', paddingTop: 36 }}>
+      {/* Top strip — fixed, above everything */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: 'var(--deep)', borderBottom: '1px solid #2A1E08' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 20px' }}>
+          <div className="serif" style={{ color: 'var(--gold)', fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', fontStyle: 'italic' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoSettings size={13} /> Admin</span>
           </div>
-          <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-            <a href="/admin" style={adminNavStyle}>Dashboard</a>
-            <a href="/admin/orders" style={adminNavStyle}>Orders</a>
-            <a href="/admin/products" style={adminNavStyle}>Products</a>
-            <a href="/admin/import" style={adminNavStyle}>Import</a>
-            <a href="/admin/reviews" style={adminNavStyle}>Reviews</a>
-          </nav>
-          <div style={{ fontSize: 11, color: '#6B5730', flexShrink: 0 }}>
+          <div style={{ fontSize: 11, color: '#8B7040' }}>
             {admin.email} · <span className="serif" style={{ color: 'var(--gold)', letterSpacing: 1, textTransform: 'uppercase' }}>{admin.role}</span>
           </div>
+        </div>
+      </div>
+
+      {/* Nav links — normal flow, below site header */}
+      <div style={{ background: 'var(--deep)', borderBottom: '1px solid #2A1E08', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', gap: 16, padding: '12px 20px', minWidth: 'max-content' }}>
+          <a href="/admin" style={adminNavStyle}>Dashboard</a>
+          <a href="/admin/orders" style={adminNavStyle}>Orders</a>
+          <a href="/admin/products" style={adminNavStyle}>Products</a>
+          <a href="/admin/import" style={adminNavStyle}>Import</a>
+          <a href="/admin/reviews" style={adminNavStyle}>Reviews</a>
         </div>
       </div>
 
