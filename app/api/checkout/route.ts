@@ -5,6 +5,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 import type { CartItem } from '@/lib/types';
 import { rateLimit, getIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/csrf';
+import { validateShipping, type CarrierCode } from '@/lib/shipping';
 
 export const runtime = 'nodejs';
 
@@ -21,6 +22,7 @@ type Body = {
     country: string;
   };
   shipping_cost: number;
+  carrier?: CarrierCode;
   lang: 'th' | 'en' | 'zh';
   payment_method?: 'card' | 'alipay';
 };
@@ -35,7 +37,7 @@ export async function POST(req: Request) {
     }
 
     const body = (await req.json()) as Body;
-    const { items, customer, shipping_cost, lang, payment_method = 'card' } = body;
+    const { items, customer, shipping_cost, carrier, lang, payment_method = 'card' } = body;
 
     if (!items?.length) {
       return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
@@ -45,6 +47,22 @@ export async function POST(req: Request) {
     }
     if (typeof shipping_cost !== 'number' || shipping_cost < 0 || shipping_cost > 100_000_00) {
       return NextResponse.json({ error: 'Invalid shipping cost' }, { status: 400 });
+    }
+
+    // Server-side shipping validation: recalculate and verify the sent cost
+    const totalQty = items.reduce((s, i) => s + (i.qty ?? 1), 0);
+    const effectiveCarrier = carrier ?? (customer.country === 'TH' ? 'domestic' : null);
+    if (!effectiveCarrier) {
+      return NextResponse.json({ error: 'Shipping carrier is required' }, { status: 400 });
+    }
+    const expectedCost = validateShipping(customer.country, effectiveCarrier, totalQty);
+    if (expectedCost === null) {
+      return NextResponse.json({ error: 'Invalid shipping method for this destination' }, { status: 400 });
+    }
+    // Allow ฿0 free-shipping override for domestic orders over threshold
+    const isFreeShipping = customer.country === 'TH' && shipping_cost === 0;
+    if (!isFreeShipping && Math.abs(shipping_cost - expectedCost) > 500) {
+      return NextResponse.json({ error: 'Shipping cost does not match the calculated rate' }, { status: 400 });
     }
 
     // Re-validate inventory + prices from DB (don't trust client)
@@ -139,6 +157,7 @@ export async function POST(req: Request) {
         items: canonicalItems,
         subtotal,
         shipping_cost,
+        shipping_carrier: effectiveCarrier,
         total,
         currency: isAlipay ? 'cny' : 'thb',
         status: payment_method === 'alipay' ? 'pending_alipay' : 'pending',

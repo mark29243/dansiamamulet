@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '@/components/CartProvider';
 import { useLang } from '@/components/LangProvider';
 import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
-import { formatPrice, calcShipping } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
+import type { ShippingOption, CarrierCode } from '@/lib/shipping';
 import { IcoLock, IcoWarning } from '@/components/icons';
 
-const FREE_SHIPPING_THRESHOLD = 500000;
+const FREE_SHIPPING_THRESHOLD = 500000; // ฿5,000 domestic only
 
 export default function CheckoutPage() {
   const { items, subtotal } = useCart();
@@ -27,15 +28,54 @@ export default function CheckoutPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Shipping
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [shippingMethod, setShippingMethod] = useState<CarrierCode | null>(null);
+  const [fetchingRates, setFetchingRates] = useState(false);
+
+  const totalQty = items.reduce((s, i) => s + i.qty, 0);
+
+  // Fetch shipping options whenever country or qty changes
+  const fetchRates = useCallback(async (country: string, qty: number) => {
+    setFetchingRates(true);
+    try {
+      const res = await fetch(`/api/shipping-rates?country=${country}&qty=${qty}`);
+      const data = await res.json();
+      const opts: ShippingOption[] = data.options ?? [];
+      setShippingOptions(opts);
+      // Auto-select: domestic → only option; international → epacket if available, else spa
+      if (opts.length === 1) {
+        setShippingMethod(opts[0].carrier);
+      } else if (opts.length > 1) {
+        const preferred = opts.find((o) => o.carrier === 'epacket') ?? opts[0];
+        setShippingMethod(preferred.carrier);
+      } else {
+        setShippingMethod(null);
+      }
+    } catch {
+      setShippingOptions([]);
+      setShippingMethod(null);
+    } finally {
+      setFetchingRates(false);
+    }
+  }, []);
+
   useEffect(() => {
     setMounted(true);
     if (items.length === 0) router.replace('/cart');
   }, [items.length, router]);
 
+  useEffect(() => {
+    if (mounted && form.country) {
+      fetchRates(form.country, totalQty);
+    }
+  }, [form.country, totalQty, mounted, fetchRates]);
+
   if (!mounted || items.length === 0) return null;
 
-  const baseShipping = calcShipping(form.country, items.length);
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : baseShipping;
+  const selectedOption = shippingOptions.find((o) => o.carrier === shippingMethod);
+  const baseShipping = selectedOption?.cost ?? 0;
+  const shipping = (form.country === 'TH' && subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : baseShipping;
   const total = subtotal + shipping;
 
   function validate() {
@@ -47,6 +87,7 @@ export default function CheckoutPage() {
     if (!form.address.trim()) e.address = t.common.required;
     if (!form.city.trim()) e.city = t.common.required;
     if (!form.postal.trim()) e.postal = t.common.required;
+    if (form.country !== 'TH' && !shippingMethod) e.shipping = lang === 'th' ? 'กรุณาเลือกวิธีการจัดส่ง' : lang === 'zh' ? '请选择运输方式' : 'Please select a shipping method';
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -55,7 +96,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!validate()) {
       toast(lang === 'th' ? 'กรุณากรอกข้อมูลให้ครบ' : lang === 'zh' ? '请填写所有必填项' : 'Please fill in all required fields', 'error');
-      const firstErr = document.querySelector('.input.error');
+      const firstErr = document.querySelector('.input.error, .shipping-error');
       firstErr?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
@@ -65,7 +106,14 @@ export default function CheckoutPage() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, customer: form, shipping_cost: shipping, lang, payment_method: paymentMethod }),
+        body: JSON.stringify({
+          items,
+          customer: form,
+          shipping_cost: shipping,
+          carrier: shippingMethod,
+          lang,
+          payment_method: paymentMethod,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Checkout failed');
@@ -88,6 +136,9 @@ export default function CheckoutPage() {
       setErrors(next);
     }
   }
+
+  const shippingLabel = lang === 'th' ? 'วิธีการจัดส่ง' : lang === 'zh' ? '运输方式' : 'Shipping Method';
+  const daysLabel = lang === 'th' ? 'วัน' : lang === 'zh' ? '天' : 'days';
 
   return (
     <div className="container" style={{ padding: '24px 24px 80px', maxWidth: 1100 }}>
@@ -164,6 +215,82 @@ export default function CheckoutPage() {
               </select>
             </Field>
 
+            {/* Shipping method selector */}
+            {form.country !== 'TH' && (
+              <div style={{ marginBottom: 14 }}>
+                <label className="label">
+                  {shippingLabel} <span className="required">*</span>
+                </label>
+                {fetchingRates ? (
+                  <div style={{ padding: '16px 0', display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: 13 }}>
+                    <span className="spinner" style={{ width: 16, height: 16 }} />
+                    {lang === 'th' ? 'กำลังคำนวณค่าส่ง…' : lang === 'zh' ? '计算运费中…' : 'Calculating shipping…'}
+                  </div>
+                ) : shippingOptions.length === 0 ? (
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)', padding: '10px 0' }}>
+                    {lang === 'th' ? 'ไม่รองรับการจัดส่งไปยังประเทศนี้' : lang === 'zh' ? '暂不支持配送至此国家' : 'Shipping not available for this country'}
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {shippingOptions.map((opt) => {
+                      const selected = shippingMethod === opt.carrier;
+                      return (
+                        <button
+                          key={opt.carrier}
+                          type="button"
+                          onClick={() => {
+                            setShippingMethod(opt.carrier);
+                            if (errors.shipping) setErrors((p) => { const n = { ...p }; delete n.shipping; return n; });
+                          }}
+                          style={{
+                            padding: '14px 18px',
+                            border: `2px solid ${selected ? 'var(--gold)' : errors.shipping ? '#e53935' : 'var(--cream-dark)'}`,
+                            background: selected ? 'rgba(201,168,76,0.08)' : '#fff',
+                            borderRadius: 10,
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: 12,
+                            transition: 'all 0.15s',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            {/* Radio dot */}
+                            <span style={{
+                              width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
+                              border: `2px solid ${selected ? 'var(--gold)' : 'var(--cream-dark)'}`,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                              {selected && <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--gold)' }} />}
+                            </span>
+                            <div>
+                              <div style={{ fontWeight: 600, fontSize: 14, color: selected ? 'var(--gold-dark)' : 'var(--text)' }}>
+                                {opt.label}
+                              </div>
+                              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
+                                {opt.tracked ? '📦 ' : '✉️ '}
+                                {opt.sublabel} · {opt.estimatedDays} {daysLabel}
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 600, color: 'var(--gold-dark)', whiteSpace: 'nowrap' }}>
+                            {formatPrice(opt.cost, lang)}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                {errors.shipping && (
+                  <div className="shipping-error helper error" style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6 }}>
+                    <IcoWarning size={12} /> {errors.shipping}
+                  </div>
+                )}
+              </div>
+            )}
+
             <Field label={t.checkout.address} required error={errors.address}>
               <input className={`input ${errors.address ? 'error' : ''}`} value={form.address} onChange={(e) => update('address', e.target.value)} placeholder={t.checkout.placeholder.address} autoComplete="address-line1" />
             </Field>
@@ -207,8 +334,23 @@ export default function CheckoutPage() {
             <SumRow l={t.cart.subtotal} v={formatPrice(subtotal, lang)} />
             <SumRow
               l={t.cart.shipping}
-              v={shipping === 0 ? <span style={{ color: 'var(--jade)', fontWeight: 600 }}>{t.cart.shippingFree}</span> : formatPrice(shipping, lang)}
+              v={
+                fetchingRates ? (
+                  <span style={{ color: 'var(--text-faint)', fontSize: 12 }}>…</span>
+                ) : shipping === 0 && form.country === 'TH' ? (
+                  <span style={{ color: 'var(--jade)', fontWeight: 600 }}>{t.cart.shippingFree}</span>
+                ) : !selectedOption && form.country !== 'TH' ? (
+                  <span style={{ color: 'var(--text-faint)', fontSize: 12 }}>—</span>
+                ) : (
+                  formatPrice(shipping, lang)
+                )
+              }
             />
+            {selectedOption && form.country !== 'TH' && (
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'right', marginTop: -4, marginBottom: 4 }}>
+                {selectedOption.label}
+              </div>
+            )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid var(--cream-dark)', paddingTop: 14, marginTop: 10 }}>
               <span className="serif" style={{ fontSize: 13, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--text)', fontWeight: 600 }}>{t.cart.total}</span>
               <span className="serif" style={{ fontSize: 22, fontWeight: 600, color: 'var(--gold-dark)' }}>{formatPrice(total, lang)}</span>
@@ -250,7 +392,7 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          <button type="submit" className="btn-gold" disabled={loading} style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <button type="submit" className="btn-gold" disabled={loading || (form.country !== 'TH' && !shippingMethod)} style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
             {loading ? (
               <><span className="spinner" /> {t.common.loading}</>
             ) : (
@@ -281,6 +423,7 @@ export default function CheckoutPage() {
           .checkout-grid { grid-template-columns: 1fr !important; }
           .row-2 { grid-template-columns: 1fr !important; }
         }
+        .helper.error { font-size: 12px; color: #e53935; margin-top: 4px; }
       `}</style>
     </div>
   );
