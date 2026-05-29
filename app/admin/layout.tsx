@@ -43,9 +43,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div style={{ minHeight: 'calc(100vh - 200px)', background: 'var(--cream)' }}>
       {/* Admin nav */}
-      <div style={{ background: 'var(--deep)', padding: '12px 24px', borderBottom: '1px solid #2A1E08' }}>
-        <div className="container" style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-          <div className="serif" style={{ color: 'var(--gold)', fontSize: 14, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', fontStyle: 'italic' }}>
+      <div style={{ background: 'var(--deep)', borderBottom: '1px solid #2A1E08', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '12px 20px', minWidth: 'max-content' }}>
+          <div className="serif" style={{ color: 'var(--gold)', fontSize: 14, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', fontStyle: 'italic', flexShrink: 0 }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoSettings size={14} /> Admin</span>
           </div>
           <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
@@ -55,7 +55,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/import" style={adminNavStyle}>Import</Link>
             <Link href="/admin/reviews" style={adminNavStyle}>Reviews</Link>
           </nav>
-          <div style={{ marginLeft: 'auto', fontSize: 11, color: '#6B5730' }}>
+          <div style={{ fontSize: 11, color: '#6B5730', flexShrink: 0 }}>
             {admin.email} · <span className="serif" style={{ color: 'var(--gold)', letterSpacing: 1, textTransform: 'uppercase' }}>{admin.role}</span>
           </div>
         </div>

@@ -29,7 +29,8 @@ export default function AdminReviewsPage() {
   const loadReviews = useCallback(() => {
     fetch('/api/admin/reviews')
       .then((r) => r.json())
-      .then((d) => { setReviews(d); setLoading(false); });
+      .then((d) => { setReviews(Array.isArray(d) ? d : []); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   useEffect(() => {
