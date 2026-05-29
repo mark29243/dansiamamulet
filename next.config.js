@@ -32,6 +32,8 @@ const nextConfig = {
   reactStrictMode: true,
   // Compress output
   compress: true,
+  // Redirect /product/slug/ → /product/slug (prevents duplicate URL indexing)
+  trailingSlash: false,
   // Disable client-side router cache for dynamic pages (admin always gets fresh data)
   experimental: {
     staleTimes: {

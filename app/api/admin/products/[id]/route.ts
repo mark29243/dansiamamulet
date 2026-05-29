@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { notifyGoogleIndex } from '@/lib/google-indexing';
 
 export const runtime = 'nodejs';
 
@@ -44,6 +45,12 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   console.log('[audit] product-update', { admin: ctx.user.id, productId: params.id, updates: allowed });
+
+  // Notify Google to index immediately when product is published
+  if (allowed.published === true && data?.slug) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
+    await notifyGoogleIndex(`${siteUrl}/product/${data.slug}`);
+  }
 
   return NextResponse.json({ product: data });
 }
