@@ -13,19 +13,19 @@ export default function ShippingContent() {
       domestic: {
         title: lang === 'th' ? 'ในประเทศไทย' : 'ไทย',
         rows: [
-          ['ไปรษณีย์ไทย', '฿50', '3-5 วันทำการ'],
-          ['Kerry / Flash Express', '฿50', '1-3 วันทำการ'],
-          ['พื้นที่ห่างไกล', '฿100', '3-5 วันทำการ'],
+          ['ไปรษณีย์ไทย', '฿50 (พื้นที่ห่างไกล ฿60)', '3-5 วันทำการ'],
+          ['Flash Express', '฿50 (พื้นที่ห่างไกล ฿100)', '1-3 วันทำการ'],
+          ['Kerry Express', '฿50 (พื้นที่ห่างไกล ฿100)', '1-3 วันทำการ'],
         ],
         note: 'จัดส่งทุกวันจันทร์-เสาร์ ยกเว้นวันหยุดนักขัตฤกษ์',
       },
       international: {
         title: 'ต่างประเทศ',
         rows: [
-          ['เอเชีย (จีน/ญี่ปุ่น/ฮ่องกง)', 'Airmail ฿150 / EMS ฿350', '7-15 วัน / 5-7 วัน'],
-          ['ทั่วโลก (ยุโรป/อเมริกา)', 'Airmail ฿200 / EMS ฿520', '14-21 วัน / 7-10 วัน'],
+          ['เอเชีย (จีน/ญี่ปุ่น/ฮ่องกง)', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30 วัน / eP 7-15 วัน'],
+          ['ยุโรป / อเมริกา / ออสเตรเลีย', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30 วัน / eP 7-15 วัน'],
         ],
-        note: 'EMS มี tracking number ทุกชิ้น · Airmail ไม่มี tracking',
+        note: 'ePacket มี tracking number · SPA (Small Packet Air) ไม่มี tracking · ราคาจริงคำนวณตามน้ำหนักและปลายทางที่ checkout',
       },
       packaging: {
         title: 'การบรรจุภัณฑ์',
@@ -46,19 +46,19 @@ export default function ShippingContent() {
       domestic: {
         title: 'Within Thailand',
         rows: [
-          ['Thailand Post', '฿50', '3-5 business days'],
-          ['Kerry / Flash Express', '฿50', '1-3 business days'],
-          ['Remote areas', '฿100', '3-5 business days'],
+          ['Thailand Post', '฿50 (remote area ฿60)', '3-5 business days'],
+          ['Flash Express', '฿50 (remote area ฿100)', '1-3 business days'],
+          ['Kerry Express', '฿50 (remote area ฿100)', '1-3 business days'],
         ],
         note: 'Ships Monday–Saturday, excluding public holidays',
       },
       international: {
         title: 'International',
         rows: [
-          ['Asia (China/Japan/HK)', 'Airmail ฿150 / EMS ฿350', '7-15 days / 5-7 days'],
-          ['Worldwide (Europe/USA)', 'Airmail ฿200 / EMS ฿520', '14-21 days / 7-10 days'],
+          ['Asia (China/Japan/HK)', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30 days / eP 7-15 days'],
+          ['Europe / Americas / Australia', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30 days / eP 7-15 days'],
         ],
-        note: 'EMS includes tracking number · Airmail is untracked',
+        note: 'ePacket includes tracking number · SPA (Small Packet Air) is untracked · Exact rate calculated at checkout based on weight and destination',
       },
       packaging: {
         title: 'Packaging',
@@ -79,19 +79,19 @@ export default function ShippingContent() {
       domestic: {
         title: '泰国境内',
         rows: [
-          ['泰国邮政', '฿50', '3-5个工作日'],
-          ['Kerry / Flash Express', '฿50', '1-3个工作日'],
-          ['偏远地区', '฿100', '3-5个工作日'],
+          ['泰国邮政', '฿50（偏远地区 ฿60）', '3-5个工作日'],
+          ['Flash Express', '฿50（偏远地区 ฿100）', '1-3个工作日'],
+          ['Kerry Express', '฿50（偏远地区 ฿100）', '1-3个工作日'],
         ],
         note: '周一至周六发货，公共假日除外',
       },
       international: {
         title: '国际配送',
         rows: [
-          ['亚洲（中国/日本/香港）', '普通航空 ฿150 / EMS ฿350', '7-15天 / 5-7天'],
-          ['全球（欧洲/美国）', '普通航空 ฿200 / EMS ฿520', '14-21天 / 7-10天'],
+          ['亚洲（中国/日本/香港）', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30天 / eP 7-15天'],
+          ['欧洲 / 美洲 / 澳大利亚', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30天 / eP 7-15天'],
         ],
-        note: 'EMS含追踪号码 · 普通航空邮件不含追踪',
+        note: 'ePacket含追踪号码 · SPA（小包航空）不含追踪 · 实际运费在结账时根据重量和目的地计算',
       },
       packaging: {
         title: '包装',
