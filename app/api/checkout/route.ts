@@ -5,7 +5,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 import type { CartItem } from '@/lib/types';
 import { rateLimit, getIp } from '@/lib/rate-limit';
 import { checkOrigin } from '@/lib/csrf';
-import { validateShipping, type CarrierCode } from '@/lib/shipping';
+import { validateShipping, isRemotePostal, type CarrierCode } from '@/lib/shipping';
 
 export const runtime = 'nodejs';
 
@@ -51,13 +51,22 @@ export async function POST(req: Request) {
 
     // Server-side shipping validation: recalculate and verify the sent cost
     const totalQty = items.reduce((s, i) => s + (i.qty ?? 1), 0);
-    const effectiveCarrier = carrier ?? (customer.country === 'TH' ? 'domestic' : null);
+    const effectiveCarrier = carrier ?? (customer.country === 'TH' ? 'thaipost' : null);
     if (!effectiveCarrier) {
       return NextResponse.json({ error: 'Shipping carrier is required' }, { status: 400 });
     }
     const expectedCost = validateShipping(customer.country, effectiveCarrier, totalQty);
     if (expectedCost === null) {
       return NextResponse.json({ error: 'Invalid shipping method for this destination' }, { status: 400 });
+    }
+
+    // Server-side remote area cross-check: carrier remote flag must match postal code
+    if (customer.country === 'TH') {
+      const serverRemote = isRemotePostal(customer.postal);
+      const carrierIsRemote = effectiveCarrier.endsWith('-remote');
+      if (serverRemote !== carrierIsRemote) {
+        return NextResponse.json({ error: 'Shipping method does not match delivery address' }, { status: 400 });
+      }
     }
     // Allow ฿0 free-shipping override for domestic orders over threshold
     const isFreeShipping = customer.country === 'TH' && shipping_cost === 0;
@@ -163,7 +172,7 @@ export async function POST(req: Request) {
         items: canonicalItems,
         subtotal,
         shipping_cost,
-        shipping_carrier: effectiveCarrier,
+        carrier: effectiveCarrier,
         total,
         currency: isAlipay ? 'cny' : 'thb',
         status: payment_method === 'alipay' ? 'pending_alipay' : 'pending',

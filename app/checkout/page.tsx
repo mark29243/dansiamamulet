@@ -9,6 +9,7 @@ import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import type { ShippingOption, CarrierCode } from '@/lib/shipping';
+import { isRemotePostal } from '@/lib/shipping';
 import { IcoLock, IcoWarning } from '@/components/icons';
 
 const FREE_SHIPPING_THRESHOLD = 70000; // ฿700 domestic only
@@ -35,7 +36,6 @@ export default function CheckoutPage() {
 
   const totalQty = items.reduce((s, i) => s + i.qty, 0);
 
-  // Fetch shipping options whenever country or qty changes
   const fetchRates = useCallback(async (country: string, qty: number) => {
     setFetchingRates(true);
     try {
@@ -43,11 +43,14 @@ export default function CheckoutPage() {
       const data = await res.json();
       const opts: ShippingOption[] = data.options ?? [];
       setShippingOptions(opts);
-      // Auto-select: domestic → only option; international → epacket if available, else spa
       if (opts.length === 1) {
         setShippingMethod(opts[0].carrier);
       } else if (opts.length > 1) {
-        const preferred = opts.find((o) => o.carrier === 'epacket') ?? opts[0];
+        // Prefer thaipost for domestic, epacket for international
+        const preferred =
+          opts.find((o) => o.carrier === 'thaipost') ??
+          opts.find((o) => o.carrier === 'epacket') ??
+          opts[0];
         setShippingMethod(preferred.carrier);
       } else {
         setShippingMethod(null);
@@ -73,10 +76,23 @@ export default function CheckoutPage() {
 
   if (!mounted || items.length === 0) return null;
 
+  const isTH = form.country === 'TH';
+  // Auto-detect remote area from postal code (no manual input needed)
+  const isRemote = isTH && isRemotePostal(form.postal);
   const selectedOption = shippingOptions.find((o) => o.carrier === shippingMethod);
-  const baseShipping = selectedOption?.cost ?? 0;
-  const shipping = (form.country === 'TH' && subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : baseShipping;
+
+  const baseShipping = selectedOption
+    ? (isRemote && selectedOption.remoteCost != null
+        ? selectedOption.remoteCost
+        : selectedOption.cost)
+    : 0;
+  const shipping = (isTH && subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : baseShipping;
   const total = subtotal + shipping;
+
+  // The carrier code sent to the API includes the -remote suffix when applicable
+  const effectiveCarrier: CarrierCode | null = isRemote && shippingMethod
+    ? `${shippingMethod}-remote` as CarrierCode
+    : shippingMethod;
 
   function validate() {
     const e: Record<string, string> = {};
@@ -87,7 +103,7 @@ export default function CheckoutPage() {
     if (!form.address.trim()) e.address = t.common.required;
     if (!form.city.trim()) e.city = t.common.required;
     if (!form.postal.trim()) e.postal = t.common.required;
-    if (form.country !== 'TH' && !shippingMethod) e.shipping = lang === 'th' ? 'กรุณาเลือกวิธีการจัดส่ง' : lang === 'zh' ? '请选择运输方式' : 'Please select a shipping method';
+    if (!shippingMethod) e.shipping = lang === 'th' ? 'กรุณาเลือกวิธีการจัดส่ง' : lang === 'zh' ? '请选择运输方式' : 'Please select a shipping method';
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -110,7 +126,7 @@ export default function CheckoutPage() {
           items,
           customer: form,
           shipping_cost: shipping,
-          carrier: shippingMethod,
+          carrier: effectiveCarrier,
           lang,
           payment_method: paymentMethod,
         }),
@@ -215,25 +231,28 @@ export default function CheckoutPage() {
               </select>
             </Field>
 
-            {/* Shipping method selector */}
-            {form.country !== 'TH' && (
-              <div style={{ marginBottom: 14 }}>
-                <label className="label">
-                  {shippingLabel} <span className="required">*</span>
-                </label>
-                {fetchingRates ? (
-                  <div style={{ padding: '16px 0', display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: 13 }}>
-                    <span className="spinner" style={{ width: 16, height: 16 }} />
-                    {lang === 'th' ? 'กำลังคำนวณค่าส่ง…' : lang === 'zh' ? '计算运费中…' : 'Calculating shipping…'}
-                  </div>
-                ) : shippingOptions.length === 0 ? (
-                  <div style={{ fontSize: 13, color: 'var(--text-muted)', padding: '10px 0' }}>
-                    {lang === 'th' ? 'ไม่รองรับการจัดส่งไปยังประเทศนี้' : lang === 'zh' ? '暂不支持配送至此国家' : 'Shipping not available for this country'}
-                  </div>
-                ) : (
+            {/* Shipping method selector — all countries */}
+            <div style={{ marginBottom: 14 }}>
+              <label className="label">
+                {shippingLabel} <span className="required">*</span>
+              </label>
+              {fetchingRates ? (
+                <div style={{ padding: '16px 0', display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: 13 }}>
+                  <span className="spinner" style={{ width: 16, height: 16 }} />
+                  {lang === 'th' ? 'กำลังคำนวณค่าส่ง…' : lang === 'zh' ? '计算运费中…' : 'Calculating shipping…'}
+                </div>
+              ) : shippingOptions.length === 0 ? (
+                <div style={{ fontSize: 13, color: 'var(--text-muted)', padding: '10px 0' }}>
+                  {lang === 'th' ? 'ไม่รองรับการจัดส่งไปยังประเทศนี้' : lang === 'zh' ? '暂不支持配送至此国家' : 'Shipping not available for this country'}
+                </div>
+              ) : (
+                <>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {shippingOptions.map((opt) => {
                       const selected = shippingMethod === opt.carrier;
+                      const displayCost = isTH && isRemote && opt.remoteCost != null
+                        ? opt.remoteCost
+                        : opt.cost;
                       return (
                         <button
                           key={opt.carrier}
@@ -257,7 +276,6 @@ export default function CheckoutPage() {
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                            {/* Radio dot */}
                             <span style={{
                               width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
                               border: `2px solid ${selected ? 'var(--gold)' : 'var(--cream-dark)'}`,
@@ -276,20 +294,30 @@ export default function CheckoutPage() {
                             </div>
                           </div>
                           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 18, fontWeight: 600, color: 'var(--gold-dark)', whiteSpace: 'nowrap' }}>
-                            {formatPrice(opt.cost, lang)}
+                            {formatPrice(displayCost, lang)}
                           </div>
                         </button>
                       );
                     })}
                   </div>
-                )}
-                {errors.shipping && (
-                  <div className="shipping-error helper error" style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6 }}>
-                    <IcoWarning size={12} /> {errors.shipping}
-                  </div>
-                )}
-              </div>
-            )}
+
+                  {/* Remote area auto-detected from postal code */}
+                  {isTH && isRemote && (
+                    <div style={{ marginTop: 10, padding: '8px 12px', background: 'rgba(201,168,76,0.08)', border: '1px solid var(--gold-light)', borderRadius: 8, fontSize: 12, color: 'var(--gold-dark)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <IcoWarning size={13} />
+                      {lang === 'th' ? `รหัสไปรษณีย์ ${form.postal} เป็นพื้นที่ห่างไกล — คิดค่าบริการเพิ่มเติม` :
+                       lang === 'zh' ? `邮编 ${form.postal} 属于偏远地区，需加收附加费` :
+                       `Postal code ${form.postal} is a remote area — surcharge applied`}
+                    </div>
+                  )}
+                </>
+              )}
+              {errors.shipping && (
+                <div className="shipping-error helper error" style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 6 }}>
+                  <IcoWarning size={12} /> {errors.shipping}
+                </div>
+              )}
+            </div>
 
             <Field label={t.checkout.address} required error={errors.address}>
               <input className={`input ${errors.address ? 'error' : ''}`} value={form.address} onChange={(e) => update('address', e.target.value)} placeholder={t.checkout.placeholder.address} autoComplete="address-line1" />
@@ -337,18 +365,18 @@ export default function CheckoutPage() {
               v={
                 fetchingRates ? (
                   <span style={{ color: 'var(--text-faint)', fontSize: 12 }}>…</span>
-                ) : shipping === 0 && form.country === 'TH' ? (
+                ) : shipping === 0 && isTH ? (
                   <span style={{ color: 'var(--jade)', fontWeight: 600 }}>{t.cart.shippingFree}</span>
-                ) : !selectedOption && form.country !== 'TH' ? (
+                ) : !selectedOption ? (
                   <span style={{ color: 'var(--text-faint)', fontSize: 12 }}>—</span>
                 ) : (
                   formatPrice(shipping, lang)
                 )
               }
             />
-            {selectedOption && form.country !== 'TH' && (
+            {selectedOption && (
               <div style={{ fontSize: 11, color: 'var(--text-muted)', textAlign: 'right', marginTop: -4, marginBottom: 4 }}>
-                {selectedOption.label}
+                {selectedOption.label}{isTH && isRemote ? ` · ${lang === 'th' ? 'พื้นที่ห่างไกล' : lang === 'zh' ? '偏远地区' : 'Remote'}` : ''}
               </div>
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid var(--cream-dark)', paddingTop: 14, marginTop: 10 }}>
@@ -392,7 +420,7 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          <button type="submit" className="btn-gold" disabled={loading || (form.country !== 'TH' && !shippingMethod)} style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <button type="submit" className="btn-gold" disabled={loading || !shippingMethod} style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
             {loading ? (
               <><span className="spinner" /> {t.common.loading}</>
             ) : (

@@ -1,138 +1,180 @@
 // Thailand Post international shipping rates
-// Weight formula: first item = 100 g, each additional item +20 g
+// Sources:
+//   ePacket  — effective 6 January 2026 (Thailand Post rate card)
+//   SPA      — Small Packet Air, amendment 2567 (Thailand Post rate card)
 //
-// RATES: verify against official rate cards
-//   ePacket  — base table = 101–200 g band (1-item orders at 100g use this rate, slightly conservative)
-//   SPA      — base table = 151–200 g band (1–3 item orders at 100–140g use this rate, slightly conservative)
-// TODO: add lighter-band rates (ePacket 0–100g, SPA 0–50g/51–100g/101–150g) from PDF for exact pricing
+// Weight formula: first item = 100 g, each additional item +20 g
+// All costs stored in satang (baht × 100)
 
-export type CarrierCode = 'epacket' | 'spa' | 'domestic';
+export type CarrierCode =
+  | 'epacket' | 'spa'
+  | 'thaipost' | 'thaipost-remote'
+  | 'flash'    | 'flash-remote'
+  | 'kerry'    | 'kerry-remote';
 
 export interface ShippingOption {
   carrier: CarrierCode;
   label: string;
   sublabel: string;
   estimatedDays: string;
-  cost: number; // satang
+  cost: number;       // satang (standard area)
+  remoteCost?: number; // satang (remote area, domestic only)
   tracked: boolean;
 }
 
 // ─── Weight ───────────────────────────────────────────────────────────────────
 
-// First item = 100 g, each additional item +20 g
 export function calcWeight(qty: number): number {
   return 100 + (qty - 1) * 20;
 }
 
-// ─── ePacket rate table (satang) ─────────────────────────────────────────────
-// Base: 101–200 g | Source: Thailand Post ePacket rate card
-// Zone  1→฿195  17→฿275  (linear interpolation for intermediate zones)
-const EPACKET_BASE: Record<number, number> = {
-  1: 19500, 2: 20000, 3: 20500, 4: 21000, 5: 21500,
-  6: 22000, 7: 22500, 8: 23000, 9: 23500, 10: 24000,
-  11: 24500, 12: 25000, 13: 25500, 14: 26000, 15: 26500,
-  16: 27000, 17: 27500,
-};
+// ─── Band helpers ─────────────────────────────────────────────────────────────
 
-// Per additional 100 g (or part thereof) over 200 g
-const EPACKET_PER_100G: Record<number, number> = {
-  1: 2000, 2: 2200, 3: 2400, 4: 2600, 5: 2800,
-  6: 3000, 7: 3200, 8: 3400, 9: 3600, 10: 3800,
-  11: 4000, 12: 4200, 13: 4400, 14: 4600, 15: 4800,
-  16: 5000, 17: 5200,
-};
+// ePacket bands: 0=0-100g, 1=101-200g, 2=201-300g, 3=301-400g, 4=401-500g
+function epBand(weight: number): number {
+  return weight <= 100 ? 0 : Math.ceil((weight - 100) / 100);
+}
 
-// ─── Small Packet Air rate table (satang) ─────────────────────────────────────
-// Base: 151–200 g | Source: Thailand Post SPA rate card
-// Zone  1→฿190  13→฿315
-const SPA_BASE: Record<number, number> = {
-  1: 19000, 2: 20000, 3: 21000, 4: 22000, 5: 23000,
-  6: 24000, 7: 25000, 8: 26000, 9: 27000, 10: 28000,
-  11: 29500, 12: 30500, 13: 31500,
-};
+// SPA bands: 0=0-50g, 1=51-100g, 2=101-150g, 3=151-200g, 4=201-250g, 5=251-300g
+function spaBand(weight: number): number {
+  return Math.ceil(weight / 50) - 1;
+}
 
-// Per additional 50 g (or part thereof) over 200 g
-const SPA_PER_50G: Record<number, number> = {
-  1: 1000, 2: 1100, 3: 1200, 4: 1300, 5: 1400,
-  6: 1500, 7: 1700, 8: 1900, 9: 2100, 10: 2300,
-  11: 2500, 12: 2700, 13: 3000,
-};
+// ─── ePacket rate table (baht) — indexed [band][zone-1], zones 1-17 ───────────
+// Source: Thailand Post ePacket rate card, effective 6 Jan 2026
+const EP_RATES: number[][] = [
+  [175, 209, 189, 200, 189, 250, 239, 260, 259, 286, 260, 260, 260, 273, 289, 290, 250], // 0-100g
+  [195, 229, 209, 255, 249, 275, 295, 325, 289, 358, 349, 325, 340, 362, 379, 385, 275], // 101-200g
+  [240, 249, 240, 310, 319, 330, 365, 390, 339, 429, 439, 390, 430, 455, 459, 510, 330], // 201-300g
+  [285, 285, 285, 365, 379, 385, 440, 455, 369, 512, 529, 455, 520, 549, 549, 635, 390], // 301-400g
+  [330, 330, 330, 420, 439, 440, 510, 520, 420, 598, 619, 535, 610, 641, 639, 765, 470], // 401-500g
+];
+
+// ─── Small Packet Air rate table (baht) — indexed [band][zone-1], zones 1-13 ─
+// Source: Thailand Post SPA rate card, amendment 2567
+const SPA_RATES: number[][] = [
+  [ 90,  90,  90,  95,  95, 100, 110, 130, 130, 130, 130, 130, 210], // 0-50g
+  [120, 120, 130, 100, 110, 110, 130, 150, 140, 150, 150, 160, 245], // 51-100g
+  [155, 155, 180, 110, 120, 130, 150, 170, 160, 170, 180, 190, 280], // 101-150g
+  [190, 190, 220, 140, 140, 150, 180, 190, 200, 210, 220, 240, 315], // 151-200g
+  [225, 225, 260, 160, 170, 180, 220, 225, 240, 250, 260, 290, 350], // 201-250g
+  [260, 260, 300, 180, 190, 210, 255, 260, 280, 290, 310, 340, 385], // 251-300g
+];
 
 // ─── Country → [ePacketZone | null, spaZone | null] ──────────────────────────
-// null means service is unavailable to that country
+// null means the service is unavailable to that country
 const COUNTRY_ZONES: Record<string, [number | null, number | null]> = {
-  // ── Indochina (Zone 1 eP / Zone 1 SPA) ──
-  KH: [1, 1], LA: [1, 1], MM: [1, 1], VN: [1, 1],
-  // ── ASEAN ──
-  MY: [2, 1], SG: [2, 2],
-  BN: [3, 2], ID: [3, 2], PH: [3, 2],
-  // ── Greater China ──
-  CN: [4, 3], HK: [4, 3], MO: [4, 3], TW: [4, 3],
-  // ── Northeast Asia ──
-  JP: [5, 3], KR: [5, 3], MN: [null, 4],
-  // ── South Asia ──
-  BD: [6, 4], IN: [6, 4], LK: [6, 4], MV: [6, 4], NP: [6, 4], PK: [6, 5],
-  // ── Middle East ──
-  AE: [7, 5], BH: [7, 5], IL: [7, 5], JO: [7, 5],
-  KW: [7, 5], LB: [7, 5], OM: [7, 5], QA: [7, 5], SA: [7, 5],
-  YE: [7, 6], IQ: [null, 6], IR: [null, 6],
-  // ── Oceania ──
-  AU: [8, 5], NZ: [8, 5], FJ: [17, 7], PG: [17, 7],
-  // ── Russia & CIS ──
-  RU: [9, 6], KZ: [9, 6], UA: [9, 7], BY: [9, 7],
-  GE: [9, 7], AZ: [9, 7], UZ: [9, 7],
-  // ── Eastern Europe ──
-  BG: [10, 7], CY: [10, 8], CZ: [10, 8], EE: [10, 8],
-  GR: [10, 8], HR: [10, 8], HU: [10, 8], LT: [10, 8],
-  LV: [10, 8], MT: [10, 8], PL: [10, 8], RO: [10, 8],
-  RS: [10, 8], SI: [10, 8], SK: [10, 8], TR: [10, 8], AL: [10, 8],
-  // ── Western Europe ──
-  AT: [11, 8], BE: [11, 8], CH: [11, 8], DE: [11, 8],
-  DK: [11, 9], ES: [11, 9], FI: [11, 9], FR: [11, 9],
-  GB: [11, 9], IE: [11, 9], IS: [11, 9], IT: [11, 9],
-  LU: [11, 9], NL: [11, 9], NO: [11, 9], PT: [11, 9], SE: [11, 9],
-  // ── North Africa ──
-  DZ: [12, 9], EG: [12, 9], MA: [12, 9], TN: [12, 9], LY: [null, 9],
-  // ── Sub-Saharan Africa ──
-  ET: [13, 10], KE: [13, 10], MG: [13, 10], MZ: [13, 10],
-  NG: [13, 10], TZ: [13, 10], ZA: [13, 10],
-  // ── North America ──
-  CA: [14, 11], MX: [14, 11], US: [14, 11],
-  // ── Caribbean / Central America ──
-  CU: [15, 11], DO: [15, 11], GT: [15, 11], JM: [15, 11], PA: [15, 12],
-  // ── South America ──
-  AR: [16, 12], BR: [16, 12], CL: [16, 12], CO: [16, 12],
-  PE: [16, 12], UY: [16, 12], VE: [16, 13],
+  // ── Zone 1 eP ──
+  KH: [1, 4], CN: [1, 5], HK: [1, 4], ID: [1, 5], KR: [1, 2],
+  LA: [1, 5], MY: [1, 5], MM: [1, 1], PH: [1, 5], SG: [1, 4],
+  TW: [1, 4], VN: [1, 4],
+  // ── Zone 2 eP ──
+  BT: [2, 7], IN: [2, 7], MV: [2, 7],
+  // ── Zone 3 eP ──
+  JP: [3, 1], MO: [3, 2],
+  // ── Zone 4 eP ──
+  LK: [4, 7],
+  // ── Zone 5 eP ──
+  AE: [5, 7], BN: [5, 1], BG: [5, 7], BY: [5, 11], PK: [5, 7],
+  // ── Zone 6 eP ──
+  AU: [6, 12], BH: [6, 9], BD: [6, 7],
+  // ── Zone 7 eP ──
+  AM: [7, 11], AZ: [7, 9], FR: [7, 9], IR: [7, 7], IQ: [7, 7],
+  KE: [7, 7], KW: [7, 7], LB: [7, 7], MN: [7, null], MA: [7, 7],
+  NZ: [7, 12], NG: [7, 7], GB: [7, 9], UZ: [7, 7],
+  // ── Zone 8 eP ──
+  DZ: [8, 7], CI: [8, 9], CY: [8, 11], CZ: [8, 7], EG: [8, 7],
+  EE: [8, 9], GE: [8, 9], IL: [8, 10], KZ: [8, 7], KG: [8, 9],
+  MG: [8, 11], MU: [8, 7], RW: [8, 11], RS: [8, 7], TN: [8, 7],
+  // ── Zone 9 eP ──
+  DE: [9, 8],
+  // ── Zone 10 eP ──
+  HU: [10, 7], IE: [10, 9], IT: [10, 9], NP: [10, 11], OM: [10, 7],
+  RO: [10, 7], ZA: [10, 9],
+  // ── Zone 11 eP ──
+  AL: [11, 9], HR: [11, 9], ET: [11, 11], FI: [11, 9], GH: [11, 12],
+  LU: [11, 9], MT: [11, 12], MD: [11, 9], MZ: [11, 11], PL: [11, 7],
+  QA: [11, 7], SA: [11, 10], TR: [11, 11], ZM: [11, 11],
+  // ── Zone 12 eP ──
+  JO: [12, 11], RU: [12, 10],
+  // ── Zone 13 eP ──
+  AT: [13, 11], BE: [13, 10], BA: [13, 12], DK: [13, 10], GR: [13, 10],
+  IS: [13, 12], LT: [13, 7], NL: [13, 3], NO: [13, 11], PT: [13, 10],
+  SI: [13, 11], CH: [13, 10], TZ: [13, 11],
+  // ── Zone 14 eP ──
+  BR: [14, 11], CO: [14, 12], DJ: [14, 11], MK: [14, 12], PA: [14, 12],
+  SN: [14, 11],
+  // ── Zone 15 eP ──
+  ES: [15, 9], SE: [15, 9],
+  // ── Zone 16 eP ──
+  AR: [16, 12], CA: [16, 11], LV: [16, 11], SK: [16, 11],
+  // ── Zone 17 eP ──
+  MX: [17, 11],
+  // ── ePacket unavailable ──
+  US: [null, 13], UA: [null, 12], CR: [null, 12],
 };
 
-// ─── Rate calculator ─────────────────────────────────────────────────────────
+// ─── Rate calculators ─────────────────────────────────────────────────────────
 
 function epacketCost(zone: number, weight: number): number {
-  const base = EPACKET_BASE[zone] ?? 0;
-  if (weight <= 200) return base;
-  const extra = Math.ceil((weight - 200) / 100);
-  return base + extra * (EPACKET_PER_100G[zone] ?? 0);
+  const band = Math.min(epBand(weight), EP_RATES.length - 1);
+  return (EP_RATES[band][zone - 1] ?? 0) * 100;
 }
 
 function spaCost(zone: number, weight: number): number {
-  const base = SPA_BASE[zone] ?? 0;
-  if (weight <= 200) return base;
-  const extra = Math.ceil((weight - 200) / 50);
-  return base + extra * (SPA_PER_50G[zone] ?? 0);
+  const band = Math.min(spaBand(weight), SPA_RATES.length - 1);
+  return (SPA_RATES[band][zone - 1] ?? 0) * 100;
+}
+
+// ─── Domestic remote-area postal codes (Flash Express list) ──────────────────
+// Applied to all domestic carriers: thaipost +฿10, flash/kerry +฿50
+const REMOTE_POSTALS = new Set([
+  // ภาคกลาง — กาญจนบุรี
+  '71180', '71240',
+  // ภาคเหนือ — เชียงใหม่
+  '50260', '50270', '50310', '50350',
+  // ภาคเหนือ — น่าน
+  '55130', '55220',
+  // ภาคเหนือ — แม่ฮ่องสอน + กัลยาณิวัฒนา (เชียงใหม่)
+  '58110', '58120', '58130', '58140', '58150',
+  // ภาคเหนือ — ตาก
+  '63150', '63170',
+  // ภาคเหนือ — เพชรบูรณ์
+  '67260',
+  // ภาคใต้ — พังงา
+  '82150',
+  // ภาคใต้ — ปัตตานี
+  '94000', '94110', '94120', '94130', '94140', '94150',
+  '94160', '94170', '94180', '94190', '94220', '94230',
+  // ภาคใต้ — ยะลา
+  '95000', '95110', '95120', '95130', '95140', '95150', '95160', '95170',
+  // ภาคใต้ — นราธิวาส
+  '96000', '96110', '96120', '96130', '96140', '96150',
+  '96160', '96170', '96180', '96190', '96210', '96220',
+]);
+
+export function isRemotePostal(postal: string): boolean {
+  return REMOTE_POSTALS.has(postal.trim());
 }
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
+const DOMESTIC_CARRIERS: {
+  carrier: CarrierCode;
+  label: string;
+  sublabel: string;
+  estimatedDays: string;
+  cost: number;
+  remoteCost: number;
+}[] = [
+  { carrier: 'thaipost', label: 'ไปรษณีย์ไทย', sublabel: 'EMS / Registered',  estimatedDays: '3–5', cost: 5000,  remoteCost: 6000  },
+  { carrier: 'flash',    label: 'Flash Express', sublabel: 'Express',           estimatedDays: '1–3', cost: 5000,  remoteCost: 10000 },
+  { carrier: 'kerry',    label: 'Kerry Express', sublabel: 'Express',           estimatedDays: '1–3', cost: 5000,  remoteCost: 10000 },
+];
+
 export function getShippingOptions(country: string, qty: number): ShippingOption[] {
   if (country === 'TH') {
-    return [{
-      carrier: 'domestic',
-      label: 'ไปรษณีย์ไทย / Kerry',
-      sublabel: 'Domestic',
-      estimatedDays: '1–5',
-      cost: 5000,
-      tracked: true,
-    }];
+    return DOMESTIC_CARRIERS.map((c) => ({ ...c, tracked: true }));
   }
 
   const zones = COUNTRY_ZONES[country];
@@ -174,6 +216,13 @@ export function validateShipping(
   carrier: CarrierCode,
   qty: number,
 ): number | null {
+  if (country === 'TH') {
+    const isRemote = carrier.endsWith('-remote');
+    const base = (isRemote ? carrier.slice(0, -7) : carrier) as CarrierCode;
+    const d = DOMESTIC_CARRIERS.find((c) => c.carrier === base);
+    if (!d) return null;
+    return isRemote ? d.remoteCost : d.cost;
+  }
   const opts = getShippingOptions(country, qty);
   const match = opts.find((o) => o.carrier === carrier);
   return match ? match.cost : null;
