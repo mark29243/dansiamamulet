@@ -9,7 +9,8 @@ import { formatPrice } from '@/lib/utils';
 import { IcoSearch, IcoFilter } from '@/components/icons';
 import type { Product } from '@/lib/types';
 
-const PER_PAGE = 12;
+const DESKTOP_PER_PAGE = 20;
+const MOBILE_PER_PAGE = 12;
 
 export default function HomeShop({ products, defaultCategory }: { products: Product[]; defaultCategory?: string }) {
   const { lang } = useLang();
@@ -20,6 +21,15 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
   const [page, setPage] = useState(1);
   const [quickView, setQuickView] = useState<Product | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  const PER_PAGE = isMobile ? MOBILE_PER_PAGE : DESKTOP_PER_PAGE;
 
   const CAT_ORDER = ['พระสมเด็จ', 'หลวงพ่อทวด', 'เหรียญ', 'พระเกจิอาจารย์', 'พระปิดตา', 'รูปหล่อ', 'พระกริ่ง', 'เครื่องราง', 'พระผง', 'พระนางพญา'];
 
