@@ -16,7 +16,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   let query = admin.from('products').select('*').order('id', { ascending: true });
   if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
   if (filter === 'oos') query = query.eq('stock', 0);
-  else if (filter === 'low') query = query.gt('stock', 0).lte('stock', 3);
+  else if (filter === 'published') query = query.eq('published', true);
   else if (filter === 'unpublished') query = query.eq('published', false);
 
   const { data: products } = await query;
@@ -40,7 +40,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         {[
           { v: 'all', label: 'All' },
           { v: 'oos', label: 'Out of Stock' },
-          { v: 'low', label: 'Low Stock (≤3)' },
+          { v: 'published', label: 'Published' },
           { v: 'unpublished', label: 'Unpublished' },
         ].map((f) => (
           <Link
