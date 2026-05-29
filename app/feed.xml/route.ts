@@ -27,7 +27,7 @@ export async function GET() {
     const url = `${baseUrl}/product/${p.slug}`;
     const imageUrl = (p.images as string[] | null)?.[0] ?? '';
     const effectivePrice = (p.sale_price && p.sale_price < p.price) ? p.sale_price : p.price;
-    const priceStr = effectivePrice.toFixed(2) + ' THB';
+    const priceStr = (effectivePrice / 100).toFixed(2) + ' THB';
     const name = p.name_th || p.name;
     const desc = p.description || name;
     const descFinal = escapeXml(desc.length > 0 ? desc : name);
