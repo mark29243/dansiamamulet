@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import StockEditor from './StockEditor';
 import PublishButton from './PublishButton';
 import { AdminProductName, AdminProductCategory, AdminProductPrice } from './AdminProductName';
+import { IcoEye } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,7 +100,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     <StockEditor productId={p.id} stock={p.stock} />
                   </Td>
                   <Td style={{ color: 'var(--text-muted)', fontSize: 12 }}>
-                    👁 {p.views ?? 0}
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IcoEye size={13} /> {p.views ?? 0}</span>
                   </Td>
                   <Td>
                     {p.stock === 0 ? <span className="badge badge-oos">OOS</span> : p.stock <= 3 ? <span className="badge badge-warning">LOW</span> : <span className="badge badge-success">OK</span>}
@@ -120,7 +121,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       </div>
 
       <p style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 16, textAlign: 'center' }}>
-        💡 Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
+        Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
       </p>
     </div>
   );

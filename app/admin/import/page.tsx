@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { categoryNames } from '@/lib/i18n';
+import { IcoCamera, IcoSearch, IcoClock, IcoUpload, IcoCheck, IcoWarning } from '@/components/icons';
 
 const CATEGORIES = Object.keys(categoryNames);
 
@@ -89,7 +90,7 @@ export default function ImportPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      setSuccess(`✓ ลงสินค้าสำเร็จ! — /product/${data.slug}`);
+      setSuccess(`ลงสินค้าสำเร็จ! — /product/${data.slug}`);
       setData(null); setUrl(''); setSalePrice('');
     } catch (e: any) {
       setError(e.message);
@@ -122,7 +123,6 @@ export default function ImportPage() {
   async function handleManualSave() {
     if (!nameTh || !price) { setError('กรุณากรอกชื่อสินค้าและราคา'); return; }
     setSaving(true); setError('');
-    // Generate temp slug from timestamp — Claude will update later
     const tempSlug = `draft-${Date.now()}`;
     const cat = autoCategory(nameTh.toLowerCase());
     try {
@@ -146,7 +146,7 @@ export default function ImportPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      setSuccess(`✓ บันทึก draft สำเร็จ (ID: ${json.id}) — แจ้ง Claude ให้เติม SEO ได้เลยครับ`);
+      setSuccess(`บันทึก draft สำเร็จ (ID: ${json.id}) — แจ้ง Claude ให้เติม SEO ได้เลยครับ`);
       setNameTh(''); setPrice(''); setManualImages([]); setNote('');
     } catch (e: any) {
       setError(e.message);
@@ -182,21 +182,22 @@ export default function ImportPage() {
               color: tab === t ? 'var(--gold-dark)' : '#6B7280',
               borderBottom: tab === t ? '2px solid var(--gold-dark)' : '2px solid transparent',
               marginBottom: -1,
+              display: 'inline-flex', alignItems: 'center', gap: 6,
             }}
           >
-            {t === 'manual' ? '📸 เพิ่มสินค้าใหม่' : '🔍 นำเข้าจาก Shopee'}
+            {t === 'manual' ? <><IcoCamera size={14} /> เพิ่มสินค้าใหม่</> : <><IcoSearch size={14} /> นำเข้าจาก Shopee</>}
           </button>
         ))}
       </div>
 
       {error && (
-        <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16 }}>
-          ⚠ {error}
+        <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <IcoWarning size={14} /> {error}
         </div>
       )}
       {success && (
-        <div style={{ background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#16A34A', marginBottom: 16 }}>
-          {success}
+        <div style={{ background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#16A34A', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <IcoCheck size={14} /> {success}
         </div>
       )}
 
@@ -241,7 +242,9 @@ export default function ImportPage() {
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
               }}
             >
-              <span style={{ fontSize: 36 }}>{uploadingImages ? '⏳' : '📷'}</span>
+              <span style={{ display: 'flex', color: '#6B7280' }}>
+                {uploadingImages ? <IcoClock size={36} /> : <IcoCamera size={36} />}
+              </span>
               <span style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>
                 {uploadingImages ? 'กำลังอัพโหลด...' : 'เลือกรูปจากโทรศัพท์'}
               </span>
@@ -291,9 +294,9 @@ export default function ImportPage() {
             className="btn-gold"
             onClick={handleManualSave}
             disabled={saving || uploadingImages || !nameTh || !price}
-            style={{ width: '100%', padding: '14px', fontSize: 15 }}
+            style={{ width: '100%', padding: '14px', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
           >
-            {saving ? '⏳ กำลังบันทึก...' : '📤 อัพโหลดและแจ้ง Claude'}
+            {saving ? <><IcoClock size={14} /> กำลังบันทึก...</> : <><IcoUpload size={14} /> อัพโหลดและแจ้ง Claude</>}
           </button>
 
           <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center' }}>
@@ -319,9 +322,9 @@ export default function ImportPage() {
               className="btn-gold"
               onClick={handleFetch}
               disabled={fetching || !url}
-              style={{ whiteSpace: 'nowrap', padding: '0 20px' }}
+              style={{ whiteSpace: 'nowrap', padding: '0 20px', display: 'inline-flex', alignItems: 'center', gap: 6 }}
             >
-              {fetching ? '⏳ กำลังดึง...' : '🔍 ดึงข้อมูล'}
+              {fetching ? <><IcoClock size={14} /> กำลังดึง...</> : <><IcoSearch size={14} /> ดึงข้อมูล</>}
             </button>
           </div>
 
@@ -361,8 +364,8 @@ export default function ImportPage() {
                 </Field>
                 <Field label="คำอธิบายสั้น"><textarea className="input" rows={2} value={data.short} onChange={(e) => setData({ ...data, short: e.target.value })} style={{ resize: 'vertical' }} /></Field>
                 <Field label="รายละเอียด (TH)"><textarea className="input" rows={4} value={data.description_th} onChange={(e) => setData({ ...data, description_th: e.target.value })} style={{ resize: 'vertical' }} /></Field>
-                <button className="btn-gold" onClick={handleSave} disabled={saving || !data.name || !data.slug} style={{ width: '100%', padding: '13px' }}>
-                  {saving ? '⏳ กำลังบันทึก...' : '✓ บันทึกสินค้าลงเว็บ'}
+                <button className="btn-gold" onClick={handleSave} disabled={saving || !data.name || !data.slug} style={{ width: '100%', padding: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  {saving ? <><IcoClock size={14} /> กำลังบันทึก...</> : <><IcoCheck size={14} /> บันทึกสินค้าลงเว็บ</>}
                 </button>
               </div>
             </div>

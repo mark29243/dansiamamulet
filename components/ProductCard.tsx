@@ -8,6 +8,7 @@ import { useToast } from './ToastProvider';
 import { getDict, getCatName } from '@/lib/i18n';
 import type { Product } from '@/lib/types';
 import { useState, useEffect } from 'react';
+import { IcoAmulet, IcoWarning, IcoEye, IcoCheck } from '@/components/icons';
 
 function useLocalPrice(satang: number, lang: string): string {
   const [price, setPrice] = useState(() => {
@@ -91,8 +92,8 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
           {hasDiscount && p.stock > 0 && <span className="badge badge-sale">SALE</span>}
         </div>
         {onQuickView && (
-          <button onClick={handleQuickView} className="quick-view-btn serif" aria-label={t.product.quickView} style={{ position: 'absolute', top: 12, right: 12, zIndex: 3, background: 'rgba(255,255,255,0.95)', border: '1px solid var(--cream-dark)', padding: '6px 12px', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text)', borderRadius: 3, opacity: 0, transform: 'translateY(-4px)', transition: 'all var(--transition)' }}>
-            👁 {t.product.quickView}
+          <button onClick={handleQuickView} className="quick-view-btn serif" aria-label={t.product.quickView} style={{ position: 'absolute', top: 12, right: 12, zIndex: 3, background: 'rgba(255,255,255,0.95)', border: '1px solid var(--cream-dark)', padding: '6px 12px', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text)', borderRadius: 3, opacity: 0, transform: 'translateY(-4px)', transition: 'all var(--transition)', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <IcoEye size={13} /> {t.product.quickView}
           </button>
         )}
         <div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -100,7 +101,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
           {p.images[0] ? (
             <Image src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'contain', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} unoptimized />
           ) : (
-            <span style={{ fontSize: 56, opacity: 0.3 }}>🙏</span>
+            <IcoAmulet size={56} />
           )}
         </div>
         <div style={{ padding: 16, flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -109,8 +110,8 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
             {displayName}
           </h3>
           {lowStock && (
-            <span className="badge badge-warning" style={{ marginBottom: 8, alignSelf: 'flex-start', fontSize: 10 }}>
-              ⚠ {t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}
+            <span className="badge badge-warning" style={{ marginBottom: 8, alignSelf: 'flex-start', fontSize: 10, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <IcoWarning size={11} /> {t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}
             </span>
           )}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--cream-dark)', paddingTop: 12, marginTop: 'auto' }}>
@@ -121,7 +122,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
               </div>
             </div>
             <button onClick={handleAdd} disabled={p.stock < 1 || loading} aria-label={t.product.addCart} style={{ background: loading ? 'var(--jade)' : p.stock < 1 ? '#E5DDC8' : 'var(--deep)', color: p.stock < 1 ? '#A89868' : 'var(--gold)', border: 'none', width: 40, height: 40, cursor: p.stock < 1 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, borderRadius: 'var(--radius)', transition: 'all var(--transition)', flexShrink: 0 }}>
-              {loading ? '✓' : '＋'}
+              {loading ? <IcoCheck size={16} /> : '＋'}
             </button>
           </div>
         </div>

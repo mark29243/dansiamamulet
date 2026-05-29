@@ -10,6 +10,7 @@ import { getDict, getCatName } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import LocalPrice from '@/components/LocalPrice';
 import type { Product } from '@/lib/types';
+import { IcoAmulet, IcoSearch, IcoCheck, IcoWarning, IcoCart, IcoShieldCheck, IcoGlobe } from '@/components/icons';
 
 export default function ProductDetail({ product: p, related = [] }: { product: Product; related?: Product[] }) {
   const { lang } = useLang();
@@ -20,13 +21,11 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   const [qty, setQty] = useState(1);
   const [zoomOpen, setZoomOpen] = useState(false);
 
-  // ชื่อและรายละเอียดตามภาษา
   const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
   const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
   const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.description || p.short) : (p.description ? p.description.slice(0, 200) : p.short);
 
   const displayPrice = p.sale_price ?? p.price;
-
   const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
   const lowStock = p.stock > 0 && p.stock <= 3;
 
@@ -40,25 +39,13 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
   function handleAdd() {
     if (p.stock < 1) return;
-    add({
-      product_id: p.id,
-      name: p.name,
-      price: displayPrice,
-      image: p.images[0] ?? '',
-      qty,
-    });
+    add({ product_id: p.id, name: p.name, price: displayPrice, image: p.images[0] ?? '', qty });
     toast(t.product.addedToCart, 'success');
   }
 
   function handleBuyNow() {
     if (p.stock < 1) return;
-    add({
-      product_id: p.id,
-      name: p.name,
-      price: displayPrice,
-      image: p.images[0] ?? '',
-      qty,
-    });
+    add({ product_id: p.id, name: p.name, price: displayPrice, image: p.images[0] ?? '', qty });
     window.location.href = '/checkout';
   }
 
@@ -95,32 +82,23 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
               <div
                 onClick={() => p.images[activeImg] && setZoomOpen(true)}
                 style={{
-                  width: '100%',
-                  aspectRatio: '4/3',
+                  width: '100%', aspectRatio: '4/3',
                   background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))',
-                  overflow: 'hidden',
-                  marginBottom: 12,
-                  position: 'relative',
+                  overflow: 'hidden', marginBottom: 12, position: 'relative',
                   cursor: p.images[activeImg] ? 'zoom-in' : 'default',
                   borderRadius: 'var(--radius-lg)',
                 }}
               >
                 {p.images[activeImg] ? (
-                  <Image
-                    src={p.images[activeImg]}
-                    alt={p.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 500px"
-                    style={{ objectFit: 'contain' }}
-                    unoptimized
-                    priority
-                  />
+                  <Image src={p.images[activeImg]} alt={p.name} fill sizes="(max-width: 768px) 100vw, 500px" style={{ objectFit: 'contain' }} unoptimized priority />
                 ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: 80 }}>🙏</div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                    <IcoAmulet size={80} />
+                  </div>
                 )}
                 {p.images[activeImg] && (
-                  <div className="serif" style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(255,255,255,0.9)', padding: '4px 10px', fontSize: 10, letterSpacing: 1.5, color: 'var(--text-muted)', borderRadius: 2 }}>
-                    🔍 {lang === 'th' ? 'คลิกเพื่อขยาย' : lang === 'zh' ? '点击放大' : 'Click to zoom'}
+                  <div className="serif" style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(255,255,255,0.9)', padding: '4px 10px', fontSize: 10, letterSpacing: 1.5, color: 'var(--text-muted)', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <IcoSearch size={11} /> {lang === 'th' ? 'คลิกเพื่อขยาย' : lang === 'zh' ? '点击放大' : 'Click to zoom'}
                   </div>
                 )}
               </div>
@@ -132,16 +110,10 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                       onClick={() => setActiveImg(i)}
                       aria-label={`View image ${i + 1}`}
                       style={{
-                        width: 76,
-                        height: 76,
-                        padding: 0,
+                        width: 76, height: 76, padding: 0,
                         border: '2px solid ' + (i === activeImg ? 'var(--gold)' : 'transparent'),
-                        background: 'var(--cream-dark)',
-                        flexShrink: 0,
-                        cursor: 'pointer',
-                        overflow: 'hidden',
-                        borderRadius: 'var(--radius)',
-                        transition: 'border-color 0.2s',
+                        background: 'var(--cream-dark)', flexShrink: 0, cursor: 'pointer',
+                        overflow: 'hidden', borderRadius: 'var(--radius)', transition: 'border-color 0.2s',
                       }}
                     >
                       <Image src={url} alt="" width={76} height={76} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
@@ -190,12 +162,12 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
               <div style={{ marginBottom: 24, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {p.stock > 0 ? (
                   <>
-                    <span className="badge badge-success">
-                      ✓ {t.product.inStock}
+                    <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      <IcoCheck size={11} /> {t.product.inStock}
                     </span>
                     {lowStock && (
-                      <span className="badge badge-warning">
-                        🔥 {t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}
+                      <span className="badge badge-warning" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <IcoWarning size={11} /> {t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}
                       </span>
                     )}
                   </>
@@ -224,8 +196,8 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
               {/* Desktop CTAs */}
               <div className="hide-mobile" style={{ display: 'flex', gap: 12, marginBottom: 28, flexWrap: 'wrap' }}>
-                <button className="btn-gold" onClick={handleAdd} disabled={p.stock < 1} style={{ flex: '1 1 200px' }}>
-                  🛒 {t.product.addCart}
+                <button className="btn-gold" onClick={handleAdd} disabled={p.stock < 1} style={{ flex: '1 1 200px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <IcoCart size={14} /> {t.product.addCart}
                 </button>
                 <button className="btn-outline" onClick={handleBuyNow} disabled={p.stock < 1} style={{ flex: '1 1 200px' }}>
                   {t.product.buyNow} →
@@ -234,9 +206,9 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
               {/* Trust pills */}
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 28 }}>
-                <span className="trust-pill">🏛️ {t.trust.t1}</span>
-                <span className="trust-pill">📜 {t.trust.t3}</span>
-                <span className="trust-pill">🌏 {t.trust.t2}</span>
+                <span className="trust-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><IcoShieldCheck size={13} /> {t.trust.t1}</span>
+                <span className="trust-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><IcoCheck size={13} /> {t.trust.t3}</span>
+                <span className="trust-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><IcoGlobe size={13} /> {t.trust.t2}</span>
               </div>
 
               {/* Description */}
@@ -263,21 +235,21 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 {related.slice(0, 4).map((r) => {
                   const rName = lang === 'th' ? (r.name_th || r.name) : r.name;
                   return (
-                  <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
-                    <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
-                      {r.images[0] && (
-                        <Image src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
-                      )}
-                    </div>
-                    <div style={{ padding: 14 }}>
-                      <h4 className="serif" style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 36 }}>
-                        {rName}
-                      </h4>
-                      <div className="serif" style={{ fontSize: 16, fontWeight: 600, color: 'var(--gold-dark)' }}>
-                        {formatPrice(r.sale_price ?? r.price, lang)}
+                    <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
+                      <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
+                        {r.images[0] && (
+                          <Image src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                        )}
                       </div>
-                    </div>
-                  </Link>
+                      <div style={{ padding: 14 }}>
+                        <h4 className="serif" style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 36 }}>
+                          {rName}
+                        </h4>
+                        <div className="serif" style={{ fontSize: 16, fontWeight: 600, color: 'var(--gold-dark)' }}>
+                          {formatPrice(r.sale_price ?? r.price, lang)}
+                        </div>
+                      </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -294,8 +266,8 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
           </div>
           <div style={{ fontSize: 10, color: 'var(--text-faint)' }}>{t.cart.qty}: {qty}</div>
         </div>
-        <button className="btn-gold" onClick={handleAdd} disabled={p.stock < 1} style={{ padding: '13px 24px' }}>
-          🛒 {t.product.addCart}
+        <button className="btn-gold" onClick={handleAdd} disabled={p.stock < 1} style={{ padding: '13px 24px', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <IcoCart size={14} /> {t.product.addCart}
         </button>
       </div>
 
@@ -312,14 +284,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
           >
             ×
           </button>
-          <Image
-            src={p.images[activeImg]}
-            alt={p.name}
-            width={1000}
-            height={1000}
-            style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', width: 'auto', height: 'auto' }}
-            unoptimized
-          />
+          <Image src={p.images[activeImg]} alt={p.name} width={1000} height={1000} style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', width: 'auto', height: 'auto' }} unoptimized />
         </div>
       )}
 
@@ -335,14 +300,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 }
 
 const qtyBtnStyle: React.CSSProperties = {
-  width: 36,
-  height: 36,
-  background: 'transparent',
-  border: 'none',
-  fontSize: 18,
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  width: 36, height: 36, background: 'transparent', border: 'none',
+  fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
   color: 'var(--text)',
 };

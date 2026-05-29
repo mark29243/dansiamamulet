@@ -7,6 +7,7 @@ import { useCart } from '@/components/CartProvider';
 import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
+import { IcoCheck, IcoMail } from '@/components/icons';
 
 function SuccessInner() {
   const sp = useSearchParams();
@@ -21,7 +22,6 @@ function SuccessInner() {
     clear();
     if (!sessionId) { setLoading(false); return; }
 
-    // Retry a few times in case webhook hasn't processed yet
     let attempts = 0;
     const tryFetch = () => {
       attempts++;
@@ -45,8 +45,8 @@ function SuccessInner() {
   return (
     <div className="container animate-fade-in" style={{ padding: '60px 24px 80px', maxWidth: 640, textAlign: 'center' }}>
       {/* Success icon */}
-      <div style={{ width: 80, height: 80, background: 'var(--jade)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 28px', boxShadow: '0 8px 24px rgba(45,90,61,0.3)', animation: 'scaleIn 0.4s ease' }}>
-        <span style={{ fontSize: 40, color: '#fff' }}>✓</span>
+      <div style={{ width: 80, height: 80, background: 'var(--jade)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 28px', boxShadow: '0 8px 24px rgba(45,90,61,0.3)', animation: 'scaleIn 0.4s ease', color: '#fff' }}>
+        <IcoCheck size={36} strokeWidth={2.5} />
       </div>
 
       <h1 className="serif" style={{ fontSize: 32, fontWeight: 600, color: 'var(--text)', marginBottom: 14 }}>
@@ -70,7 +70,9 @@ function SuccessInner() {
                 #{order.id.slice(0, 8).toUpperCase()}
               </div>
             </div>
-            <span className="badge badge-success">✓ {order.status.toUpperCase()}</span>
+            <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <IcoCheck size={11} /> {order.status.toUpperCase()}
+            </span>
           </div>
 
           {order.items && order.items.length > 0 && (
@@ -96,7 +98,7 @@ function SuccessInner() {
       ) : null}
 
       <div className="card" style={{ padding: 16, background: 'rgba(45,90,61,0.06)', border: '1px solid rgba(45,90,61,0.15)', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span style={{ fontSize: 24 }}>📧</span>
+        <span style={{ color: 'var(--jade)', flexShrink: 0 }}><IcoMail size={22} /></span>
         <span style={{ fontSize: 13, color: 'var(--text)' }}>{t.success.emailSent}</span>
       </div>
 
@@ -107,7 +109,7 @@ function SuccessInner() {
 
       <div style={{ marginTop: 40, paddingTop: 32, borderTop: '1px solid var(--cream-dark)' }}>
         <p className="serif" style={{ fontSize: 12, color: 'var(--text-faint)', letterSpacing: 1, fontStyle: 'italic' }}>
-          {lang === 'th' ? 'มีคำถาม? ติดต่อเราที่' : lang === 'zh' ? '有问题？联系我们' : 'Questions? Contact us at'} <a href="mailto:info@dansiam.com" style={{ color: 'var(--gold-dark)' }}>info@dansiam.com</a>
+          {lang === 'th' ? 'มีคำถาม? ติดต่อเราที่' : lang === 'zh' ? '有问题？联系我们' : 'Questions? Contact us at'} <a href="mailto:dansiamamulets2@gmail.com" style={{ color: 'var(--gold-dark)' }}>dansiamamulets2@gmail.com</a>
         </p>
       </div>
     </div>

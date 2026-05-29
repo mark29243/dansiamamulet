@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useLang } from '@/components/LangProvider';
 import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
+import { IcoLock, IcoMail, IcoCheck } from '@/components/icons';
 
 export default function SignInContent() {
   const { lang } = useLang();
@@ -54,8 +55,6 @@ export default function SignInContent() {
       toast(error.message, 'error');
     } else {
       toast(lang === 'th' ? 'เข้าสู่ระบบสำเร็จ!' : 'Signed in!', 'success');
-      // Check if user is admin → go to /admin, otherwise → /orders
-      // Use window.location for full reload so server picks up the new session cookie
       const uid = data.user?.id;
       if (uid) {
         const { data: adminRow } = await supabase.from('admins').select('user_id').eq('user_id', uid).maybeSingle();
@@ -74,8 +73,8 @@ export default function SignInContent() {
         <span style={{ color: 'var(--text)' }}>{t.nav.signin}</span>
       </nav>
       <div className="card" style={{ padding: 36, textAlign: 'center' }}>
-        <div style={{ width: 56, height: 56, background: 'var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 26 }}>
-          🔐
+        <div style={{ width: 56, height: 56, background: 'var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--deep)' }}>
+          <IcoLock size={24} />
         </div>
         <h1 className="serif" style={{ fontSize: 24, fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>
           {t.nav.signin}
@@ -96,8 +95,10 @@ export default function SignInContent() {
                 placeholder="you@example.com"
                 autoFocus
               />
-              <button type="submit" disabled={loading} className="btn-gold" style={{ width: '100%', marginTop: 16 }}>
-                {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังส่ง...' : 'Sending...'}</> : (lang === 'th' ? '✉ ส่งรหัส OTP' : lang === 'zh' ? '✉ 发送验证码' : '✉ Send OTP Code')}
+              <button type="submit" disabled={loading} className="btn-gold" style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังส่ง...' : 'Sending...'}</> : (
+                  <><IcoMail size={14} /> {lang === 'th' ? 'ส่งรหัส OTP' : lang === 'zh' ? '发送验证码' : 'Send OTP Code'}</>
+                )}
               </button>
             </form>
           </>
@@ -106,8 +107,8 @@ export default function SignInContent() {
             <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8, lineHeight: 1.6 }}>
               {lang === 'th' ? `ส่งรหัส 6 หลักไปที่ ${email} แล้วครับ` : `6-digit code sent to ${email}`}
             </p>
-            <p style={{ fontSize: 12, color: 'var(--jade)', marginBottom: 24 }}>
-              {lang === 'th' ? '📧 เช็ค Gmail แล้วใส่รหัสด้านล่าง' : '📧 Check your email and enter the code below'}
+            <p style={{ fontSize: 12, color: 'var(--jade)', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <IcoMail size={13} /> {lang === 'th' ? 'เช็ค Gmail แล้วใส่รหัสด้านล่าง' : 'Check your email and enter the code below'}
             </p>
             <form onSubmit={verifyOtp} style={{ textAlign: 'left' }}>
               <label className="label">
@@ -125,8 +126,10 @@ export default function SignInContent() {
                 autoFocus
                 style={{ fontSize: 24, letterSpacing: 8, textAlign: 'center' }}
               />
-              <button type="submit" disabled={loading || otp.length < 6} className="btn-gold" style={{ width: '100%', marginTop: 16 }}>
-                {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังตรวจสอบ...' : 'Verifying...'}</> : (lang === 'th' ? '✓ เข้าสู่ระบบ' : lang === 'zh' ? '✓ 登录' : '✓ Sign In')}
+              <button type="submit" disabled={loading || otp.length < 6} className="btn-gold" style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังตรวจสอบ...' : 'Verifying...'}</> : (
+                  <><IcoCheck size={14} /> {lang === 'th' ? 'เข้าสู่ระบบ' : lang === 'zh' ? '登录' : 'Sign In'}</>
+                )}
               </button>
             </form>
             <button onClick={() => { setSent(false); setOtp(''); }} className="btn-text" style={{ marginTop: 12 }}>

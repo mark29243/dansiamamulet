@@ -8,6 +8,7 @@ import { useLang } from '@/components/LangProvider';
 import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice, calcShipping } from '@/lib/utils';
+import { IcoLock, IcoWarning } from '@/components/icons';
 
 const FREE_SHIPPING_THRESHOLD = 500000;
 
@@ -22,20 +23,12 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'alipay'>('card');
 
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    address2: '',
-    city: '',
-    postal: '',
-    country: 'TH',
+    name: '', email: '', phone: '', address: '', address2: '', city: '', postal: '', country: 'TH',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMounted(true);
-    // Redirect if cart is empty
     if (items.length === 0) router.replace('/cart');
   }, [items.length, router]);
 
@@ -62,7 +55,6 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!validate()) {
       toast(lang === 'th' ? 'กรุณากรอกข้อมูลให้ครบ' : lang === 'zh' ? '请填写所有必填项' : 'Please fill in all required fields', 'error');
-      // Scroll to first error
       const firstErr = document.querySelector('.input.error');
       firstErr?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -127,35 +119,15 @@ export default function CheckoutPage() {
             </h2>
 
             <Field label={t.checkout.name} required error={errors.name}>
-              <input
-                className={`input ${errors.name ? 'error' : ''}`}
-                value={form.name}
-                onChange={(e) => update('name', e.target.value)}
-                placeholder={lang === 'th' ? 'ชื่อ-นามสกุล' : lang === 'zh' ? '姓名' : 'Your full name'}
-                autoComplete="name"
-              />
+              <input className={`input ${errors.name ? 'error' : ''}`} value={form.name} onChange={(e) => update('name', e.target.value)} placeholder={lang === 'th' ? 'ชื่อ-นามสกุล' : lang === 'zh' ? '姓名' : 'Your full name'} autoComplete="name" />
             </Field>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }} className="row-2">
               <Field label={t.checkout.email} required error={errors.email}>
-                <input
-                  className={`input ${errors.email ? 'error' : ''}`}
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => update('email', e.target.value)}
-                  placeholder={t.checkout.placeholder.email}
-                  autoComplete="email"
-                />
+                <input className={`input ${errors.email ? 'error' : ''}`} type="email" value={form.email} onChange={(e) => update('email', e.target.value)} placeholder={t.checkout.placeholder.email} autoComplete="email" />
               </Field>
               <Field label={t.checkout.phone} required error={errors.phone}>
-                <input
-                  className={`input ${errors.phone ? 'error' : ''}`}
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => update('phone', e.target.value)}
-                  placeholder={t.checkout.placeholder.phone}
-                  autoComplete="tel"
-                />
+                <input className={`input ${errors.phone ? 'error' : ''}`} type="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} placeholder={t.checkout.placeholder.phone} autoComplete="tel" />
               </Field>
             </div>
           </div>
@@ -168,71 +140,44 @@ export default function CheckoutPage() {
             </h2>
 
             <Field label={t.checkout.country} required>
-              <select
-                className="input"
-                value={form.country}
-                onChange={(e) => update('country', e.target.value)}
-                autoComplete="country"
-              >
-                <option value="TH">🇹🇭 Thailand</option>
-                <option value="SG">🇸🇬 Singapore</option>
-                <option value="HK">🇭🇰 Hong Kong</option>
-                <option value="CN">🇨🇳 China</option>
-                <option value="TW">🇹🇼 Taiwan</option>
-                <option value="MY">🇲🇾 Malaysia</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="KR">🇰🇷 South Korea</option>
-                <option value="VN">🇻🇳 Vietnam</option>
-                <option value="ID">🇮🇩 Indonesia</option>
-                <option value="PH">🇵🇭 Philippines</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="IT">🇮🇹 Italy</option>
-                <option value="ES">🇪🇸 Spain</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="CA">🇨🇦 Canada</option>
+              <select className="input" value={form.country} onChange={(e) => update('country', e.target.value)} autoComplete="country">
+                <option value="TH">Thailand</option>
+                <option value="SG">Singapore</option>
+                <option value="HK">Hong Kong</option>
+                <option value="CN">China</option>
+                <option value="TW">Taiwan</option>
+                <option value="MY">Malaysia</option>
+                <option value="JP">Japan</option>
+                <option value="KR">South Korea</option>
+                <option value="VN">Vietnam</option>
+                <option value="ID">Indonesia</option>
+                <option value="PH">Philippines</option>
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="DE">Germany</option>
+                <option value="FR">France</option>
+                <option value="IT">Italy</option>
+                <option value="ES">Spain</option>
+                <option value="NL">Netherlands</option>
+                <option value="CA">Canada</option>
               </select>
             </Field>
 
             <Field label={t.checkout.address} required error={errors.address}>
-              <input
-                className={`input ${errors.address ? 'error' : ''}`}
-                value={form.address}
-                onChange={(e) => update('address', e.target.value)}
-                placeholder={t.checkout.placeholder.address}
-                autoComplete="address-line1"
-              />
+              <input className={`input ${errors.address ? 'error' : ''}`} value={form.address} onChange={(e) => update('address', e.target.value)} placeholder={t.checkout.placeholder.address} autoComplete="address-line1" />
             </Field>
 
             <Field label={t.checkout.address2}>
-              <input
-                className="input"
-                value={form.address2}
-                onChange={(e) => update('address2', e.target.value)}
-                placeholder={t.checkout.placeholder.address2}
-                autoComplete="address-line2"
-              />
+              <input className="input" value={form.address2} onChange={(e) => update('address2', e.target.value)} placeholder={t.checkout.placeholder.address2} autoComplete="address-line2" />
             </Field>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12 }} className="row-2">
               <Field label={t.checkout.city} required error={errors.city}>
-                <input
-                  className={`input ${errors.city ? 'error' : ''}`}
-                  value={form.city}
-                  onChange={(e) => update('city', e.target.value)}
-                  autoComplete="address-level2"
-                />
+                <input className={`input ${errors.city ? 'error' : ''}`} value={form.city} onChange={(e) => update('city', e.target.value)} autoComplete="address-level2" />
               </Field>
               <Field label={t.checkout.postal} required error={errors.postal}>
-                <input
-                  className={`input ${errors.postal ? 'error' : ''}`}
-                  value={form.postal}
-                  onChange={(e) => update('postal', e.target.value)}
-                  autoComplete="postal-code"
-                />
+                <input className={`input ${errors.postal ? 'error' : ''}`} value={form.postal} onChange={(e) => update('postal', e.target.value)} autoComplete="postal-code" />
               </Field>
             </div>
           </div>
@@ -288,9 +233,7 @@ export default function CheckoutPage() {
                     padding: '8px 4px',
                     border: `2px solid ${paymentMethod === m.id ? 'var(--gold)' : 'var(--cream-dark)'}`,
                     background: paymentMethod === m.id ? 'rgba(201,168,76,0.08)' : '#fff',
-                    borderRadius: 6,
-                    cursor: 'pointer',
-                    textAlign: 'center',
+                    borderRadius: 6, cursor: 'pointer', textAlign: 'center',
                     color: paymentMethod === m.id ? 'var(--gold-dark)' : 'var(--text-muted)',
                     transition: 'all 0.15s',
                   }}
@@ -302,27 +245,21 @@ export default function CheckoutPage() {
             </div>
             {paymentMethod !== 'card' && (
               <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-faint)', background: 'var(--cream)', padding: '6px 10px', borderRadius: 4, lineHeight: 1.6 }}>
-                {lang === 'zh'
-                  ? '将以人民币 (CNY) 结算，汇率约 1฿ ≈ 0.20¥'
-                  : lang === 'th'
-                  ? 'ชำระเป็นหยวน (CNY) อัตราประมาณ 1฿ ≈ 0.20¥'
-                  : 'Charged in CNY — rate approx. 1฿ ≈ 0.20¥'}
+                {lang === 'zh' ? '将以人民币 (CNY) 结算，汇率约 1฿ ≈ 0.20¥' : lang === 'th' ? 'ชำระเป็นหยวน (CNY) อัตราประมาณ 1฿ ≈ 0.20¥' : 'Charged in CNY — rate approx. 1฿ ≈ 0.20¥'}
               </div>
             )}
           </div>
 
-          <button type="submit" className="btn-gold" disabled={loading} style={{ width: '100%', marginTop: 16 }}>
+          <button type="submit" className="btn-gold" disabled={loading} style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
             {loading ? (
-              <>
-                <span className="spinner" /> {t.common.loading}
-              </>
+              <><span className="spinner" /> {t.common.loading}</>
             ) : (
-              <>🔒 {t.checkout.payNow}</>
+              <><IcoLock size={14} /> {t.checkout.payNow}</>
             )}
           </button>
 
-          <div style={{ marginTop: 14, fontSize: 11, color: 'var(--text-faint)', textAlign: 'center', lineHeight: 1.6 }}>
-            🔒 {t.checkout.secureNotice}
+          <div style={{ marginTop: 14, fontSize: 11, color: 'var(--text-faint)', textAlign: 'center', lineHeight: 1.6, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+            <IcoLock size={11} /> {t.checkout.secureNotice}
           </div>
           <div style={{ textAlign: 'center', marginTop: 8 }}>
             <a href="/payment" target="_blank" style={{ fontSize: 11, color: 'var(--gold-dark)', textDecoration: 'underline' }}>
@@ -352,20 +289,7 @@ export default function CheckoutPage() {
 function Step({ n, label, active }: { n: number; label: string; active?: boolean }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span
-        style={{
-          background: active ? 'var(--gold)' : 'var(--cream-dark)',
-          color: active ? 'var(--deep)' : 'var(--text-muted)',
-          width: 26,
-          height: 26,
-          borderRadius: '50%',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 12,
-          fontWeight: 600,
-        }}
-      >
+      <span style={{ background: active ? 'var(--gold)' : 'var(--cream-dark)', color: active ? 'var(--deep)' : 'var(--text-muted)', width: 26, height: 26, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600 }}>
         {n}
       </span>
       <span className="serif" style={{ color: active ? 'var(--text)' : 'var(--text-muted)', letterSpacing: 1.5, textTransform: 'uppercase' }}>{label}</span>
@@ -382,7 +306,7 @@ function Field({ label, required, error, children }: { label: string; required?:
         {required && <span className="required">*</span>}
       </label>
       {children}
-      {error && <div className="helper error">⚠ {error}</div>}
+      {error && <div className="helper error" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IcoWarning size={12} /> {error}</div>}
     </div>
   );
 }
@@ -398,20 +322,7 @@ function SumRow({ l, v }: { l: string; v: React.ReactNode }) {
 
 function PaymentLogo({ children }: { children: React.ReactNode }) {
   return (
-    <span
-      className="serif"
-      style={{
-        fontSize: 10,
-        letterSpacing: 1.5,
-        textTransform: 'uppercase',
-        padding: '4px 8px',
-        border: '1px solid var(--cream-dark)',
-        color: 'var(--text-muted)',
-        borderRadius: 3,
-        background: '#fff',
-        fontWeight: 600,
-      }}
-    >
+    <span className="serif" style={{ fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', padding: '4px 8px', border: '1px solid var(--cream-dark)', color: 'var(--text-muted)', borderRadius: 3, background: '#fff', fontWeight: 600 }}>
       {children}
     </span>
   );

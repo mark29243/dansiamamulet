@@ -3,6 +3,7 @@
 import { Suspense, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { IcoMobile, IcoMoney, IcoUpload, IcoWarning, IcoCheck } from '@/components/icons';
 
 const ALIPAY_NAME = process.env.NEXT_PUBLIC_ALIPAY_NAME || 'jacky(* JARUN)';
 
@@ -50,7 +51,7 @@ function AlipayInner() {
     return (
       <div className="container animate-fade-in" style={{ padding: '80px 24px', maxWidth: 480, textAlign: 'center' }}>
         <div style={{ width: 72, height: 72, background: 'var(--jade)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', boxShadow: '0 8px 24px rgba(45,90,61,0.3)' }}>
-          <span style={{ fontSize: 36, color: '#fff' }}>✓</span>
+          <IcoCheck size={36} strokeWidth={2.5} style={{ color: '#fff' }} />
         </div>
         <h1 className="serif" style={{ fontSize: 24, fontWeight: 600, color: 'var(--text)', marginBottom: 12 }}>
           ส่งสลิปเรียบร้อยแล้ว!
@@ -65,6 +66,14 @@ function AlipayInner() {
       </div>
     );
   }
+
+  const steps = [
+    { icon: <IcoMobile size={24} />, th: 'สแกน QR', zh: '扫码' },
+    { arrow: true },
+    { icon: <IcoMoney size={24} />, th: `โอน ¥${amount}`, zh: `转账` },
+    { arrow: true },
+    { icon: <IcoUpload size={24} />, th: 'ส่งสลิป', zh: '上传截图' },
+  ];
 
   return (
     <div className="container animate-fade-in" style={{ padding: '48px 24px 80px', maxWidth: 520, textAlign: 'center' }}>
@@ -94,27 +103,21 @@ function AlipayInner() {
 
       {/* Steps */}
       <div style={{ display: 'flex', gap: 0, marginBottom: 20 }}>
-        {[
-          { icon: '📱', th: 'สแกน QR', zh: '扫码' },
-          { icon: '→', th: '', zh: '' },
-          { icon: '💸', th: `โอน ¥${amount}`, zh: `转账` },
-          { icon: '→', th: '', zh: '' },
-          { icon: '📤', th: 'ส่งสลิป', zh: '上传截图' },
-        ].map((s, i) => (
-          s.icon === '→'
+        {steps.map((s, i) =>
+          'arrow' in s
             ? <div key={i} style={{ display: 'flex', alignItems: 'center', color: 'var(--text-faint)', fontSize: 18, flex: 0, padding: '0 4px' }}>→</div>
             : <div key={i} style={{ flex: 1, textAlign: 'center', padding: '14px 8px', background: 'var(--cream)', borderRadius: 10 }}>
-                <div style={{ fontSize: 28, marginBottom: 4 }}>{s.icon}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4, color: 'var(--gold-dark)' }}>{s.icon}</div>
                 <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)' }}>{s.th}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>{s.zh}</div>
               </div>
-        ))}
+        )}
       </div>
 
       {/* Upload slip */}
       <div className="card" style={{ padding: 24, marginBottom: 24, textAlign: 'left' }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 14 }}>
-          📤 ส่งสลิปการโอนเงิน <span style={{ fontSize: 12, color: 'var(--text-faint)', fontWeight: 400 }}>/ 上传付款截图</span>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <IcoUpload size={16} /> ส่งสลิปการโอนเงิน <span style={{ fontSize: 12, color: 'var(--text-faint)', fontWeight: 400 }}>/ 上传付款截图</span>
         </div>
 
         <input
@@ -135,7 +138,7 @@ function AlipayInner() {
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
             }}
           >
-            <span style={{ fontSize: 32 }}>📎</span>
+            <span style={{ display: 'flex', color: 'var(--text-muted)' }}><IcoUpload size={32} /></span>
             <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>แตะเพื่อเลือกรูปสลิป / 点击选择截图</span>
             <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>JPG, PNG ขนาดไม่เกิน 10MB</span>
           </button>
@@ -149,8 +152,8 @@ function AlipayInner() {
         )}
 
         {error && (
-          <div style={{ marginTop: 10, fontSize: 13, color: '#c0392b', background: 'rgba(192,57,43,0.08)', padding: '8px 12px', borderRadius: 6 }}>
-            ⚠ {error}
+          <div style={{ marginTop: 10, fontSize: 13, color: '#c0392b', background: 'rgba(192,57,43,0.08)', padding: '8px 12px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <IcoWarning size={14} /> {error}
           </div>
         )}
 
@@ -159,9 +162,9 @@ function AlipayInner() {
           className="btn-gold"
           disabled={!file || uploading}
           onClick={handleUpload}
-          style={{ width: '100%', marginTop: 16, opacity: !file ? 0.5 : 1 }}
+          style={{ width: '100%', marginTop: 16, opacity: !file ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
         >
-          {uploading ? <><span className="spinner" /> กำลังส่ง...</> : '📤 ส่งสลิป / 提交截图'}
+          {uploading ? <><span className="spinner" /> กำลังส่ง...</> : <><IcoUpload size={14} /> ส่งสลิป / 提交截图</>}
         </button>
       </div>
 

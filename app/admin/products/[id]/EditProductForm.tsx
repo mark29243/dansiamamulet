@@ -47,7 +47,7 @@ export default function EditProductForm({ product }: { product: any }) {
       if (!res.ok) throw new Error(data.error || 'Failed');
 
       // Step 2: regenerate SEO via Claude
-      toast('🤖 Claude กำลังอัพเดท SEO...', 'success');
+      toast('Claude กำลังอัพเดท SEO...', 'success');
       const seoRes = await fetch('/api/admin/process-draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -150,7 +150,7 @@ export default function EditProductForm({ product }: { product: any }) {
             className="btn-primary"
             style={{ padding: '10px 24px', opacity: busy ? 0.7 : 1 }}
           >
-            {busy ? '🤖 กำลังบันทึก + SEO...' : 'บันทึก'}
+            {busy ? 'กำลังบันทึก + SEO...' : 'บันทึก'}
           </button>
         </div>
       </div>

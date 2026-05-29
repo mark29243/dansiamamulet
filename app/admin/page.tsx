@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
+import { IcoClipboard, IcoPackage, IcoClock, IcoEye } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,9 +56,9 @@ export default async function AdminDashboard() {
 
       {/* Quick actions */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 36, flexWrap: 'wrap' }}>
-        <Link href="/admin/orders" className="btn-outline">📋 Manage Orders</Link>
-        <Link href="/admin/products" className="btn-outline">📦 Manage Products</Link>
-        <Link href="/admin/orders?status=pending" className="btn-outline">⏳ Pending Orders</Link>
+        <Link href="/admin/orders" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoClipboard size={14} /> Manage Orders</Link>
+        <Link href="/admin/products" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoPackage size={14} /> Manage Products</Link>
+        <Link href="/admin/orders?status=pending" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoClock size={14} /> Pending Orders</Link>
       </div>
 
       {/* Top viewed products */}
@@ -89,7 +90,7 @@ export default async function AdminDashboard() {
                       </Link>
                     </div>
                   </Td>
-                  <Td style={{ fontWeight: 600, color: 'var(--gold-dark)' }}>👁 {p.views ?? 0}</Td>
+                  <Td style={{ fontWeight: 600, color: 'var(--gold-dark)' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IcoEye size={13} /> {p.views ?? 0}</span></Td>
                 </tr>
               ))}
             </tbody>

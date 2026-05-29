@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
+import { IcoHome, IcoShop } from '@/components/icons';
 
 export default function NotFound() {
   const { lang } = useLang();
@@ -22,8 +23,12 @@ export default function NotFound() {
           : 'The page you are looking for may have been moved or no longer exists.'}
       </p>
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/" className="btn-gold">🏠 {t.nav.home}</Link>
-        <Link href="/shop" className="btn-outline">🛍️ {t.nav.shop}</Link>
+        <Link href="/" className="btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <IcoHome size={14} /> {t.nav.home}
+        </Link>
+        <Link href="/shop" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <IcoShop size={14} /> {t.nav.shop}
+        </Link>
       </div>
     </div>
   );

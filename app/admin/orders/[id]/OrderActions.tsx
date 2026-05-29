@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastProvider';
+import { IcoPackage } from '@/components/icons';
 import type { Order } from '@/lib/types';
 
 type Status = Order['status'];
@@ -82,7 +83,7 @@ export default function OrderActions({ order }: { order: Order }) {
 
       {status === 'paid' && !showShip && (
         <button onClick={() => setShowShip(true)} className="btn-outline" style={{ padding: '8px 16px', fontSize: 11 }}>
-          📦 Mark Shipped + Email Customer
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoPackage size={13} /> Mark Shipped + Email Customer</span>
         </button>
       )}
 

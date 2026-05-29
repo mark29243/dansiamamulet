@@ -7,8 +7,9 @@ import { useLang } from '@/components/LangProvider';
 import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
+import { IcoCart, IcoShop, IcoTruck, IcoCelebrate, IcoLock, IcoPackage } from '@/components/icons';
 
-const FREE_SHIPPING_THRESHOLD = 500000; // ฿5,000 in satang
+const FREE_SHIPPING_THRESHOLD = 500000;
 
 export default function CartPage() {
   const { items, setQty, remove, subtotal, count, clear } = useCart();
@@ -23,13 +24,13 @@ export default function CartPage() {
     return (
       <div style={{ padding: '60px 24px' }}>
         <div className="empty-state animate-fade-in">
-          <div className="icon">🛒</div>
+          <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoCart size={56} /></div>
           <h1 className="serif" style={{ fontSize: 26, fontWeight: 500, color: 'var(--text)', marginBottom: 12 }}>
             {t.cart.empty}
           </h1>
           <p style={{ fontSize: 14, marginBottom: 24 }}>{t.cart.emptyDesc}</p>
-          <Link href="/shop" className="btn-gold">
-            🛍️ {t.cart.browseShop}
+          <Link href="/shop" className="btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <IcoShop size={14} /> {t.cart.browseShop}
           </Link>
         </div>
       </div>
@@ -58,7 +59,7 @@ export default function CartPage() {
       {remaining > 0 ? (
         <div className="animate-fade-in" style={{ background: 'rgba(45,90,61,0.06)', border: '1px solid rgba(45,90,61,0.15)', borderRadius: 'var(--radius-lg)', padding: 16, marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 18 }}>🚚</span>
+            <span style={{ color: 'var(--jade)', display: 'flex' }}><IcoTruck size={20} /></span>
             <span style={{ fontSize: 13, color: 'var(--text)' }}>
               {lang === 'th'
                 ? <>เพิ่มอีก <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> เพื่อรับ <strong>ส่งฟรี</strong></>
@@ -74,7 +75,7 @@ export default function CartPage() {
         </div>
       ) : (
         <div className="animate-fade-in" style={{ background: 'rgba(45,90,61,0.1)', borderLeft: '3px solid var(--jade)', borderRadius: 'var(--radius-lg)', padding: 12, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontSize: 18 }}>🎉</span>
+          <span style={{ color: 'var(--jade)', display: 'flex' }}><IcoCelebrate size={20} /></span>
           <span style={{ fontSize: 13, color: 'var(--jade)', fontWeight: 600 }}>
             {lang === 'th' ? 'คุณได้รับการส่งฟรีแล้ว!' : lang === 'zh' ? '您已获得免运费！' : "You've unlocked FREE shipping!"}
           </span>
@@ -89,19 +90,13 @@ export default function CartPage() {
               <div
                 key={item.product_id}
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: '80px 1fr auto',
-                  gap: 16,
-                  padding: '20px 0',
-                  borderBottom: idx === items.length - 1 ? 'none' : '1px solid var(--cream-dark)',
+                  display: 'grid', gridTemplateColumns: '80px 1fr auto', gap: 16,
+                  padding: '20px 0', borderBottom: idx === items.length - 1 ? 'none' : '1px solid var(--cream-dark)',
                   alignItems: 'center',
                 }}
                 className="cart-item"
               >
-                <Link
-                  href={`/product/${item.product_id}`}
-                  style={{ width: 80, height: 80, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}
-                >
+                <Link href={`/product/${item.product_id}`} style={{ width: 80, height: 80, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
                   {item.image && (
                     <Image src={item.image} alt={item.name} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
                   )}
@@ -117,37 +112,16 @@ export default function CartPage() {
                     </span>
                     {/* Qty stepper */}
                     <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid var(--cream-dark)', borderRadius: 'var(--radius)' }}>
-                      <button
-                        onClick={() => setQty(item.product_id, item.qty - 1)}
-                        style={qtyBtnStyle}
-                        aria-label={`Decrease ${item.name}`}
-                      >
-                        −
-                      </button>
+                      <button onClick={() => setQty(item.product_id, item.qty - 1)} style={qtyBtnStyle} aria-label={`Decrease ${item.name}`}>−</button>
                       <span style={{ padding: '0 12px', fontSize: 14, fontWeight: 600, minWidth: 30, textAlign: 'center' }}>{item.qty}</span>
-                      <button
-                        onClick={() => setQty(item.product_id, item.qty + 1)}
-                        style={qtyBtnStyle}
-                        aria-label={`Increase ${item.name}`}
-                      >
-                        ＋
-                      </button>
+                      <button onClick={() => setQty(item.product_id, item.qty + 1)} style={qtyBtnStyle} aria-label={`Increase ${item.name}`}>＋</button>
                     </div>
                     <button
                       onClick={() => { remove(item.product_id); toast(t.cart.removed, 'info'); }}
                       className="serif"
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--burgundy)',
-                        fontSize: 11,
-                        letterSpacing: 1,
-                        textTransform: 'uppercase',
-                        cursor: 'pointer',
-                        padding: '4px 8px',
-                      }}
+                      style={{ background: 'transparent', border: 'none', color: 'var(--burgundy)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', cursor: 'pointer', padding: '4px 8px' }}
                     >
-                      🗑 {t.cart.remove}
+                      × {t.cart.remove}
                     </button>
                   </div>
                 </div>
@@ -162,14 +136,8 @@ export default function CartPage() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16, alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-            <Link href="/shop" className="btn-text">
-              ← {t.cart.keepShopping}
-            </Link>
-            <button
-              onClick={() => { clear(); toast(t.cart.removed, 'info'); }}
-              className="btn-text"
-              style={{ color: 'var(--burgundy)' }}
-            >
+            <Link href="/shop" className="btn-text">← {t.cart.keepShopping}</Link>
+            <button onClick={() => { clear(); toast(t.cart.removed, 'info'); }} className="btn-text" style={{ color: 'var(--burgundy)' }}>
               {lang === 'th' ? 'ล้างตะกร้า' : lang === 'zh' ? '清空购物车' : 'Clear cart'}
             </button>
           </div>
@@ -197,14 +165,14 @@ export default function CartPage() {
             </span>
           </div>
 
-          <Link href="/checkout" className="btn-gold" style={{ display: 'flex', textAlign: 'center', marginTop: 20, width: '100%' }}>
-            🔒 {t.cart.checkout}
+          <Link href="/checkout" className="btn-gold" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, textAlign: 'center', marginTop: 20, width: '100%' }}>
+            <IcoLock size={14} /> {t.cart.checkout}
           </Link>
 
           <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div className="trust-pill">🔒 SSL Secure Checkout</div>
-            <div className="trust-pill">💳 Stripe · Visa · Mastercard</div>
-            <div className="trust-pill">📦 {lang === 'th' ? 'ส่งทั่วโลก' : lang === 'zh' ? '全球配送' : 'Worldwide Shipping'}</div>
+            <div className="trust-pill" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><IcoLock size={12} /> SSL Secure Checkout</div>
+            <div className="trust-pill">Stripe · Visa · Mastercard</div>
+            <div className="trust-pill" style={{ display: 'flex', alignItems: 'center', gap: 6 }}><IcoPackage size={12} /> {lang === 'th' ? 'ส่งทั่วโลก' : lang === 'zh' ? '全球配送' : 'Worldwide Shipping'}</div>
           </div>
         </aside>
       </div>
@@ -230,14 +198,7 @@ function Row({ label, value, faint }: { label: string; value: React.ReactNode; f
 }
 
 const qtyBtnStyle: React.CSSProperties = {
-  width: 32,
-  height: 32,
-  background: 'transparent',
-  border: 'none',
-  fontSize: 16,
-  cursor: 'pointer',
-  color: 'var(--text)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  width: 32, height: 32, background: 'transparent', border: 'none',
+  fontSize: 16, cursor: 'pointer', color: 'var(--text)',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
 };

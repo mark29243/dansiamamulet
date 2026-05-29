@@ -6,6 +6,7 @@ import QuickView from '@/components/QuickView';
 import { useLang } from '@/components/LangProvider';
 import { getDict, getCatName } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
+import { IcoSearch, IcoFilter } from '@/components/icons';
 import type { Product } from '@/lib/types';
 
 const PER_PAGE = 12;
@@ -127,7 +128,7 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
                 style={{ paddingLeft: 38, paddingRight: search ? 38 : 14 }}
                 aria-label={t.shop.search}
               />
-              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-faint)' }}>🔍</span>
+              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-faint)', display: 'flex' }}><IcoSearch size={16} /></span>
               {search && (
                 <button
                   onClick={() => setSearch('')}
@@ -155,7 +156,7 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
                 cursor: 'pointer',
               }}
             >
-              ⚙ {t.shop.filterBy}
+              <IcoFilter size={14} /> {t.shop.filterBy}
               {(selectedCats.length > 0 || filter !== 'all') && (
                 <span style={{ background: 'var(--gold)', color: 'var(--deep)', borderRadius: 999, padding: '0 7px', fontSize: 10, fontWeight: 600 }}>
                   {selectedCats.length + (filter !== 'all' ? 1 : 0)}
@@ -194,7 +195,7 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
           {/* Results */}
           {filtered.length === 0 ? (
             <div className="empty-state animate-fade-in">
-              <div className="icon">🔍</div>
+              <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoSearch size={56} /></div>
               <h3 className="serif" style={{ fontSize: 20, marginBottom: 8, color: 'var(--text)' }}>
                 {t.shop.noResults}
               </h3>

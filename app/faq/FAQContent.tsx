@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
+import { IcoMail, IcoChat } from '@/components/icons';
 
 const FAQ = {
   th: [
@@ -11,7 +12,7 @@ const FAQ = {
     { q: 'ใช้เวลาในการจัดส่งนานเท่าไหร่?', a: 'ภายในประเทศไทย 2-3 วัน, เอเชีย 5-7 วัน, ทั่วโลก 7-14 วัน พร้อมระบบติดตามพัสดุ' },
     { q: 'รับชำระเงินผ่านช่องทางใดบ้าง?', a: 'บัตรเครดิต/เดบิต Visa/Mastercard, PromptPay, Alipay, WeChat Pay ผ่านระบบ Stripe ที่ปลอดภัย' },
     { q: 'หากพระเครื่องไม่ถูกใจ สามารถคืนได้ไหม?', a: 'รับคืนภายใน 7 วันหลังรับสินค้า โดยพระเครื่องต้องอยู่ในสภาพเดิม' },
-    { q: 'มีการประกันความเสียหายระหว่างการจัดส่งหรือไม่?', a: 'มีครับ ทุกชิ้นมีประกันการจัดส่ง หากเกิดความเสียหายเราจะเปลี่ยนสินค้าให้ทันที' },   
+    { q: 'มีการประกันความเสียหายระหว่างการจัดส่งหรือไม่?', a: 'มีครับ ทุกชิ้นมีประกันการจัดส่ง หากเกิดความเสียหายเราจะเปลี่ยนสินค้าให้ทันที' },
     { q: 'ติดต่อสอบถามได้ที่ไหน?', a: ' WeChat: jarunpim, อีเมล: dansiamamulets2@gmail.com หรือโทร +66 89 815 7535' },
   ],
   en: [
@@ -115,8 +116,12 @@ export default function FAQContent() {
           {lang === 'th' ? 'ติดต่อทีมงานของเรา ตอบทุกข้อสงสัยในภาษาของคุณ' : lang === 'zh' ? '联系我们的团队，用您的语言回答所有问题' : 'Our team is happy to answer in your language'}
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="mailto:dansiamamulets2@gmail.com" className="btn-gold">✉ Email Us</a>
-          <a href="https://line.me/R/ti/p/jarunpim" target="_blank" rel="noopener noreferrer" className="btn-outline">💬 LINE</a>
+          <a href="mailto:dansiamamulets2@gmail.com" className="btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <IcoMail size={14} /> Email Us
+          </a>
+          <a href="https://line.me/R/ti/p/jarunpim" target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <IcoChat size={14} /> LINE
+          </a>
         </div>
       </div>
     </div>

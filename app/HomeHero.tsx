@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLang } from '@/components/LangProvider';
+import { IcoAmulet } from '@/components/icons';
 
 type MinProduct = { category: string; images?: string[] | null };
 
@@ -241,7 +242,7 @@ function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: st
           {image ? (
             <Image src={image} alt={name} fill style={{ objectFit: 'cover' }} unoptimized />
           ) : (
-            <span style={{ fontSize: 44, opacity: 0.25 }}>🙏</span>
+            <span style={{ opacity: 0.25, color: 'var(--gold)', display: 'flex' }}><IcoAmulet size={44} strokeWidth={1.5} /></span>
           )}
         </div>
         <div style={{ padding: '12px 14px' }}>

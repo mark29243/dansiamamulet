@@ -7,6 +7,7 @@ import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
+import { IcoLock, IcoUser, IcoMapPin, IcoPhone, IcoEdit, IcoTrash, IcoPackage, IcoShop, IcoCalendar } from '@/components/icons';
 import type { Order, Address } from '@/lib/types';
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
@@ -97,7 +98,7 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
     return (
       <div className="container animate-fade-in" style={{ padding: '60px 24px', maxWidth: 480, textAlign: 'center' }}>
         <div className="empty-state">
-          <div className="icon">🔒</div>
+          <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoLock size={56} /></div>
           <h1 className="serif" style={{ fontSize: 26, fontWeight: 500, marginBottom: 12, color: 'var(--text)' }}>
             {lang === 'th' ? 'เข้าสู่ระบบเพื่อดูคำสั่งซื้อ' : lang === 'zh' ? '登录查看订单' : 'Sign in to view orders'}
           </h1>
@@ -127,8 +128,8 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
             {t.nav.orders}
           </h1>
           {userEmail && (
-            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>
-              👤 {userEmail}
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 5 }}>
+              <IcoUser size={13} /> {userEmail}
             </p>
           )}
         </div>
@@ -140,8 +141,9 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
       {/* ─── Saved Addresses ─── */}
       <section style={{ marginBottom: 48 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
-          <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)' }}>
-            {lang === 'th' ? '📍 ที่อยู่ของฉัน' : lang === 'zh' ? '📍 我的地址' : '📍 Saved Addresses'}
+          <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <IcoMapPin size={18} style={{ color: 'var(--gold-dark)' }} />
+            {lang === 'th' ? 'ที่อยู่ของฉัน' : lang === 'zh' ? '我的地址' : 'Saved Addresses'}
           </h2>
           {addresses.length < 4 && editingId === null && (
             <button onClick={startNew} className="btn-outline" style={{ fontSize: 12, padding: '6px 14px' }}>
@@ -165,7 +167,11 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
                   {lang === 'th' ? (labelTh[addr.label] ?? addr.label) : addr.label}
                 </div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>{addr.name}</div>
-                {addr.phone && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>📞 {addr.phone}</div>}
+                {addr.phone && (
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <IcoPhone size={11} /> {addr.phone}
+                  </div>
+                )}
                 <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.6 }}>
                   {addr.address}
                   {addr.city && <>, {addr.city}</>}
@@ -174,11 +180,11 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
                   <br />{addr.country}
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-                  <button onClick={() => startEdit(addr)} className="btn-text" style={{ fontSize: 12, padding: '4px 0' }}>
-                    ✏️ {lang === 'th' ? 'แก้ไข' : 'Edit'}
+                  <button onClick={() => startEdit(addr)} className="btn-text" style={{ fontSize: 12, padding: '4px 0', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <IcoEdit size={12} /> {lang === 'th' ? 'แก้ไข' : 'Edit'}
                   </button>
-                  <button onClick={() => deleteAddress(addr.id)} className="btn-text" style={{ fontSize: 12, padding: '4px 0', color: 'var(--burgundy)' }}>
-                    🗑 {lang === 'th' ? 'ลบ' : 'Delete'}
+                  <button onClick={() => deleteAddress(addr.id)} className="btn-text" style={{ fontSize: 12, padding: '4px 0', color: 'var(--burgundy)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <IcoTrash size={12} /> {lang === 'th' ? 'ลบ' : 'Delete'}
                   </button>
                 </div>
               </div>
@@ -286,20 +292,23 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
 
       {/* ─── Orders ─── */}
       <section>
-        <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', marginBottom: 16 }}>
-          {lang === 'th' ? '📦 คำสั่งซื้อ' : lang === 'zh' ? '📦 订单' : '📦 Orders'}
+        <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <IcoPackage size={18} style={{ color: 'var(--gold-dark)' }} />
+          {lang === 'th' ? 'คำสั่งซื้อ' : lang === 'zh' ? '订单' : 'Orders'}
         </h2>
 
         {orders.length === 0 ? (
           <div className="empty-state">
-            <div className="icon">📦</div>
+            <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoPackage size={56} /></div>
             <h2 className="serif" style={{ fontSize: 20, fontWeight: 500, color: 'var(--text)', marginBottom: 8 }}>
               {lang === 'th' ? 'ยังไม่มีคำสั่งซื้อ' : lang === 'zh' ? '暂无订单' : 'No orders yet'}
             </h2>
             <p style={{ fontSize: 13, marginBottom: 20 }}>
               {lang === 'th' ? 'เริ่มเลือกซื้อพระเครื่องของเรา' : lang === 'zh' ? '开始浏览我们的佛牌' : 'Start browsing our collection'}
             </p>
-            <Link href="/shop" className="btn-gold">🛍️ {t.cart.browseShop}</Link>
+            <Link href="/shop" className="btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <IcoShop size={14} /> {t.cart.browseShop}
+            </Link>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -317,8 +326,8 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
                       </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                        📅 {new Date(o.created_at).toLocaleDateString(lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      <span style={{ fontSize: 11, color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <IcoCalendar size={11} /> {new Date(o.created_at).toLocaleDateString(lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                       </span>
                       <span style={{
                         fontSize: 10, letterSpacing: 2, textTransform: 'uppercase',

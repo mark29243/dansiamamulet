@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { IcoLock, IcoLightning, IcoGlobe, IcoMobile } from '@/components/icons';
 
 export const metadata: Metadata = {
   title: 'วิธีการชำระเงิน',
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 const methods = [
   {
     id: 'promptpay',
-    icon: '🇹🇭',
+    iconText: 'QR',
     name: 'PromptPay',
     nameTh: 'พร้อมเพย์',
     nameZh: '泰国扫码付',
@@ -25,7 +26,7 @@ const methods = [
   },
   {
     id: 'card',
-    icon: '💳',
+    iconText: '▪▪▪',
     name: 'Credit / Debit Card',
     nameTh: 'บัตรเครดิต / เดบิต',
     nameZh: '信用卡 / 借记卡',
@@ -39,7 +40,7 @@ const methods = [
   },
   {
     id: 'applepay',
-    icon: '',
+    iconText: '',
     name: 'Apple Pay',
     nameTh: 'Apple Pay',
     nameZh: 'Apple Pay',
@@ -53,7 +54,7 @@ const methods = [
   },
   {
     id: 'googlepay',
-    icon: '',
+    iconText: 'G',
     name: 'Google Pay',
     nameTh: 'Google Pay',
     nameZh: 'Google Pay',
@@ -67,7 +68,7 @@ const methods = [
   },
   {
     id: 'alipay',
-    icon: '支',
+    iconText: '支',
     name: 'Alipay 支付宝',
     nameTh: 'Alipay จ่ายเป็นหยวน (CNY)',
     nameZh: '支付宝付款',
@@ -81,6 +82,13 @@ const methods = [
     badgeColor: '#1677FF',
     logos: ['CNY', '人民币'],
   },
+];
+
+const trustItems = [
+  { icon: <IcoLock size={13} />, label: 'ปลอดภัย 100%' },
+  { icon: <IcoLightning size={13} />, label: 'ทันที' },
+  { icon: <IcoGlobe size={13} />, label: 'ทุกสกุลเงิน' },
+  { icon: <IcoMobile size={13} />, label: 'ทุกอุปกรณ์' },
 ];
 
 export default function PaymentPage() {
@@ -105,9 +113,9 @@ export default function PaymentPage() {
 
       {/* Trust bar */}
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 40 }}>
-        {['🔒 ปลอดภัย 100%', '⚡ ทันที', '🌏 ทุกสกุลเงิน', '📱 ทุกอุปกรณ์'].map((t) => (
-          <span key={t} style={{ fontSize: 12, padding: '6px 14px', background: 'var(--cream)', border: '1px solid var(--cream-dark)', borderRadius: 20, color: 'var(--text-muted)' }}>
-            {t}
+        {trustItems.map((item) => (
+          <span key={item.label} style={{ fontSize: 12, padding: '6px 14px', background: 'var(--cream)', border: '1px solid var(--cream-dark)', borderRadius: 20, color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {item.icon} {item.label}
           </span>
         ))}
       </div>
@@ -136,10 +144,10 @@ export default function PaymentPage() {
                 width: 56, height: 56, borderRadius: 14,
                 background: m.color, color: '#fff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: m.icon.length > 1 ? 24 : 20, fontWeight: 700,
+                fontSize: 20, fontWeight: 700,
                 flexShrink: 0, fontFamily: m.id === 'alipay' ? 'sans-serif' : 'inherit',
               }}>
-                {m.icon || (m.id === 'applepay' ? '🍎' : 'G')}
+                {m.iconText || (m.id === 'applepay' ? '' : 'G')}
               </div>
 
               <div style={{ flex: 1, minWidth: 200 }}>
@@ -174,8 +182,9 @@ export default function PaymentPage() {
 
       {/* Stripe security note */}
       <div className="card" style={{ marginTop: 28, padding: 20, textAlign: 'center', background: 'rgba(45,90,61,0.04)', border: '1px solid rgba(45,90,61,0.12)' }}>
-        <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.8 }}>
-          🔒 การชำระเงินด้วยบัตร PromptPay Apple Pay และ Google Pay ดำเนินการผ่าน{' '}
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.8, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <IcoLock size={13} style={{ flexShrink: 0 }} />
+          การชำระเงินด้วยบัตร PromptPay Apple Pay และ Google Pay ดำเนินการผ่าน{' '}
           <strong style={{ color: 'var(--text)' }}>Stripe</strong>{' '}
           — ระบบชำระเงินมาตรฐานระดับโลก ข้อมูลบัตรของคุณถูกเข้ารหัสและปลอดภัย 100%
         </p>

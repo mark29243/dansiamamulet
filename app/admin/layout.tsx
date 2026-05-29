@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { IcoLock, IcoSettings } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +22,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     return (
       <div className="container" style={{ padding: '60px 24px', maxWidth: 540, textAlign: 'center' }}>
         <div className="empty-state">
-          <div className="icon">🔒</div>
+          <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoLock size={56} /></div>
           <h1 className="serif" style={{ fontSize: 24, fontWeight: 600, marginBottom: 12, color: 'var(--text)' }}>
             Admin access required
           </h1>
@@ -44,7 +45,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div style={{ background: 'var(--deep)', padding: '12px 24px', borderBottom: '1px solid #2A1E08' }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
           <div className="serif" style={{ color: 'var(--gold)', fontSize: 14, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', fontStyle: 'italic' }}>
-            ⚙ Admin
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoSettings size={14} /> Admin</span>
           </div>
           <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
             <Link href="/admin" style={adminNavStyle}>Dashboard</Link>

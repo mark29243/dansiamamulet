@@ -47,7 +47,7 @@ export default function PublishButton({ productId }: { productId: number }) {
         textTransform: 'uppercase',
       }}
     >
-      {busy ? '🤖 ...' : 'Publish'}
+      {busy ? '...' : 'Publish'}
     </button>
   );
 }

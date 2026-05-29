@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
+import { IcoShop, IcoAmulet, IcoShieldCheck, IcoDiamond, IcoGlobe } from '@/components/icons';
+import type { ReactNode } from 'react';
 
 const CONTENT = {
   th: {
@@ -47,7 +49,7 @@ const CONTENT = {
     sections: [
       {
         title: '传承',
-        body: '丹暹罗成立的初衷是将泰国佛教佛牌的丰富传统与世界各地的信众联系起来。我们收藏的每一件佛牌都是亲自从泰国各地的著名寺庙采购，与高僧大师及其传承直接合作。',
+        body: '丹暹罗成立的初衷是将泰国佛教佛牌的丰富传统与世界各地的信众联系起来。我们收藏的每件佛牌都是亲自从泰国各地的著名寺庙采购，与高僧大师及其传承直接合作。',
       },
       {
         title: '正品认证',
@@ -70,7 +72,9 @@ export default function AboutContent() {
     <div>
       {/* Hero */}
       <section style={{ background: 'linear-gradient(135deg, #0D0804 0%, #1A1208 100%)', padding: '60px 24px', textAlign: 'center', color: '#fff', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, fontSize: 240, opacity: 0.04, color: 'var(--gold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} aria-hidden>🙏</div>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.04, color: 'var(--gold)', pointerEvents: 'none' }} aria-hidden>
+          <IcoAmulet size={240} />
+        </div>
         <div className="container" style={{ position: 'relative' }}>
           <div className="serif" style={{ fontSize: 11, letterSpacing: 5, color: 'var(--gold)', marginBottom: 14 }}>✦ ABOUT US ✦</div>
           <h1 className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'} style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: lang === 'en' ? 300 : 600, marginBottom: 10, fontStyle: lang === 'en' ? 'italic' : 'normal' }}>
@@ -106,27 +110,29 @@ export default function AboutContent() {
 
         {/* Values cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginTop: 40 }}>
-          <ValueCard icon="🙏" label={lang === 'th' ? 'ศรัทธา' : lang === 'zh' ? '信仰' : 'Devotion'} />
-          <ValueCard icon="⚖️" label={lang === 'th' ? 'ความซื่อสัตย์' : lang === 'zh' ? '诚信' : 'Integrity'} />
-          <ValueCard icon="💎" label={lang === 'th' ? 'คุณภาพ' : lang === 'zh' ? '品质' : 'Quality'} />
-          <ValueCard icon="🌏" label={lang === 'th' ? 'ทั่วโลก' : lang === 'zh' ? '全球' : 'Worldwide'} />
+          <ValueCard icon={<IcoAmulet size={32} />} label={lang === 'th' ? 'ศรัทธา' : lang === 'zh' ? '信仰' : 'Devotion'} />
+          <ValueCard icon={<IcoShieldCheck size={32} />} label={lang === 'th' ? 'ความซื่อสัตย์' : lang === 'zh' ? '诚信' : 'Integrity'} />
+          <ValueCard icon={<IcoDiamond size={32} />} label={lang === 'th' ? 'คุณภาพ' : lang === 'zh' ? '品质' : 'Quality'} />
+          <ValueCard icon={<IcoGlobe size={32} />} label={lang === 'th' ? 'ทั่วโลก' : lang === 'zh' ? '全球' : 'Worldwide'} />
         </div>
 
         <div style={{ textAlign: 'center', marginTop: 56, paddingTop: 40, borderTop: '1px solid var(--cream-dark)' }}>
           <h3 className="serif" style={{ fontSize: 20, marginBottom: 16, color: 'var(--text)' }}>
             {lang === 'th' ? 'พร้อมเริ่มต้นการเดินทาง?' : lang === 'zh' ? '准备开始您的旅程？' : 'Ready to begin your journey?'}
           </h3>
-          <Link href="/shop" className="btn-gold">🛍️ {t.cart.browseShop}</Link>
+          <Link href="/shop" className="btn-gold" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <IcoShop size={14} /> {t.cart.browseShop}
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-function ValueCard({ icon, label }: { icon: string; label: string }) {
+function ValueCard({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <div className="card" style={{ padding: 20, textAlign: 'center' }}>
-      <div style={{ fontSize: 32, marginBottom: 10 }}>{icon}</div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10, color: 'var(--gold-dark)' }}>{icon}</div>
       <div className="serif" style={{ fontSize: 12, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold-dark)', fontWeight: 600 }}>
         {label}
       </div>

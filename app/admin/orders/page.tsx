@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
+import { IcoPackage } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,7 +67,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
 
       {list.length === 0 ? (
         <div className="empty-state">
-          <div className="icon">📦</div>
+          <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoPackage size={56} /></div>
           <p>No orders found.</p>
         </div>
       ) : (

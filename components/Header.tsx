@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { IcoSearch, IcoCart, IcoUser, IcoPhone, IcoMail } from '@/components/icons';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
 import { getDict, langNames, langs } from '@/lib/i18n';
@@ -52,9 +53,9 @@ export default function Header() {
       {/* Top language bar */}
       <div style={{ background: 'var(--deep)', padding: '6px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #2A1E08' }}>
         <div style={{ display: 'flex', gap: 14, alignItems: 'center', fontSize: 11, color: '#6B5730', letterSpacing: 1 }} className="hide-mobile">
-          <span>📞 +66 89 815 7535</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><IcoPhone size={13} /> +66 89 815 7535</span>
           <span style={{ color: '#3A2A10' }}>·</span>
-          <span>✉ dansiamamulets2@gmail.com</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><IcoMail size={13} /> dansiamamulets2@gmail.com</span>
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           <span style={{ color: '#6B5730', fontSize: 10, marginRight: 8, letterSpacing: 2 }} className="hide-mobile">LANG</span>
@@ -156,13 +157,13 @@ export default function Header() {
           <Link
             href="/search"
             aria-label="Search"
-            style={{ color: 'var(--gold)', fontSize: 18, padding: '8px 6px', opacity: 0.8, display: 'flex', alignItems: 'center' }}
+            style={{ color: 'var(--gold)', padding: '8px 6px', opacity: 0.8, display: 'flex', alignItems: 'center' }}
           >
-            🔍
+            <IcoSearch size={20} />
           </Link>
           {userEmail ? (
-            <Link href="/orders" style={{ ...navLinkStyle, fontSize: 11, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className="hide-mobile" title={userEmail}>
-              👤 {userEmail.split('@')[0]}
+            <Link href="/orders" style={{ ...navLinkStyle, fontSize: 11, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }} className="hide-mobile" title={userEmail}>
+              <IcoUser size={14} /> {userEmail.split('@')[0]}
             </Link>
           ) : (
             <Link href="/signin" style={{ ...navLinkStyle, fontSize: 11 }} className="hide-mobile">
@@ -182,7 +183,7 @@ export default function Header() {
               transition: 'transform 0.2s',
             }}
           >
-            🛒
+            <IcoCart size={22} />
             {count > 0 && (
               <span
                 style={{
@@ -275,8 +276,8 @@ export default function Header() {
 
         <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid #3A2A10' }}>
           <div style={{ fontSize: 10, color: '#6B5730', letterSpacing: 2, marginBottom: 12 }}>CONTACT</div>
-          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 8 }}>📞 +66 89 815 7535</div>
-          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 16 }}>✉ dansiamamulets2@gmail.com</div>
+          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}><IcoPhone size={13} /> +66 89 815 7535</div>
+          <div style={{ fontSize: 13, color: 'var(--gold-light)', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}><IcoMail size={13} /> dansiamamulets2@gmail.com</div>
           <div style={{ display: 'flex', gap: 8 }}>
             {langs.map((l) => (
               <button

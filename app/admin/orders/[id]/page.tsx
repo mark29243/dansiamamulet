@@ -5,6 +5,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import type { Order } from '@/lib/types';
 import OrderActions from './OrderActions';
+import { IcoCalendar } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +32,7 @@ export default async function AdminOrderPage({ params }: { params: { id: string 
             #{orderNo}
           </h1>
           <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
-            📅 {new Date(o.created_at).toLocaleString()}
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IcoCalendar size={11} /> {new Date(o.created_at).toLocaleString()}</span>
           </div>
         </div>
         <OrderActions order={o} />

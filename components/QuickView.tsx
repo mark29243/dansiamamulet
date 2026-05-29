@@ -8,6 +8,7 @@ import { useCart } from './CartProvider';
 import { useToast } from './ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
+import { IcoAmulet } from './icons';
 import type { Product } from '@/lib/types';
 
 export default function QuickView({ product, onClose }: { product: Product | null; onClose: () => void }) {
@@ -122,7 +123,7 @@ export default function QuickView({ product, onClose }: { product: Product | nul
                   priority
                 />
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', fontSize: 80 }}>🙏</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--gold-dark)', opacity: 0.4 }}><IcoAmulet size={80} /></div>
               )}
             </div>
             {product.images.length > 1 && (
