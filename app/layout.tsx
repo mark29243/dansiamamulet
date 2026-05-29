@@ -37,9 +37,9 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: '/logo.png',
-        width: 1080,
-        height: 1080,
+        url: '/og-image.svg',
+        width: 1200,
+        height: 630,
         alt: 'Dan Siam Amulets — Authentic Thai Buddhist Amulets',
       },
     ],
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Dan Siam Amulets · พระเครื่องแท้',
     description: 'Authentic Thai amulets from sacred temples. Worldwide shipping with certificate of authenticity.',
-    images: ['/logo.png'],
+    images: ['/og-image.svg'],
   },
   appleWebApp: {
     capable: true,
