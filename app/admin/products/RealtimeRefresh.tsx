@@ -18,7 +18,14 @@ export default function RealtimeRefresh({ tables = ['products'] }: { tables?: st
     });
 
     channel.subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    // fallback: poll every 30s in case realtime event is missed
+    const interval = setInterval(() => router.refresh(), 30_000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
   }, []);
 
   return null;
