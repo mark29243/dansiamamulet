@@ -7,6 +7,6 @@ const ALLOWED_ORIGINS = [
 
 export function checkOrigin(req: Request): boolean {
   const origin = req.headers.get('origin');
-  if (!origin) return true; // server-to-server / curl
-  return ALLOWED_ORIGINS.some((o) => origin === o || origin.startsWith(o));
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.includes(origin);
 }

@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { checkOrigin } from '@/lib/csrf';
+import { rateLimit, getIp } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   if (!checkOrigin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!rateLimit(getIp(req), 10, 60_000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
 
   const { code, email } = await req.json();
   if (!code || !email) return NextResponse.json({ error: 'Missing code or email' }, { status: 400 });

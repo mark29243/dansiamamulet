@@ -25,6 +25,7 @@ type Body = {
   carrier?: CarrierCode;
   lang: 'th' | 'en' | 'zh';
   payment_method?: 'card' | 'alipay';
+  discount_code?: string;
 };
 
 export async function POST(req: Request) {
@@ -37,13 +38,33 @@ export async function POST(req: Request) {
     }
 
     const body = (await req.json()) as Body;
-    const { items, customer, shipping_cost, carrier, lang, payment_method = 'card' } = body;
+    const { items, customer, shipping_cost, carrier, lang, payment_method = 'card', discount_code } = body;
 
     if (!items?.length) {
       return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
     }
+    if (items.length > 50) {
+      return NextResponse.json({ error: 'Too many items in cart' }, { status: 400 });
+    }
+    for (const item of items) {
+      if (!Number.isInteger(item.qty) || item.qty < 1 || item.qty > 99) {
+        return NextResponse.json({ error: 'Invalid item quantity' }, { status: 400 });
+      }
+    }
     if (!customer?.email || !customer?.name || !customer?.address) {
       return NextResponse.json({ error: 'Missing required customer fields' }, { status: 400 });
+    }
+    if (
+      customer.name.length > 200 ||
+      customer.email.length > 200 ||
+      customer.address.length > 500 ||
+      (customer.address2 && customer.address2.length > 500) ||
+      customer.city.length > 100 ||
+      customer.postal.length > 20 ||
+      customer.country.length > 2 ||
+      (customer.phone && customer.phone.length > 30)
+    ) {
+      return NextResponse.json({ error: 'Customer field too long' }, { status: 400 });
     }
     if (typeof shipping_cost !== 'number' || shipping_cost < 0 || shipping_cost > 100_000_00) {
       return NextResponse.json({ error: 'Invalid shipping cost' }, { status: 400 });
@@ -112,13 +133,36 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Order does not qualify for free shipping' }, { status: 400 });
     }
 
-    const total = subtotal + shipping_cost;
+    // Validate discount code server-side
+    let discountAmount = 0;
+    let discountCodeId: number | null = null;
+    if (discount_code) {
+      const code = discount_code.toUpperCase().trim();
+      const { data: dc } = await admin
+        .from('discount_codes')
+        .select('id, percent, expires_at, used_at, email')
+        .eq('code', code)
+        .single();
+      if (!dc || dc.used_at || new Date(dc.expires_at) < new Date() || dc.email.toLowerCase() !== customer.email.toLowerCase()) {
+        return NextResponse.json({ error: 'Invalid or expired discount code' }, { status: 400 });
+      }
+      discountAmount = Math.round(subtotal * dc.percent / 100);
+      discountCodeId = dc.id;
+    }
+
+    const total = subtotal - discountAmount + shipping_cost;
 
     const isAlipay = payment_method === 'alipay';
-    const cnyRate = parseFloat(process.env.NEXT_PUBLIC_CNY_RATE || '0.20');
-    if (isNaN(cnyRate) || cnyRate <= 0 || cnyRate > 10) {
-      console.error('[checkout] Invalid CNY_RATE env:', process.env.NEXT_PUBLIC_CNY_RATE);
-      return NextResponse.json({ error: 'Payment configuration error' }, { status: 500 });
+    let cnyRate = 0.20; // fallback
+    if (isAlipay) {
+      try {
+        const fx = await fetch('https://open.er-api.com/v6/latest/THB', { next: { revalidate: 3600 } });
+        const fxData = await fx.json();
+        const live = fxData?.rates?.CNY;
+        if (typeof live === 'number' && live > 0 && live < 10) cnyRate = live;
+      } catch {
+        console.warn('[checkout] FX fetch failed, using fallback rate');
+      }
     }
     const currency = isAlipay ? 'cny' : 'thb';
     const toUnit = (satang: number) => isAlipay ? Math.round(satang * cnyRate) : satang;
@@ -152,6 +196,20 @@ export async function POST(req: Request) {
       });
     }
 
+    // Add discount as negative line item for Stripe
+    if (discountAmount > 0) {
+      line_items.push({
+        price_data: {
+          currency,
+          product_data: {
+            name: lang === 'th' ? `ส่วนลด ${discount_code?.toUpperCase()}` : lang === 'zh' ? `折扣 ${discount_code?.toUpperCase()}` : `Discount ${discount_code?.toUpperCase()}`,
+          },
+          unit_amount: -toUnit(discountAmount),
+        },
+        quantity: 1,
+      });
+    }
+
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
 
     // Create draft order BEFORE redirecting (so we can match it via webhook)
@@ -172,6 +230,8 @@ export async function POST(req: Request) {
         items: canonicalItems,
         subtotal,
         shipping_cost,
+        discount_amount: discountAmount,
+        discount_code: discount_code?.toUpperCase().trim() || null,
         carrier: effectiveCarrier,
         total,
         currency: isAlipay ? 'cny' : 'thb',
@@ -183,6 +243,21 @@ export async function POST(req: Request) {
     if (orderErr || !order) {
       console.error('Order create failed:', orderErr);
       return NextResponse.json({ error: 'Could not create order' }, { status: 500 });
+    }
+
+    // Atomically claim discount code (single-use). The `.is('used_at', null)`
+    // guard prevents a concurrent checkout from reusing the same code.
+    if (discountCodeId) {
+      const { data: claimed } = await admin
+        .from('discount_codes')
+        .update({ used_at: new Date().toISOString(), order_id: order.id })
+        .eq('id', discountCodeId)
+        .is('used_at', null)
+        .select('id');
+      if (!claimed?.length) {
+        await admin.from('orders').update({ status: 'cancelled' }).eq('id', order.id);
+        return NextResponse.json({ error: 'Invalid or expired discount code' }, { status: 400 });
+      }
     }
 
     // Alipay manual payment — skip Stripe, return CNY amount for QR page
