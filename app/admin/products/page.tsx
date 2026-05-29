@@ -5,6 +5,7 @@ import StockEditor from './StockEditor';
 import PublishButton from './PublishButton';
 import { AdminProductName, AdminProductCategory, AdminProductPrice } from './AdminProductName';
 import { IcoEye } from '@/components/icons';
+import RealtimeRefresh from './RealtimeRefresh';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
+      <RealtimeRefresh tables={['products']} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1 className="serif" style={{ fontSize: 28, fontWeight: 500, color: 'var(--text)' }}>
           Products <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 300 }}>({list.length})</span>
