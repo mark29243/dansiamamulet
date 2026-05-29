@@ -1,11 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 export default function RealtimeRefresh({ tables = ['products'] }: { tables?: string[] }) {
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Refresh every time the user navigates to any admin page
+  useEffect(() => {
+    router.refresh();
+  }, [pathname]);
 
   useEffect(() => {
     const refresh = () => router.refresh();
