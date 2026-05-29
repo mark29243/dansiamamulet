@@ -13,7 +13,7 @@ const FAQ = {
     { q: 'รับชำระเงินผ่านช่องทางใดบ้าง?', a: 'บัตรเครดิต/เดบิต Visa/Mastercard, PromptPay, Alipay, WeChat Pay ผ่านระบบ Stripe ที่ปลอดภัย' },
     { q: 'หากพระเครื่องไม่ถูกใจ สามารถคืนได้ไหม?', a: 'รับคืนภายใน 7 วันหลังรับสินค้า โดยพระเครื่องต้องอยู่ในสภาพเดิม' },
     { q: 'มีการประกันความเสียหายระหว่างการจัดส่งหรือไม่?', a: 'มีครับ ทุกชิ้นมีประกันการจัดส่ง หากเกิดความเสียหายเราจะเปลี่ยนสินค้าให้ทันที' },
-    { q: 'ติดต่อสอบถามได้ที่ไหน?', a: ' WeChat: jarunpim, อีเมล: dansiamamulets2@gmail.com หรือโทร +66 89 815 7535' },
+    { q: 'ติดต่อสอบถามได้ที่ไหน?', a: ' WeChat: jajackthai, อีเมล: dansiamamulets2@gmail.com หรือโทร +66 89 815 7535' },
   ],
   en: [
     { q: 'Are your amulets authentic?', a: 'Yes — every piece comes with a certificate of authenticity and is verified by experts with over 20 years of experience.' },
@@ -23,7 +23,7 @@ const FAQ = {
     { q: 'Is shipping insured?', a: 'Yes, every shipment is insured. If damage occurs in transit, we will replace your order immediately.' },
     { q: 'Can I send an amulet as a gift?', a: 'Absolutely. Every amulet ships in a beautiful wooden box. Gift wrapping and personalized cards are available on request.' },
     { q: 'How do I venerate this amulet?', a: 'Each amulet ships with a TH/EN/ZH veneration guide including the appropriate mantra and basic ceremony.' },
-    { q: 'How can I contact you?', a: 'LINE: jarunpim, WeChat: jarunpim, email: dansiamamulets2@gmail.com, or phone: +66 89 815 7535' },
+    { q: 'How can I contact you?', a: 'LINE: jarunpim, WeChat: jajackthai, email: dansiamamulets2@gmail.com, or phone: +66 89 815 7535' },
   ],
   zh: [
     { q: '你们的佛牌是正品吗？', a: '是的——每件均附有真品证书，并由拥有20年以上经验的专家鉴定。' },

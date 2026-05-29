@@ -71,7 +71,7 @@ const faqJsonLd = {
       name: 'How can I contact you?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'LINE: jarunpim, WeChat: jarunpim, email: dansiamamulets2@gmail.com, or phone: +66 89 815 7535',
+        text: 'LINE: jarunpim, WeChat: jajackthai, email: dansiamamulets2@gmail.com, or phone: +66 89 815 7535',
       },
     },
   ],
