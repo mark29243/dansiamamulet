@@ -40,10 +40,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 200px)', background: 'var(--cream)' }}>
-      {/* Admin nav */}
-      <div style={{ background: 'var(--deep)', borderBottom: '1px solid #2A1E08', overflowX: 'auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '12px 20px', minWidth: 'max-content' }}>
+    <div style={{ minHeight: 'calc(100vh - 200px)', background: 'var(--cream)', paddingTop: 44 }}>
+      {/* Admin nav — fixed at very top */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999, background: 'var(--deep)', borderBottom: '1px solid #2A1E08', overflowX: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '10px 20px', minWidth: 'max-content' }}>
           <div className="serif" style={{ color: 'var(--gold)', fontSize: 14, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', fontStyle: 'italic', flexShrink: 0 }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoSettings size={14} /> Admin</span>
           </div>
