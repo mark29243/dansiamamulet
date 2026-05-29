@@ -1,9 +1,10 @@
 // Thailand Post international shipping rates
-// Weight formula: qty ≤ 3 → 200 g, each item over 3 → +30 g
+// Weight formula: first item = 100 g, each additional item +20 g
 //
 // RATES: verify against official rate cards
-//   ePacket  — 101–200 g band
-//   SPA      — Small Packet Air, 151–200 g band
+//   ePacket  — base table = 101–200 g band (1-item orders at 100g use this rate, slightly conservative)
+//   SPA      — base table = 151–200 g band (1–3 item orders at 100–140g use this rate, slightly conservative)
+// TODO: add lighter-band rates (ePacket 0–100g, SPA 0–50g/51–100g/101–150g) from PDF for exact pricing
 
 export type CarrierCode = 'epacket' | 'spa' | 'domestic';
 
