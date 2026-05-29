@@ -33,6 +33,12 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [addrError, setAddrError] = useState('');
+  const [reviewOrderId, setReviewOrderId] = useState<string | null>(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewBody, setReviewBody] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewedOrders, setReviewedOrders] = useState<Set<string>>(new Set());
+  const [discountCode, setDiscountCode] = useState<string | null>(null);
 
   const fetchAddresses = useCallback(async () => {
     setAddrLoading(true);
@@ -75,22 +81,53 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
     const isNew = editingId === 'new';
     const url = isNew ? '/api/addresses' : `/api/addresses/${editingId}`;
     const method = isNew ? 'POST' : 'PUT';
-    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
-    if (res.ok) {
-      await fetchAddresses();
-      setEditingId(null);
-    } else {
-      const d = await res.json();
-      setAddrError(d.error || 'Error saving');
+    try {
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
+      if (res.ok) {
+        await fetchAddresses();
+        setEditingId(null);
+      } else {
+        const d = await res.json().catch(() => ({}));
+        setAddrError((d as any).error || 'Error saving');
+      }
+    } catch {
+      setAddrError('Network error — please try again');
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
+  }
+
+  async function submitReview() {
+    if (!reviewOrderId || reviewBody.trim().length < 10) return;
+    setReviewSubmitting(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: reviewOrderId, rating: reviewRating, body: reviewBody, lang }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setReviewedOrders((prev) => new Set([...prev, reviewOrderId]));
+        setDiscountCode(data.code ?? null);
+        setReviewOrderId(null);
+        setReviewBody('');
+        setReviewRating(5);
+      }
+    } catch {
+      // network error — button re-enables so user can retry
+    } finally {
+      setReviewSubmitting(false);
+    }
   }
 
   async function deleteAddress(id: number) {
     if (!confirm(lang === 'th' ? 'ลบที่อยู่นี้?' : 'Delete this address?')) return;
-    await fetch(`/api/addresses/${id}`, { method: 'DELETE' });
-    setAddresses((prev) => prev.filter((a) => a.id !== id));
-    if (editingId === id) setEditingId(null);
+    const res = await fetch(`/api/addresses/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      setAddresses((prev) => prev.filter((a) => a.id !== id));
+      if (editingId === id) setEditingId(null);
+    }
   }
 
   // Not logged in
@@ -297,6 +334,69 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
           {lang === 'th' ? 'คำสั่งซื้อ' : lang === 'zh' ? '订单' : 'Orders'}
         </h2>
 
+        {/* Discount code success banner */}
+        {discountCode && (
+          <div style={{ background: 'rgba(45,90,61,0.08)', border: '1px solid var(--gold)', borderRadius: 'var(--radius-lg)', padding: '20px 24px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <div className="serif" style={{ fontSize: 13, fontWeight: 600, color: 'var(--gold-dark)', marginBottom: 4 }}>
+                {lang === 'th' ? '🎉 ขอบคุณสำหรับรีวิว! โค้ดส่วนลด 5% ของคุณ:' : lang === 'zh' ? '🎉 感谢评价！您的5%折扣码：' : '🎉 Thanks for your review! Your 5% discount code:'}
+              </div>
+              <div style={{ fontFamily: 'monospace', fontSize: 20, fontWeight: 700, letterSpacing: 4, color: 'var(--gold)' }}>{discountCode}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+                {lang === 'th' ? 'โค้ดจะส่งไปที่อีเมลของคุณด้วย · ใช้ได้ภายใน 14 วัน' : lang === 'zh' ? '折扣码已发送至您的邮箱 · 14天内有效' : 'Code also sent to your email · Valid for 14 days'}
+              </div>
+            </div>
+            <button onClick={() => setDiscountCode(null)} style={{ background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
+          </div>
+        )}
+
+        {/* Review modal */}
+        {reviewOrderId && (
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+            <div className="card" style={{ width: '100%', maxWidth: 480, padding: 28 }}>
+              <h3 className="serif" style={{ fontSize: 20, fontWeight: 500, marginBottom: 20, color: 'var(--text)' }}>
+                {lang === 'th' ? 'เขียนรีวิว' : lang === 'zh' ? '写评价' : 'Write a Review'}
+              </h3>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cormorant Garamond', serif" }}>
+                  {lang === 'th' ? 'คะแนน' : lang === 'zh' ? '评分' : 'Rating'}
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {[1,2,3,4,5].map((n) => (
+                    <button key={n} onClick={() => setReviewRating(n)} style={{ background: 'none', border: 'none', fontSize: 28, cursor: 'pointer', color: n <= reviewRating ? 'var(--gold)' : 'var(--cream-dark)', padding: 0 }}>★</button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 8, fontFamily: "'Cormorant Garamond', serif" }}>
+                  {lang === 'th' ? 'รีวิว (10-1000 ตัวอักษร)' : lang === 'zh' ? '评价内容（10-1000字）' : 'Review (10–1000 characters)'}
+                </div>
+                <textarea
+                  value={reviewBody}
+                  onChange={(e) => setReviewBody(e.target.value)}
+                  rows={5}
+                  style={{ width: '100%', padding: '10px 12px', fontSize: 13, border: '1px solid var(--cream-dark)', borderRadius: 4, resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                  placeholder={lang === 'th' ? 'แชร์ประสบการณ์ของคุณ...' : lang === 'zh' ? '分享您的体验...' : 'Share your experience...'}
+                />
+                <div style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 4 }}>{reviewBody.length}/1000</div>
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button onClick={submitReview} disabled={reviewSubmitting || reviewBody.trim().length < 10} className="btn-gold" style={{ fontSize: 13 }}>
+                  {reviewSubmitting ? '…' : (lang === 'th' ? 'ส่งรีวิว' : lang === 'zh' ? '提交评价' : 'Submit Review')}
+                </button>
+                <button onClick={() => { setReviewOrderId(null); setReviewBody(''); setReviewRating(5); }} className="btn-outline" style={{ fontSize: 13 }}>
+                  {lang === 'th' ? 'ยกเลิก' : lang === 'zh' ? '取消' : 'Cancel'}
+                </button>
+              </div>
+              <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 12 }}>
+                {lang === 'th' ? '✦ รีวิวจะแสดงหลังผ่านการอนุมัติ · คุณจะได้รับโค้ดส่วนลด 5% ทางอีเมล'
+                  : lang === 'zh' ? '✦ 评价经审核后显示 · 您将收到5%折扣码邮件'
+                  : '✦ Reviews are shown after approval · You\'ll receive a 5% discount code by email'}
+              </p>
+            </div>
+          </div>
+        )}
+
         {orders.length === 0 ? (
           <div className="empty-state">
             <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoPackage size={56} /></div>
@@ -359,9 +459,19 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
                       ))}
                     </ul>
 
-                    <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                      <span className="serif" style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)' }}>{t.cart.total}</span>
-                      <span className="serif" style={{ fontSize: 20, fontWeight: 600, color: 'var(--gold-dark)' }}>{formatPrice(o.total, lang)}</span>
+                    <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span className="serif" style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)' }}>{t.cart.total}</span>
+                        <span className="serif" style={{ fontSize: 20, fontWeight: 600, color: 'var(--gold-dark)' }}>{formatPrice(o.total, lang)}</span>
+                      </div>
+                      {['paid', 'shipped', 'delivered'].includes(o.status) && !reviewedOrders.has(o.id) && (
+                        <button onClick={() => setReviewOrderId(o.id)} className="btn-outline" style={{ fontSize: 12, padding: '7px 16px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                          ★ {lang === 'th' ? 'เขียนรีวิว' : lang === 'zh' ? '写评价' : 'Write Review'}
+                        </button>
+                      )}
+                      {reviewedOrders.has(o.id) && (
+                        <span style={{ fontSize: 12, color: '#2D5A3D' }}>✓ {lang === 'th' ? 'ส่งรีวิวแล้ว' : lang === 'zh' ? '已评价' : 'Reviewed'}</span>
+                      )}
                     </div>
                   </div>
                 </article>

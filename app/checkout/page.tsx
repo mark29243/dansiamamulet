@@ -23,6 +23,10 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'alipay'>('card');
+  const [discountCode, setDiscountCode] = useState('');
+  const [discountPercent, setDiscountPercent] = useState<number | null>(null);
+  const [discountError, setDiscountError] = useState('');
+  const [validatingCode, setValidatingCode] = useState(false);
 
   const [form, setForm] = useState({
     name: '', email: '', phone: '', address: '', address2: '', city: '', postal: '', country: 'TH',
@@ -87,7 +91,34 @@ export default function CheckoutPage() {
         : selectedOption.cost)
     : 0;
   const shipping = (isTH && subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : baseShipping;
-  const total = subtotal + shipping;
+  const discountAmount = discountPercent ? Math.round(subtotal * discountPercent / 100) : 0;
+  const total = subtotal - discountAmount + shipping;
+
+  async function applyDiscount() {
+    if (!discountCode.trim() || !form.email.trim()) {
+      setDiscountError(lang === 'th' ? 'กรุณากรอกอีเมลก่อน' : lang === 'zh' ? '请先填写邮箱' : 'Please enter your email first');
+      return;
+    }
+    setValidatingCode(true);
+    setDiscountError('');
+    try {
+      const res = await fetch('/api/discount/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: discountCode.trim().toUpperCase(), email: form.email.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && (data as any).valid) {
+        setDiscountPercent((data as any).percent);
+      } else {
+        setDiscountError((data as any).error || (lang === 'th' ? 'โค้ดไม่ถูกต้อง' : lang === 'zh' ? '折扣码无效' : 'Invalid code'));
+      }
+    } catch {
+      setDiscountError(lang === 'th' ? 'เกิดข้อผิดพลาด กรุณาลองใหม่' : 'Network error — please try again');
+    } finally {
+      setValidatingCode(false);
+    }
+  }
 
   // The carrier code sent to the API includes the -remote suffix when applicable
   const effectiveCarrier: CarrierCode | null = isRemote && shippingMethod
@@ -129,6 +160,7 @@ export default function CheckoutPage() {
           carrier: effectiveCarrier,
           lang,
           payment_method: paymentMethod,
+          discount_code: discountPercent ? discountCode.trim().toUpperCase() : undefined,
         }),
       });
       const data = await res.json();
@@ -360,6 +392,35 @@ export default function CheckoutPage() {
 
           <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 12 }}>
             <SumRow l={t.cart.subtotal} v={formatPrice(subtotal, lang)} />
+            {/* Discount code */}
+            <div style={{ marginBottom: 10 }}>
+              {discountPercent ? (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 10px', background: 'rgba(45,90,61,0.08)', borderRadius: 6, border: '1px solid rgba(45,90,61,0.2)' }}>
+                  <span style={{ fontSize: 12, color: '#2D5A3D', fontWeight: 600 }}>
+                    🏷 {discountCode.toUpperCase()} (-{discountPercent}%)
+                  </span>
+                  <span style={{ fontSize: 13, color: '#2D5A3D', fontWeight: 600 }}>-{formatPrice(discountAmount, lang)}</span>
+                  <button type="button" onClick={() => { setDiscountPercent(null); setDiscountCode(''); }} style={{ background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', color: 'var(--text-muted)', padding: '0 0 0 8px' }}>✕</button>
+                </div>
+              ) : (
+                <div>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <input
+                      type="text"
+                      value={discountCode}
+                      onChange={(e) => { setDiscountCode(e.target.value.toUpperCase()); setDiscountError(''); }}
+                      onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), applyDiscount())}
+                      placeholder={lang === 'th' ? 'โค้ดส่วนลด' : lang === 'zh' ? '折扣码' : 'Discount code'}
+                      style={{ flex: 1, padding: '8px 10px', fontSize: 12, border: '1px solid var(--cream-dark)', borderRadius: 4, fontFamily: 'monospace', letterSpacing: 1 }}
+                    />
+                    <button type="button" onClick={applyDiscount} disabled={validatingCode || !discountCode.trim()} className="btn-outline" style={{ fontSize: 11, padding: '8px 12px', whiteSpace: 'nowrap' }}>
+                      {validatingCode ? '…' : (lang === 'th' ? 'ใช้โค้ด' : lang === 'zh' ? '使用' : 'Apply')}
+                    </button>
+                  </div>
+                  {discountError && <div style={{ fontSize: 11, color: '#e53935', marginTop: 4 }}>{discountError}</div>}
+                </div>
+              )}
+            </div>
             <SumRow
               l={t.cart.shipping}
               v={
