@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { IcoLock, IcoSettings } from '@/components/icons';
 import RealtimeRefresh from '@/app/admin/products/RealtimeRefresh';
@@ -49,11 +48,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoSettings size={14} /> Admin</span>
           </div>
           <nav style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-            <Link href="/admin" style={adminNavStyle}>Dashboard</Link>
-            <Link href="/admin/orders" style={adminNavStyle}>Orders</Link>
-            <Link href="/admin/products" style={adminNavStyle}>Products</Link>
-            <Link href="/admin/import" style={adminNavStyle}>Import</Link>
-            <Link href="/admin/reviews" style={adminNavStyle}>Reviews</Link>
+            <a href="/admin" style={adminNavStyle}>Dashboard</a>
+            <a href="/admin/orders" style={adminNavStyle}>Orders</a>
+            <a href="/admin/products" style={adminNavStyle}>Products</a>
+            <a href="/admin/import" style={adminNavStyle}>Import</a>
+            <a href="/admin/reviews" style={adminNavStyle}>Reviews</a>
           </nav>
           <div style={{ fontSize: 11, color: '#6B5730', flexShrink: 0 }}>
             {admin.email} · <span className="serif" style={{ color: 'var(--gold)', letterSpacing: 1, textTransform: 'uppercase' }}>{admin.role}</span>
