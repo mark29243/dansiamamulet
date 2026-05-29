@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import { IcoPackage } from '@/components/icons';
-import RealtimeRefresh from '@/app/admin/products/RealtimeRefresh';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +21,6 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
-      <RealtimeRefresh tables={['orders']} />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <h1 className="serif" style={{ fontSize: 28, fontWeight: 500, color: 'var(--text)' }}>
           Orders <span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 300 }}>({list.length})</span>

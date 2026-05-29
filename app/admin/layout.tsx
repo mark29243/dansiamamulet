@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { IcoLock, IcoSettings } from '@/components/icons';
+import RealtimeRefresh from '@/app/admin/products/RealtimeRefresh';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,6 +53,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/orders" style={adminNavStyle}>Orders</Link>
             <Link href="/admin/products" style={adminNavStyle}>Products</Link>
             <Link href="/admin/import" style={adminNavStyle}>Import</Link>
+            <Link href="/admin/reviews" style={adminNavStyle}>Reviews</Link>
           </nav>
           <div style={{ marginLeft: 'auto', fontSize: 11, color: '#6B5730' }}>
             {admin.email} · <span className="serif" style={{ color: 'var(--gold)', letterSpacing: 1, textTransform: 'uppercase' }}>{admin.role}</span>
@@ -59,6 +61,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
       </div>
 
+      <RealtimeRefresh tables={['products', 'orders', 'reviews']} />
       {children}
     </div>
   );
