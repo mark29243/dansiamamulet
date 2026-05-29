@@ -15,6 +15,7 @@ export default function ShippingContent() {
         rows: [
           ['Kerry / Flash Express', '฿50', '1-3 วันทำการ'],
           ['พื้นที่ห่างไกล', '฿100', '3-5 วันทำการ'],
+          ['ไปรษณีย์ไทย', '฿50', '3-5 วันทำการ'],
         ],
         note: 'จัดส่งทุกวันจันทร์-เสาร์ ยกเว้นวันหยุดนักขัตฤกษ์',
       },
@@ -47,6 +48,7 @@ export default function ShippingContent() {
         rows: [
           ['Kerry / Flash Express', '฿50', '1-3 business days'],
           ['Remote areas', '฿100', '3-5 business days'],
+          ['Thailand Post', '฿50', '3-5 business days'],
         ],
         note: 'Ships Monday–Saturday, excluding public holidays',
       },
@@ -79,6 +81,7 @@ export default function ShippingContent() {
         rows: [
           ['Kerry / Flash Express', '฿50', '1-3个工作日'],
           ['偏远地区', '฿100', '3-5个工作日'],
+          ['泰国邮政', '฿50', '3-5个工作日'],
         ],
         note: '周一至周六发货，公共假日除外',
       },
