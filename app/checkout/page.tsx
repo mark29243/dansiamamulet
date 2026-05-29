@@ -12,10 +12,10 @@ import type { ShippingOption, CarrierCode } from '@/lib/shipping';
 import { isRemotePostal } from '@/lib/shipping';
 import { IcoLock, IcoWarning } from '@/components/icons';
 
-const FREE_SHIPPING_THRESHOLD = 70000; // ฿700 domestic only
+const FREE_SHIPPING_THRESHOLD = 100000; // ฿1,000 domestic only
 
 export default function CheckoutPage() {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, hydrated } = useCart();
   const { lang } = useLang();
   const { toast } = useToast();
   const t = getDict(lang);
@@ -69,8 +69,8 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (items.length === 0) router.replace('/cart');
-  }, [items.length, router]);
+    if (hydrated && items.length === 0) router.replace('/cart');
+  }, [hydrated, items.length, router]);
 
   useEffect(() => {
     if (mounted && form.country) {
@@ -78,7 +78,7 @@ export default function CheckoutPage() {
     }
   }, [form.country, totalQty, mounted, fetchRates]);
 
-  if (!mounted || items.length === 0) return null;
+  if (!mounted || !hydrated || items.length === 0) return null;
 
   const isTH = form.country === 'TH';
   // Auto-detect remote area from postal code (no manual input needed)

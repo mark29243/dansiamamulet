@@ -9,7 +9,7 @@ import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { IcoCart, IcoShop, IcoTruck, IcoCelebrate, IcoLock, IcoPackage } from '@/components/icons';
 
-const FREE_SHIPPING_THRESHOLD = 500000;
+const FREE_SHIPPING_THRESHOLD = 100000; // ฿1,000 — domestic (Thailand) only
 
 export default function CartPage() {
   const { items, setQty, remove, subtotal, count, clear } = useCart();
@@ -62,10 +62,10 @@ export default function CartPage() {
             <span style={{ color: 'var(--jade)', display: 'flex' }}><IcoTruck size={20} /></span>
             <span style={{ fontSize: 13, color: 'var(--text)' }}>
               {lang === 'th'
-                ? <>เพิ่มอีก <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> เพื่อรับ <strong>ส่งฟรี</strong></>
+                ? <>เพิ่มอีก <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> เพื่อรับ <strong>ส่งฟรี</strong> (เฉพาะในไทย)</>
                 : lang === 'zh'
-                ? <>再购 <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> 即可享 <strong>免运费</strong></>
-                : <>Add <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> more for <strong>FREE shipping</strong></>
+                ? <>再购 <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> 即可享 <strong>免运费</strong>（仅限泰国境内）</>
+                : <>Add <strong style={{ color: 'var(--jade)' }}>{formatPrice(remaining, lang)}</strong> more for <strong>FREE shipping</strong> (within Thailand)</>
               }
             </span>
           </div>
@@ -77,7 +77,7 @@ export default function CartPage() {
         <div className="animate-fade-in" style={{ background: 'rgba(45,90,61,0.1)', borderLeft: '3px solid var(--jade)', borderRadius: 'var(--radius-lg)', padding: 12, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ color: 'var(--jade)', display: 'flex' }}><IcoCelebrate size={20} /></span>
           <span style={{ fontSize: 13, color: 'var(--jade)', fontWeight: 600 }}>
-            {lang === 'th' ? 'คุณได้รับการส่งฟรีแล้ว!' : lang === 'zh' ? '您已获得免运费！' : "You've unlocked FREE shipping!"}
+            {lang === 'th' ? 'คุณได้รับการส่งฟรีแล้ว! (เฉพาะในไทย)' : lang === 'zh' ? '您已获得免运费！（仅限泰国境内）' : "You've unlocked FREE shipping! (within Thailand)"}
           </span>
         </div>
       )}

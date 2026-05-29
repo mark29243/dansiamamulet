@@ -11,10 +11,11 @@ type CartCtx = {
   clear: () => void;
   count: number;
   subtotal: number;
+  hydrated: boolean;
 };
 
 const CartContext = createContext<CartCtx>({
-  items: [], add: () => {}, remove: () => {}, setQty: () => {}, clear: () => {}, count: 0, subtotal: 0,
+  items: [], add: () => {}, remove: () => {}, setQty: () => {}, clear: () => {}, count: 0, subtotal: 0, hydrated: false,
 });
 
 const KEY = 'dansiam_cart';
@@ -62,7 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
 
   return (
-    <CartContext.Provider value={{ items, add, remove, setQty, clear, count, subtotal }}>
+    <CartContext.Provider value={{ items, add, remove, setQty, clear, count, subtotal, hydrated }}>
       {children}
     </CartContext.Provider>
   );
