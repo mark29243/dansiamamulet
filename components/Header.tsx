@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { IcoSearch, IcoCart, IcoUser, IcoPhone, IcoMail } from '@/components/icons';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
@@ -128,28 +129,17 @@ export default function Header() {
         {/* Logo center */}
         <Link
           href="/"
-          style={{ textAlign: 'center', flex: '0 0 auto', transition: 'transform 0.2s' }}
+          style={{ textAlign: 'center', flex: '0 0 auto', transition: 'transform 0.2s', display: 'flex', alignItems: 'center' }}
           aria-label="Dan Siam Amulets — Home"
         >
-          <div
-            className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'}
-            style={{
-              fontSize: scrolled ? 18 : 22,
-              fontWeight: 600,
-              color: 'var(--gold)',
-              letterSpacing: 2,
-              lineHeight: 1,
-              fontStyle: lang === 'en' ? 'italic' : 'normal',
-              transition: 'font-size 0.2s',
-            }}
-          >
-            {lang === 'th' ? 'พระเครื่อง แดนสยาม' : lang === 'zh' ? '丹暹罗佛牌' : 'Dan Siam Amulets'}
-          </div>
-          {!scrolled && (
-            <div style={{ fontSize: 10, color: '#6B5730', letterSpacing: 1, marginTop: 4, fontFamily: "'Sarabun', sans-serif" }}>
-              {lang === 'th' ? 'พระเครื่องแท้ รับรองคุณภาพ' : lang === 'zh' ? '正品泰国佛牌' : 'AUTHENTIC SACRED THAI AMULETS'}
-            </div>
-          )}
+          <Image
+            src="/logo.png"
+            alt="Dan Siam Amulets"
+            width={scrolled ? 44 : 56}
+            height={scrolled ? 44 : 56}
+            style={{ transition: 'width 0.2s, height 0.2s', borderRadius: 4 }}
+            priority
+          />
         </Link>
 
         {/* Right actions */}
@@ -226,9 +216,7 @@ export default function Header() {
         aria-modal="true"
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, paddingBottom: 20, borderBottom: '1px solid #3A2A10' }}>
-          <div className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'} style={{ fontSize: 18, color: 'var(--gold)', fontWeight: 600, fontStyle: lang === 'en' ? 'italic' : 'normal' }}>
-            {lang === 'th' ? 'พระเครื่อง แดนสยาม' : lang === 'zh' ? '丹暹罗佛牌' : 'Dan Siam Amulets'}
-          </div>
+          <Image src="/logo.png" alt="Dan Siam Amulets" width={44} height={44} style={{ borderRadius: 4 }} />
           <button
             onClick={() => setDrawerOpen(false)}
             aria-label={t.nav.close}
