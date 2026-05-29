@@ -32,6 +32,12 @@ const nextConfig = {
   reactStrictMode: true,
   // Compress output
   compress: true,
+  // Disable client-side router cache for dynamic pages (admin always gets fresh data)
+  experimental: {
+    staleTimes: {
+      dynamic: 0,
+    },
+  },
 };
 
 module.exports = nextConfig;

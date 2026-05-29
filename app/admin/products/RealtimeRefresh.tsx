@@ -8,22 +8,26 @@ export default function RealtimeRefresh({ tables = ['products'] }: { tables?: st
   const router = useRouter();
 
   useEffect(() => {
+    const refresh = () => router.refresh();
+
+    // Realtime: instant update when another admin makes a change
     const supabase = createClient();
     const channel = supabase.channel('admin-sync');
-
     tables.forEach((table) => {
-      channel.on('postgres_changes', { event: '*', schema: 'public', table }, () => {
-        router.refresh();
-      });
+      channel.on('postgres_changes', { event: '*', schema: 'public', table }, refresh);
     });
-
     channel.subscribe();
 
-    // fallback: poll every 30s in case realtime event is missed
-    const interval = setInterval(() => router.refresh(), 30_000);
+    // Refresh when user comes back to this tab
+    const onVisible = () => { if (!document.hidden) refresh(); };
+    document.addEventListener('visibilitychange', onVisible);
+
+    // Fallback poll every 30s
+    const interval = setInterval(refresh, 30_000);
 
     return () => {
       supabase.removeChannel(channel);
+      document.removeEventListener('visibilitychange', onVisible);
       clearInterval(interval);
     };
   }, []);
