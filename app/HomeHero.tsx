@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLang } from '@/components/LangProvider';
@@ -16,13 +16,17 @@ function pickImage(products: MinProduct[], cat: string): string | null {
 
 export default function HomeHero({ productCount, products }: { productCount: number; products: MinProduct[] }) {
   const { lang } = useLang();
+  // pickImage() uses Math.random(), which differs between server and client.
+  // Defer it to after mount so SSR and first client render stay identical (no hydration mismatch).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const catImages = useMemo(() => ({
-    'พระสมเด็จ': pickImage(products, 'พระสมเด็จ'),
-    'หลวงพ่อทวด': pickImage(products, 'หลวงพ่อทวด'),
-    'เหรียญ': pickImage(products, 'เหรียญ'),
-    'พระเกจิอาจารย์': pickImage(products, 'พระเกจิอาจารย์'),
-  }), [products]);
+    'พระสมเด็จ': mounted ? pickImage(products, 'พระสมเด็จ') : null,
+    'หลวงพ่อทวด': mounted ? pickImage(products, 'หลวงพ่อทวด') : null,
+    'เหรียญ': mounted ? pickImage(products, 'เหรียญ') : null,
+    'พระเกจิอาจารย์': mounted ? pickImage(products, 'พระเกจิอาจารย์') : null,
+  }), [products, mounted]);
 
   return (
     <>
