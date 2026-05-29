@@ -180,7 +180,8 @@ export default function HomeHero({ productCount, products }: { productCount: num
           <StatItem icon={<IconAmulet />} num={String(productCount)}
             label={lang === 'th' ? 'พระเครื่อง\nรายการทั้งหมด' : lang === 'zh' ? '在售佛牌总数' : 'Total Amulets'} />
           <StatItem icon={<IconStar />} num="100%"
-            label={lang === 'th' ? 'ความพึงพอใจ\nจากลูกค้า' : lang === 'zh' ? '客户满意度' : 'Customer Satisfaction'} />
+            label={lang === 'th' ? 'ความพึงพอใจ\nจากลูกค้า' : lang === 'zh' ? '客户满意度' : 'Customer Satisfaction'}
+            href="/reviews" />
         </div>
       </div>
 
@@ -254,18 +255,23 @@ function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: st
   );
 }
 
-function StatItem({ icon, num, label }: { icon: React.ReactNode; num: string; label: string }) {
-  return (
-    <div style={{
-      padding: '28px 16px', textAlign: 'center',
-      borderRight: '1px solid #2A1E08',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-    }}>
+function StatItem({ icon, num, label, href }: { icon: React.ReactNode; num: string; label: string; href?: string }) {
+  const inner = (
+    <>
       <div style={{ color: 'var(--gold)', marginBottom: 4 }}>{icon}</div>
       <div className="serif" style={{ fontSize: 30, fontWeight: 600, color: 'var(--gold)', lineHeight: 1 }}>{num}</div>
       <div style={{ fontSize: 11, color: '#6B5730', marginTop: 6, lineHeight: 1.5, whiteSpace: 'pre-line' }}>{label}</div>
-    </div>
+      {href && <div style={{ fontSize: 10, color: 'var(--gold)', marginTop: 4, letterSpacing: 1, opacity: 0.7 }}>→ รีวิว</div>}
+    </>
   );
+  const style: React.CSSProperties = {
+    padding: '28px 16px', textAlign: 'center',
+    borderRight: '1px solid #2A1E08',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+    ...(href ? { cursor: 'pointer', transition: 'opacity 0.15s' } : {}),
+  };
+  if (href) return <Link href={href} style={{ ...style, textDecoration: 'none' }}>{inner}</Link>;
+  return <div style={style}>{inner}</div>;
 }
 
 const S = 28;

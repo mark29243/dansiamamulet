@@ -18,7 +18,8 @@ export default function ReviewsPage() {
   useEffect(() => {
     fetch('/api/reviews/public?limit=50')
       .then((r) => r.json())
-      .then((d) => { setReviews(d); setLoading(false); });
+      .then((d) => { setReviews(Array.isArray(d) ? d : []); setLoading(false); })
+      .catch(() => setLoading(false));
   }, []);
 
   const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : null;
