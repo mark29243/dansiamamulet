@@ -18,8 +18,9 @@ export interface ShippingOption {
 
 // ─── Weight ───────────────────────────────────────────────────────────────────
 
+// First item = 100 g, each additional item +20 g
 export function calcWeight(qty: number): number {
-  return qty <= 3 ? 200 : 200 + (qty - 3) * 30;
+  return 100 + (qty - 1) * 20;
 }
 
 // ─── ePacket rate table (satang) ─────────────────────────────────────────────
