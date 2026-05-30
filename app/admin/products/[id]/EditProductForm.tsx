@@ -12,6 +12,8 @@ export default function EditProductForm({ product }: { product: any }) {
   const [busy, setBusy] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [images, setImages] = useState<string[]>(Array.isArray(product.images) ? product.images : []);
+  const [uploading, setUploading] = useState(false);
 
   const [form, setForm] = useState({
     name_th: product.name_th || '',
@@ -26,6 +28,34 @@ export default function EditProductForm({ product }: { product: any }) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  async function handleImageFiles(files: FileList | null) {
+    if (!files?.length) return;
+    setUploading(true);
+    const uploaded: string[] = [];
+    for (const file of Array.from(files)) {
+      const fd = new FormData();
+      fd.append('file', file);
+      try {
+        const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Upload failed');
+        uploaded.push(json.url);
+      } catch (e: any) {
+        toast(`อัพโหลด ${file.name} ล้มเหลว: ${e.message}`, 'error');
+      }
+    }
+    if (uploaded.length) setImages((prev) => [...prev, ...uploaded]);
+    setUploading(false);
+  }
+
+  function removeImage(i: number) {
+    setImages((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
+  function makeMain(i: number) {
+    setImages((prev) => (i <= 0 ? prev : [prev[i], ...prev.filter((_, idx) => idx !== i)]));
+  }
+
   async function handleSave() {
     setBusy(true);
     try {
@@ -37,6 +67,7 @@ export default function EditProductForm({ product }: { product: any }) {
         price: Math.round(Number(form.price) * 100),
         sale_price: form.sale_price === '' ? null : Math.round(Number(form.sale_price) * 100),
         stock: Number(form.stock),
+        images,
       };
       const res = await fetch(`/api/admin/products/${product.id}`, {
         method: 'PATCH',
@@ -72,7 +103,7 @@ export default function EditProductForm({ product }: { product: any }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
       toast('ลบสินค้าแล้ว', 'success');
-      setTimeout(() => router.push('/admin/products'), 600);
+      setTimeout(() => { window.location.href = '/admin/products'; }, 600);
     } catch (e: any) {
       toast(e.message, 'error');
       setDeleting(false);
@@ -81,9 +112,61 @@ export default function EditProductForm({ product }: { product: any }) {
 
   return (
     <div className="card" style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {product.images?.[0] && (
-        <img src={product.images[0]} alt="" style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: 'var(--radius)' }} />
-      )}
+      <Field label={`รูปภาพ (${images.length} รูป)`}>
+        {images.length > 0 && (
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
+            {images.map((img, i) => (
+              <div key={img + i} style={{ position: 'relative' }}>
+                <img
+                  src={img}
+                  alt=""
+                  style={{
+                    width: 96, height: 96, objectFit: 'cover', borderRadius: 'var(--radius)',
+                    border: i === 0 ? '2px solid var(--gold-dark)' : '1px solid var(--cream-dark)',
+                  }}
+                />
+                {i === 0 && (
+                  <span style={{ position: 'absolute', bottom: 4, left: 4, background: 'var(--gold-dark)', color: '#fff', fontSize: 9, padding: '1px 5px', borderRadius: 3, letterSpacing: 0.5 }}>
+                    รูปหลัก
+                  </span>
+                )}
+                {i !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => makeMain(i)}
+                    title="ตั้งเป็นรูปหลัก"
+                    style={{ position: 'absolute', bottom: 4, left: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', fontSize: 9, padding: '2px 5px', borderRadius: 3, cursor: 'pointer' }}
+                  >
+                    ตั้งหลัก
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => removeImage(i)}
+                  title="ลบรูป"
+                  style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', background: 'var(--burgundy)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12, lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <label
+          className="btn-outline"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', cursor: uploading ? 'wait' : 'pointer', fontSize: 13, opacity: uploading ? 0.6 : 1, alignSelf: 'flex-start' }}
+        >
+          {uploading ? 'กำลังอัพโหลด...' : '+ เพิ่มรูป'}
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            disabled={uploading}
+            onChange={(e) => { handleImageFiles(e.target.files); e.target.value = ''; }}
+            style={{ display: 'none' }}
+          />
+        </label>
+      </Field>
 
       <Field label="ชื่อภาษาไทย">
         <input className="input" value={form.name_th} onChange={(e) => set('name_th', e.target.value)} />

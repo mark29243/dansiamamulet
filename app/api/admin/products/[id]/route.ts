@@ -28,6 +28,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (typeof body.name_th === 'string') allowed.name_th = body.name_th.trim();
   if (typeof body.description_th === 'string') allowed.description_th = body.description_th.trim();
   if (typeof body.category === 'string') allowed.category = body.category.trim();
+  if (Array.isArray(body.images) && body.images.every((u: unknown) => typeof u === 'string' && u.length > 0 && u.length <= 1000)) {
+    allowed.images = body.images.slice(0, 12);
+  }
 
   if (Object.keys(allowed).length === 0) {
     return NextResponse.json({ error: 'No valid fields' }, { status: 400 });
