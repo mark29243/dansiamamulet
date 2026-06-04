@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { notifyGoogleIndex } from '@/lib/google-indexing';
+import { processDraft } from '@/lib/seo';
 
 export const runtime = 'nodejs';
 
@@ -19,6 +20,35 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const body = await req.json();
+
+  // Publishing a product whose slug is still a draft placeholder:
+  // run full SEO (generates a real slug + EN/ZH translations) instead of a
+  // bare published flag flip, so it never goes live with a draft-... URL.
+  if (body.published === true) {
+    const { data: current } = await ctx.admin
+      .from('products')
+      .select('id, slug, name_th, description_th, category')
+      .eq('id', parseInt(params.id))
+      .single();
+    if (current && typeof current.slug === 'string' && current.slug.startsWith('draft-')) {
+      const { data: existingSlugs } = await ctx.admin.from('products').select('slug').neq('id', current.id);
+      const usedSlugs = new Set((existingSlugs ?? []).map((p: any) => p.slug));
+      try {
+        const result = await processDraft(ctx.admin, current, usedSlugs);
+        const { data: updated } = await ctx.admin.from('products').select('*').eq('id', result.id).single();
+        if (updated?.slug) {
+          const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
+          await notifyGoogleIndex(`${siteUrl}/product/${updated.slug}`);
+        }
+        console.log('[audit] product-publish-draft', { admin: ctx.user.id, productId: params.id, slug: result.slug });
+        return NextResponse.json({ product: updated });
+      } catch (e: any) {
+        console.error('[publish-draft] failed', { id: params.id, error: e.message });
+        return NextResponse.json({ error: e.message }, { status: 500 });
+      }
+    }
+  }
+
   const allowed: any = {};
   if (typeof body.stock === 'number') allowed.stock = Math.max(0, body.stock);
   if (typeof body.published === 'boolean') allowed.published = body.published;
