@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     .select('name, name_th, name_zh, description, short, images, price, sale_price, category')
     .eq('slug', params.slug)
     .single();
-  if (!p) return { title: 'Not found' };
+  if (!p) notFound();
   const img = p.images?.[0] ?? '';
   const desc = p.short || p.description?.slice(0, 160) || p.name;
   const canonicalUrl = `${siteUrl}/product/${params.slug}`;
