@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
+import { unstable_noStore as noStore } from 'next/cache';
 import type { Product } from '@/lib/types';
 import ProductDetail from './ProductDetail';
 import ViewTracker from './ViewTracker';
 
-export const dynamic = 'force-dynamic';
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
+  noStore();
   const supabase = createClient();
   const { data: p } = await supabase
     .from('products')
@@ -41,6 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
+  noStore();
   const supabase = createClient();
   const { data, error } = await supabase
     .from('products')
