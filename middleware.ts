@@ -44,9 +44,8 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Only run on /admin — the middleware's sole job is the admin auth guard.
-  // Running it on every route made Next return HTTP 200 for notFound() pages
-  // (a known middleware + notFound interaction), causing soft 404s for
-  // unknown/old product URLs.
-  matcher: ['/admin/:path*'],
+  matcher: [
+    // Run on all paths except static assets
+    '/((?!_next/static|_next/image|favicon.ico|icon\\.svg|.*\\.(?:png|jpg|jpeg|gif|webp|ico)).*)',
+  ],
 };
