@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   if (!topic?.trim()) return NextResponse.json({ error: 'topic is required' }, { status: 400 });
 
   const msg = await client.messages.create({
-    model: 'claude-sonnet-4-5-20251001',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 3000,
     messages: [{
       role: 'user',
