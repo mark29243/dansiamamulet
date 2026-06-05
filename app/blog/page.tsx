@@ -1,6 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import './blog.css';
 
 export const revalidate = 60;
 
@@ -43,10 +44,7 @@ export default async function BlogPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
           {posts.map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
-              <article className="card animate-fade-in" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(0,0,0,0.1)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = ''; }}
-              >
+              <article className="card blog-card animate-fade-in" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {/* Cover */}
                 <div style={{ height: 200, background: 'var(--cream-dark)', overflow: 'hidden', flexShrink: 0 }}>
                   {post.cover_image
