@@ -25,38 +25,39 @@ export async function POST(req: Request) {
   const ctx = await requireAdmin();
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { topic, category } = await req.json();
-  if (!topic?.trim()) return NextResponse.json({ error: 'topic is required' }, { status: 400 });
+  const body = await req.json();
+  const { title_th, content_th, category } = body;
+
+  if (!title_th?.trim()) return NextResponse.json({ error: 'title_th is required' }, { status: 400 });
 
   const msg = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 3000,
+    max_tokens: 4000,
     messages: [{
       role: 'user',
-      content: `You are a Thai Buddhist amulet expert writing SEO-optimized blog content for Dan Siam Amulets (dansiamamulets.com).
+      content: `You are a Thai Buddhist amulet expert for Dan Siam Amulets (dansiamamulets.com).
 
-Topic: ${topic}
+Thai title: ${title_th}
 Category: ${category || 'ความรู้พระเครื่อง'}
+${content_th ? `\nThai content:\n${content_th}` : ''}
 
-Write a complete blog post in all 3 languages. The content should be:
-- Informative and accurate about Thai Buddhist amulets
-- SEO-optimized (use the topic keywords naturally)
-- Helpful for collectors and buyers
-- 400-600 words per language for content
-- Include practical information (history, sacred properties, how to identify genuine pieces, etc.)
-- Monk/temple names: romanize in English and Chinese (e.g. หลวงปู่ทวด → Luang Pu Tuad)
+Tasks:
+1. Translate the Thai title to English and Chinese
+2. Generate a clean URL slug from the English title (lowercase, hyphens only)
+3. Write excerpt/summary in all 3 languages (max 155 chars each)
+4. ${content_th ? 'Translate the Thai content to English and Chinese' : 'Write full blog content in all 3 languages (400-600 words each)'}
+5. Monk/temple names: keep as romanization in EN and ZH (e.g. หลวงปู่ทวด → Luang Pu Tuad)
+6. Format content with HTML: <h2>, <p>, <strong>, <ul><li>
 
 Return ONLY valid JSON (no markdown):
 {
-  "title": "SEO-optimized English title (max 60 chars)",
-  "title_th": "Thai title",
-  "title_zh": "Chinese title (keep monk/temple names as romanization)",
-  "slug": "url-slug-lowercase-hyphens",
-  "excerpt": "English meta description (max 155 chars, compelling)",
-  "excerpt_th": "Thai excerpt (max 155 chars)",
-  "excerpt_zh": "Chinese excerpt (max 155 chars)",
-  "content": "English HTML content (use <h2>, <p>, <strong>, <ul><li> tags)",
-  "content_th": "Thai HTML content",
+  "title": "English title (max 60 chars, SEO-optimized)",
+  "title_zh": "Chinese title",
+  "slug": "url-slug-lowercase-hyphens-only",
+  "excerpt": "English meta description max 155 chars",
+  "excerpt_th": "Thai excerpt max 155 chars",
+  "excerpt_zh": "Chinese excerpt max 155 chars",
+  "content": "English HTML content",
   "content_zh": "Chinese HTML content"
 }`,
     }],
@@ -67,7 +68,6 @@ Return ONLY valid JSON (no markdown):
 
   try {
     const data = JSON.parse(cleaned);
-    // Ensure slug is clean
     if (data.slug) data.slug = toSlug(data.slug);
     else if (data.title) data.slug = toSlug(data.title);
     return NextResponse.json(data);
