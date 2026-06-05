@@ -1,0 +1,167 @@
+import { createAdminClient } from '@/lib/supabase/server';
+import { notFound } from 'next/navigation';
+import { unstable_noStore as noStore } from 'next/cache';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  noStore();
+  const admin = createAdminClient();
+  const { data: post } = await admin
+    .from('blog_posts')
+    .select('title, title_th, title_zh, excerpt, excerpt_th, cover_image')
+    .eq('slug', params.slug)
+    .eq('published', true)
+    .single();
+
+  if (!post) notFound();
+
+  const title = post.title_th || post.title;
+  const desc  = post.excerpt_th || post.excerpt || '';
+  const canonicalUrl = `${siteUrl}/blog/${params.slug}`;
+
+  return {
+    title,
+    description: desc,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title: `${title} · Dan Siam Amulets`,
+      description: desc,
+      url: canonicalUrl,
+      type: 'article',
+      images: post.cover_image ? [{ url: post.cover_image, width: 1200, height: 630, alt: title }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} · Dan Siam Amulets`,
+      description: desc,
+      images: post.cover_image ? [post.cover_image] : [],
+    },
+  };
+}
+
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  noStore();
+  const admin = createAdminClient();
+  const { data: post } = await admin
+    .from('blog_posts')
+    .select('*')
+    .eq('slug', params.slug)
+    .eq('published', true)
+    .single();
+
+  if (!post) notFound();
+
+  // Increment views (fire-and-forget)
+  admin.from('blog_posts').update({ views: (post.views || 0) + 1 }).eq('id', post.id).then(() => {});
+
+  const canonicalUrl = `${siteUrl}/blog/${params.slug}`;
+
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt || '',
+    image: post.cover_image ? [post.cover_image] : [],
+    datePublished: post.created_at,
+    dateModified: post.updated_at,
+    url: canonicalUrl,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Dan Siam Amulets',
+      logo: { '@type': 'ImageObject', url: `${siteUrl}/icon.svg` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+    inLanguage: 'th',
+  };
+
+  // Show Thai content by default (best for SEO in Thai market)
+  const displayTitle   = post.title_th   || post.title;
+  const displayContent = post.content_th || post.content;
+  const displayExcerpt = post.excerpt_th || post.excerpt;
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+
+      <div className="container" style={{ padding: '32px 24px 80px', maxWidth: 760 }}>
+        {/* Breadcrumb */}
+        <nav className="breadcrumb" style={{ marginBottom: 24 }}>
+          <Link href="/">หน้าแรก</Link>
+          <span className="breadcrumb-sep">/</span>
+          <Link href="/blog">Blog</Link>
+          <span className="breadcrumb-sep">/</span>
+          <span style={{ color: 'var(--text)' }}>{displayTitle}</span>
+        </nav>
+
+        {/* Cover */}
+        {post.cover_image && (
+          <div style={{ width: '100%', height: 360, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 32 }}>
+            <img src={post.cover_image} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+        )}
+
+        {/* Meta */}
+        <div style={{ marginBottom: 24 }}>
+          {post.category && (
+            <span style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold-dark)', fontFamily: "'Cormorant Garamond', serif", display: 'block', marginBottom: 10 }}>
+              {post.category}
+            </span>
+          )}
+          <h1 className="serif" style={{ fontSize: 30, fontWeight: 600, color: 'var(--text)', lineHeight: 1.35, marginBottom: 12 }}>
+            {displayTitle}
+          </h1>
+          {displayExcerpt && (
+            <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 12 }}>{displayExcerpt}</p>
+          )}
+          <div style={{ fontSize: 12, color: 'var(--text-faint)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            <span>{new Date(post.created_at).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+            <span>👁 {post.views} ครั้ง</span>
+          </div>
+        </div>
+
+        <hr style={{ border: 'none', borderTop: '1px solid var(--cream-dark)', marginBottom: 32 }} />
+
+        {/* Content */}
+        <div
+          className="blog-content"
+          dangerouslySetInnerHTML={{ __html: displayContent }}
+          style={{ fontSize: 15, lineHeight: 1.85, color: 'var(--text)' }}
+        />
+
+        {/* Language switch */}
+        {(post.content || post.content_zh) && (
+          <div style={{ marginTop: 40, padding: '16px 20px', background: 'var(--cream-dark)', borderRadius: 'var(--radius)', fontSize: 13, color: 'var(--text-muted)' }}>
+            <span style={{ marginRight: 12 }}>อ่านในภาษาอื่น:</span>
+            {post.content && post.content !== post.content_th && (
+              <a href={`/blog/${post.slug}?lang=en`} style={{ marginRight: 12, color: 'var(--gold-dark)', textDecoration: 'none' }}>🇬🇧 English</a>
+            )}
+            {post.content_zh && (
+              <a href={`/blog/${post.slug}?lang=zh`} style={{ color: 'var(--gold-dark)', textDecoration: 'none' }}>🇨🇳 中文</a>
+            )}
+          </div>
+        )}
+
+        {/* Back */}
+        <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid var(--cream-dark)' }}>
+          <Link href="/blog" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+            ← กลับไปหน้า Blog
+          </Link>
+        </div>
+      </div>
+
+      <style>{`
+        .blog-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text); margin: 32px 0 14px; }
+        .blog-content h3 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--text); margin: 24px 0 10px; }
+        .blog-content p  { margin-bottom: 18px; }
+        .blog-content ul, .blog-content ol { padding-left: 24px; margin-bottom: 18px; }
+        .blog-content li { margin-bottom: 8px; }
+        .blog-content strong { color: var(--text); font-weight: 600; }
+        .blog-content a  { color: var(--gold-dark); }
+        .blog-content blockquote { border-left: 3px solid var(--gold); padding-left: 16px; color: var(--text-muted); font-style: italic; margin: 20px 0; }
+      `}</style>
+    </>
+  );
+}

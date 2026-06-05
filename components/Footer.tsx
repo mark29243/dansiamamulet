@@ -89,6 +89,7 @@ export default function Footer() {
             <li><Link href="/shop">{t.shop.all}</Link></li>
             <li><Link href="/shop">{t.shop.instock}</Link></li>
             <li><Link href="/shop">{t.shop.category}</Link></li>
+            <li><Link href="/blog">{lang === 'th' ? 'ความรู้พระเครื่อง' : lang === 'zh' ? '佛牌知识' : 'Blog'}</Link></li>
           </FooterCol>
 
           <FooterCol title={lang === 'th' ? 'บริการ' : lang === 'zh' ? '服务' : 'Service'}>
