@@ -43,6 +43,21 @@ export default function BlogForm({ post }: { post?: Post }) {
   const [category, setCategory]    = useState(post?.category   || '');
   const [cover_image, setCover]    = useState(post?.cover_image || '');
 
+  function handleHtmlFile(files: FileList | null) {
+    if (!files?.length) return;
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const html = e.target?.result as string;
+      // Extract <body> content if full HTML file, otherwise use as-is
+      const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+      const content = bodyMatch ? bodyMatch[1].trim() : html.trim();
+      setContentTh(content);
+      toast(`นำเข้า ${file.name} แล้ว`, 'success');
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+
   async function handleCoverUpload(files: FileList | null) {
     if (!files?.length) return;
     setUploading(true);
@@ -170,9 +185,20 @@ export default function BlogForm({ post }: { post?: Post }) {
 
       {/* Content editor */}
       <div className="card" style={{ padding: 16 }}>
-        <label style={{ ...labelStyle, display: 'block', marginBottom: 10 }}>เนื้อหา (ภาษาไทย)</label>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <label style={labelStyle}>เนื้อหา (ภาษาไทย)</label>
+          <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 12px', fontSize: 12, cursor: 'pointer', border: '1px solid var(--cream-dark)', borderRadius: 'var(--radius)', color: 'var(--text-muted)', background: 'var(--cream)' }}>
+            📂 นำเข้าไฟล์ HTML
+            <input
+              type="file"
+              accept=".html,.htm,.txt"
+              onChange={e => { handleHtmlFile(e.target.files); e.target.value = ''; }}
+              style={{ display: 'none' }}
+            />
+          </label>
+        </div>
         <p style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 10 }}>
-          วางข้อความจาก Word / Google Docs / เว็บไซต์ได้เลย — ตาราง ย่อหน้า รายการ จะคงอยู่ทั้งหมด
+          วางจาก Word / Google Docs / เว็บ หรือนำเข้าไฟล์ .html ได้เลย — ตาราง ย่อหน้า รายการ คงอยู่ทั้งหมด
         </p>
         <RichEditor
           value={content_th}
