@@ -42,8 +42,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams?: { lang?: string };
+}) {
   noStore();
+  const lang = (searchParams?.lang ?? 'th') as 'th' | 'en' | 'zh';
   const admin = createAdminClient();
   const { data: post } = await admin
     .from('blog_posts')
@@ -77,10 +84,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     inLanguage: 'th',
   };
 
-  // Show Thai content by default (best for SEO in Thai market)
-  const displayTitle   = post.title_th   || post.title;
-  const displayContent = post.content_th || post.content;
-  const displayExcerpt = post.excerpt_th || post.excerpt;
+  // Pick content by lang param (default Thai for SEO)
+  const displayTitle = lang === 'en' ? (post.title || post.title_th)
+    : lang === 'zh' ? (post.title_zh || post.title)
+    : (post.title_th || post.title);
+  const displayContent = lang === 'en' ? (post.content || post.content_th)
+    : lang === 'zh' ? (post.content_zh || post.content_th)
+    : (post.content_th || post.content);
+  const displayExcerpt = lang === 'en' ? (post.excerpt || post.excerpt_th)
+    : lang === 'zh' ? (post.excerpt_zh || post.excerpt_th)
+    : (post.excerpt_th || post.excerpt);
 
   return (
     <>
@@ -133,14 +146,30 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
         {/* Language switch */}
         {(post.content || post.content_zh) && (
-          <div style={{ marginTop: 40, padding: '16px 20px', background: 'var(--cream-dark)', borderRadius: 'var(--radius)', fontSize: 13, color: 'var(--text-muted)' }}>
-            <span style={{ marginRight: 12 }}>อ่านในภาษาอื่น:</span>
-            {post.content && post.content !== post.content_th && (
-              <a href={`/blog/${post.slug}?lang=en`} style={{ marginRight: 12, color: 'var(--gold-dark)', textDecoration: 'none' }}>🇬🇧 English</a>
-            )}
-            {post.content_zh && (
-              <a href={`/blog/${post.slug}?lang=zh`} style={{ color: 'var(--gold-dark)', textDecoration: 'none' }}>🇨🇳 中文</a>
-            )}
+          <div style={{ marginTop: 40, padding: '14px 20px', background: 'var(--cream-dark)', borderRadius: 'var(--radius)', fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span style={{ color: 'var(--text-muted)', marginRight: 4 }}>🌐</span>
+            {[
+              { code: 'th', label: '🇹🇭 ไทย',    available: !!post.content_th },
+              { code: 'en', label: '🇬🇧 English', available: !!post.content },
+              { code: 'zh', label: '🇨🇳 中文',    available: !!post.content_zh },
+            ].filter(l => l.available).map(l => (
+              <a
+                key={l.code}
+                href={`/blog/${post.slug}?lang=${l.code}`}
+                style={{
+                  padding: '5px 14px',
+                  borderRadius: 100,
+                  fontSize: 12,
+                  fontWeight: lang === l.code ? 600 : 400,
+                  textDecoration: 'none',
+                  background: lang === l.code ? 'var(--gold-dark)' : 'var(--cream)',
+                  color: lang === l.code ? '#fff' : 'var(--text-muted)',
+                  border: '1px solid ' + (lang === l.code ? 'var(--gold-dark)' : 'var(--cream-dark)'),
+                }}
+              >
+                {l.label}
+              </a>
+            ))}
           </div>
         )}
 
