@@ -1,10 +1,14 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastProvider';
 
+const RichEditor = dynamic(() => import('./RichEditor'), { ssr: false });
+
 const CATEGORIES = ['ความรู้พระเครื่อง', 'ประวัติวัดและหลวงพ่อ', 'วิธีบูชา', 'ข่าวสารร้าน', 'สะสมพระ', 'อื่น ๆ'];
+
 
 type Post = {
   id: number;
@@ -23,107 +27,16 @@ type Post = {
   published: boolean;
 };
 
-// ── HTML toolbar ─────────────────────────────────────────────────────────────
-type ToolbarAction =
-  | { type: 'wrap'; tag: string; label: string; title: string }
-  | { type: 'block'; open: string; close: string; label: string; title: string }
-  | { type: 'insert'; text: string; label: string; title: string }
-  | { type: 'divider' };
-
-const TOOLBAR: ToolbarAction[] = [
-  { type: 'wrap',  tag: 'strong',       label: 'B',   title: 'ตัวหนา <strong>' },
-  { type: 'wrap',  tag: 'em',           label: 'I',   title: 'ตัวเอียง <em>' },
-  { type: 'wrap',  tag: 'u',            label: 'U',   title: 'ขีดเส้นใต้ <u>' },
-  { type: 'divider' },
-  { type: 'block', open: '<h2>',  close: '</h2>', label: 'H2', title: 'หัวข้อใหญ่ <h2>' },
-  { type: 'block', open: '<h3>',  close: '</h3>', label: 'H3', title: 'หัวข้อเล็ก <h3>' },
-  { type: 'block', open: '<p>',   close: '</p>',  label: '¶',  title: 'ย่อหน้า <p>' },
-  { type: 'divider' },
-  { type: 'block', open: '<ul>\n  <li>', close: '</li>\n</ul>', label: '• list', title: 'รายการ <ul>' },
-  { type: 'block', open: '<li>',  close: '</li>', label: '• item', title: 'รายการย่อย <li>' },
-  { type: 'divider' },
-  { type: 'block', open: '<blockquote>', close: '</blockquote>', label: '❝', title: 'คำอ้างอิง <blockquote>' },
-  { type: 'insert', text: '<hr>', label: '—', title: 'เส้นแบ่ง <hr>' },
-];
-
-function HtmlToolbar({ textareaRef, value, onChange }: {
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  function apply(action: ToolbarAction) {
-    const ta = textareaRef.current;
-    if (!ta) return;
-    const start = ta.selectionStart;
-    const end   = ta.selectionEnd;
-    const sel   = value.slice(start, end);
-    let insert = '';
-    let cursorOffset = 0;
-
-    if (action.type === 'wrap') {
-      insert = sel ? `<${action.tag}>${sel}</${action.tag}>` : `<${action.tag}></${action.tag}>`;
-      cursorOffset = sel ? insert.length : insert.length - action.tag.length - 3;
-    } else if (action.type === 'block') {
-      insert = sel ? `${action.open}${sel}${action.close}` : `${action.open}${action.close}`;
-      cursorOffset = sel ? insert.length : action.open.length;
-    } else if (action.type === 'insert') {
-      insert = action.text;
-      cursorOffset = insert.length;
-    } else {
-      return;
-    }
-
-    const newVal = value.slice(0, start) + insert + value.slice(end);
-    onChange(newVal);
-    // Restore focus + cursor after React re-render
-    requestAnimationFrame(() => {
-      ta.focus();
-      const pos = start + cursorOffset;
-      ta.setSelectionRange(pos, pos);
-    });
-  }
-
-  return (
-    <div style={{ display: 'flex', gap: 2, flexWrap: 'wrap', padding: '6px 8px', background: 'var(--cream-dark)', borderRadius: 'var(--radius) var(--radius) 0 0', borderBottom: '1px solid var(--cream-dark)' }}>
-      {TOOLBAR.map((action, i) => {
-        if (action.type === 'divider') {
-          return <span key={i} style={{ width: 1, background: '#ccc', margin: '2px 4px', alignSelf: 'stretch' }} />;
-        }
-        return (
-          <button
-            key={i}
-            type="button"
-            title={action.title}
-            onMouseDown={e => { e.preventDefault(); apply(action); }}
-            style={{
-              padding: '3px 8px', fontSize: 12, fontWeight: 600,
-              background: 'var(--cream)', border: '1px solid #ddd',
-              borderRadius: 4, cursor: 'pointer', color: 'var(--text)',
-              fontFamily: action.label === 'B' ? 'sans-serif' : action.label === 'I' ? 'serif' : 'inherit',
-              fontStyle: action.label === 'I' ? 'italic' : 'normal',
-              minWidth: 28, textAlign: 'center',
-            }}
-          >
-            {action.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 // ── Main form ─────────────────────────────────────────────────────────────────
 export default function BlogForm({ post }: { post?: Post }) {
   const router = useRouter();
   const { toast } = useToast();
   const isEdit = !!post;
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [busy, setBusy]               = useState(false);
   const [uploading, setUploading]     = useState(false);
   const [deleting, setDeleting]       = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [preview, setPreview]         = useState(false);
 
   const [title_th, setTitleTh]     = useState(post?.title_th   || '');
   const [content_th, setContentTh] = useState(post?.content_th || '');
@@ -256,40 +169,16 @@ export default function BlogForm({ post }: { post?: Post }) {
       </div>
 
       {/* Content editor */}
-      <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid var(--cream-dark)' }}>
-          <label style={labelStyle}>เนื้อหา (ภาษาไทย)</label>
-          <button
-            type="button"
-            onClick={() => setPreview(p => !p)}
-            style={{ fontSize: 12, background: preview ? 'var(--gold-dark)' : 'transparent', color: preview ? '#fff' : 'var(--text-muted)', border: '1px solid var(--cream-dark)', borderRadius: 'var(--radius)', padding: '4px 12px', cursor: 'pointer' }}
-          >
-            {preview ? '✏️ แก้ไข' : '👁 Preview'}
-          </button>
-        </div>
-
-        {preview ? (
-          /* Preview panel */
-          <div
-            className="blog-content"
-            dangerouslySetInnerHTML={{ __html: content_th || '<p style="color:var(--text-faint);padding:20px">ยังไม่มีเนื้อหา...</p>' }}
-            style={{ padding: '20px 24px', minHeight: 300, fontSize: 15, lineHeight: 1.85, color: 'var(--text)' }}
-          />
-        ) : (
-          /* Editor with toolbar */
-          <div>
-            <HtmlToolbar textareaRef={textareaRef} value={content_th} onChange={setContentTh} />
-            <textarea
-              ref={textareaRef}
-              className="input"
-              rows={18}
-              value={content_th}
-              onChange={e => setContentTh(e.target.value)}
-              placeholder="เขียนเนื้อหาบทความที่นี่...&#10;&#10;ใช้ปุ่ม toolbar ด้านบนเพื่อจัดรูปแบบ หรือพิมพ์ HTML ตรงๆ ได้เลย&#10;เช่น <h2>หัวข้อ</h2> <p>ย่อหน้า</p> <strong>ตัวหนา</strong>"
-              style={{ resize: 'vertical', fontFamily: 'monospace', fontSize: 13, lineHeight: 1.7, borderRadius: '0 0 var(--radius) var(--radius)', borderTop: 'none' }}
-            />
-          </div>
-        )}
+      <div className="card" style={{ padding: 16 }}>
+        <label style={{ ...labelStyle, display: 'block', marginBottom: 10 }}>เนื้อหา (ภาษาไทย)</label>
+        <p style={{ fontSize: 11, color: 'var(--text-faint)', marginBottom: 10 }}>
+          วางข้อความจาก Word / Google Docs / เว็บไซต์ได้เลย — ตาราง ย่อหน้า รายการ จะคงอยู่ทั้งหมด
+        </p>
+        <RichEditor
+          value={content_th}
+          onChange={setContentTh}
+          placeholder="เขียนหรือวางเนื้อหาที่นี่..."
+        />
       </div>
 
       {/* Actions */}
@@ -326,15 +215,6 @@ export default function BlogForm({ post }: { post?: Post }) {
         </div>
       </div>
 
-      <style>{`
-        .blog-content h2 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--text); margin:24px 0 12px; }
-        .blog-content h3 { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--text); margin:20px 0 8px; }
-        .blog-content p  { margin-bottom:16px; }
-        .blog-content ul,.blog-content ol { padding-left:22px; margin-bottom:16px; }
-        .blog-content li { margin-bottom:6px; }
-        .blog-content strong { color:var(--text); font-weight:600; }
-        .blog-content blockquote { border-left:3px solid var(--gold); padding-left:14px; color:var(--text-muted); font-style:italic; margin:18px 0; }
-      `}</style>
     </div>
   );
 }
