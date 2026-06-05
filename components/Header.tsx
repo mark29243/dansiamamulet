@@ -123,6 +123,7 @@ export default function Header() {
           <Link href="/shop" style={navLinkStyle}>{t.nav.shop}</Link>
           <Link href="/about" style={navLinkStyle}>{t.nav.about}</Link>
           <Link href="/faq" style={navLinkStyle}>FAQ</Link>
+          <Link href="/blog" style={navLinkStyle}>{lang === 'th' ? 'บทความ' : lang === 'zh' ? '文章' : 'Blog'}</Link>
         </nav>
 
         {/* Logo center */}
@@ -244,6 +245,7 @@ export default function Header() {
             { href: '/shop', label: t.nav.shop, icon: <NavIconShop /> },
             { href: '/about', label: t.nav.about, icon: <NavIconAbout /> },
             { href: '/faq', label: 'FAQ', icon: <NavIconFaq /> },
+            { href: '/blog', label: lang === 'th' ? 'บทความ' : lang === 'zh' ? '文章' : 'Blog', icon: '✍️' },
             { href: '/cart', label: `${t.nav.cart}${count > 0 ? ` (${count})` : ''}`, icon: <NavIconCart /> },
             { href: '/orders', label: t.nav.orders, icon: <NavIconOrders /> },
             { href: '/signin', label: t.nav.signin, icon: <NavIconUser /> },
