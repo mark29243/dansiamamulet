@@ -103,7 +103,9 @@ function SuccessInner() {
       </div>
 
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/orders" className="btn-gold">{t.success.viewOrders}</Link>
+        <Link href="/track" className="btn-gold">
+          {lang === 'th' ? '📦 ติดตามพัสดุ' : lang === 'zh' ? '📦 追踪订单' : '📦 Track Order'}
+        </Link>
         <Link href="/shop" className="btn-outline">{t.success.shop}</Link>
       </div>
 
