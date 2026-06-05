@@ -10,7 +10,7 @@ import { IcoSearch, IcoFilter } from '@/components/icons';
 import type { Product } from '@/lib/types';
 
 const DESKTOP_PER_PAGE = 20;
-const MOBILE_PER_PAGE = 12;
+const MOBILE_PER_PAGE = 20;
 
 export default function HomeShop({ products, defaultCategory }: { products: Product[]; defaultCategory?: string }) {
   const { lang } = useLang();
