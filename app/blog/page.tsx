@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import './blog.css';
+import BlogGrid from './BlogGrid';
 
 export const revalidate = 60;
 
@@ -16,7 +16,7 @@ export default async function BlogPage() {
   const admin = createAdminClient();
   const { data: posts } = await admin
     .from('blog_posts')
-    .select('id, slug, title, title_th, title_zh, excerpt, excerpt_th, cover_image, category, created_at')
+    .select('id, slug, title, title_th, title_zh, excerpt, excerpt_th, excerpt_zh, cover_image, category, created_at')
     .eq('published', true)
     .order('created_at', { ascending: false });
 
@@ -35,48 +35,7 @@ export default async function BlogPage() {
         </p>
       </div>
 
-      {!posts?.length ? (
-        <div style={{ textAlign: 'center', padding: '60px 24px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
-          <p>กำลังเตรียมบทความ โปรดติดตาม...</p>
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
-          {posts.map((post) => (
-            <Link key={post.id} href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
-              <article className="card blog-card animate-fade-in" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                {/* Cover */}
-                <div style={{ height: 200, background: 'var(--cream-dark)', overflow: 'hidden', flexShrink: 0 }}>
-                  {post.cover_image
-                    ? <img src={post.cover_image} alt={post.title_th || post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🏯</div>
-                  }
-                </div>
-
-                {/* Content */}
-                <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {post.category && (
-                    <span style={{ fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--gold-dark)', fontFamily: "'Cormorant Garamond', serif" }}>
-                      {post.category}
-                    </span>
-                  )}
-                  <h2 className="serif" style={{ fontSize: 17, fontWeight: 600, color: 'var(--text)', lineHeight: 1.4, margin: 0 }}>
-                    {post.title_th || post.title}
-                  </h2>
-                  {post.excerpt_th && (
-                    <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {post.excerpt_th}
-                    </p>
-                  )}
-                  <div style={{ marginTop: 'auto', paddingTop: 12, fontSize: 11, color: 'var(--text-faint)' }}>
-                    {new Date(post.created_at).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      )}
+      <BlogGrid posts={posts ?? []} />
     </div>
   );
 }
