@@ -23,7 +23,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
   const displayName =
     lang === 'th' ? (p.name_th || p.name) :
-    /* en & zh */   (p.name || p.name_th || '');
+    /* en & zh */   p.name;
   const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
   const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.description || p.short) : (p.description ? p.description.slice(0, 200) : p.short);
 
@@ -237,7 +237,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 {related.slice(0, 4).map((r) => {
                   const rName =
                     lang === 'th' ? (r.name_th || r.name) :
-                    /* en & zh */   (r.name || r.name_th || '');
+                    /* en & zh */   r.name;
                   return (
                     <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
                       <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
