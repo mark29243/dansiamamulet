@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import { IcoClipboard, IcoPackage, IcoClock, IcoEye } from '@/components/icons';
+import BatchTools from './BatchTools';
 
 export const dynamic = 'force-dynamic';
 
@@ -97,6 +98,9 @@ export default async function AdminDashboard() {
           </table>
         </div>
       </section>
+
+      {/* Batch Tools */}
+      <BatchTools />
 
       {/* Recent orders */}
       <section>
