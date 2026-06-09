@@ -10,7 +10,7 @@ export default async function AdminDashboard() {
   const admin = createAdminClient();
 
   // Fetch stats in parallel
-  const [productsRes, ordersRes, recentOrdersRes, usersRes, topViewedRes, allViewsRes, translationRes] = await Promise.all([
+  const [productsRes, ordersRes, recentOrdersRes, usersRes, topViewedRes, allViewsRes, translationRes, wishlistRes] = await Promise.all([
     admin.from('products').select('id, stock', { count: 'exact', head: false }),
     admin.from('orders').select('id, total, status, created_at', { count: 'exact' }),
     admin.from('orders').select('id, customer_email, customer_name, total, status, created_at, items').order('created_at', { ascending: false }).limit(5),
@@ -18,6 +18,7 @@ export default async function AdminDashboard() {
     admin.from('products').select('id, name, name_th, slug, views, images').eq('published', true).order('views', { ascending: false }).limit(5),
     admin.from('products').select('views').eq('published', true),
     admin.from('products').select('id, name, name_th, description, name_zh, description_zh').eq('published', true),
+    admin.rpc('get_top_wishlisted', { limit_count: 8 }),
   ]);
 
   const totalProducts = productsRes.count ?? 0;
@@ -38,6 +39,7 @@ export default async function AdminDashboard() {
   const recentOrders = recentOrdersRes.data ?? [];
   const totalMembers = (usersRes.data as any)?.total ?? 0;
   const topViewed = topViewedRes.data ?? [];
+  const topWishlisted = (wishlistRes.data ?? []) as { product_id: number; name: string; name_th: string; slug: string; images: string[]; net_adds: number }[];
   const totalViews = (allViewsRes.data ?? []).reduce((s: number, p: any) => s + (p.views ?? 0), 0);
 
   // Translation completeness
@@ -70,6 +72,50 @@ export default async function AdminDashboard() {
         <Link href="/admin/products" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoPackage size={14} /> Manage Products</Link>
         <Link href="/admin/orders?status=pending" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoClock size={14} /> Pending Orders</Link>
       </div>
+
+      {/* Top Wishlisted */}
+      <section style={{ marginBottom: 36 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
+          <h2 className="serif" style={{ fontSize: 18, fontWeight: 500, color: 'var(--text)' }}>♡ Top Wishlisted</h2>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>สินค้าที่ลูกค้ากด ♡ มากที่สุด</span>
+        </div>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          {topWishlisted.length === 0 ? (
+            <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)', fontSize: 13 }}>ยังไม่มีข้อมูล — รอลูกค้ากด ♡</div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ background: 'var(--cream-dark)', textAlign: 'left' }}>
+                  <Th>สินค้า</Th>
+                  <Th>♡ บันทึก</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {topWishlisted.map((p, i) => (
+                  <tr key={p.product_id} style={{ borderTop: '1px solid var(--cream-dark)' }}>
+                    <Td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 11, color: 'var(--text-faint)', minWidth: 20, textAlign: 'right' }}>{i + 1}</span>
+                        {Array.isArray(p.images) && p.images[0] && (
+                          <img src={p.images[0]} alt="" width={36} height={36} style={{ borderRadius: 'var(--radius)', objectFit: 'cover', flexShrink: 0 }} />
+                        )}
+                        <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
+                          {(p.name || p.name_th || '').slice(0, 60)}{(p.name || p.name_th || '').length > 60 ? '…' : ''}
+                        </Link>
+                      </div>
+                    </Td>
+                    <Td>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 600, color: '#7A1A1A', fontSize: 14 }}>
+                        ♥ {p.net_adds}
+                      </span>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
 
       {/* Top viewed products */}
       <section style={{ marginBottom: 36 }}>

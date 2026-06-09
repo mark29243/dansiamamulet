@@ -28,8 +28,15 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = useCallback((id: number) => {
     setItems(prev => {
-      const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
+      const isAdding = !prev.includes(id);
+      const next = isAdding ? [...prev, id] : prev.filter(x => x !== id);
       try { localStorage.setItem('dsa_wishlist', JSON.stringify(next)); } catch {}
+      // Fire-and-forget analytics event
+      fetch('/api/wishlist/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: id, action: isAdding ? 'add' : 'remove' }),
+      }).catch(() => {});
       return next;
     });
   }, []);
