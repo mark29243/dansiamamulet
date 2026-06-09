@@ -17,7 +17,7 @@ export default async function AdminDashboard() {
     admin.auth.admin.listUsers({ page: 1, perPage: 1 }),
     admin.from('products').select('id, name, name_th, slug, views, images').eq('published', true).order('views', { ascending: false }).limit(5),
     admin.from('products').select('views').eq('published', true),
-    admin.from('products').select('id, name, name_th, name_zh, description_zh').eq('published', true),
+    admin.from('products').select('id, name, name_th, description, name_zh, description_zh').eq('published', true),
   ]);
 
   const totalProducts = productsRes.count ?? 0;
@@ -43,10 +43,10 @@ export default async function AdminDashboard() {
   // Translation completeness
   const allPublished = translationRes.data ?? [];
   const missingNameEn  = allPublished.filter((p) => /[ก-๙]/.test(p.name ?? ''));
+  const missingDescEn  = allPublished.filter((p) => !p.description);
   const missingNameZh  = allPublished.filter((p) => !p.name_zh);
   const missingDescZh  = allPublished.filter((p) => !p.description_zh);
-  const translationOk  = allPublished.length - Math.max(missingNameEn.length, missingNameZh.length, missingDescZh.length);
-  const translationWarn = missingNameEn.length > 0 || missingNameZh.length > 0 || missingDescZh.length > 0;
+  const translationWarn = missingNameEn.length > 0 || missingDescEn.length > 0 || missingNameZh.length > 0 || missingDescZh.length > 0;
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
@@ -120,19 +120,25 @@ export default async function AdminDashboard() {
         </div>
         <div className="card" style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <TranslationRow
-            label="ชื่ออังกฤษ (name)"
+            label="🇬🇧 ชื่ออังกฤษ (name)"
             done={allPublished.length - missingNameEn.length}
             total={allPublished.length}
             missing={missingNameEn.map((p) => p.name_th || p.name)}
           />
           <TranslationRow
-            label="ชื่อจีน (name_zh)"
+            label="🇬🇧 รายละเอียดอังกฤษ (description)"
+            done={allPublished.length - missingDescEn.length}
+            total={allPublished.length}
+            missing={missingDescEn.map((p) => p.name_th || p.name)}
+          />
+          <TranslationRow
+            label="🇨🇳 ชื่อจีน (name_zh)"
             done={allPublished.length - missingNameZh.length}
             total={allPublished.length}
             missing={missingNameZh.map((p) => p.name_th || p.name)}
           />
           <TranslationRow
-            label="รายละเอียดจีน (description_zh)"
+            label="🇨🇳 รายละเอียดจีน (description_zh)"
             done={allPublished.length - missingDescZh.length}
             total={allPublished.length}
             missing={missingDescZh.map((p) => p.name_th || p.name)}
