@@ -21,7 +21,10 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   const [qty, setQty] = useState(1);
   const [zoomOpen, setZoomOpen] = useState(false);
 
-  const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
+  const displayName =
+    lang === 'zh' ? (p.name_zh || p.name_th || p.name) :
+    lang === 'th' ? (p.name_th || p.name) :
+    /* en */        (p.name || p.name_th || '');
   const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
   const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.description || p.short) : (p.description ? p.description.slice(0, 200) : p.short);
 
@@ -233,7 +236,10 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
                 {related.slice(0, 4).map((r) => {
-                  const rName = lang === 'th' ? (r.name_th || r.name) : r.name;
+                  const rName =
+                    lang === 'zh' ? (r.name_zh || r.name_th || r.name) :
+                    lang === 'th' ? (r.name_th || r.name) :
+                    /* en */        (r.name || r.name_th || '');
                   return (
                     <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
                       <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>

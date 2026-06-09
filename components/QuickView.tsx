@@ -39,6 +39,11 @@ export default function QuickView({ product, onClose }: { product: Product | nul
 
   if (!product) return null;
 
+  const displayName =
+    lang === 'zh' ? (product.name_zh || product.name_th || product.name) :
+    lang === 'th' ? (product.name_th || product.name) :
+    /* en */        (product.name || product.name_th || '');
+
   const displayPrice = product.sale_price ?? product.price;
   const hasDiscount = product.sale_price !== null && product.sale_price < product.price;
 
@@ -157,7 +162,7 @@ export default function QuickView({ product, onClose }: { product: Product | nul
               {product.category}
             </div>
             <h2 className="serif" style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4, marginBottom: 16, color: 'var(--text)' }}>
-              {product.name}
+              {displayName}
             </h2>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 12 }}>
