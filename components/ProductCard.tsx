@@ -55,9 +55,8 @@ function useLocalPrice(satang: number, lang: string): string {
 export default function ProductCard({ p, onQuickView }: { p: Product; onQuickView?: (p: Product) => void }) {
   const { lang } = useLang();
   const displayName =
-    lang === 'zh' ? (p.name_zh || p.name_th || p.name) :
     lang === 'th' ? (p.name_th || p.name) :
-    /* en */        (p.name || p.name_th || '');
+    /* en & zh */   (p.name || p.name_th || '');
   const { add } = useCart();
   const { toast } = useToast();
   const t = getDict(lang);
