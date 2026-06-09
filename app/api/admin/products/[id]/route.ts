@@ -27,10 +27,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (body.published === true) {
     const { data: current } = await ctx.admin
       .from('products')
-      .select('id, slug, name_th, description_th, category')
+      .select('id, slug, name, name_th, description_th, category')
       .eq('id', parseInt(params.id))
       .single();
-    if (current && typeof current.slug === 'string' && current.slug.startsWith('draft-')) {
+    const needsProcessing =
+      current &&
+      typeof current.slug === 'string' &&
+      (current.slug.startsWith('draft-') || /[ก-๙]/.test(current.name ?? ''));
+    if (needsProcessing) {
       const { data: existingSlugs } = await ctx.admin.from('products').select('slug').neq('id', current.id);
       const usedSlugs = new Set((existingSlugs ?? []).map((p: any) => p.slug));
       try {
