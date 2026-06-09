@@ -9,6 +9,7 @@ import { getDict, getCatName } from '@/lib/i18n';
 import type { Product } from '@/lib/types';
 import { useState, useEffect } from 'react';
 import { IcoAmulet, IcoWarning, IcoEye, IcoCheck } from '@/components/icons';
+import WishlistButton from './WishlistButton';
 
 function useLocalPrice(satang: number, lang: string): string {
   const [price, setPrice] = useState(() => {
@@ -93,8 +94,12 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
           {p.stock === 0 && <span className="badge badge-oos">{t.product.oos}</span>}
           {hasDiscount && p.stock > 0 && <span className="badge badge-sale">SALE</span>}
         </div>
+        {/* Wishlist button — always visible */}
+        <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 3 }}>
+          <WishlistButton productId={p.id} size={14} />
+        </div>
         {onQuickView && (
-          <button onClick={handleQuickView} className="quick-view-btn serif" aria-label={t.product.quickView} style={{ position: 'absolute', top: 12, right: 12, zIndex: 3, background: 'rgba(255,255,255,0.95)', border: '1px solid var(--cream-dark)', padding: '6px 12px', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text)', borderRadius: 3, opacity: 0, transform: 'translateY(-4px)', transition: 'all var(--transition)', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <button onClick={handleQuickView} className="quick-view-btn serif" aria-label={t.product.quickView} style={{ position: 'absolute', top: 12, right: 46, zIndex: 3, background: 'rgba(255,255,255,0.95)', border: '1px solid var(--cream-dark)', padding: '6px 12px', fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--text)', borderRadius: 3, opacity: 0, transform: 'translateY(-4px)', transition: 'all var(--transition)', display: 'flex', alignItems: 'center', gap: 4 }}>
             <IcoEye size={13} /> {t.product.quickView}
           </button>
         )}

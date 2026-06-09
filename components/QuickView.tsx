@@ -9,6 +9,7 @@ import { useToast } from './ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { IcoAmulet } from './icons';
+import WishlistButton from './WishlistButton';
 import type { Product } from '@/lib/types';
 
 export default function QuickView({ product, onClose }: { product: Product | null; onClose: () => void }) {
@@ -160,9 +161,12 @@ export default function QuickView({ product, onClose }: { product: Product | nul
             <div className="serif" style={{ fontSize: 10, color: 'var(--gold-dark)', letterSpacing: 3, textTransform: 'uppercase', marginBottom: 8 }}>
               {product.category}
             </div>
-            <h2 className="serif" style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4, marginBottom: 16, color: 'var(--text)' }}>
-              {displayName}
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 16 }}>
+              <h2 className="serif" style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.4, color: 'var(--text)', flex: 1 }}>
+                {displayName}
+              </h2>
+              <WishlistButton productId={product.id} size={15} style={{ marginTop: 2, flexShrink: 0 }} />
+            </div>
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 12 }}>
               <span className="serif" style={{ fontSize: 26, fontWeight: 600, color: 'var(--gold-dark)' }}>

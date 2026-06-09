@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { LangProvider } from '@/components/LangProvider';
 import { CartProvider } from '@/components/CartProvider';
 import { ToastProvider } from '@/components/ToastProvider';
+import { WishlistProvider } from '@/components/WishlistProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import QuickContact from '@/components/QuickContact';
@@ -186,6 +187,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LangProvider>
           <ToastProvider>
             <CurrencyProvider>
+              <WishlistProvider>
               <CartProvider>
                 <a href="#main" className="sr-only">Skip to content</a>
                 <Header />
@@ -195,6 +197,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Footer />
                 <QuickContact />
               </CartProvider>
+              </WishlistProvider>
             </CurrencyProvider>
           </ToastProvider>
         </LangProvider>

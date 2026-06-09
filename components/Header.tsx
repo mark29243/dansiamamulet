@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { IcoSearch, IcoCart, IcoUser, IcoPhone, IcoMail } from '@/components/icons';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
+import { useWishlist } from './WishlistProvider';
 import { getDict, langNames, langs } from '@/lib/i18n';
 import { createBrowserClient } from '@supabase/ssr';
 
 export default function Header() {
   const { lang, setLang } = useLang();
   const { count } = useCart();
+  const { count: wishCount } = useWishlist();
   const t = getDict(lang);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -162,6 +164,20 @@ export default function Header() {
           >
             <IcoSearch size={20} />
           </Link>
+          <Link
+            href="/wishlist"
+            aria-label={`${t.nav.wishlist}${wishCount > 0 ? ` (${wishCount})` : ''}`}
+            style={{ position: 'relative', color: 'var(--gold)', padding: '8px 6px', display: 'flex', alignItems: 'center', opacity: wishCount > 0 ? 1 : 0.7 }}
+          >
+            <svg width={21} height={21} viewBox="0 0 24 24" fill={wishCount > 0 ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            {wishCount > 0 && (
+              <span style={{ background: '#7A1A1A', color: '#fff', fontSize: 10, minWidth: 18, height: 18, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute', top: 2, right: 0, fontFamily: 'sans-serif', padding: '0 5px', fontWeight: 600, border: '2px solid var(--deep)' }}>
+                {wishCount}
+              </span>
+            )}
+          </Link>
           {userEmail ? (
             <Link href="/orders" style={{ ...navLinkStyle, fontSize: 11, maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 6 }} className="hide-mobile" title={userEmail}>
               <IcoUser size={14} /> {userEmail.split('@')[0]}
@@ -246,6 +262,7 @@ export default function Header() {
             { href: '/about', label: t.nav.about, icon: <NavIconAbout /> },
             { href: '/faq', label: 'FAQ', icon: <NavIconFaq /> },
             { href: '/blog', label: lang === 'th' ? 'บทความ' : lang === 'zh' ? '文章' : 'Blog', icon: '✍️' },
+            { href: '/wishlist', label: `${t.nav.wishlist}${wishCount > 0 ? ` (${wishCount})` : ''}`, icon: <NavIconHeart filled={wishCount > 0} /> },
             { href: '/cart', label: `${t.nav.cart}${count > 0 ? ` (${count})` : ''}`, icon: <NavIconCart /> },
             { href: '/orders', label: t.nav.orders, icon: <NavIconOrders /> },
             { href: '/signin', label: t.nav.signin, icon: <NavIconUser /> },
@@ -317,6 +334,7 @@ function NavIconFaq() { return <svg {...ni} viewBox="0 0 24 24"><circle cx="12" 
 function NavIconCart() { return <svg {...ni} viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>; }
 function NavIconOrders() { return <svg {...ni} viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>; }
 function NavIconUser() { return <svg {...ni} viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>; }
+function NavIconHeart({ filled }: { filled: boolean }) { return <svg {...ni} viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} strokeWidth={filled ? 0 : 1.6}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>; }
 
 const navLinkStyle: React.CSSProperties = {
   color: 'var(--gold)',

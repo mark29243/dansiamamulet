@@ -2,7 +2,7 @@ import type { Lang } from './types';
 
 export const dict = {
   th: {
-    nav: { shop: 'สินค้า', about: 'เกี่ยวกับเรา', cart: 'ตะกร้า', signin: 'เข้าสู่ระบบ', orders: 'คำสั่งซื้อ', home: 'หน้าแรก', menu: 'เมนู', close: 'ปิด' },
+    nav: { shop: 'สินค้า', about: 'เกี่ยวกับเรา', cart: 'ตะกร้า', signin: 'เข้าสู่ระบบ', orders: 'คำสั่งซื้อ', home: 'หน้าแรก', menu: 'เมนู', close: 'ปิด', wishlist: 'รายการโปรด' },
     hero: {
       pre: '✦ พระเครื่องแท้ — รับรอง 100% ✦',
       title1: 'พระเครื่องไทยแท้',
@@ -111,7 +111,7 @@ export const dict = {
     },
   },
   en: {
-    nav: { shop: 'Shop', about: 'About', cart: 'Cart', signin: 'Sign in', orders: 'Orders', home: 'Home', menu: 'Menu', close: 'Close' },
+    nav: { shop: 'Shop', about: 'About', cart: 'Cart', signin: 'Sign in', orders: 'Orders', home: 'Home', menu: 'Menu', close: 'Close', wishlist: 'Wishlist' },
     hero: {
       pre: '✦ AUTHENTIC CERTIFIED AMULETS ✦',
       title1: 'Authentic Thai Amulets',
@@ -220,7 +220,7 @@ export const dict = {
     },
   },
   zh: {
-    nav: { shop: '商品', about: '关于', cart: '购物车', signin: '登录', orders: '订单', home: '首页', menu: '菜单', close: '关闭' },
+    nav: { shop: '商品', about: '关于', cart: '购物车', signin: '登录', orders: '订单', home: '首页', menu: '菜单', close: '关闭', wishlist: '心愿单' },
     hero: {
       pre: '✦ 正品认证佛牌 — 100%保证 ✦',
       title1: '来自泰国名寺',

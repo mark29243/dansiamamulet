@@ -11,6 +11,7 @@ import { formatPrice } from '@/lib/utils';
 import LocalPrice from '@/components/LocalPrice';
 import type { Product } from '@/lib/types';
 import { IcoAmulet, IcoSearch, IcoCheck, IcoWarning, IcoCart, IcoShieldCheck, IcoGlobe } from '@/components/icons';
+import WishlistButton from '@/components/WishlistButton';
 
 export default function ProductDetail({ product: p, related = [] }: { product: Product; related?: Product[] }) {
   const { lang } = useLang();
@@ -131,14 +132,17 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 <div className="serif" style={{ fontSize: 11, color: 'var(--gold-dark)', letterSpacing: 3, textTransform: 'uppercase' }}>
                   {getCatName(p.category, lang)}
                 </div>
-                <button
-                  onClick={handleShare}
-                  className="serif"
-                  style={{ background: 'transparent', border: '1px solid var(--cream-dark)', padding: '4px 12px', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--text-muted)', borderRadius: 'var(--radius)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                  aria-label={t.product.share}
-                >
-                  ↗ {t.product.share}
-                </button>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <WishlistButton productId={p.id} size={16} />
+                  <button
+                    onClick={handleShare}
+                    className="serif"
+                    style={{ background: 'transparent', border: '1px solid var(--cream-dark)', padding: '4px 12px', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--text-muted)', borderRadius: 'var(--radius)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                    aria-label={t.product.share}
+                  >
+                    ↗ {t.product.share}
+                  </button>
+                </div>
               </div>
 
               <h1 className="serif" style={{ fontSize: 26, fontWeight: 600, lineHeight: 1.35, marginBottom: 20, color: 'var(--text)' }}>
