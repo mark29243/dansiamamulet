@@ -24,7 +24,7 @@ type Body = {
   shipping_cost: number;
   carrier?: CarrierCode;
   lang: 'th' | 'en' | 'zh';
-  payment_method?: 'card' | 'alipay';
+  payment_method?: 'card' | 'promptpay' | 'alipay';
   discount_code?: string;
 };
 
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     if (!checkOrigin(req)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    if (!rateLimit(getIp(req), 10, 60_000)) {
+    if (!(await rateLimit(`checkout:${getIp(req)}`, 10, 60_000))) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
@@ -140,13 +140,14 @@ export async function POST(req: Request) {
       const code = discount_code.toUpperCase().trim();
       const { data: dc } = await admin
         .from('discount_codes')
-        .select('id, percent, expires_at, used_at, email')
+        .select('id, percent, free_shipping, expires_at, used_at, email')
         .eq('code', code)
         .single();
       if (!dc || dc.used_at || new Date(dc.expires_at) < new Date() || dc.email.toLowerCase() !== customer.email.toLowerCase()) {
         return NextResponse.json({ error: 'Invalid or expired discount code' }, { status: 400 });
       }
       discountAmount = Math.round(subtotal * dc.percent / 100);
+      if (dc.free_shipping) discountAmount += shipping_cost;
       discountCodeId = dc.id;
     }
 
@@ -191,20 +192,6 @@ export async function POST(req: Request) {
             name: lang === 'th' ? 'ค่าจัดส่ง' : lang === 'zh' ? '运费' : 'Shipping',
           },
           unit_amount: toUnit(shipping_cost),
-        },
-        quantity: 1,
-      });
-    }
-
-    // Add discount as negative line item for Stripe
-    if (discountAmount > 0) {
-      line_items.push({
-        price_data: {
-          currency,
-          product_data: {
-            name: lang === 'th' ? `ส่วนลด ${discount_code?.toUpperCase()}` : lang === 'zh' ? `折扣 ${discount_code?.toUpperCase()}` : `Discount ${discount_code?.toUpperCase()}`,
-          },
-          unit_amount: -toUnit(discountAmount),
         },
         quantity: 1,
       });
@@ -267,6 +254,7 @@ export async function POST(req: Request) {
     }
 
     // Create Stripe Checkout Session
+    // Discount: Stripe rejects negative unit_amount, so use a one-off coupon instead
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       line_items,
@@ -276,7 +264,36 @@ export async function POST(req: Request) {
       cancel_url: `${siteUrl}/cart`,
       metadata: { order_id: order.id },
     };
-    const session = await stripe.checkout.sessions.create(sessionParams);
+
+    // PromptPay: restrict the Stripe page to PromptPay QR only (THB required)
+    if (payment_method === 'promptpay') {
+      sessionParams.payment_method_types = ['promptpay'];
+    }
+
+    let session: Stripe.Checkout.Session;
+    try {
+      if (discountAmount > 0) {
+        const coupon = await stripe.coupons.create({
+          amount_off: toUnit(discountAmount),
+          currency,
+          duration: 'once',
+          name: `Discount ${discount_code?.toUpperCase()}`,
+        });
+        sessionParams.discounts = [{ coupon: coupon.id }];
+      }
+      session = await stripe.checkout.sessions.create(sessionParams);
+    } catch (stripeErr: any) {
+      // Stripe failed after we claimed the discount code — release it and cancel the order
+      if (discountCodeId) {
+        await admin
+          .from('discount_codes')
+          .update({ used_at: null, order_id: null })
+          .eq('id', discountCodeId);
+      }
+      await admin.from('orders').update({ status: 'cancelled' }).eq('id', order.id);
+      console.error('[checkout] Stripe session create failed:', stripeErr.message);
+      return NextResponse.json({ error: 'Payment session could not be created' }, { status: 500 });
+    }
 
     // Save the Stripe session id back on the order
     await admin

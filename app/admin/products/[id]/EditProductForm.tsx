@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastProvider';
 
-const CATEGORIES = ['พระสมเด็จ', 'พระกริ่ง', 'พระปิดตา', 'เหรียญ', 'รูปหล่อ', 'พระงิ้ว', 'เครื่องราง', 'พระผง'];
+const CATEGORIES = [
+  'พระสมเด็จ', 'พระนางพญา', 'พระปิดตา', 'พระนาคปรก', 'พระกริ่ง',
+  'พระผง', 'พระรอด', 'เหรียญ', 'รูปหล่อ', 'เครื่องราง', 'พระพิฆเนศ',
+  'หลวงพ่อทวด', 'หลวงปู่โต พรหมรังสี', 'หลวงพ่อคูณ', 'หลวงพ่อเงิน', 'พระเกจิอาจารย์', 'พระสังกัจจายน์',
+];
 
 export default function EditProductForm({ product }: { product: any }) {
   const router = useRouter();

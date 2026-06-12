@@ -8,6 +8,7 @@ import { useToast } from '@/components/ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { IcoCart, IcoShop, IcoTruck, IcoCelebrate, IcoLock, IcoPackage } from '@/components/icons';
+import RecentlyViewedRow from '@/components/RecentlyViewedRow';
 
 const FREE_SHIPPING_THRESHOLD = 100000; // ฿1,000 — domestic (Thailand) only
 
@@ -98,7 +99,7 @@ export default function CartPage() {
               >
                 <Link href={`/product/${item.product_id}`} style={{ width: 80, height: 80, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
                   {item.image && (
-                    <Image src={item.image} alt={item.name} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                    <Image src={item.image} alt={item.name} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   )}
                 </Link>
 
@@ -184,6 +185,9 @@ export default function CartPage() {
           .cart-item > a:first-child { width: 60px !important; height: 60px !important; }
         }
       `}</style>
+
+      {/* Recently Viewed */}
+      <RecentlyViewedRow />
     </div>
   );
 }

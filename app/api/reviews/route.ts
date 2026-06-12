@@ -33,7 +33,7 @@ async function sendDiscountEmail(to: string, code: string, expiresAt: Date, lang
 
 export async function POST(req: Request) {
   if (!checkOrigin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  if (!rateLimit(getIp(req), 3, 60_000)) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  if (!(await rateLimit(`reviews:${getIp(req)}`, 3, 60_000))) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();

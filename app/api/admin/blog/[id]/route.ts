@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export const runtime = 'nodejs';
 
@@ -41,9 +42,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (typeof body.excerpt === 'string') allowed.excerpt = body.excerpt.trim() || null;
   if (typeof body.excerpt_th === 'string') allowed.excerpt_th = body.excerpt_th.trim() || null;
   if (typeof body.excerpt_zh === 'string') allowed.excerpt_zh = body.excerpt_zh.trim() || null;
-  if (typeof body.content === 'string') allowed.content = body.content;
-  if (typeof body.content_th === 'string') allowed.content_th = body.content_th || null;
-  if (typeof body.content_zh === 'string') allowed.content_zh = body.content_zh || null;
+  if (typeof body.content === 'string') allowed.content = sanitizeHtml(body.content);
+  if (typeof body.content_th === 'string') allowed.content_th = sanitizeHtml(body.content_th) || null;
+  if (typeof body.content_zh === 'string') allowed.content_zh = sanitizeHtml(body.content_zh) || null;
   if (typeof body.cover_image === 'string' || body.cover_image === null) allowed.cover_image = body.cover_image;
   if (typeof body.category === 'string') allowed.category = body.category.trim() || null;
   if (typeof body.published === 'boolean') allowed.published = body.published;

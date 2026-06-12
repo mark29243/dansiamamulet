@@ -338,16 +338,44 @@ export function getDict(lang: Lang) {
 }
 
 export const categoryNames: Record<string, { th: string; en: string; zh: string }> = {
-  'เหรียญ':     { th: 'เหรียญ',     en: 'Coin Amulet',   zh: '圣币' },
-  'พระสมเด็จ':  { th: 'พระสมเด็จ',  en: 'Somdej',        zh: '颂德佛牌' },
-  'พระปิดตา':   { th: 'พระปิดตา',   en: 'Pidta',         zh: '闭眼佛' },
-  'รูปหล่อ':    { th: 'รูปหล่อ',    en: 'Cast Image',    zh: '铸造佛像' },
-  'พระกริ่ง':   { th: 'พระกริ่ง',   en: 'Kring',         zh: '铃铛佛牌' },
-  'เครื่องราง': { th: 'เครื่องราง', en: 'Talisman',      zh: '护身符' },
-  'พระผง':      { th: 'พระผง',      en: 'Powder Amulet', zh: '粉末佛牌' },
-  'พระนางพญา':  { th: 'พระนางพญา',  en: 'Nang Phaya',    zh: '南帕雅' },
-  'หลวงพ่อทวด': { th: 'หลวงพ่อทวด', en: 'Luang Pu Tuad', zh: '龙普托' },
-  'พระเกจิอาจารย์': { th: 'พระเกจิอาจารย์', en: 'Monk Amulets', zh: '高僧佛牌' },
+  'พระสมเด็จ':           { th: 'พระสมเด็จ',           en: 'Somdej',           zh: '颂德佛牌' },
+  'พระนางพญา':           { th: 'พระนางพญา',           en: 'Nang Phaya',       zh: '南帕雅' },
+  'พระปิดตา':            { th: 'พระปิดตา',            en: 'Pidta',            zh: '闭眼佛' },
+  'พระนาคปรก':           { th: 'พระนาคปรก',           en: 'Naga Prok',        zh: '那伽佛牌' },
+  'พระกริ่ง':            { th: 'พระกริ่ง',            en: 'Kring',            zh: '铃铛佛牌' },
+  'พระผง':               { th: 'พระผง',               en: 'Powder Amulet',    zh: '粉末佛牌' },
+  'พระรอด':              { th: 'พระรอด',              en: 'Phra Rod',         zh: '帕罗德' },
+  'เหรียญ':              { th: 'เหรียญ',              en: 'Coin Amulet',      zh: '圣币' },
+  'รูปหล่อ':             { th: 'รูปหล่อ',             en: 'Cast Image',       zh: '铸造佛像' },
+  'เครื่องราง':          { th: 'เครื่องราง',          en: 'Talisman',         zh: '护身符' },
+  'พระพิฆเนศ':           { th: 'พระพิฆเนศ',           en: 'Ganesha',          zh: '象头神' },
+  'หลวงพ่อทวด':          { th: 'หลวงพ่อทวด',          en: 'Luang Pu Tuad',    zh: '龙普托' },
+  'หลวงปู่โต พรหมรังสี': { th: 'หลวงปู่โต พรหมรังสี', en: 'Somdej Toh',       zh: '颂德多' },
+  'หลวงพ่อคูณ':          { th: 'หลวงพ่อคูณ',          en: 'Luang Pu Khun',    zh: '龙普坤' },
+  'หลวงพ่อเงิน':         { th: 'หลวงพ่อเงิน',         en: 'Luang Pu Ngern',   zh: '龙普银' },
+  'พระเกจิอาจารย์':      { th: 'พระเกจิอาจารย์',      en: 'Monk Amulets',     zh: '高僧佛牌' },
+  'พระสังกัจจายน์':     { th: 'พระสังกัจจายน์',     en: 'Phra Sangkachai',  zh: '圣迦旃延' },
+};
+
+// Thai DB value → URL slug
+export const CAT_SLUG: Record<string, string> = {
+  'พระสมเด็จ':           'phra-somdej',
+  'พระนางพญา':           'nang-phaya',
+  'พระปิดตา':            'phra-pidta',
+  'พระนาคปรก':           'naga-prok',
+  'พระกริ่ง':            'phra-kring',
+  'พระผง':               'phra-phong',
+  'พระรอด':              'phra-rod',
+  'เหรียญ':              'rian',
+  'รูปหล่อ':             'rup-lor',
+  'เครื่องราง':          'khruang-rang',
+  'พระพิฆเนศ':           'ganesha',
+  'หลวงพ่อทวด':          'luang-pu-tuad',
+  'หลวงปู่โต พรหมรังสี': 'somdej-toh',
+  'หลวงพ่อคูณ':          'luang-pu-khun',
+  'หลวงพ่อเงิน':         'luang-pu-ngern',
+  'พระเกจิอาจารย์':      'phrakejiaachan',
+  'พระสังกัจจายน์':     'phra-sangkachai',
 };
 
 export function getCatName(cat: string, lang: Lang): string {

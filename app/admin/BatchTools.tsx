@@ -101,9 +101,19 @@ export default function BatchTools() {
         Batch Tools
       </h2>
       <BatchButton
+        label="📝 Generate Meta Descriptions (short) — ทุกสินค้า"
+        endpoint="/api/admin/batch-short-meta"
+        description="สร้าง short meta description ภาษาอังกฤษ 140-155 ตัวอักษร สำหรับสินค้าที่ยังไม่มี หรือ short ยังเป็นภาษาไทย — ใช้สำหรับ Google search snippet"
+      />
+      <BatchButton
+        label="🔧 Fix Descriptions (EN + ZH) — แก้ทีเดียวทั้งหมด"
+        endpoint="/api/admin/fix-descriptions"
+        description="ตรวจและแก้สินค้าที่ description เป็นภาษาไทย หรือ description_zh ไม่มี Chinese chars — แปลใหม่อัตโนมัติ"
+      />
+      <BatchButton
         label="Translate Product Names → English"
         endpoint="/api/admin/batch-translate-name-en"
-        description="แปลชื่อสินค้าที่ยังเป็นภาษาไทยใน field 'name' ให้เป็นอังกฤษ (45 รายการ)"
+        description="แปลชื่อสินค้าที่ยังเป็นภาษาไทยใน field 'name' ให้เป็นอังกฤษ"
       />
       <BatchButton
         label="Translate Products → Chinese (name_zh)"

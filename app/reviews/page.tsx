@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useLang } from '@/components/LangProvider';
 
-type Review = { id: number; rating: number; body: string; user_email: string; created_at: string };
+type Review = { id: number; rating: number; body: string; user_email: string; created_at: string; product_names: string[] };
 
 function Stars({ n }: { n: number }) {
   return <span style={{ color: 'var(--gold)', fontSize: 16, letterSpacing: 2 }}>{'★'.repeat(n)}{'☆'.repeat(5 - n)}</span>;
@@ -63,6 +63,15 @@ export default function ReviewsPage() {
                 </span>
               </div>
               <p style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.8, marginBottom: 14 }}>{r.body}</p>
+              {r.product_names && r.product_names.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+                  {r.product_names.map((name, i) => (
+                    <span key={i} style={{ fontSize: 10, background: 'var(--cream-dark)', color: 'var(--gold-dark)', padding: '3px 8px', borderRadius: 3, letterSpacing: 0.5 }}>
+                      📿 {name.length > 40 ? name.slice(0, 40) + '…' : name}
+                    </span>
+                  ))}
+                </div>
+              )}
               <div style={{ fontSize: 11, color: 'var(--text-faint)' }}>— {r.user_email}</div>
             </div>
           ))}

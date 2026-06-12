@@ -3,6 +3,9 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import { IcoClipboard, IcoPackage, IcoClock, IcoEye } from '@/components/icons';
 import BatchTools from './BatchTools';
+import ViewsChart from './ViewsChart';
+import ChartErrorBoundary from './ChartErrorBoundary';
+import RevenueChart from './RevenueChart';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +20,7 @@ export default async function AdminDashboard() {
     admin.auth.admin.listUsers({ page: 1, perPage: 1 }),
     admin.from('products').select('id, name, name_th, slug, views, images').eq('published', true).order('views', { ascending: false }).limit(5),
     admin.from('products').select('views').eq('published', true),
-    admin.from('products').select('id, name, name_th, description, name_zh, description_zh').eq('published', true),
+    admin.from('products').select('id, name, name_th, description, description_zh').eq('published', true),
     admin.rpc('get_top_wishlisted', { limit_count: 8 }),
   ]);
 
@@ -46,9 +49,8 @@ export default async function AdminDashboard() {
   const allPublished = translationRes.data ?? [];
   const missingNameEn  = allPublished.filter((p) => /[ก-๙]/.test(p.name ?? ''));
   const missingDescEn  = allPublished.filter((p) => !p.description);
-  const missingNameZh  = allPublished.filter((p) => !p.name_zh);
   const missingDescZh  = allPublished.filter((p) => !p.description_zh);
-  const translationWarn = missingNameEn.length > 0 || missingDescEn.length > 0 || missingNameZh.length > 0 || missingDescZh.length > 0;
+  const translationWarn = missingNameEn.length > 0 || missingDescEn.length > 0 || missingDescZh.length > 0;
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
@@ -72,6 +74,16 @@ export default async function AdminDashboard() {
         <Link href="/admin/products" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoPackage size={14} /> Manage Products</Link>
         <Link href="/admin/orders?status=pending" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><IcoClock size={14} /> Pending Orders</Link>
       </div>
+
+      {/* Revenue Chart */}
+      <ChartErrorBoundary>
+        <RevenueChart />
+      </ChartErrorBoundary>
+
+      {/* Views Chart */}
+      <ChartErrorBoundary>
+        <ViewsChart />
+      </ChartErrorBoundary>
 
       {/* Top Wishlisted */}
       <section style={{ marginBottom: 36 }}>
@@ -176,12 +188,6 @@ export default async function AdminDashboard() {
             done={allPublished.length - missingDescEn.length}
             total={allPublished.length}
             missing={missingDescEn.map((p) => p.name_th || p.name)}
-          />
-          <TranslationRow
-            label="🇨🇳 ชื่อจีน (name_zh)"
-            done={allPublished.length - missingNameZh.length}
-            total={allPublished.length}
-            missing={missingNameZh.map((p) => p.name_th || p.name)}
           />
           <TranslationRow
             label="🇨🇳 รายละเอียดจีน (description_zh)"

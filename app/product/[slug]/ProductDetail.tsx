@@ -12,33 +12,65 @@ import LocalPrice from '@/components/LocalPrice';
 import type { Product } from '@/lib/types';
 import { IcoAmulet, IcoSearch, IcoCheck, IcoWarning, IcoCart, IcoShieldCheck, IcoGlobe } from '@/components/icons';
 import WishlistButton from '@/components/WishlistButton';
+import RecentlyViewedRow from '@/components/RecentlyViewedRow';
+import { useRecentlyViewed } from '@/components/RecentlyViewedProvider';
 
 export default function ProductDetail({ product: p, related = [] }: { product: Product; related?: Product[] }) {
   const { lang } = useLang();
   const { add } = useCart();
   const { toast } = useToast();
+  const { add: addToHistory } = useRecentlyViewed();
   const t = getDict(lang);
   const [activeImg, setActiveImg] = useState(0);
   const [qty, setQty] = useState(1);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [zoomedIn, setZoomedIn] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
+
+  // Track this product in recently viewed history
+  useEffect(() => { addToHistory(p.id); }, [p.id]);
+
+  // Language spec:
+  //   TH  → name_th  + description_th
+  //   EN  → name     + description     (both English)
+  //   ZH  → name     (English name!)   + description_zh
 
   const displayName =
     lang === 'th' ? (p.name_th || p.name) :
-    /* en & zh */   p.name;
-  const displayDesc = lang === 'th' ? (p.description_th || p.description) : lang === 'zh' ? (p.description_zh || p.description) : p.description;
-  const displayShort = lang === 'th' ? (p.description_th ? p.description_th.slice(0, 200) : p.short) : lang === 'zh' ? (p.description_zh ? p.description_zh.slice(0, 200) : p.description || p.short) : (p.description ? p.description.slice(0, 200) : p.short);
+    /* en & zh use English name */ p.name;
+
+  // Guard: if a field still contains Thai chars (not yet translated), fall back gracefully
+  const hasThai = (s?: string | null) => !!s && /[฀-๿]/.test(s);
+  const safeEn = (s?: string | null, fallback = p.name) =>
+    (s && !hasThai(s)) ? s : fallback;
+
+  const displayDesc =
+    lang === 'th' ? (p.description_th || p.description) :
+    lang === 'zh' ? (p.description_zh || safeEn(p.description)) :
+    safeEn(p.description);
 
   const displayPrice = p.sale_price ?? p.price;
   const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
   const lowStock = p.stock > 0 && p.stock <= 3;
 
   useEffect(() => {
-    if (!zoomOpen) return;
+    if (!zoomOpen) { setZoomedIn(false); return; }
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setZoomOpen(false); };
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
     return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', onKey); };
   }, [zoomOpen]);
+
+  // % position of pointer inside the element — used as transform origin when zoomed
+  function pointerOrigin(e: React.MouseEvent | React.TouchEvent, el: HTMLElement) {
+    const rect = el.getBoundingClientRect();
+    const pt = 'touches' in e ? e.touches[0] : e;
+    if (!pt) return { x: 50, y: 50 };
+    return {
+      x: Math.min(100, Math.max(0, ((pt.clientX - rect.left) / rect.width) * 100)),
+      y: Math.min(100, Math.max(0, ((pt.clientY - rect.top) / rect.height) * 100)),
+    };
+  }
 
   function handleAdd() {
     if (p.stock < 1) return;
@@ -93,7 +125,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 }}
               >
                 {p.images[activeImg] ? (
-                  <Image src={p.images[activeImg]} alt={p.name} fill sizes="(max-width: 768px) 100vw, 500px" style={{ objectFit: 'contain' }} unoptimized priority />
+                  <Image src={p.images[activeImg]} alt={p.name} fill sizes="(max-width: 768px) 100vw, 500px" style={{ objectFit: 'contain' }} priority />
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                     <IcoAmulet size={80} />
@@ -119,7 +151,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                         overflow: 'hidden', borderRadius: 'var(--radius)', transition: 'border-color 0.2s',
                       }}
                     >
-                      <Image src={url} alt="" width={76} height={76} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                      <Image src={url} alt={`${p.name} — รูปที่ ${i + 1}`} width={76} height={76} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </button>
                   ))}
                 </div>
@@ -182,12 +214,6 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 )}
               </div>
 
-              {p.short && (
-                <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: 24, padding: '14px 16px', background: '#fff', borderLeft: '3px solid var(--gold)', borderRadius: '0 var(--radius) var(--radius) 0' }}>
-                  {displayShort}
-                </p>
-              )}
-
               {p.stock > 0 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
                   <span className="label" style={{ marginBottom: 0 }}>{t.cart.qty}</span>
@@ -218,7 +244,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
               </div>
 
               {/* Description */}
-              {p.description && p.description.length > (p.short?.length ?? 0) + 50 && (
+              {displayDesc && (
                 <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 24 }}>
                   <h3 className="serif" style={{ fontSize: 13, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 14 }}>
                     {t.product.description}
@@ -246,7 +272,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                     <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
                       <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
                         {r.images[0] && (
-                          <Image src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                          <Image src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         )}
                       </div>
                       <div style={{ padding: 14 }}>
@@ -292,9 +318,46 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
           >
             ×
           </button>
-          <Image src={p.images[activeImg]} alt={p.name} width={1000} height={1000} style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', width: 'auto', height: 'auto' }} unoptimized />
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              if (zoomedIn) { setZoomedIn(false); return; }
+              setZoomOrigin(pointerOrigin(e, e.currentTarget));
+              setZoomedIn(true);
+            }}
+            onMouseMove={(e) => {
+              if (zoomedIn) setZoomOrigin(pointerOrigin(e, e.currentTarget));
+            }}
+            onTouchMove={(e) => {
+              if (zoomedIn) setZoomOrigin(pointerOrigin(e, e.currentTarget));
+            }}
+            style={{ overflow: 'hidden', maxWidth: '90vw', maxHeight: '90vh', cursor: zoomedIn ? 'zoom-out' : 'zoom-in', touchAction: zoomedIn ? 'none' : 'auto' }}
+          >
+            <Image
+              src={p.images[activeImg]}
+              alt={p.name}
+              width={1000}
+              height={1000}
+              style={{
+                maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', width: 'auto', height: 'auto',
+                display: 'block',
+                transform: zoomedIn ? 'scale(2.5)' : 'scale(1)',
+                transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
+                transition: zoomedIn ? 'transform 0.15s ease-out' : 'transform 0.25s ease',
+              }}
+              unoptimized
+            />
+          </div>
+          <div style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.55)', fontSize: 12, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+            {zoomedIn
+              ? (lang === 'th' ? 'เลื่อนเพื่อส่องดู · กดอีกครั้งเพื่อย่อ' : lang === 'zh' ? '移动查看 · 再点缩小' : 'Move to inspect · click to zoom out')
+              : (lang === 'th' ? 'กดที่รูปเพื่อซูมดูรายละเอียด' : lang === 'zh' ? '点击图片放大查看细节' : 'Click image to zoom in')}
+          </div>
         </div>
       )}
+
+      {/* Recently Viewed */}
+      <RecentlyViewedRow excludeId={p.id} />
 
       <style>{`
         @media (max-width: 768px) {

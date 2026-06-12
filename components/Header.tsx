@@ -19,15 +19,29 @@ export default function Header() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email ?? null));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setUserEmail(session?.user?.email ?? null);
-    });
-    return () => subscription.unsubscribe();
+    let unsubscribe: (() => void) | null = null;
+    try {
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      // getUser uses REST only — safe on all browsers
+      supabase.auth.getUser()
+        .then(({ data }) => setUserEmail(data.user?.email ?? null))
+        .catch(() => {});
+      // onAuthStateChange may open a WebSocket — iOS Safari blocks this in some contexts
+      try {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+          setUserEmail(session?.user?.email ?? null);
+        });
+        unsubscribe = () => subscription.unsubscribe();
+      } catch {
+        // WebSocket unavailable (iOS Safari private/restricted) — auth still works via getUser above
+      }
+    } catch {
+      // Supabase client init failed — non-critical, skip auth display
+    }
+    return () => { unsubscribe?.(); };
   }, []);
 
   useEffect(() => {

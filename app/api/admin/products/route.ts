@@ -13,17 +13,41 @@ async function requireAdmin() {
   return { user, admin };
 }
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const BLOCKED_HOSTS = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|::1)/i;
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10 MB
+
 async function rehostImage(url: string, admin: ReturnType<typeof createAdminClient>): Promise<string> {
   try {
+    // SSRF prevention: only allow http/https, block private IPs
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return url;
+    if (BLOCKED_HOSTS.test(parsed.hostname)) return url;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10_000); // 10s timeout
+
     const res = await fetch(url, {
       headers: { 'Referer': 'https://shopee.co.th/', 'User-Agent': 'Mozilla/5.0' },
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
+
     if (!res.ok) return url;
 
-    const contentType = res.headers.get('content-type') || 'image/jpeg';
+    // Validate content-type is an image
+    const contentType = (res.headers.get('content-type') || '').split(';')[0].trim();
+    if (!ALLOWED_IMAGE_TYPES.includes(contentType)) return url;
+
+    // Guard against huge files
+    const contentLength = Number(res.headers.get('content-length') || 0);
+    if (contentLength > MAX_IMAGE_BYTES) return url;
+
+    const buffer = await res.arrayBuffer();
+    if (buffer.byteLength > MAX_IMAGE_BYTES) return url;
+
     const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const buffer = await res.arrayBuffer();
 
     const { error } = await admin.storage
       .from('products')

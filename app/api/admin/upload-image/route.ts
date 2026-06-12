@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
+import sharp from 'sharp';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { uploadToR2 } from '@/lib/r2';
 
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+const MAX_WIDTH = 1600; // enough for the 2.5x zoom viewer
 
 async function requireAdmin() {
   const supabase = createClient();
@@ -24,27 +28,41 @@ export async function POST(req: Request) {
 
   if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 });
 
-  const mime = file.type || 'image/jpeg';
-  if (!ALLOWED_MIME.includes(mime) && !mime.startsWith('image/')) {
-    return NextResponse.json({ error: 'Only images allowed' }, { status: 400 });
+  const mime = file.type || '';
+  if (!ALLOWED_MIME.includes(mime)) {
+    return NextResponse.json({ error: `File type not allowed. Allowed: ${ALLOWED_MIME.join(', ')}` }, { status: 400 });
   }
   if (file.size > 20 * 1024 * 1024) {
     return NextResponse.json({ error: 'File too large (max 20MB)' }, { status: 400 });
   }
 
-  const ext = mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const buffer = await file.arrayBuffer();
+  const input = Buffer.from(await file.arrayBuffer());
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
 
-  const { error } = await ctx.admin.storage
-    .from('products')
-    .upload(filename, buffer, { contentType: mime, upsert: false });
+  try {
+    // Resize to max 1600px wide and convert to WebP — typically 5MB → ~200KB
+    const optimized = await sharp(input, { failOn: 'none' })
+      .rotate() // respect EXIF orientation
+      .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toBuffer();
 
-  if (error) {
-    console.error('[upload-image]', error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    const url = await uploadToR2(filename, optimized, 'image/webp');
+    return NextResponse.json({ url, bytes: optimized.length, original_bytes: input.length });
+  } catch (e: any) {
+    // sharp cannot decode HEIC without libheif — fall back to storing original in R2
+    if (mime === 'image/heic' || mime === 'image/heif') {
+      try {
+        const ext = mime.split('/')[1];
+        const rawName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const url = await uploadToR2(rawName, input, mime);
+        return NextResponse.json({ url, bytes: input.length, original_bytes: input.length, warning: 'HEIC stored without resize' });
+      } catch (e2: any) {
+        console.error('[upload-image] HEIC fallback failed:', e2?.message);
+        return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+      }
+    }
+    console.error('[upload-image]', e?.message);
+    return NextResponse.json({ error: 'Image processing failed' }, { status: 500 });
   }
-
-  const { data } = ctx.admin.storage.from('products').getPublicUrl(filename);
-  return NextResponse.json({ url: data.publicUrl });
 }

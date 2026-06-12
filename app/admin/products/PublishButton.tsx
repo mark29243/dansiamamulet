@@ -12,10 +12,11 @@ export default function PublishButton({ productId }: { productId: number }) {
   async function handlePublish() {
     setBusy(true);
     try {
-      const res = await fetch(`/api/admin/products/${productId}`, {
-        method: 'PATCH',
+      // Call process-draft which translates Thai → EN + ZH via Claude, then sets published=true
+      const res = await fetch('/api/admin/process-draft', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ published: true }),
+        body: JSON.stringify({ id: productId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
@@ -47,7 +48,7 @@ export default function PublishButton({ productId }: { productId: number }) {
         textTransform: 'uppercase',
       }}
     >
-      {busy ? '...' : 'Publish'}
+      {busy ? 'Translating…' : 'Publish'}
     </button>
   );
 }

@@ -8,7 +8,7 @@ import { useToast } from './ToastProvider';
 import { getDict, getCatName } from '@/lib/i18n';
 import type { Product } from '@/lib/types';
 import { useState, useEffect } from 'react';
-import { IcoAmulet, IcoWarning, IcoEye, IcoCheck } from '@/components/icons';
+import { IcoAmulet, IcoEye, IcoCheck } from '@/components/icons';
 import WishlistButton from './WishlistButton';
 
 function useLocalPrice(satang: number, lang: string): string {
@@ -66,9 +66,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
 
   const displayPrice = p.sale_price ?? p.price;
   const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
-  const lowStock = p.stock > 0 && p.stock <= 3;
-
-  const priceDisplay = useLocalPrice(displayPrice, lang);
+const priceDisplay = useLocalPrice(displayPrice, lang);
   const origPriceDisplay = useLocalPrice(p.price, lang);
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -89,7 +87,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
 
   return (
     <Link href={`/product/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
-      <article className="pcard" style={{ background: '#fff', border: '1px solid var(--cream-dark)', borderRadius: 'var(--radius-lg)', transition: 'all var(--transition)', position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <article className="pcard" style={{ background: 'var(--glass)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-lg)', transition: 'all var(--transition)', position: 'relative', overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
         <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 3, display: 'flex', flexDirection: 'column', gap: 6 }}>
           {p.stock === 0 && <span className="badge badge-oos">{t.product.oos}</span>}
           {hasDiscount && p.stock > 0 && <span className="badge badge-sale">SALE</span>}
@@ -106,7 +104,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
         <div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           {!imgLoaded && p.images[0] && <div className="skeleton" style={{ position: 'absolute', inset: 0 }} />}
           {p.images[0] ? (
-            <Image src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'contain', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} unoptimized />
+            <Image src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'contain', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} />
           ) : (
             <IcoAmulet size={56} />
           )}
@@ -116,12 +114,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
           <h3 className="serif" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.4, marginBottom: 6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 39 }}>
             {displayName}
           </h3>
-          {lowStock && (
-            <span className="badge badge-warning" style={{ marginBottom: 8, alignSelf: 'flex-start', fontSize: 10, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-              <IcoWarning size={11} /> {t.product.onlyLeft} {p.stock} {lang === 'th' ? 'องค์' : lang === 'zh' ? '件' : 'left'}
-            </span>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--cream-dark)', paddingTop: 12, marginTop: 'auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.6)', paddingTop: 12, marginTop: 'auto' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                 <span className="serif" style={{ fontSize: 18, fontWeight: 600, color: 'var(--gold-dark)' }}>{priceDisplay}</span>
@@ -134,7 +127,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
           </div>
         </div>
         <style>{`
-          .pcard:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--gold-light); }
+          .pcard:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(26,18,8,0.14); border-color: rgba(201,168,76,0.5); background: rgba(255,250,242,0.78); }
           .pcard:hover img { transform: scale(1.05); }
           .pcard:hover .quick-view-btn { opacity: 1; transform: translateY(0); }
           .pcard:hover .quick-view-btn:hover { background: var(--gold); color: var(--deep); border-color: var(--gold); }

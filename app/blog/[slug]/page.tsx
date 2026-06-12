@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
@@ -97,7 +98,7 @@ export default async function BlogPostPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd).replace(/</g, '\\u003c') }} />
 
       <div className="container" style={{ padding: '32px 24px 80px', maxWidth: 760 }}>
         {/* Breadcrumb */}
@@ -111,8 +112,8 @@ export default async function BlogPostPage({
 
         {/* Cover */}
         {post.cover_image && (
-          <div style={{ width: '100%', height: 360, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 32 }}>
-            <img src={post.cover_image} alt={displayTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div style={{ width: '100%', height: 360, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 32, position: 'relative' }}>
+            <Image src={post.cover_image} alt={displayTitle} fill sizes="(max-width: 768px) 100vw, 800px" style={{ objectFit: 'cover' }} priority />
           </div>
         )}
 

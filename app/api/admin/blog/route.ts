@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export const runtime = 'nodejs';
 
@@ -50,9 +51,9 @@ export async function POST(req: Request) {
       excerpt: excerpt?.trim() || null,
       excerpt_th: excerpt_th?.trim() || null,
       excerpt_zh: excerpt_zh?.trim() || null,
-      content: content?.trim() || '',
-      content_th: content_th?.trim() || null,
-      content_zh: content_zh?.trim() || null,
+      content: sanitizeHtml(content?.trim()) || '',
+      content_th: sanitizeHtml(content_th?.trim()) || null,
+      content_zh: sanitizeHtml(content_zh?.trim()) || null,
       cover_image: cover_image || null,
       category: category?.trim() || null,
       published: published === true,

@@ -110,12 +110,33 @@ create or replace function public.decrement_stock(items jsonb)
 returns void as $$
 declare
   item jsonb;
+  current_stock int;
+  need_qty int;
+  prod_id bigint;
 begin
   for item in select * from jsonb_array_elements(items)
   loop
+    prod_id  := (item->>'product_id')::bigint;
+    need_qty := (item->>'qty')::int;
+
+    -- Lock the row to prevent concurrent oversell
+    select stock into current_stock
+      from public.products
+     where id = prod_id
+       for update;
+
+    if current_stock is null then
+      raise exception 'Product % not found', prod_id;
+    end if;
+
+    if current_stock < need_qty then
+      raise exception 'Insufficient stock for product %: have %, need %',
+        prod_id, current_stock, need_qty;
+    end if;
+
     update public.products
-       set stock = greatest(0, stock - (item->>'qty')::int)
-     where id = (item->>'product_id')::bigint;
+       set stock = stock - need_qty
+     where id = prod_id;
   end loop;
 end;
 $$ language plpgsql security definer;

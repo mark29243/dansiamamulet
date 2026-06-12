@@ -22,10 +22,17 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const body = await req.json();
   const { status, tracking_number, carrier, sendEmail } = body;
 
+  const VALID_STATUSES = ['pending', 'paid', 'pending_alipay', 'pending_review', 'shipped', 'delivered', 'cancelled', 'refunded'];
+
   const updates: any = {};
-  if (status) updates.status = status;
-  if (tracking_number !== undefined) updates.tracking_number = tracking_number;
-  if (carrier !== undefined) updates.carrier = carrier;
+  if (status !== undefined) {
+    if (!VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
+    }
+    updates.status = status;
+  }
+  if (tracking_number !== undefined) updates.tracking_number = String(tracking_number).slice(0, 100);
+  if (carrier !== undefined) updates.carrier = String(carrier).slice(0, 50);
 
   const { data, error } = await ctx.admin
     .from('orders')

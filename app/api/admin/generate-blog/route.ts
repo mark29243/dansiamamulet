@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const maxDuration = 120;
@@ -111,6 +112,10 @@ Reply in EXACTLY this format:
 export async function POST(req: Request) {
   const ctx = await requireAdmin();
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  if (!(await rateLimit(`generate-blog:${ctx.user.id}`, 10))) {
+    return NextResponse.json({ error: 'Rate limit: max 10 blog generations per hour' }, { status: 429 });
+  }
 
   const body = await req.json();
   const { title_th, content_th, category } = body;

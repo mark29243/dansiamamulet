@@ -123,7 +123,7 @@ export default function WishlistPage() {
                   {/* Image */}
                   <div style={{ aspectRatio: '4/3', background: 'var(--cream-dark)', overflow: 'hidden', position: 'relative' }}>
                     {p.images[0] ? (
-                      <Image src={p.images[0]} alt={getDisplayName(p)} fill sizes="220px" style={{ objectFit: 'contain' }} unoptimized />
+                      <Image src={p.images[0]} alt={getDisplayName(p)} fill sizes="220px" style={{ objectFit: 'contain' }} />
                     ) : (
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                         <IcoAmulet size={48} />

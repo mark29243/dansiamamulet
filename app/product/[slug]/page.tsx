@@ -12,12 +12,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const supabase = createClient();
   const { data: p } = await supabase
     .from('products')
-    .select('name, name_th, name_zh, description, short, images, price, sale_price, category')
+    .select('name, name_th, name_zh, description, short, images, price, sale_price, stock, category')
     .eq('slug', params.slug)
     .single();
   if (!p) notFound();
   const img = p.images?.[0] ?? '';
-  const desc = p.short || p.description?.slice(0, 160) || p.name;
+  // short = English meta description (new products) or Thai name (legacy) — use if English
+  const isEnglishShort = p.short && !/[฀-๿]/.test(p.short);
+  const desc = (isEnglishShort ? p.short : null)
+    || p.description?.slice(0, 160)
+    || p.name;
   const canonicalUrl = `${siteUrl}/product/${params.slug}`;
   return {
     title: p.name,
@@ -61,6 +65,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: p.name,
+    alternateName: [p.name_th, p.name_zh].filter(Boolean),
     description: p.description || p.short,
     image: p.images ?? [],
     brand: { '@type': 'Brand', name: 'Dan Siam Amulets' },
@@ -71,8 +76,10 @@ export default async function ProductPage({ params }: { params: { slug: string }
       price: price,
       availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
       seller: { '@type': 'Organization', name: 'Dan Siam Amulets' },
+      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     },
     category: p.category,
+    inLanguage: ['th', 'en', 'zh'],
   };
 
   const breadcrumbJsonLd = {
@@ -118,11 +125,11 @@ export default async function ProductPage({ params }: { params: { slug: string }
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, '\\u003c') }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c') }}
       />
       <ViewTracker productId={p.id} />
       <ProductDetail product={p} related={(related ?? []) as unknown as Product[]} />

@@ -7,7 +7,7 @@ export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   if (!checkOrigin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  if (!rateLimit(getIp(req), 10, 60_000)) {
+  if (!(await rateLimit(`discount:${getIp(req)}`, 10, 60_000))) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   const admin = createAdminClient();
   const { data } = await admin
     .from('discount_codes')
-    .select('id, percent, expires_at, used_at, email')
+    .select('id, percent, free_shipping, expires_at, used_at, email')
     .eq('code', code.toUpperCase().trim())
     .single();
 
@@ -28,5 +28,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Discount code is not valid for this email' }, { status: 400 });
   }
 
-  return NextResponse.json({ valid: true, percent: data.percent });
+  return NextResponse.json({ valid: true, percent: data.percent, free_shipping: data.free_shipping ?? false });
 }

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/server';
+import { labelToken } from '@/lib/label-token';
 import { formatPrice } from '@/lib/utils';
 import type { Order } from '@/lib/types';
 import OrderActions from './OrderActions';
@@ -23,7 +24,12 @@ export default async function AdminOrderPage({ params }: { params: { id: string 
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px', maxWidth: 1000 }}>
-      <Link href="/admin/orders" className="btn-text" style={{ padding: 0, marginBottom: 16, display: 'inline-block' }}>← Back to orders</Link>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+        <Link href="/admin/orders" className="btn-text" style={{ padding: 0 }}>← Back to orders</Link>
+        <a href={`/print/${o.id}?k=${labelToken(o.id)}`} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ fontSize: 12, padding: '5px 14px' }}>
+          🏷️ ใบปะหน้าพัสดุ
+        </a>
+      </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
         <div>
@@ -86,6 +92,7 @@ export default async function AdminOrderPage({ params }: { params: { id: string 
               {o.shipping_address.line2 && <>{o.shipping_address.line2}<br /></>}
               {o.shipping_address.city}, {o.shipping_address.postal_code}<br />
               <strong>{o.shipping_address.country}</strong>
+              {o.customer_phone && <><br /><span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{o.customer_phone}</span></>}
             </p>
           </section>
         </div>

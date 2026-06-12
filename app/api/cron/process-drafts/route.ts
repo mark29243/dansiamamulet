@@ -48,9 +48,20 @@ Return ONLY valid JSON, no markdown.`,
 }
 
 export async function GET(req: Request) {
-  // Verify Vercel cron secret
-  const authHeader = req.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Verify Vercel cron secret (timing-safe to prevent timing attacks)
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) {
+    console.error('[cron] CRON_SECRET env var is not set — refusing all requests');
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const authHeader = req.headers.get('authorization') ?? '';
+  const expected = `Bearer ${cronSecret}`;
+  const enc = new TextEncoder();
+  const a = enc.encode(authHeader.padEnd(expected.length));
+  const b = enc.encode(expected.padEnd(authHeader.length));
+  let mismatch = a.length !== b.length;
+  for (let i = 0; i < Math.max(a.length, b.length); i++) mismatch = ((a[i] ?? 0) ^ (b[i] ?? 0)) !== 0 || mismatch;
+  if (mismatch) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

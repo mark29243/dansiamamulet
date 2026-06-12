@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
 import HomeHero from './HomeHero';
 import HomeShop from './HomeShop';
+import ReviewsSection from '@/components/ReviewsSection';
 
 export const revalidate = 60; // ISR: re-fetch every 60s
 
@@ -25,6 +26,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { cate
   return (
     <>
       <HomeHero productCount={products.length} products={products} />
+      <ReviewsSection />
       <HomeShop products={products} defaultCategory={searchParams?.category} />
     </>
   );

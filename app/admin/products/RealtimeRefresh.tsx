@@ -17,19 +17,28 @@ function Inner({ tables }: { tables: string[] }) {
   useEffect(() => {
     const refresh = () => router.refresh();
 
-    const supabase = createClient();
-    const channel = supabase.channel('admin-sync');
-    tables.forEach((table) => {
-      channel.on('postgres_changes', { event: '*', schema: 'public', table }, refresh);
-    });
-    channel.subscribe();
+    // Realtime WebSocket — may fail on iOS Safari (SecurityError: The operation is insecure)
+    // Wrap in try-catch so it degrades gracefully; fallback refreshes still work below
+    let cleanupRealtime: (() => void) | null = null;
+    try {
+      const supabase = createClient();
+      const channel = supabase.channel('admin-sync');
+      tables.forEach((table) => {
+        channel.on('postgres_changes', { event: '*', schema: 'public', table }, refresh);
+      });
+      channel.subscribe();
+      cleanupRealtime = () => supabase.removeChannel(channel);
+    } catch {
+      // WebSocket unavailable — realtime disabled, interval/visibilitychange still active
+    }
 
+    // Fallback: refresh on tab focus + every 30s (works on all browsers)
     const onVisible = () => { if (!document.hidden) refresh(); };
     document.addEventListener('visibilitychange', onVisible);
     const interval = setInterval(refresh, 30_000);
 
     return () => {
-      supabase.removeChannel(channel);
+      cleanupRealtime?.();
       document.removeEventListener('visibilitychange', onVisible);
       clearInterval(interval);
     };

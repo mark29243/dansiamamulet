@@ -13,7 +13,7 @@ export default function ShippingContent() {
       domestic: {
         title: lang === 'th' ? 'ในประเทศไทย' : 'ไทย',
         rows: [
-          ['ไปรษณีย์ไทย', '฿50 (พื้นที่ห่างไกล ฿60)', '3-5 วันทำการ'],
+          ['ไปรษณีย์ไทย', '฿50 (พื้นที่ห่างไกล ฿60)', '1-3 วันทำการ'],
           ['Flash Express', '฿50 (พื้นที่ห่างไกล ฿100)', '1-3 วันทำการ'],
           ['Kerry Express', '฿50 (พื้นที่ห่างไกล ฿100)', '1-3 วันทำการ'],
         ],
@@ -22,8 +22,8 @@ export default function ShippingContent() {
       international: {
         title: 'ต่างประเทศ',
         rows: [
-          ['เอเชีย (จีน/ญี่ปุ่น/ฮ่องกง)', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30 วัน / eP 7-15 วัน'],
-          ['ยุโรป / อเมริกา / ออสเตรเลีย', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30 วัน / eP 7-15 วัน'],
+          ['เอเชีย (จีน/ญี่ปุ่น/ฮ่องกง)', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30 วัน / ePacket 7-15 วัน'],
+          ['ยุโรป / อเมริกา / ออสเตรเลีย', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30 วัน / ePacket 7-15 วัน'],
         ],
         note: 'ePacket มี tracking number · SPA (Small Packet Air) ไม่มี tracking · ราคาจริงคำนวณตามน้ำหนักและปลายทางที่ checkout',
       },
@@ -46,7 +46,7 @@ export default function ShippingContent() {
       domestic: {
         title: 'Within Thailand',
         rows: [
-          ['Thailand Post', '฿50 (remote area ฿60)', '3-5 business days'],
+          ['Thailand Post', '฿50 (remote area ฿60)', '1-3 business days'],
           ['Flash Express', '฿50 (remote area ฿100)', '1-3 business days'],
           ['Kerry Express', '฿50 (remote area ฿100)', '1-3 business days'],
         ],
@@ -55,8 +55,8 @@ export default function ShippingContent() {
       international: {
         title: 'International',
         rows: [
-          ['Asia (China/Japan/HK)', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30 days / eP 7-15 days'],
-          ['Europe / Americas / Australia', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30 days / eP 7-15 days'],
+          ['Asia (China/Japan/HK)', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30 days / ePacket 7-15 days'],
+          ['Europe / Americas / Australia', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30 days / ePacket 7-15 days'],
         ],
         note: 'ePacket includes tracking number · SPA (Small Packet Air) is untracked · Exact rate calculated at checkout based on weight and destination',
       },
@@ -79,7 +79,7 @@ export default function ShippingContent() {
       domestic: {
         title: '泰国境内',
         rows: [
-          ['泰国邮政', '฿50（偏远地区 ฿60）', '3-5个工作日'],
+          ['泰国邮政', '฿50（偏远地区 ฿60）', '1-3个工作日'],
           ['Flash Express', '฿50（偏远地区 ฿100）', '1-3个工作日'],
           ['Kerry Express', '฿50（偏远地区 ฿100）', '1-3个工作日'],
         ],
@@ -88,8 +88,8 @@ export default function ShippingContent() {
       international: {
         title: '国际配送',
         rows: [
-          ['亚洲（中国/日本/香港）', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30天 / eP 7-15天'],
-          ['欧洲 / 美洲 / 澳大利亚', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30天 / eP 7-15天'],
+          ['亚洲（中国/日本/香港）', 'SPA ฿100-130 / ePacket ฿175-200', 'SPA 14-30天 / ePacket 7-15天'],
+          ['欧洲 / 美洲 / 澳大利亚', 'SPA ฿130-250 / ePacket ฿240-390', 'SPA 14-30天 / ePacket 7-15天'],
         ],
         note: 'ePacket含追踪号码 · SPA（小包航空）不含追踪 · 实际运费在结账时根据重量和目的地计算',
       },

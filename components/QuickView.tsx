@@ -124,7 +124,6 @@ export default function QuickView({ product, onClose }: { product: Product | nul
                   fill
                   sizes="440px"
                   style={{ objectFit: 'cover' }}
-                  unoptimized
                   priority
                 />
               ) : (
@@ -149,7 +148,7 @@ export default function QuickView({ product, onClose }: { product: Product | nul
                       borderRadius: 3,
                     }}
                   >
-                    <Image src={url} alt="" width={56} height={56} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                    <Image src={url} alt="" width={56} height={56} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </button>
                 ))}
               </div>

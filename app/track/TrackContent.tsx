@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import { useLang } from '@/components/LangProvider';
 import { formatPrice } from '@/lib/utils';
 import { IcoPackage, IcoTruck, IcoCheck, IcoCelebrate } from '@/components/icons';
 
-type OrderStatus = 'paid' | 'shipped' | 'delivered' | 'cancelled' | 'refunded' | 'pending_review';
+type OrderStatus = 'pending' | 'pending_alipay' | 'paid' | 'shipped' | 'delivered' | 'cancelled' | 'refunded' | 'pending_review';
 
 type TrackOrder = {
   id: string;
@@ -49,6 +51,8 @@ const STATUS_STEPS: OrderStatus[] = ['paid', 'shipped', 'delivered'];
 
 function statusLabel(status: OrderStatus, lang: string): string {
   const map: Record<OrderStatus, Record<string, string>> = {
+    pending:        { th: 'รอชำระเงิน', en: 'Awaiting payment', zh: '待付款' },
+    pending_alipay: { th: 'รอชำระเงิน (Alipay)', en: 'Awaiting payment (Alipay)', zh: '待付款 (支付宝)' },
     paid:           { th: 'ชำระเงินแล้ว / กำลังเตรียม', en: 'Paid · Preparing', zh: '已付款 · 备货中' },
     shipped:        { th: 'จัดส่งแล้ว', en: 'Shipped', zh: '已发货' },
     delivered:      { th: 'จัดส่งสำเร็จ', en: 'Delivered', zh: '已送达' },
@@ -69,14 +73,16 @@ function statusColor(status: OrderStatus): string {
 
 export default function TrackContent() {
   const { lang } = useLang();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState<TrackOrder | null>(null);
   const [error, setError] = useState('');
+  const autoLooked = useRef(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function lookup(orderIdArg: string, emailArg: string) {
     setError('');
     setOrder(null);
     setLoading(true);
@@ -84,7 +90,7 @@ export default function TrackContent() {
       const res = await fetch('/api/orders/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order_id: orderId.trim(), email: email.trim() }),
+        body: JSON.stringify({ order_id: orderIdArg.trim(), email: emailArg.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -101,6 +107,31 @@ export default function TrackContent() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Auto-lookup when arriving from an email link: /track?order=A1B2C3D4&email=...
+  // Logged-in users with no link params are sent to their orders page instead.
+  useEffect(() => {
+    if (autoLooked.current) return;
+    const qOrder = searchParams.get('order') ?? '';
+    const qEmail = searchParams.get('email') ?? '';
+    if (qOrder && qEmail) {
+      autoLooked.current = true;
+      setOrderId(qOrder.toUpperCase());
+      setEmail(qEmail);
+      lookup(qOrder, qEmail);
+    } else {
+      autoLooked.current = true;
+      createClient().auth.getUser().then(({ data: { user } }) => {
+        if (user) router.replace('/orders');
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    await lookup(orderId, email);
   }
 
   const orderNo = order ? order.id.slice(0, 8).toUpperCase() : '';
@@ -293,7 +324,7 @@ export default function TrackContent() {
               }}>
                 <div style={{ width: 56, height: 56, background: 'var(--cream-dark)', borderRadius: 'var(--radius)', overflow: 'hidden', flexShrink: 0 }}>
                   {item.image && (
-                    <Image src={item.image} alt={item.name} width={56} height={56} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                    <Image src={item.image} alt={item.name} width={56} height={56} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   )}
                 </div>
                 <div>

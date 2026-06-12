@@ -19,9 +19,12 @@
   --shadow-sm: 0 2px 8px rgba(26, 18, 8, 0.06);
   --shadow-md: 0 6px 20px rgba(26, 18, 8, 0.10);
   --shadow-lg: 0 14px 36px rgba(26, 18, 8, 0.12);
-  --radius: 4px;
-  --radius-lg: 8px;
+  --radius: 6px;
+  --radius-lg: 12px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass: rgba(255, 248, 240, 0.62);
+  --glass-border: rgba(255, 255, 255, 0.72);
+  --glass-blur: blur(16px);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -118,8 +121,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--cream-dark);
-  background: #fff;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   font-size: 14px;
   font-family: 'Sarabun', sans-serif;
   color: var(--text);
@@ -185,8 +190,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
 .card {
-  background: #fff;
-  border: 1px solid var(--cream-dark);
+  background: var(--glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   transition: all var(--transition);
 }

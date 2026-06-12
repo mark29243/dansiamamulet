@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     if (!checkOrigin(req)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    if (!rateLimit(getIp(req), 5, 60_000)) {
+    if (!(await rateLimit(`upload-slip:${getIp(req)}`, 5, 60_000))) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
@@ -21,8 +21,8 @@ export async function POST(req: Request) {
     const email = (form.get('email') as string | null)?.toLowerCase().trim();
     const file = form.get('file') as File;
 
-    if (!orderId || !file) {
-      return NextResponse.json({ error: 'Missing orderId or file' }, { status: 400 });
+    if (!orderId || !file || !email) {
+      return NextResponse.json({ error: 'Missing orderId, email, or file' }, { status: 400 });
     }
 
     // Whitelist MIME types — reject non-image files
@@ -48,8 +48,8 @@ export async function POST(req: Request) {
     if (!['pending_alipay', 'pending'].includes(order.status)) {
       return NextResponse.json({ error: 'Order is not awaiting payment' }, { status: 400 });
     }
-    // Verify requester knows the email on the order
-    if (email && order.customer_email && email !== order.customer_email.toLowerCase()) {
+    // Verify requester knows the email on the order (mandatory)
+    if (!order.customer_email || email !== order.customer_email.toLowerCase()) {
       return NextResponse.json({ error: 'Email does not match order' }, { status: 403 });
     }
 

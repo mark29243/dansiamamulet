@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import QuickView from '@/components/QuickView';
 import { useLang } from '@/components/LangProvider';
-import { getDict, getCatName } from '@/lib/i18n';
+import { getDict, getCatName, CAT_SLUG } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { IcoSearch, IcoFilter } from '@/components/icons';
 import type { Product } from '@/lib/types';
@@ -12,12 +13,12 @@ import type { Product } from '@/lib/types';
 const DESKTOP_PER_PAGE = 20;
 const MOBILE_PER_PAGE = 20;
 
-export default function HomeShop({ products, defaultCategory }: { products: Product[]; defaultCategory?: string }) {
+export default function HomeShop({ products, defaultCategory, currentSlug }: { products: Product[]; defaultCategory?: string; currentSlug?: string }) {
   const { lang } = useLang();
   const t = getDict(lang);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'instock'>('all');
-  const [sort, setSort] = useState<'default' | 'price-asc' | 'price-desc' | 'name'>('default');
+  const [sort, setSort] = useState<'default' | 'price-asc' | 'price-desc' | 'name' | 'newest'>('default');
   const [page, setPage] = useState(1);
   const [quickView, setQuickView] = useState<Product | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -26,12 +27,19 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
     const mq = window.matchMedia('(max-width: 900px)');
     setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
+    // addEventListener on MediaQueryList requires Safari 14+ / iOS 14+
+    // fallback to deprecated addListener for older iOS Safari
+    if (typeof mq.addEventListener === 'function') {
+      mq.addEventListener('change', handler);
+      return () => mq.removeEventListener('change', handler);
+    } else {
+      (mq as any).addListener(handler);
+      return () => (mq as any).removeListener(handler);
+    }
   }, []);
   const PER_PAGE = isMobile ? MOBILE_PER_PAGE : DESKTOP_PER_PAGE;
 
-  const CAT_ORDER = ['พระสมเด็จ', 'หลวงพ่อทวด', 'เหรียญ', 'พระเกจิอาจารย์', 'พระปิดตา', 'รูปหล่อ', 'พระกริ่ง', 'เครื่องราง', 'พระผง', 'พระนางพญา'];
+  const CAT_ORDER = ['พระสมเด็จ', 'พระนางพญา', 'พระปิดตา', 'พระนาคปรก', 'พระกริ่ง', 'พระผง', 'พระรอด', 'เหรียญ', 'รูปหล่อ', 'เครื่องราง', 'พระพิฆเนศ', 'หลวงพ่อทวด', 'หลวงปู่โต พรหมรังสี', 'หลวงพ่อคูณ', 'หลวงพ่อเงิน', 'พระเกจิอาจารย์'];
 
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
@@ -69,6 +77,7 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
     if (sort === 'price-asc') r.sort((a, b) => (a.sale_price ?? a.price) - (b.sale_price ?? b.price));
     else if (sort === 'price-desc') r.sort((a, b) => (b.sale_price ?? b.price) - (a.sale_price ?? a.price));
     else if (sort === 'name') r.sort((a, b) => a.name.localeCompare(b.name));
+    else if (sort === 'newest') r.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     return r;
   }, [products, search, filter, selectedCats, priceRange, sort]);
 
@@ -113,7 +122,7 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
 
       <div className="container" style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: 32 }} data-grid="shop">
         {/* Sidebar (desktop) */}
-        <aside className="hide-mobile" style={{ position: 'sticky', top: 140, alignSelf: 'start', maxHeight: 'calc(100vh - 160px)', overflowY: 'auto', paddingRight: 8 }}>
+        <aside className="hide-mobile" style={{ position: 'sticky', top: 140, alignSelf: 'start', maxHeight: 'calc(100vh - 160px)', overflowY: 'auto', background: 'var(--glass)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-lg)', padding: 20 }}>
           <FilterPanel
             t={t} lang={lang} categories={categories}
             selectedCats={selectedCats} toggleCat={toggleCat}
@@ -122,13 +131,15 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
             maxPrice={maxPrice}
             hasActiveFilters={!!hasActiveFilters}
             clearAll={clearAllFilters}
+            currentSlug={currentSlug}
+            totalProducts={products.length}
           />
         </aside>
 
         {/* Main content */}
         <div>
           {/* Top toolbar */}
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', background: 'var(--glass)', backdropFilter: 'var(--glass-blur)', WebkitBackdropFilter: 'var(--glass-blur)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-lg)', padding: '10px 14px' }}>
             <div style={{ flex: 1, minWidth: 200, position: 'relative' }}>
               <input
                 className="input"
@@ -182,6 +193,7 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
               aria-label={t.shop.sortBy}
             >
               <option value="default">{t.shop.sortBy}: {t.shop.sortDefault}</option>
+              <option value="newest">{lang === 'th' ? 'สินค้าล่าสุด' : lang === 'zh' ? '最新商品' : 'Newest First'}</option>
               <option value="price-asc">{t.shop.sortPriceLow}</option>
               <option value="price-desc">{t.shop.sortPriceHigh}</option>
               <option value="name">{t.shop.sortName}</option>
@@ -274,6 +286,8 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
               maxPrice={maxPrice}
               hasActiveFilters={!!hasActiveFilters}
               clearAll={clearAllFilters}
+              currentSlug={currentSlug}
+              totalProducts={products.length}
             />
             <button
               onClick={() => setMobileFilterOpen(false)}
@@ -304,19 +318,47 @@ export default function HomeShop({ products, defaultCategory }: { products: Prod
 function FilterPanel({
   t, lang, categories, selectedCats, toggleCat, filter, setFilter,
   priceRange, setPriceRange, maxPrice, hasActiveFilters, clearAll,
+  currentSlug, totalProducts,
 }: any) {
+  const counts = new Map<string, number>(categories.map((c: any) => [c.name, c.count]));
+
   return (
     <>
-      {hasActiveFilters && (
-        <button onClick={clearAll} className="btn-text" style={{ padding: 0, marginBottom: 16, fontSize: 12 }}>
-          ↻ {t.shop.clearFilters}
-        </button>
-      )}
-
-      <div style={{ marginBottom: 24 }}>
-        <h4 className="serif" style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 12 }}>
-          {t.shop.filterBy}
+      <div style={{ marginBottom: 20 }}>
+        <h4 className="serif" style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 10 }}>
+          {t.shop.category}
         </h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Link href="/shop" style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '6px 8px', borderRadius: 6, textDecoration: 'none', fontSize: 13,
+            background: !currentSlug ? 'var(--gold-faint, #F4EFE5)' : 'transparent',
+            color: !currentSlug ? 'var(--gold-dark)' : 'var(--text-muted)',
+            fontWeight: !currentSlug ? 600 : 400,
+          }}>
+            <span>{lang === 'th' ? 'ทั้งหมด' : lang === 'zh' ? '全部' : 'All'}</span>
+            {!currentSlug && <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{totalProducts}</span>}
+          </Link>
+          {Object.entries(CAT_SLUG).map(([nameTh, slug]) => {
+            const count = counts.get(nameTh);
+            const isActive = currentSlug === slug;
+            return (
+              <Link key={slug} href={`/shop/${slug}`} style={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                padding: '6px 8px', borderRadius: 6, textDecoration: 'none', fontSize: 13,
+                background: isActive ? 'var(--gold-faint, #F4EFE5)' : 'transparent',
+                color: isActive ? 'var(--gold-dark)' : 'var(--text-muted)',
+                fontWeight: isActive ? 600 : 400,
+              }}>
+                <span>{getCatName(nameTh, lang)}</span>
+                {count !== undefined && <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{count}</span>}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 20, paddingTop: 16, borderTop: '1px solid var(--cream-dark)' }}>
         <label style={checkboxLabelStyle}>
           <input
             type="checkbox"
@@ -326,26 +368,6 @@ function FilterPanel({
           />
           {t.shop.instock}
         </label>
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <h4 className="serif" style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 12 }}>
-          {t.shop.category}
-        </h4>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {categories.map((c: { name: string; count: number }) => (
-            <label key={c.name} style={checkboxLabelStyle}>
-              <input
-                type="checkbox"
-                checked={selectedCats.includes(c.name)}
-                onChange={() => toggleCat(c.name)}
-                style={checkboxStyle}
-              />
-              <span style={{ flex: 1 }}>{getCatName(c.name, lang)}</span>
-              <span style={{ fontSize: 11, color: 'var(--text-faint)' }}>{c.count}</span>
-            </label>
-          ))}
-        </div>
       </div>
 
       <div>

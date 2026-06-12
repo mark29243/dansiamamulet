@@ -7,17 +7,50 @@ import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
-import { IcoLock, IcoUser, IcoMapPin, IcoPhone, IcoEdit, IcoTrash, IcoPackage, IcoShop, IcoCalendar } from '@/components/icons';
+import { IcoLock, IcoUser, IcoMapPin, IcoPhone, IcoEdit, IcoTrash, IcoPackage, IcoShop, IcoCalendar, IcoTruck, IcoCelebrate } from '@/components/icons';
 import type { Order, Address } from '@/lib/types';
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
-  paid:      { bg: 'rgba(45,90,61,0.12)',    color: '#2D5A3D' },
-  pending:   { bg: 'rgba(186,117,23,0.12)',  color: '#8B5E0F' },
-  shipped:   { bg: 'rgba(74,128,96,0.15)',   color: '#2D5A3D' },
-  delivered: { bg: 'rgba(45,90,61,0.18)',    color: '#2D5A3D' },
-  cancelled: { bg: 'rgba(92,26,26,0.1)',     color: '#5C1A1A' },
-  refunded:  { bg: 'rgba(168,152,104,0.15)', color: '#6B5730' },
+  paid:           { bg: 'rgba(45,90,61,0.12)',    color: '#2D5A3D' },
+  pending:        { bg: 'rgba(186,117,23,0.12)',  color: '#8B5E0F' },
+  pending_alipay: { bg: 'rgba(186,117,23,0.12)',  color: '#8B5E0F' },
+  pending_review: { bg: 'rgba(186,117,23,0.12)',  color: '#8B5E0F' },
+  shipped:        { bg: 'rgba(74,128,96,0.15)',   color: '#2D5A3D' },
+  delivered:      { bg: 'rgba(45,90,61,0.18)',    color: '#2D5A3D' },
+  cancelled:      { bg: 'rgba(92,26,26,0.1)',     color: '#5C1A1A' },
+  refunded:       { bg: 'rgba(168,152,104,0.15)', color: '#6B5730' },
 };
+
+const STATUS_LABELS: Record<string, Record<string, string>> = {
+  pending:        { th: 'รอชำระเงิน', en: 'Awaiting payment', zh: '待付款' },
+  pending_alipay: { th: 'รอชำระเงิน (Alipay)', en: 'Awaiting payment', zh: '待付款' },
+  pending_review: { th: 'รอตรวจสอบสลิป', en: 'Pending review', zh: '待审核' },
+  paid:           { th: 'ชำระแล้ว / กำลังเตรียม', en: 'Paid · Preparing', zh: '已付款 · 备货中' },
+  shipped:        { th: 'จัดส่งแล้ว', en: 'Shipped', zh: '已发货' },
+  delivered:      { th: 'จัดส่งสำเร็จ', en: 'Delivered', zh: '已送达' },
+  cancelled:      { th: 'ยกเลิก', en: 'Cancelled', zh: '已取消' },
+  refunded:       { th: 'คืนเงินแล้ว', en: 'Refunded', zh: '已退款' },
+};
+
+const CARRIER_LINKS: Record<string, string> = {
+  'thaipost':      'https://track.thailandpost.co.th/?trackNumber=',
+  'thailand post': 'https://track.thailandpost.co.th/?trackNumber=',
+  'ems':           'https://track.thailandpost.co.th/?trackNumber=',
+  'kerry':         'https://th.kerryexpress.com/en/track/?track=',
+  'flash':         'https://www.flashexpress.co.th/tracking/?se=',
+  'dhl':           'https://www.dhl.com/th-en/home/tracking.html?tracking-id=',
+  'fedex':         'https://www.fedex.com/fedextrack/?trknbr=',
+};
+
+function getTrackingUrl(carrier: string, trackingNo: string): string | null {
+  const key = carrier.toLowerCase();
+  for (const [k, url] of Object.entries(CARRIER_LINKS)) {
+    if (key.includes(k)) return url + encodeURIComponent(trackingNo);
+  }
+  return null;
+}
+
+const PROGRESS_STEPS = ['paid', 'shipped', 'delivered'] as const;
 
 const LABELS = ['Home', 'Work', 'Other', 'Holiday'];
 
@@ -39,6 +72,7 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewedOrders, setReviewedOrders] = useState<Set<string>>(new Set());
   const [discountCode, setDiscountCode] = useState<string | null>(null);
+  const [myCodes, setMyCodes] = useState<{ code: string; percent: number; free_shipping: boolean; expires_at: string }[]>([]);
 
   const fetchAddresses = useCallback(async () => {
     setAddrLoading(true);
@@ -48,7 +82,10 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
   }, []);
 
   useEffect(() => {
-    if (orders !== null) fetchAddresses();
+    if (orders !== null) {
+      fetchAddresses();
+      fetch('/api/discount/my-codes').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setMyCodes(d); }).catch(() => {});
+    }
   }, [orders, fetchAddresses]);
 
   async function signOut() {
@@ -113,6 +150,7 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
         setReviewOrderId(null);
         setReviewBody('');
         setReviewRating(5);
+        fetch('/api/discount/my-codes').then((r) => r.json()).then((d) => { if (Array.isArray(d)) setMyCodes(d); }).catch(() => {});
       }
     } catch {
       // network error — button re-enables so user can retry
@@ -334,7 +372,31 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
           {lang === 'th' ? 'คำสั่งซื้อ' : lang === 'zh' ? '订单' : 'Orders'}
         </h2>
 
-        {/* Discount code success banner */}
+        {/* Persistent review discount codes */}
+        {myCodes.length > 0 && (
+          <div style={{ marginBottom: 24 }}>
+            <div className="serif" style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 10 }}>
+              {lang === 'th' ? '✦ โค้ดส่วนลดของคุณ' : lang === 'zh' ? '✦ 您的折扣码' : '✦ Your Discount Codes'}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+              {myCodes.map((c) => (
+                <div key={c.code} style={{ background: 'rgba(201,168,76,0.08)', border: '1px dashed var(--gold)', borderRadius: 'var(--radius)', padding: '12px 18px', minWidth: 200 }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: 18, fontWeight: 700, letterSpacing: 4, color: 'var(--gold-dark)', marginBottom: 4 }}>{c.code}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                    {c.free_shipping
+                      ? (lang === 'th' ? 'ส่งฟรี' : lang === 'zh' ? '免运费' : 'Free shipping')
+                      : `${c.percent}% off`}
+                    {' · '}
+                    {lang === 'th' ? 'หมดอายุ ' : lang === 'zh' ? '有效至 ' : 'Expires '}
+                    {new Date(c.expires_at).toLocaleDateString(lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Discount code success banner (just-submitted) */}
         {discountCode && (
           <div style={{ background: 'rgba(45,90,61,0.08)', border: '1px solid var(--gold)', borderRadius: 'var(--radius-lg)', padding: '20px 24px', marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
             <div>
@@ -430,22 +492,73 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
                         <IcoCalendar size={11} /> {new Date(o.created_at).toLocaleDateString(lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                       </span>
                       <span style={{
-                        fontSize: 10, letterSpacing: 2, textTransform: 'uppercase',
+                        fontSize: 10, letterSpacing: 1, textTransform: 'uppercase',
                         padding: '4px 10px', background: statusColor.bg, color: statusColor.color,
                         borderRadius: 999, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600,
                       }}>
-                        {o.status}
+                        {STATUS_LABELS[o.status]?.[lang] ?? o.status}
                       </span>
                     </div>
                   </div>
 
                   <div style={{ padding: 20 }}>
+                    {/* Shipping progress bar */}
+                    {PROGRESS_STEPS.includes(o.status as any) && (
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
+                        {PROGRESS_STEPS.map((step, i) => {
+                          const activeStep = PROGRESS_STEPS.indexOf(o.status as any);
+                          const done = activeStep >= i;
+                          const stepLabels: Record<string, Record<string, string>> = {
+                            paid:      { th: 'ชำระแล้ว', en: 'Paid', zh: '已付款' },
+                            shipped:   { th: 'จัดส่งแล้ว', en: 'Shipped', zh: '已发货' },
+                            delivered: { th: 'ถึงแล้ว', en: 'Delivered', zh: '已送达' },
+                          };
+                          return (
+                            <div key={step} style={{ display: 'flex', alignItems: 'center', flex: i < PROGRESS_STEPS.length - 1 ? 1 : 'none' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                                <div style={{
+                                  width: 28, height: 28, borderRadius: '50%',
+                                  background: done ? (step === 'delivered' ? 'var(--jade)' : 'var(--gold-dark)') : 'var(--cream-dark)',
+                                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                  color: done ? '#fff' : 'var(--text-faint)',
+                                  boxShadow: activeStep === i ? '0 0 0 3px rgba(201,168,76,0.25)' : 'none',
+                                }}>
+                                  {step === 'paid' && <IcoPackage size={13} />}
+                                  {step === 'shipped' && <IcoTruck size={13} />}
+                                  {step === 'delivered' && <IcoCelebrate size={13} />}
+                                </div>
+                                <span style={{ fontSize: 10, color: done ? 'var(--text)' : 'var(--text-faint)', whiteSpace: 'nowrap' }}>
+                                  {stepLabels[step][lang] ?? stepLabels[step].en}
+                                </span>
+                              </div>
+                              {i < PROGRESS_STEPS.length - 1 && (
+                                <div style={{ flex: 1, height: 2, background: activeStep > i ? 'var(--gold-dark)' : 'var(--cream-dark)', margin: '0 6px', marginBottom: 16 }} />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Tracking number */}
+                    {o.tracking_number && (
+                      <div style={{ background: 'rgba(45,90,61,0.06)', border: '1px solid rgba(45,90,61,0.2)', borderRadius: 'var(--radius)', padding: '10px 14px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                        <span style={{ color: 'var(--jade)', display: 'flex' }}><IcoTruck size={15} /></span>
+                        {o.carrier && <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{o.carrier}</span>}
+                        <span style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 600, color: 'var(--text)', letterSpacing: 1 }}>{o.tracking_number}</span>
+                        {o.carrier && getTrackingUrl(o.carrier, o.tracking_number) && (
+                          <a href={getTrackingUrl(o.carrier, o.tracking_number)!} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ padding: '3px 12px', fontSize: 11, marginLeft: 'auto' }}>
+                            {lang === 'th' ? '→ ติดตามพัสดุ' : lang === 'zh' ? '→ 追踪包裹' : '→ Track'}
+                          </a>
+                        )}
+                      </div>
+                    )}
                     <ul style={{ listStyle: 'none', marginBottom: 14 }}>
                       {o.items.map((i, k) => (
                         <li key={k} style={{ display: 'flex', gap: 12, padding: '8px 0', alignItems: 'center' }}>
                           {i.image && (
                             <div style={{ width: 48, height: 48, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
-                              <Image src={i.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
+                              <Image src={i.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                           )}
                           <div style={{ flex: 1, fontSize: 13 }}>

@@ -18,9 +18,10 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
       <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
         We're sorry — an unexpected error occurred. Please try again.
       </p>
-      {error.digest && (
-        <p style={{ fontSize: 11, color: 'var(--text-faint)', fontFamily: 'monospace', marginBottom: 20 }}>
-          Error ID: {error.digest}
+      {(error.message || error.digest) && (
+        <p style={{ fontSize: 11, color: 'var(--text-faint)', fontFamily: 'monospace', marginBottom: 20, wordBreak: 'break-all' }}>
+          {error.message && <span style={{ display: 'block' }}>{error.message}</span>}
+          {error.digest && <span style={{ display: 'block' }}>ID: {error.digest}</span>}
         </p>
       )}
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>

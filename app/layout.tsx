@@ -5,9 +5,8 @@ import { LangProvider } from '@/components/LangProvider';
 import { CartProvider } from '@/components/CartProvider';
 import { ToastProvider } from '@/components/ToastProvider';
 import { WishlistProvider } from '@/components/WishlistProvider';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import QuickContact from '@/components/QuickContact';
+import { RecentlyViewedProvider } from '@/components/RecentlyViewedProvider';
+import ConditionalSiteChrome from '@/components/ConditionalSiteChrome';
 import { CurrencyProvider } from '@/components/CurrencyProvider';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
@@ -28,6 +27,12 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
+    languages: {
+      'x-default': siteUrl,
+      'en': siteUrl,
+      'th': siteUrl,
+      'zh-Hans': siteUrl,
+    },
   },
   openGraph: {
     type: 'website',
@@ -182,21 +187,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, '\\u003c') }}
         />
         <LangProvider>
           <ToastProvider>
             <CurrencyProvider>
               <WishlistProvider>
+              <RecentlyViewedProvider>
               <CartProvider>
                 <a href="#main" className="sr-only">Skip to content</a>
-                <Header />
-                <main id="main" style={{ minHeight: 'calc(100vh - 280px)' }}>
+                <ConditionalSiteChrome>
                   {children}
-                </main>
-                <Footer />
-                <QuickContact />
+                </ConditionalSiteChrome>
               </CartProvider>
+              </RecentlyViewedProvider>
               </WishlistProvider>
             </CurrencyProvider>
           </ToastProvider>

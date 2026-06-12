@@ -13,6 +13,19 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   if (!name?.trim() || !address?.trim()) {
     return NextResponse.json({ error: 'Name and address are required' }, { status: 400 });
   }
+  // Length limits — mirror checkout validation
+  if (
+    (label && label.length > 50) ||
+    name.length > 200 ||
+    (phone && phone.length > 30) ||
+    address.length > 500 ||
+    (city && city.length > 100) ||
+    (province && province.length > 100) ||
+    (postal_code && postal_code.length > 20) ||
+    (country && country.length > 100)
+  ) {
+    return NextResponse.json({ error: 'Field too long' }, { status: 400 });
+  }
 
   if (is_default) {
     await supabase.from('addresses').update({ is_default: false }).eq('user_id', user.id);

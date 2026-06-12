@@ -27,13 +27,41 @@ export async function POST(req: Request) {
 
   const admin = createAdminClient();
 
+  // Idempotency: reject duplicate event deliveries (Stripe retries)
+  try {
+    const { error: insertErr } = await admin
+      .from('processed_webhook_events')
+      .insert({ stripe_event_id: event.id, event_type: event.type });
+
+    if (insertErr) {
+      // unique violation = already processed → return 200 so Stripe stops retrying
+      if (insertErr.code === '23505') {
+        console.log(`[webhook] Duplicate event ${event.id} — skipping`);
+        return NextResponse.json({ received: true, duplicate: true });
+      }
+      // other DB error — still try to process but log it
+      console.warn('[webhook] Could not record event id:', insertErr.message);
+    }
+  } catch (e: any) {
+    console.warn('[webhook] Idempotency check failed:', e.message);
+  }
+
   try {
     switch (event.type) {
-      case 'checkout.session.completed': {
+      // `completed` fires for all methods; for async methods (PromptPay) the
+      // payment may not have cleared yet — `async_payment_succeeded` fires later.
+      case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded': {
         const session = event.data.object as Stripe.Checkout.Session;
         const orderId = session.metadata?.order_id;
         if (!orderId) {
           console.error('[webhook] No order_id in session metadata');
+          break;
+        }
+
+        // Async payment methods: only mark paid once the money actually cleared
+        if (session.payment_status !== 'paid') {
+          console.log(`[webhook] Order ${orderId.slice(0, 8)} session completed but payment_status=${session.payment_status} — waiting for async_payment_succeeded`);
           break;
         }
 
@@ -77,7 +105,17 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         const orderId = session.metadata?.order_id;
         if (orderId) {
-          await admin.from('orders').update({ status: 'cancelled' }).eq('id', orderId);
+          // Only cancel if not already paid (guard against out-of-order events)
+          await admin
+            .from('orders')
+            .update({ status: 'cancelled' })
+            .eq('id', orderId)
+            .in('status', ['pending', 'pending_alipay']);
+          // Release the discount code so the customer can use it again
+          await admin
+            .from('discount_codes')
+            .update({ used_at: null, order_id: null })
+            .eq('order_id', orderId);
           console.log(`[webhook] Order ${orderId.slice(0, 8)} cancelled (${event.type})`);
         }
         break;

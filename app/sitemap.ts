@@ -4,15 +4,26 @@ import { createClient } from '@/lib/supabase/server';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
+  const categories = [
+    'phra-somdej', 'luang-pu-tuad', 'rian', 'phra-pidta',
+    'rup-lor', 'phra-kring', 'khruang-rang', 'phra-phong',
+    'nang-phaya', 'phrakejiaachan',
+  ];
+
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/`,          lastModified: new Date(), changeFrequency: 'daily',   priority: 1.0 },
-    { url: `${baseUrl}/shop`,      lastModified: new Date(), changeFrequency: 'daily',   priority: 0.9 },
-    { url: `${baseUrl}/blog`,      lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
-    { url: `${baseUrl}/about`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${baseUrl}/faq`,       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${baseUrl}/shipping`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${baseUrl}/returns`,   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${baseUrl}/signin`,    lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
+    { url: `${baseUrl}/`,         lastModified: new Date(), changeFrequency: 'daily',   priority: 1.0 },
+    { url: `${baseUrl}/shop`,     lastModified: new Date(), changeFrequency: 'daily',   priority: 0.9 },
+    { url: `${baseUrl}/blog`,     lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.8 },
+    { url: `${baseUrl}/about`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/faq`,      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/shipping`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/returns`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    ...categories.map(slug => ({
+      url: `${baseUrl}/shop/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    })),
   ];
 
   try {

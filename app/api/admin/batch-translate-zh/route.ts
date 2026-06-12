@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300; // 5 minutes for batch
@@ -71,6 +72,10 @@ export async function GET() {
 export async function POST() {
   const ctx = await requireAdmin();
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  if (!(await rateLimit(`batch-translate-zh:${ctx.user.id}`, 3))) {
+    return NextResponse.json({ error: 'Rate limit: max 3 batch runs per hour' }, { status: 429 });
+  }
 
   // Fetch all published products missing Chinese translation
   const { data: products, error } = await ctx.admin

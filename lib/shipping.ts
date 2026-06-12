@@ -167,7 +167,7 @@ const DOMESTIC_CARRIERS: {
   cost: number;
   remoteCost: number;
 }[] = [
-  { carrier: 'thaipost', label: 'ไปรษณีย์ไทย', sublabel: 'EMS / Registered',  estimatedDays: '3–5', cost: 5000,  remoteCost: 6000  },
+  { carrier: 'thaipost', label: 'ไปรษณีย์ไทย', sublabel: 'EMS / Registered',  estimatedDays: '1–3', cost: 5000,  remoteCost: 6000  },
   { carrier: 'flash',    label: 'Flash Express', sublabel: 'Express',           estimatedDays: '1–3', cost: 5000,  remoteCost: 10000 },
   { carrier: 'kerry',    label: 'Kerry Express', sublabel: 'Express',           estimatedDays: '1–3', cost: 5000,  remoteCost: 10000 },
 ];

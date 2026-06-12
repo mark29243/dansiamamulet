@@ -191,7 +191,7 @@ function SearchContent() {
                     )}
                     <div style={{ aspectRatio: '1', background: 'linear-gradient(135deg,var(--cream-dark),var(--cream-darker))', overflow: 'hidden', position: 'relative' }}>
                       {p.images[0] ? (
-                        <Image src={p.images[0]} alt={p.name} fill sizes="220px" style={{ objectFit: 'cover', transition: 'transform 0.4s' }} unoptimized />
+                        <Image src={p.images[0]} alt={p.name} fill sizes="220px" style={{ objectFit: 'cover', transition: 'transform 0.4s' }} />
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                           <IcoAmulet size={48} />

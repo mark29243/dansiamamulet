@@ -14,6 +14,13 @@ const RESEND_API = 'https://api.resend.com/emails';
 
 export type EmailResult = { ok: true; id: string } | { ok: false; error: string };
 
+/** Direct tracking link — pre-fills order number + email and auto-looks up */
+function trackUrl(order: Order): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
+  const orderNo = order.id.slice(0, 8).toUpperCase();
+  return `${siteUrl}/track?order=${orderNo}&email=${encodeURIComponent(order.customer_email)}`;
+}
+
 async function send(to: string, subject: string, html: string): Promise<EmailResult> {
   const key = process.env.RESEND_API_KEY;
   if (!key) {
@@ -100,6 +107,12 @@ export async function sendOrderConfirmation(order: Order): Promise<EmailResult> 
       ${escapeHtml(order.shipping_address.country)}
     </p>
 
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${trackUrl(order)}" style="display:inline-block;background:#C9A84C;color:#2A1E06;text-decoration:none;padding:12px 32px;font-size:14px;font-weight:600;border-radius:4px;">
+        ติดตามสถานะออเดอร์ · Track Your Order
+      </a>
+    </div>
+
     <p style="color:#6B5730;font-size:13px;line-height:1.7;margin-top:32px;">
       We'll send you another email with tracking info once your order ships.
       Questions? Reply to this email or contact us at <a href="mailto:info@dansiam.com" style="color:#8B6914;">info@dansiam.com</a>.
@@ -159,6 +172,11 @@ export async function sendOrderShipped(order: Order, tracking: string, carrier: 
       <div style="font-size:11px;color:#2D5A3D;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Tracking</div>
       <div style="font-size:13px;color:#6B5730;margin-bottom:6px;">Carrier: <strong>${escapeHtml(carrier)}</strong></div>
       <div style="font-size:16px;font-weight:600;color:#8B6914;font-family:monospace;">${escapeHtml(tracking)}</div>
+    </div>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${trackUrl(order)}" style="display:inline-block;background:#C9A84C;color:#2A1E06;text-decoration:none;padding:12px 32px;font-size:14px;font-weight:600;border-radius:4px;">
+        ติดตามสถานะออเดอร์ · Track Your Order
+      </a>
     </div>
     <p style="color:#6B5730;font-size:13px;">
       Thank you for shopping with us 🙏

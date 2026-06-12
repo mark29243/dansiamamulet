@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLang } from '@/components/LangProvider';
 
 type BlogPost = {
@@ -47,9 +48,9 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
         <Link key={post.id} href={`/blog/${post.slug}?lang=${lang}`} style={{ textDecoration: 'none' }}>
           <article className="card blog-card animate-fade-in" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
             {/* Cover */}
-            <div style={{ height: 200, background: 'var(--cream-dark)', overflow: 'hidden', flexShrink: 0 }}>
+            <div style={{ height: 200, background: 'var(--cream-dark)', overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
               {post.cover_image
-                ? <img src={post.cover_image} alt={getTitle(post) || ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ? <Image src={post.cover_image} alt={getTitle(post) || ''} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
                 : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🏯</div>
               }
             </div>

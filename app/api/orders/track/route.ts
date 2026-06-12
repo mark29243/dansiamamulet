@@ -5,7 +5,7 @@ import { rateLimit, getIp } from '@/lib/rate-limit';
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
-  if (!rateLimit(getIp(req), 10, 60_000)) {
+  if (!(await rateLimit(`track:${getIp(req)}`, 10, 60_000))) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
@@ -31,13 +31,14 @@ export async function POST(req: Request) {
     // full UUID
     query = query.eq('id', orderId);
   } else {
-    // short code: first 8 chars uppercased
-    query = query.ilike('id', `${orderId.toUpperCase()}%`);
+    // short code: first 8 chars uppercased — escape ilike wildcards (%, _)
+    const escaped = orderId.toUpperCase().replace(/[%_\\]/g, '\\$&');
+    query = query.ilike('id', `${escaped}%`);
   }
 
   const { data, error } = await query
     .eq('customer_email', email)
-    .in('status', ['paid', 'shipped', 'delivered', 'cancelled', 'refunded', 'pending_review'])
+    .in('status', ['pending', 'pending_alipay', 'paid', 'shipped', 'delivered', 'cancelled', 'refunded', 'pending_review'])
     .single();
 
   if (error || !data) {

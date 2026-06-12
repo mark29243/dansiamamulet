@@ -15,7 +15,7 @@ function SuccessInner() {
   const { clear } = useCart();
   const { lang } = useLang();
   const t = getDict(lang);
-  const [order, setOrder] = useState<{ id: string; status: string; total: number; items: any[] } | null>(null);
+  const [order, setOrder] = useState<{ id: string; status: string; total: number; items: any[]; customer_email?: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -103,7 +103,7 @@ function SuccessInner() {
       </div>
 
       <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/track" className="btn-gold">
+        <Link href={order ? `/track?order=${order.id.slice(0, 8).toUpperCase()}` : '/track'} className="btn-gold">
           {lang === 'th' ? '📦 ติดตามพัสดุ' : lang === 'zh' ? '📦 追踪订单' : '📦 Track Order'}
         </Link>
         <Link href="/shop" className="btn-outline">{t.success.shop}</Link>

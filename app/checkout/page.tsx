@@ -22,9 +22,10 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'alipay'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'promptpay' | 'alipay'>('card');
   const [discountCode, setDiscountCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState<number | null>(null);
+  const [discountFreeShip, setDiscountFreeShip] = useState(false);
   const [discountError, setDiscountError] = useState('');
   const [validatingCode, setValidatingCode] = useState(false);
 
@@ -91,7 +92,7 @@ export default function CheckoutPage() {
         : selectedOption.cost)
     : 0;
   const shipping = (isTH && subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : baseShipping;
-  const discountAmount = discountPercent ? Math.round(subtotal * discountPercent / 100) : 0;
+  const discountAmount = (discountPercent ? Math.round(subtotal * discountPercent / 100) : 0) + (discountFreeShip ? shipping : 0);
   const total = subtotal - discountAmount + shipping;
 
   async function applyDiscount() {
@@ -110,6 +111,7 @@ export default function CheckoutPage() {
       const data = await res.json().catch(() => ({}));
       if (res.ok && (data as any).valid) {
         setDiscountPercent((data as any).percent);
+        setDiscountFreeShip(!!(data as any).free_shipping);
       } else {
         setDiscountError((data as any).error || (lang === 'th' ? 'โค้ดไม่ถูกต้อง' : lang === 'zh' ? '折扣码无效' : 'Invalid code'));
       }
@@ -160,7 +162,7 @@ export default function CheckoutPage() {
           carrier: effectiveCarrier,
           lang,
           payment_method: paymentMethod,
-          discount_code: discountPercent ? discountCode.trim().toUpperCase() : undefined,
+          discount_code: (discountPercent || discountFreeShip) ? discountCode.trim().toUpperCase() : undefined,
         }),
       });
       const data = await res.json();
@@ -394,13 +396,15 @@ export default function CheckoutPage() {
             <SumRow l={t.cart.subtotal} v={formatPrice(subtotal, lang)} />
             {/* Discount code */}
             <div style={{ marginBottom: 10 }}>
-              {discountPercent ? (
+              {(discountPercent || discountFreeShip) ? (
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 10px', background: 'rgba(45,90,61,0.08)', borderRadius: 6, border: '1px solid rgba(45,90,61,0.2)' }}>
                   <span style={{ fontSize: 12, color: '#2D5A3D', fontWeight: 600 }}>
-                    🏷 {discountCode.toUpperCase()} (-{discountPercent}%)
+                    🏷 {discountCode.toUpperCase()}
+                    {discountPercent ? ` (-${discountPercent}%)` : ''}
+                    {discountFreeShip ? ` · ${lang === 'th' ? 'ส่งฟรี' : lang === 'zh' ? '免运费' : 'Free shipping'}` : ''}
                   </span>
                   <span style={{ fontSize: 13, color: '#2D5A3D', fontWeight: 600 }}>-{formatPrice(discountAmount, lang)}</span>
-                  <button type="button" onClick={() => { setDiscountPercent(null); setDiscountCode(''); }} style={{ background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', color: 'var(--text-muted)', padding: '0 0 0 8px' }}>✕</button>
+                  <button type="button" onClick={() => { setDiscountPercent(null); setDiscountFreeShip(false); setDiscountCode(''); }} style={{ background: 'none', border: 'none', fontSize: 14, cursor: 'pointer', color: 'var(--text-muted)', padding: '0 0 0 8px' }}>✕</button>
                 </div>
               ) : (
                 <div>
@@ -451,9 +455,10 @@ export default function CheckoutPage() {
             <div style={{ fontSize: 10, letterSpacing: 2, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 10 }}>
               {lang === 'zh' ? '支付方式' : lang === 'th' ? 'วิธีชำระเงิน' : 'Payment Method'}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
               {([
                 { id: 'card', label: lang === 'zh' ? '银行卡' : lang === 'th' ? 'บัตร' : 'Card', sub: 'Visa / MC' },
+                { id: 'promptpay', label: lang === 'th' ? 'พร้อมเพย์' : 'PromptPay', sub: lang === 'th' ? 'สแกน QR' : 'QR' },
                 { id: 'alipay', label: '支付宝', sub: 'Alipay' },
               ] as const).map((m) => (
                 <button
@@ -474,7 +479,7 @@ export default function CheckoutPage() {
                 </button>
               ))}
             </div>
-            {paymentMethod !== 'card' && (
+            {paymentMethod === 'alipay' && (
               <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-faint)', background: 'var(--cream)', padding: '6px 10px', borderRadius: 4, lineHeight: 1.6 }}>
                 {lang === 'zh' ? '将以人民币 (CNY) 结算，汇率约 1฿ ≈ 0.20¥' : lang === 'th' ? 'ชำระเป็นหยวน (CNY) อัตราประมาณ 1฿ ≈ 0.20¥' : 'Charged in CNY — rate approx. 1฿ ≈ 0.20¥'}
               </div>
@@ -502,6 +507,7 @@ export default function CheckoutPage() {
             <PaymentLogo>Stripe</PaymentLogo>
             <PaymentLogo>Visa</PaymentLogo>
             <PaymentLogo>MC</PaymentLogo>
+            <PaymentLogo>PromptPay</PaymentLogo>
             <PaymentLogo>Alipay</PaymentLogo>
           </div>
         </aside>
