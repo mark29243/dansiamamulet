@@ -39,6 +39,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       const usedSlugs = new Set((existingSlugs ?? []).map((p: any) => p.slug));
       try {
         const result = await processDraft(ctx.admin, current, usedSlugs);
+        await ctx.admin.from('products').update({ published: true }).eq('id', result.id);
         const { data: updated } = await ctx.admin.from('products').select('*').eq('id', result.id).single();
         if (updated?.slug) {
           const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';

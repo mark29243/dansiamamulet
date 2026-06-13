@@ -197,7 +197,6 @@ export async function processDraft(
       description_th: seo.description_th,
       name_zh:        seo.name_zh,
       description_zh: seo.description_zh,
-      published:      false,
     })
     .eq('id', draft.id);
 
