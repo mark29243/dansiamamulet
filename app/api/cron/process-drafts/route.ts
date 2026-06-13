@@ -30,16 +30,14 @@ Product info:
 - Category: ${category}
 - Thai notes: ${descTh || 'none'}
 
-Generate JSON with these fields:
+Translate and expand from the Thai notes above. Return ONLY valid JSON with these fields:
 {
   "name": "English product name (concise, SEO-friendly, 5-10 words)",
-  "slug": "url-slug-lowercase-hyphens-only (include key terms like temple, year if known)",
+  "slug": "url-slug-lowercase-hyphens-only",
   "short": "One sentence English description for search results (max 160 chars)",
-  "description": "2-3 paragraph English description covering: what it is, the temple/monk, spiritual significance, collectibility. Optimized for SEO.",
-  "description_th": "2-3 paragraph Thai description covering the same topics naturally"
-}
-
-Return ONLY valid JSON, no markdown.`,
+  "description": "2-3 paragraph English description translated from the Thai notes. No Thai characters.",
+  "description_zh": "200字左右的中文描述，翻译自泰文说明。"
+}`,
     }],
   });
 
@@ -115,7 +113,8 @@ export async function GET(req: Request) {
           slug,
           short: seo.short,
           description: seo.description,
-          description_th: seo.description_th,
+          // description_th kept as-is — seller's original Thai notes
+          description_zh: seo.description_zh,
           published: true,
         })
         .eq('id', draft.id);
