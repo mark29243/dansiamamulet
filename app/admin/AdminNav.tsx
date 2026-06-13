@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import OrderNotifier from './OrderNotifier';
+import { useLang } from '@/components/LangProvider';
+import { langNames, langs } from '@/lib/i18n';
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '◈' },
@@ -18,6 +20,7 @@ const NAV = [
 export default function AdminNav({ email, role }: { email: string; role: string }) {
   const pathname = usePathname();
   const [pendingOrders, setPendingOrders] = useState(0);
+  const { lang, setLang } = useLang();
 
   return (
     <nav style={{
@@ -42,6 +45,29 @@ export default function AdminNav({ email, role }: { email: string; role: string 
         </Link>
 
         <div style={{ flex: 1 }} />
+
+        {/* Language switcher */}
+        <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
+          {langs.map((l) => (
+            <button
+              key={l}
+              onClick={() => setLang(l)}
+              style={{
+                padding: '3px 8px',
+                borderRadius: 6,
+                border: '1px solid ' + (lang === l ? '#C9A96E' : '#EDEBE8'),
+                background: lang === l ? '#F4EFE5' : 'transparent',
+                color: lang === l ? '#1A1208' : '#6B6760',
+                fontSize: 11,
+                fontWeight: lang === l ? 700 : 400,
+                cursor: 'pointer',
+                lineHeight: 1.4,
+              }}
+            >
+              {langNames[l]}
+            </button>
+          ))}
+        </div>
 
         {/* User pill */}
         <div style={{
