@@ -387,5 +387,6 @@ export const CAT_SLUG: Record<string, string> = {
 };
 
 export function getCatName(cat: string, lang: Lang): string {
-  return categoryNames[cat]?.[lang] ?? cat;
+  const primary = cat.split(',')[0].trim();
+  return categoryNames[primary]?.[lang] ?? primary;
 }

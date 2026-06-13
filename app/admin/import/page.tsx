@@ -10,7 +10,7 @@ type Step = 'idle' | 'uploading' | 'saving' | 'done' | 'error';
 
 export default function ImportPage() {
   const [nameTh, setNameTh] = useState('');
-  const [category, setCategory] = useState('เครื่องราง');
+  const [selectedCats, setSelectedCats] = useState<string[]>([]);
   const [price, setPrice] = useState('');
   const [note, setNote] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -42,8 +42,17 @@ export default function ImportPage() {
     setStep('idle');
   }
 
+  function toggleCat(cat: string) {
+    setSelectedCats((prev) => {
+      if (prev.includes(cat)) return prev.filter((c) => c !== cat);
+      if (prev.length >= 3) return prev;
+      return [...prev, cat];
+    });
+  }
+
   async function handleSave() {
     if (!nameTh || !price) { setError('กรุณากรอกชื่อสินค้าและราคา'); return; }
+    if (selectedCats.length === 0) { setError('กรุณาเลือกหมวดหมู่อย่างน้อย 1 อย่าง'); return; }
     setError('');
     setStep('saving');
 
@@ -59,7 +68,7 @@ export default function ImportPage() {
           price: parseFloat(price) * 100,
           sale_price: null,
           stock: 1,
-          category,
+          category: selectedCats.join(','),
           description: note,
           description_th: note,
           short: '',
@@ -72,7 +81,7 @@ export default function ImportPage() {
       setSavedId(json.id);
       setStep('done');
       setNameTh(''); setPrice(''); setNote(''); setImages([]);
-      setCategory('เครื่องราง');
+      setSelectedCats([]);
     } catch (e: any) {
       setError(e.message);
       setStep('error');
@@ -198,18 +207,36 @@ export default function ImportPage() {
 
           {/* Category */}
           <div>
-            <div style={labelStyle}>หมวดหมู่ *</div>
-            <select
-              className="input"
-              style={{ fontSize: 15 }}
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              disabled={busy}
-            >
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c} — {categoryNames[c].en}</option>
-              ))}
-            </select>
+            <div style={{ ...labelStyle, marginBottom: 8 }}>
+              หมวดหมู่ * <span style={{ fontWeight: 400, color: '#9CA3AF', textTransform: 'none', letterSpacing: 0 }}>(เลือกได้สูงสุด 3 หมวด — เลือกแล้ว {selectedCats.length}/3)</span>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {CATEGORIES.map((c) => {
+                const checked = selectedCats.includes(c);
+                const disabled = busy || (!checked && selectedCats.length >= 3);
+                return (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => !disabled && toggleCat(c)}
+                    disabled={disabled}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: 20,
+                      border: '1px solid ' + (checked ? '#C9A96E' : '#D1D5DB'),
+                      background: checked ? '#F4EFE5' : '#F9FAFB',
+                      color: checked ? '#1A1208' : disabled ? '#D1D5DB' : '#374151',
+                      fontSize: 13,
+                      fontWeight: checked ? 600 : 400,
+                      cursor: disabled ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {checked && '✓ '}{c}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Price */}
@@ -246,7 +273,7 @@ export default function ImportPage() {
           <button
             className="btn-gold"
             onClick={handleSave}
-            disabled={busy || !nameTh || !price}
+            disabled={busy || !nameTh || !price || selectedCats.length === 0}
             style={{ width: '100%', padding: '14px', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
           >
             {busy ? (

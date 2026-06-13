@@ -179,7 +179,7 @@ export default async function CategoryPage({ params }: { params: { category: str
     .from('products')
     .select('*')
     .eq('published', true)
-    .eq('category', catTh)
+    .ilike('category', `%${catTh}%`)
     .order('stock', { ascending: false })
     .order('id', { ascending: true });
 

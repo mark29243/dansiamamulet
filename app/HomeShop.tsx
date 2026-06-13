@@ -43,7 +43,12 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
 
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
-    products.forEach((p) => counts.set(p.category, (counts.get(p.category) || 0) + 1));
+    products.forEach((p) => {
+      p.category.split(',').forEach((c) => {
+        const cat = c.trim();
+        counts.set(cat, (counts.get(cat) || 0) + 1);
+      });
+    });
     return Array.from(counts.entries())
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => {
@@ -69,7 +74,10 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
       );
     }
     if (filter === 'instock') r = r.filter((p) => p.stock > 0);
-    if (selectedCats.length > 0) r = r.filter((p) => selectedCats.includes(p.category));
+    if (selectedCats.length > 0) r = r.filter((p) => {
+      const cats = p.category.split(',').map((c) => c.trim());
+      return selectedCats.some((sc) => cats.includes(sc));
+    });
     r = r.filter((p) => {
       const price = (p.sale_price ?? p.price) / 100;
       return price >= priceRange[0] && price <= priceRange[1];
