@@ -3,12 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ToastProvider';
+import { categoryNames } from '@/lib/i18n';
 
-const CATEGORIES = [
-  'พระสมเด็จ', 'พระนางพญา', 'พระปิดตา', 'พระนาคปรก', 'พระกริ่ง',
-  'พระผง', 'พระรอด', 'เหรียญ', 'รูปหล่อ', 'เครื่องราง', 'พระพิฆเนศ',
-  'หลวงพ่อทวด', 'หลวงปู่โต พรหมรังสี', 'หลวงพ่อคูณ', 'หลวงพ่อเงิน', 'พระเกจิอาจารย์', 'พระสังกัจจายน์',
-];
+const CATEGORIES = Object.keys(categoryNames);
 
 export default function EditProductForm({ product }: { product: any }) {
   const router = useRouter();
@@ -20,14 +17,25 @@ export default function EditProductForm({ product }: { product: any }) {
   const [uploading, setUploading] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
 
+  const [selectedCats, setSelectedCats] = useState<string[]>(
+    (product.category || '').split(',').map((c: string) => c.trim()).filter(Boolean)
+  );
+
   const [form, setForm] = useState({
     name_th: product.name_th || '',
     description_th: product.description_th || '',
-    category: product.category || '',
     price: ((product.price ?? 0) / 100).toFixed(2),
     sale_price: product.sale_price ? (product.sale_price / 100).toFixed(2) : '',
     stock: product.stock ?? 0,
   });
+
+  function toggleCat(cat: string) {
+    setSelectedCats((prev) => {
+      if (prev.includes(cat)) return prev.filter((c) => c !== cat);
+      if (prev.length >= 3) return prev;
+      return [...prev, cat];
+    });
+  }
 
   function set(key: string, value: any) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -79,7 +87,7 @@ export default function EditProductForm({ product }: { product: any }) {
       const body: any = {
         name_th: form.name_th,
         description_th: form.description_th,
-        category: form.category,
+        category: selectedCats.join(','),
         price: Math.round(Number(form.price) * 100),
         sale_price: form.sale_price === '' ? null : Math.round(Number(form.sale_price) * 100),
         stock: Number(form.stock),
@@ -206,11 +214,33 @@ export default function EditProductForm({ product }: { product: any }) {
         <textarea className="input" rows={3} value={form.description_th} onChange={(e) => set('description_th', e.target.value)} style={{ resize: 'vertical' }} />
       </Field>
 
-      <Field label="หมวดหมู่">
-        <select className="input" value={form.category} onChange={(e) => set('category', e.target.value)}>
-          <option value="">-- เลือก --</option>
-          {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
+      <Field label={`หมวดหมู่ (เลือกได้สูงสุด 3 — เลือกแล้ว ${selectedCats.length}/3)`}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {CATEGORIES.map((c) => {
+            const checked = selectedCats.includes(c);
+            const disabled = !checked && selectedCats.length >= 3;
+            return (
+              <button
+                key={c}
+                type="button"
+                onClick={() => !disabled && toggleCat(c)}
+                style={{
+                  padding: '5px 12px',
+                  borderRadius: 20,
+                  border: '1px solid ' + (checked ? '#C9A96E' : '#D1D5DB'),
+                  background: checked ? '#F4EFE5' : '#F9FAFB',
+                  color: checked ? '#1A1208' : disabled ? '#D1D5DB' : '#374151',
+                  fontSize: 13,
+                  fontWeight: checked ? 600 : 400,
+                  cursor: disabled ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {checked && '✓ '}{c}
+              </button>
+            );
+          })}
+        </div>
       </Field>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
