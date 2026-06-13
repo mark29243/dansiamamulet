@@ -14,7 +14,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   const q = searchParams.q?.trim() || '';
   const filter = searchParams.filter || 'all';
 
-  let query = admin.from('products').select('*').order('id', { ascending: true });
+  let query = admin.from('products').select('*').order('id', { ascending: false });
   if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
   if (filter === 'oos') query = query.eq('stock', 0);
   else if (filter === 'published') query = query.eq('published', true);
