@@ -194,7 +194,7 @@ export async function processDraft(
       slug,
       short:          seo.short,
       description:    seo.description,
-      description_th: seo.description_th,
+      description_th: draft.description_th?.trim() || seo.description_th,
       name_zh:        seo.name_zh,
       description_zh: seo.description_zh,
     })
