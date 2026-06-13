@@ -18,6 +18,7 @@ export default function EditProductForm({ product }: { product: any }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [images, setImages] = useState<string[]>(Array.isArray(product.images) ? product.images : []);
   const [uploading, setUploading] = useState(false);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
 
   const [form, setForm] = useState({
     name_th: product.name_th || '',
@@ -58,6 +59,17 @@ export default function EditProductForm({ product }: { product: any }) {
 
   function makeMain(i: number) {
     setImages((prev) => (i <= 0 ? prev : [prev[i], ...prev.filter((_, idx) => idx !== i)]));
+  }
+
+  function handleDrop(targetIdx: number) {
+    if (dragIdx === null || dragIdx === targetIdx) return;
+    setImages((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(dragIdx, 1);
+      next.splice(targetIdx, 0, moved);
+      return next;
+    });
+    setDragIdx(null);
   }
 
   async function handleSave() {
@@ -120,13 +132,27 @@ export default function EditProductForm({ product }: { product: any }) {
         {images.length > 0 && (
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
             {images.map((img, i) => (
-              <div key={img + i} style={{ position: 'relative' }}>
+              <div
+                key={img + i}
+                draggable
+                onDragStart={() => setDragIdx(i)}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={() => handleDrop(i)}
+                onDragEnd={() => setDragIdx(null)}
+                style={{
+                  position: 'relative', cursor: 'grab',
+                  opacity: dragIdx === i ? 0.4 : 1,
+                  transform: dragIdx === i ? 'scale(0.95)' : 'none',
+                  transition: 'opacity 0.15s, transform 0.15s',
+                }}
+              >
                 <img
                   src={img}
                   alt=""
                   style={{
                     width: 96, height: 96, objectFit: 'cover', borderRadius: 'var(--radius)',
                     border: i === 0 ? '2px solid var(--gold-dark)' : '1px solid var(--cream-dark)',
+                    pointerEvents: 'none',
                   }}
                 />
                 {i === 0 && (

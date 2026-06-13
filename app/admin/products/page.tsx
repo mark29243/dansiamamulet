@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/server';
 import StockEditor from './StockEditor';
 import PublishButton from './PublishButton';
+import DuplicateButton from './DuplicateButton';
 import { AdminProductName, AdminProductCategory, AdminProductPrice } from './AdminProductName';
 import { IcoEye } from '@/components/icons';
 
@@ -110,6 +111,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       {!p.published && <PublishButton productId={p.id} />}
                       <Link href={`/admin/products/${p.id}`} className="btn-outline" style={{ padding: '4px 12px', fontSize: 11 }}>แก้ไข</Link>
+                      <DuplicateButton productId={p.id} />
                       {p.published && <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View</Link>}
                     </div>
                   </Td>
