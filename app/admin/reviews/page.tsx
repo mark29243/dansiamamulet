@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { createClient } from '@/lib/supabase/client';
 
 type Review = {
   id: number;
@@ -35,11 +34,6 @@ export default function AdminReviewsPage() {
 
   useEffect(() => {
     loadReviews();
-    const supabase = createClient();
-    const channel = supabase.channel('admin-reviews-sync')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, loadReviews)
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
   }, [loadReviews]);
 
   async function setApproved(id: number, approved: boolean) {
