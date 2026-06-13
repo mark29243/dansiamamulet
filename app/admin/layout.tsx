@@ -32,7 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div style={{ minHeight: '100vh', background: '#F9F7F4', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <AdminNav email={admin.email} role={admin.role} />
-      <div style={{ paddingTop: 56 }}>
+      <div style={{ paddingTop: 88 }}>
         {children}
       </div>
       <RealtimeRefresh tables={['products', 'orders', 'reviews']} />
