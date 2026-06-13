@@ -69,7 +69,7 @@ ROMANIZATION RULES:
 - วัด → Wat (e.g. วัดช้างให้ → Wat Chang Hai)
 - พ.ศ. years → B.E. (e.g. พ.ศ. 2511 → B.E. 2511)
 
-IMPORTANT: Translate and expand from the seller's Thai description above. Do not invent facts not mentioned by the seller.
+IMPORTANT: Translate directly from the seller's Thai description. Do not add, expand, or invent anything not in the original text.
 
 Return ONLY a raw JSON object with exactly these 5 fields:
 
@@ -80,9 +80,9 @@ Return ONLY a raw JSON object with exactly these 5 fields:
 
   "short": "English meta description for Google. 140-155 characters. Summarise the key details from the seller's notes: amulet type, monk/temple, year, material, blessing. No Thai chars.",
 
-  "description": "Full English product description, 250-400 words. TRANSLATE and expand the seller's Thai notes into fluent English. Cover: what the amulet is, the monk/temple, the year created, material, spiritual significance, condition/rarity. No Thai characters anywhere in this field.",
+  "description": "Translate the seller's Thai notes into English. Translate faithfully — do not add, invent, or embellish anything not in the original. Keep the same length and tone. No Thai characters.",
 
-  "description_zh": "将卖家的泰文说明翻译成中文。200-280个汉字。涵盖：佛牌名称、高僧/寺庙、年份、材质、功效、稀有度。必须包含汉字。"
+  "description_zh": "将卖家的泰文说明直接翻译成中文。忠实翻译，不添加、不发挥、不虚构原文没有的内容。保持相同长度和语气。必须包含汉字。"
 }`,
       },
       {
