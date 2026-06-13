@@ -17,6 +17,7 @@ export default function ImportPage() {
   const [step, setStep] = useState<Step>('idle');
   const [error, setError] = useState('');
   const [resultSlug, setResultSlug] = useState('');
+  const [savedProductId, setSavedProductId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleImageFiles(files: FileList) {
@@ -72,29 +73,35 @@ export default function ImportPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
       productId = json.id;
+      setSavedProductId(productId);
     } catch (e: any) {
       setError(e.message);
       setStep('error');
       return;
     }
 
-    // Step 2: generate SEO + publish automatically
+    await runSeo(productId);
+  }
+
+  async function runSeo(id: number) {
     setStep('seo');
+    setError('');
     try {
       const res = await fetch('/api/admin/process-draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: productId }),
+        body: JSON.stringify({ id }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error);
+      let json: any;
+      try { json = await res.json(); } catch { json = {}; }
+      if (!res.ok) throw new Error(json.error || `Server error (${res.status})`);
       setResultSlug(json.slug);
       setStep('done');
-      // Reset form
       setNameTh(''); setPrice(''); setNote(''); setImages([]);
       setCategory('เครื่องราง');
+      setSavedProductId(null);
     } catch (e: any) {
-      setError(`SEO generation ล้มเหลว: ${e.message}`);
+      setError(`สินค้าบันทึกแล้ว (ID #${id}) แต่ SEO ล้มเหลว: ${e.message}`);
       setStep('error');
     }
   }
@@ -110,8 +117,26 @@ export default function ImportPage() {
 
       {/* Error */}
       {error && (
-        <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <IcoWarning size={14} /> {error}
+        <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: savedProductId ? 10 : 0 }}>
+            <IcoWarning size={14} /> {error}
+          </div>
+          {savedProductId && step === 'error' && (
+            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+              <button
+                onClick={() => runSeo(savedProductId)}
+                style={{ background: '#DC2626', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: 6, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}
+              >
+                ลอง SEO อีกครั้ง
+              </button>
+              <a
+                href={`/admin/products/${savedProductId}`}
+                style={{ padding: '6px 14px', borderRadius: 6, fontSize: 12, border: '1px solid #FCA5A5', color: '#DC2626', textDecoration: 'none', fontWeight: 500 }}
+              >
+                ไปแก้ไขสินค้า #{savedProductId}
+              </a>
+            </div>
+          )}
         </div>
       )}
 
