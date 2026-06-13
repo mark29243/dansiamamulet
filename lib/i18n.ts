@@ -355,6 +355,9 @@ export const categoryNames: Record<string, { th: string; en: string; zh: string 
   'หลวงพ่อเงิน':         { th: 'หลวงพ่อเงิน',         en: 'Luang Pu Ngern',   zh: '龙普银' },
   'พระเกจิอาจารย์':      { th: 'พระเกจิอาจารย์',      en: 'Monk Amulets',     zh: '高僧佛牌' },
   'พระสังกัจจายน์':     { th: 'พระสังกัจจายน์',     en: 'Phra Sangkachai',  zh: '圣迦旃延' },
+  'รูปหล่อพระพุทธ':    { th: 'รูปหล่อพระพุทธ',    en: 'Buddha Cast Image', zh: '铸造佛陀像' },
+  'รูปหล่อเจ้า':       { th: 'รูปหล่อเจ้า',       en: 'Deity Cast Image',  zh: '铸造神像' },
+  'รูปหล่อเกจิ':       { th: 'รูปหล่อเกจิ',       en: 'Monk Cast Image',   zh: '铸造高僧像' },
 };
 
 // Thai DB value → URL slug
@@ -376,6 +379,9 @@ export const CAT_SLUG: Record<string, string> = {
   'หลวงพ่อเงิน':         'luang-pu-ngern',
   'พระเกจิอาจารย์':      'phrakejiaachan',
   'พระสังกัจจายน์':     'phra-sangkachai',
+  'รูปหล่อพระพุทธ':    'rup-lor-phra-phut',
+  'รูปหล่อเจ้า':       'rup-lor-chao',
+  'รูปหล่อเกจิ':       'rup-lor-kejii',
 };
 
 export function getCatName(cat: string, lang: Lang): string {
