@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await processDraft(admin, draft, usedSlugs);
-    return NextResponse.json({ id: result.id, slug: result.slug });
+    return NextResponse.json({ id: result.id, slug: result.slug, name: result.name, short: result.short });
   } catch (e: any) {
     console.error('[process-draft] failed', { id, error: e.message, stack: e.stack });
     return NextResponse.json({ error: e.message }, { status: 500 });

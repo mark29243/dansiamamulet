@@ -176,7 +176,7 @@ export async function processDraft(
   admin: SupabaseClient,
   draft: { id: number; name_th: string; description_th: string | null; category: string | null },
   usedSlugs: Set<string>,
-): Promise<{ id: number; slug: string }> {
+): Promise<{ id: number; slug: string; name: string; short: string }> {
   const seo = await generateSeo(draft.name_th, draft.description_th ?? '', draft.category ?? '');
 
   let slug = toSlug(seo.slug || seo.name);
@@ -197,11 +197,11 @@ export async function processDraft(
       description_th: seo.description_th,
       name_zh:        seo.name_zh,
       description_zh: seo.description_zh,
-      published:      true,
+      published:      false,
     })
     .eq('id', draft.id);
 
   if (error) throw new Error(error.message);
 
-  return { id: draft.id, slug };
+  return { id: draft.id, slug, name: seo.name, short: seo.short };
 }

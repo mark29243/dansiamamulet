@@ -6,7 +6,9 @@ import { IcoCamera, IcoClock, IcoCheck, IcoWarning } from '@/components/icons';
 
 const CATEGORIES = Object.keys(categoryNames);
 
-type Step = 'idle' | 'uploading' | 'saving' | 'seo' | 'done' | 'error';
+type Step = 'idle' | 'uploading' | 'saving' | 'seo' | 'preview' | 'publishing' | 'done' | 'error';
+
+type SeoPreview = { id: number; slug: string; name: string; short: string };
 
 export default function ImportPage() {
   const [nameTh, setNameTh] = useState('');
@@ -18,6 +20,7 @@ export default function ImportPage() {
   const [error, setError] = useState('');
   const [resultSlug, setResultSlug] = useState('');
   const [savedProductId, setSavedProductId] = useState<number | null>(null);
+  const [seoPreview, setSeoPreview] = useState<SeoPreview | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleImageFiles(files: FileList) {
@@ -95,18 +98,40 @@ export default function ImportPage() {
       let json: any;
       try { json = await res.json(); } catch { json = {}; }
       if (!res.ok) throw new Error(json.error || `Server error (${res.status})`);
-      setResultSlug(json.slug);
-      setStep('done');
-      setNameTh(''); setPrice(''); setNote(''); setImages([]);
-      setCategory('เครื่องราง');
-      setSavedProductId(null);
+      setSeoPreview({ id: json.id, slug: json.slug, name: json.name, short: json.short });
+      setStep('preview');
     } catch (e: any) {
       setError(`สินค้าบันทึกแล้ว (ID #${id}) แต่ SEO ล้มเหลว: ${e.message}`);
       setStep('error');
     }
   }
 
-  const busy = step === 'uploading' || step === 'saving' || step === 'seo';
+  async function handlePublish() {
+    if (!seoPreview) return;
+    setStep('publishing');
+    setError('');
+    try {
+      const res = await fetch(`/api/admin/products/${seoPreview.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: true }),
+      });
+      let json: any;
+      try { json = await res.json(); } catch { json = {}; }
+      if (!res.ok) throw new Error(json.error || `Server error (${res.status})`);
+      setResultSlug(seoPreview.slug);
+      setStep('done');
+      setNameTh(''); setPrice(''); setNote(''); setImages([]);
+      setCategory('เครื่องราง');
+      setSavedProductId(null);
+      setSeoPreview(null);
+    } catch (e: any) {
+      setError(`Publish ล้มเหลว: ${e.message}`);
+      setStep('preview');
+    }
+  }
+
+  const busy = step === 'uploading' || step === 'saving' || step === 'seo' || step === 'publishing';
 
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', padding: '32px 24px' }}>
@@ -140,6 +165,36 @@ export default function ImportPage() {
         </div>
       )}
 
+      {/* SEO Preview — รอ approve */}
+      {(step === 'preview' || step === 'publishing') && seoPreview && (
+        <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', borderRadius: 8, padding: '16px 20px', marginBottom: 20 }}>
+          <div style={{ fontWeight: 600, fontSize: 14, color: '#1D4ED8', marginBottom: 12 }}>
+            ✦ SEO สร้างเสร็จแล้ว — ตรวจสอบก่อน publish
+          </div>
+          <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>ชื่อภาษาอังกฤษ</div>
+          <div style={{ fontSize: 14, fontWeight: 500, color: '#111827', marginBottom: 10 }}>{seoPreview.name}</div>
+          <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>URL</div>
+          <div style={{ fontSize: 13, color: '#374151', fontFamily: 'monospace', marginBottom: 10 }}>/product/{seoPreview.slug}</div>
+          <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>Meta description</div>
+          <div style={{ fontSize: 13, color: '#374151', marginBottom: 16, lineHeight: 1.5 }}>{seoPreview.short}</div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              onClick={handlePublish}
+              disabled={step === 'publishing'}
+              style={{ background: '#1D4ED8', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: step === 'publishing' ? 'not-allowed' : 'pointer' }}
+            >
+              {step === 'publishing' ? 'กำลัง publish...' : '✓ Publish เลย'}
+            </button>
+            <a
+              href={`/admin/products/${seoPreview.id}`}
+              style={{ padding: '8px 16px', borderRadius: 6, fontSize: 13, border: '1px solid #93C5FD', color: '#1D4ED8', textDecoration: 'none', fontWeight: 500 }}
+            >
+              ไปแก้ไขก่อน
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Success */}
       {step === 'done' && (
         <div style={{ background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: 8, padding: '16px 20px', marginBottom: 20 }}>
@@ -164,6 +219,7 @@ export default function ImportPage() {
           {step === 'uploading' && 'กำลังอัพโหลดรูป...'}
           {step === 'saving' && 'กำลังบันทึกสินค้า...'}
           {step === 'seo' && 'กำลัง generate SEO (อังกฤษ + จีน)... รอสักครู่'}
+          {step === 'publishing' && 'กำลัง publish...'}
         </div>
       )}
 
