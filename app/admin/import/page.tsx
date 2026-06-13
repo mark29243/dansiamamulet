@@ -28,8 +28,9 @@ export default function ImportPage() {
       fd.append('file', file);
       try {
         const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error);
+        let json: any;
+        try { json = await res.json(); } catch { json = { error: `Server error (${res.status})` }; }
+        if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
         uploaded.push(json.url);
       } catch (e: any) {
         setError(`อัพโหลด ${file.name} ล้มเหลว: ${e.message}`);

@@ -41,6 +41,7 @@ const nextConfig = {
     staleTimes: {
       dynamic: 0,
     },
+    serverComponentsExternalPackages: ['sharp'],
     outputFileTracingIncludes: {
       '/api/label-pdf/[id]': ['./app/api/label-pdf/[id]/fonts/**'],
     },
