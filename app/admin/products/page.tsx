@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export default async function AdminProductsPage({ searchParams }: { searchParams: { q?: string; filter?: string } }) {
   const admin = createAdminClient();
   const q = searchParams.q?.trim() || '';
-  const filter = searchParams.filter || 'all';
+  const filter = searchParams.filter || 'published';
 
   let query = admin.from('products').select('*').order('id', { ascending: false });
   if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
@@ -46,7 +46,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         ].map((f) => (
           <Link
             key={f.v}
-            href={`/admin/products${f.v === 'all' ? '' : `?filter=${f.v}`}`}
+            href={`/admin/products${f.v === 'published' ? '' : `?filter=${f.v}`}`}
             className="serif"
             style={{
               padding: '6px 14px', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase',
