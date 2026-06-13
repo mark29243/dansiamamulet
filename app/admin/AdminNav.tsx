@@ -69,21 +69,25 @@ export default function AdminNav({ email, role }: { email: string; role: string 
           ))}
         </div>
 
-        {/* User pill */}
-        <div style={{
-          flexShrink: 0,
-          display: 'flex', alignItems: 'center', gap: 6,
-          padding: '4px 10px',
-          borderRadius: 20,
-          background: '#F9F7F4',
-          border: '1px solid #EDEBE8',
-        }}>
+        {/* User pill + logout */}
+        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 20, background: '#F9F7F4', border: '1px solid #EDEBE8' }}>
           <span style={{ width: 20, height: 20, borderRadius: '50%', background: '#E8E0D2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, color: '#5C4D2E', flexShrink: 0 }}>
             {email?.[0]?.toUpperCase() ?? 'A'}
           </span>
-          <span style={{ fontSize: 12, color: '#6B6760', maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: 12, color: '#6B6760', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {email}
           </span>
+          <button
+            onClick={async () => {
+              const { createClient } = await import('@/lib/supabase/client');
+              await createClient().auth.signOut();
+              window.location.href = '/signin';
+            }}
+            style={{ marginLeft: 2, padding: '1px 6px', fontSize: 10, color: '#9B8868', border: '1px solid #DEDAD3', borderRadius: 4, background: 'transparent', cursor: 'pointer' }}
+            title="Sign out"
+          >
+            ออก
+          </button>
         </div>
       </div>
 
