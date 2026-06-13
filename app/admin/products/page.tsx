@@ -39,10 +39,10 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
 
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, overflowX: 'auto', paddingBottom: 4 }}>
         {[
-          { v: 'all', label: 'All' },
-          { v: 'oos', label: 'Out of Stock' },
           { v: 'published', label: 'Published' },
           { v: 'unpublished', label: 'Unpublished' },
+          { v: 'all', label: 'All' },
+          { v: 'oos', label: 'Out of Stock' },
         ].map((f) => (
           <Link
             key={f.v}
