@@ -6,9 +6,7 @@ import { IcoCamera, IcoClock, IcoCheck, IcoWarning } from '@/components/icons';
 
 const CATEGORIES = Object.keys(categoryNames);
 
-type Step = 'idle' | 'uploading' | 'saving' | 'seo' | 'preview' | 'publishing' | 'done' | 'error';
-
-type SeoPreview = { id: number; slug: string; name: string; short: string };
+type Step = 'idle' | 'uploading' | 'saving' | 'done' | 'error';
 
 export default function ImportPage() {
   const [nameTh, setNameTh] = useState('');
@@ -18,9 +16,7 @@ export default function ImportPage() {
   const [images, setImages] = useState<string[]>([]);
   const [step, setStep] = useState<Step>('idle');
   const [error, setError] = useState('');
-  const [resultSlug, setResultSlug] = useState('');
-  const [savedProductId, setSavedProductId] = useState<number | null>(null);
-  const [seoPreview, setSeoPreview] = useState<SeoPreview | null>(null);
+  const [savedId, setSavedId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleImageFiles(files: FileList) {
@@ -49,11 +45,9 @@ export default function ImportPage() {
   async function handleSave() {
     if (!nameTh || !price) { setError('กรุณากรอกชื่อสินค้าและราคา'); return; }
     setError('');
-
-    // Step 1: save draft
     setStep('saving');
+
     const tempSlug = `draft-${Date.now()}`;
-    let productId: number;
     try {
       const res = await fetch('/api/admin/products', {
         method: 'POST',
@@ -75,140 +69,61 @@ export default function ImportPage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      productId = json.id;
-      setSavedProductId(productId);
-    } catch (e: any) {
-      setError(e.message);
-      setStep('error');
-      return;
-    }
-
-    await runSeo(productId);
-  }
-
-  async function runSeo(id: number) {
-    setStep('seo');
-    setError('');
-    try {
-      const res = await fetch('/api/admin/process-draft', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      });
-      let json: any;
-      try { json = await res.json(); } catch { json = {}; }
-      if (!res.ok) throw new Error(json.error || `Server error (${res.status})`);
-      setSeoPreview({ id: json.id, slug: json.slug, name: json.name, short: json.short });
-      setStep('preview');
-    } catch (e: any) {
-      setError(`สินค้าบันทึกแล้ว (ID #${id}) แต่ SEO ล้มเหลว: ${e.message}`);
-      setStep('error');
-    }
-  }
-
-  async function handlePublish() {
-    if (!seoPreview) return;
-    setStep('publishing');
-    setError('');
-    try {
-      const res = await fetch(`/api/admin/products/${seoPreview.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ published: true }),
-      });
-      let json: any;
-      try { json = await res.json(); } catch { json = {}; }
-      if (!res.ok) throw new Error(json.error || `Server error (${res.status})`);
-      setResultSlug(seoPreview.slug);
+      setSavedId(json.id);
       setStep('done');
       setNameTh(''); setPrice(''); setNote(''); setImages([]);
       setCategory('เครื่องราง');
-      setSavedProductId(null);
-      setSeoPreview(null);
     } catch (e: any) {
-      setError(`Publish ล้มเหลว: ${e.message}`);
-      setStep('preview');
+      setError(e.message);
+      setStep('error');
     }
   }
 
-  const busy = step === 'uploading' || step === 'saving' || step === 'seo' || step === 'publishing';
+  function handleAddAnother() {
+    setStep('idle');
+    setError('');
+    setSavedId(null);
+  }
+
+  const busy = step === 'uploading' || step === 'saving';
 
   return (
     <div style={{ maxWidth: 680, margin: '0 auto', padding: '32px 24px' }}>
       <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 4 }}>เพิ่มสินค้าใหม่</h1>
       <p style={{ fontSize: 13, color: '#6B7280', marginBottom: 28 }}>
-        กรอกข้อมูลภาษาไทย — ระบบจะ generate ชื่ออังกฤษ, จีน, slug และ SEO ให้อัตโนมัติ
+        บันทึกเป็น draft — ไปกด Publish ในหน้า Products เพื่อ generate SEO และเผยแพร่
       </p>
 
       {/* Error */}
       {error && (
-        <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: savedProductId ? 10 : 0 }}>
-            <IcoWarning size={14} /> {error}
-          </div>
-          {savedProductId && step === 'error' && (
-            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-              <button
-                onClick={() => runSeo(savedProductId)}
-                style={{ background: '#DC2626', color: '#fff', border: 'none', padding: '6px 14px', borderRadius: 6, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}
-              >
-                ลอง SEO อีกครั้ง
-              </button>
-              <a
-                href={`/admin/products/${savedProductId}`}
-                style={{ padding: '6px 14px', borderRadius: 6, fontSize: 12, border: '1px solid #FCA5A5', color: '#DC2626', textDecoration: 'none', fontWeight: 500 }}
-              >
-                ไปแก้ไขสินค้า #{savedProductId}
-              </a>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* SEO Preview — รอ approve */}
-      {(step === 'preview' || step === 'publishing') && seoPreview && (
-        <div style={{ background: '#EFF6FF', border: '1px solid #93C5FD', borderRadius: 8, padding: '16px 20px', marginBottom: 20 }}>
-          <div style={{ fontWeight: 600, fontSize: 14, color: '#1D4ED8', marginBottom: 12 }}>
-            ✦ SEO สร้างเสร็จแล้ว — ตรวจสอบก่อน publish
-          </div>
-          <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>ชื่อภาษาอังกฤษ</div>
-          <div style={{ fontSize: 14, fontWeight: 500, color: '#111827', marginBottom: 10 }}>{seoPreview.name}</div>
-          <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>URL</div>
-          <div style={{ fontSize: 13, color: '#374151', fontFamily: 'monospace', marginBottom: 10 }}>/product/{seoPreview.slug}</div>
-          <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 2 }}>Meta description</div>
-          <div style={{ fontSize: 13, color: '#374151', marginBottom: 16, lineHeight: 1.5 }}>{seoPreview.short}</div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button
-              onClick={handlePublish}
-              disabled={step === 'publishing'}
-              style={{ background: '#1D4ED8', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: step === 'publishing' ? 'not-allowed' : 'pointer' }}
-            >
-              {step === 'publishing' ? 'กำลัง publish...' : '✓ Publish เลย'}
-            </button>
-            <a
-              href={`/admin/products/${seoPreview.id}`}
-              style={{ padding: '8px 16px', borderRadius: 6, fontSize: 13, border: '1px solid #93C5FD', color: '#1D4ED8', textDecoration: 'none', fontWeight: 500 }}
-            >
-              ไปแก้ไขก่อน
-            </a>
-          </div>
+        <div style={{ background: '#FFF0F0', border: '1px solid #FCA5A5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#DC2626', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <IcoWarning size={14} /> {error}
         </div>
       )}
 
       {/* Success */}
-      {step === 'done' && (
+      {step === 'done' && savedId && (
         <div style={{ background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: 8, padding: '16px 20px', marginBottom: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16A34A', fontWeight: 600, marginBottom: 6 }}>
-            <IcoCheck size={16} /> ลงสินค้าเสร็จแล้ว พร้อม SEO ครบ
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#16A34A', fontWeight: 600, marginBottom: 10 }}>
+            <IcoCheck size={16} /> บันทึก draft เรียบร้อย
           </div>
-          <a
-            href={`/product/${resultSlug}`}
-            target="_blank"
-            rel="noreferrer"
-            style={{ fontSize: 13, color: '#16A34A', textDecoration: 'underline' }}
-          >
-            /product/{resultSlug}
-          </a>
+          <p style={{ fontSize: 13, color: '#374151', marginBottom: 12 }}>
+            ไปที่หน้า Products → แท็บ Unpublished → กด Publish เพื่อ generate SEO และเผยแพร่
+          </p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <a
+              href="/admin/products"
+              style={{ background: '#16A34A', color: '#fff', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
+            >
+              ไปหน้า Products
+            </a>
+            <button
+              onClick={handleAddAnother}
+              style={{ padding: '8px 18px', borderRadius: 6, fontSize: 13, border: '1px solid #86EFAC', color: '#16A34A', background: 'transparent', cursor: 'pointer', fontWeight: 500 }}
+            >
+              เพิ่มสินค้าอีก
+            </button>
+          </div>
         </div>
       )}
 
@@ -218,130 +133,130 @@ export default function ImportPage() {
           <IcoClock size={14} />
           {step === 'uploading' && 'กำลังอัพโหลดรูป...'}
           {step === 'saving' && 'กำลังบันทึกสินค้า...'}
-          {step === 'seo' && 'กำลัง generate SEO (อังกฤษ + จีน)... รอสักครู่'}
-          {step === 'publishing' && 'กำลัง publish...'}
         </div>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {step !== 'done' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-        {/* Image upload */}
-        <div>
-          <div style={labelStyle}>รูปภาพ</div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            style={{ display: 'none' }}
-            onChange={(e) => e.target.files && handleImageFiles(e.target.files)}
-          />
-          {images.length > 0 && (
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-              {images.map((img, i) => (
-                <div key={i} style={{ position: 'relative' }}>
-                  <img src={img} alt="" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8, border: '1px solid #E5E7EB' }} />
-                  <button
-                    onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
-                    style={{ position: 'absolute', top: -6, right: -6, width: 22, height: 22, borderRadius: '50%', background: '#EF4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12 }}
-                  >×</button>
-                </div>
+          {/* Image upload */}
+          <div>
+            <div style={labelStyle}>รูปภาพ</div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display: 'none' }}
+              onChange={(e) => e.target.files && handleImageFiles(e.target.files)}
+            />
+            {images.length > 0 && (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                {images.map((img, i) => (
+                  <div key={i} style={{ position: 'relative' }}>
+                    <img src={img} alt="" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8, border: '1px solid #E5E7EB' }} />
+                    <button
+                      onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                      style={{ position: 'absolute', top: -6, right: -6, width: 22, height: 22, borderRadius: '50%', background: '#EF4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 12 }}
+                    >×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={busy}
+              style={{
+                width: '100%', padding: '24px 16px', border: '2px dashed #D1D5DB',
+                borderRadius: 10, background: '#F9FAFB', cursor: busy ? 'not-allowed' : 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+              }}
+            >
+              <span style={{ color: '#6B7280', display: 'flex' }}>
+                {step === 'uploading' ? <IcoClock size={36} /> : <IcoCamera size={36} />}
+              </span>
+              <span style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>
+                {step === 'uploading' ? 'กำลังอัพโหลด...' : 'เลือกรูปจากโทรศัพท์'}
+              </span>
+              <span style={{ fontSize: 12, color: '#9CA3AF' }}>เลือกได้หลายรูปพร้อมกัน</span>
+            </button>
+          </div>
+
+          {/* Thai name */}
+          <div>
+            <div style={labelStyle}>ชื่อสินค้า (ภาษาไทย) *</div>
+            <input
+              className="input"
+              style={{ fontSize: 15 }}
+              placeholder="เช่น เหรียญหลวงปู่ทวด วัดช้างให้ ปี 2511 เนื้อทองแดง"
+              value={nameTh}
+              onChange={(e) => setNameTh(e.target.value)}
+              disabled={busy}
+            />
+          </div>
+
+          {/* Category */}
+          <div>
+            <div style={labelStyle}>หมวดหมู่ *</div>
+            <select
+              className="input"
+              style={{ fontSize: 15 }}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              disabled={busy}
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c} — {categoryNames[c].en}</option>
               ))}
+            </select>
+          </div>
+
+          {/* Price */}
+          <div>
+            <div style={labelStyle}>ราคา (บาท) *</div>
+            <input
+              className="input"
+              type="number"
+              style={{ fontSize: 15 }}
+              placeholder="เช่น 1500"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              disabled={busy}
+            />
+          </div>
+
+          {/* Note */}
+          <div>
+            <div style={labelStyle}>รายละเอียด / หมายเหตุ (ภาษาไทย)</div>
+            <textarea
+              className="input"
+              rows={4}
+              style={{ resize: 'vertical', fontSize: 13 }}
+              placeholder="เช่น สร้างปี พ.ศ. 2511 เนื้อทองแดง พิมพ์ใหญ่ วัดช้างให้ จ.ปัตตานี หายากมาก มีตำหนิตามรูป..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              disabled={busy}
+            />
+            <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 4 }}>
+              ยิ่งละเอียดมาก SEO ยิ่งดี — ใส่ปีสร้าง เนื้อหา วัด พุทธคุณ
             </div>
-          )}
+          </div>
+
           <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={busy}
-            style={{
-              width: '100%', padding: '24px 16px', border: '2px dashed #D1D5DB',
-              borderRadius: 10, background: '#F9FAFB', cursor: busy ? 'not-allowed' : 'pointer',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-            }}
+            className="btn-gold"
+            onClick={handleSave}
+            disabled={busy || !nameTh || !price}
+            style={{ width: '100%', padding: '14px', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
           >
-            <span style={{ color: '#6B7280', display: 'flex' }}>
-              {step === 'uploading' ? <IcoClock size={36} /> : <IcoCamera size={36} />}
-            </span>
-            <span style={{ fontSize: 14, color: '#374151', fontWeight: 500 }}>
-              {step === 'uploading' ? 'กำลังอัพโหลด...' : 'เลือกรูปจากโทรศัพท์'}
-            </span>
-            <span style={{ fontSize: 12, color: '#9CA3AF' }}>เลือกได้หลายรูปพร้อมกัน</span>
+            {busy ? (
+              <><IcoClock size={15} /> {step === 'uploading' ? 'อัพโหลดรูป...' : 'บันทึก...'}</>
+            ) : (
+              <><IcoCheck size={15} /> บันทึก draft</>
+            )}
           </button>
         </div>
-
-        {/* Thai name */}
-        <div>
-          <div style={labelStyle}>ชื่อสินค้า (ภาษาไทย) *</div>
-          <input
-            className="input"
-            style={{ fontSize: 15 }}
-            placeholder="เช่น เหรียญหลวงปู่ทวด วัดช้างให้ ปี 2511 เนื้อทองแดง"
-            value={nameTh}
-            onChange={(e) => setNameTh(e.target.value)}
-            disabled={busy}
-          />
-        </div>
-
-        {/* Category */}
-        <div>
-          <div style={labelStyle}>หมวดหมู่ *</div>
-          <select
-            className="input"
-            style={{ fontSize: 15 }}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            disabled={busy}
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c} — {categoryNames[c].en}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Price */}
-        <div>
-          <div style={labelStyle}>ราคา (บาท) *</div>
-          <input
-            className="input"
-            type="number"
-            style={{ fontSize: 15 }}
-            placeholder="เช่น 1500"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            disabled={busy}
-          />
-        </div>
-
-        {/* Note */}
-        <div>
-          <div style={labelStyle}>รายละเอียด / หมายเหตุ (ภาษาไทย)</div>
-          <textarea
-            className="input"
-            rows={4}
-            style={{ resize: 'vertical', fontSize: 13 }}
-            placeholder="เช่น สร้างปี พ.ศ. 2511 เนื้อทองแดง พิมพ์ใหญ่ วัดช้างให้ จ.ปัตตานี หายากมาก มีตำหนิตามรูป..."
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            disabled={busy}
-          />
-          <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 4 }}>
-            ยิ่งละเอียดมาก SEO ยิ่งดี — ใส่ปีสร้าง เนื้อหา วัด พุทธคุณ
-          </div>
-        </div>
-
-        <button
-          className="btn-gold"
-          onClick={handleSave}
-          disabled={busy || !nameTh || !price}
-          style={{ width: '100%', padding: '14px', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
-        >
-          {busy ? (
-            <><IcoClock size={15} /> {step === 'uploading' ? 'อัพโหลดรูป...' : step === 'saving' ? 'บันทึก...' : 'Generate SEO...'}</>
-          ) : (
-            <><IcoCheck size={15} /> ลงสินค้าพร้อม SEO อัตโนมัติ</>
-          )}
-        </button>
-      </div>
+      )}
     </div>
   );
 }
