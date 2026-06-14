@@ -116,6 +116,36 @@ const CAT_META: Record<string, {
     desc_th: 'พระสังกัจจายน์แท้ พระพุทธรูปอ้วนกลมที่เป็นที่นิยมในหมู่ผู้บูชา มีพุทธคุณด้านมหาลาภ ความร่ำรวย และความอุดมสมบูรณ์ นิยมในหมู่ชาวไทยและชาวจีน',
     keywords: ['Phra Sangkachai amulet', 'พระสังกัจจายน์แท้', 'fat monk amulet Thailand', 'wealth amulet', '圣迦旃延佛牌', 'abundance amulet Thai'],
   },
+  'phra-khun-phaen': {
+    th: 'พระขุนแผน', en: 'Phra Khun Phaen', zh: '坤平佛牌',
+    desc_en: 'Authentic Phra Khun Phaen amulets — one of Thailand\'s most powerful amulets for metta (loving-kindness), charm, and attraction. Highly sought by collectors and devotees worldwide.',
+    desc_th: 'พระขุนแผนแท้ พระเครื่องที่ขึ้นชื่อด้านเมตตามหานิยม เสน่ห์ และมหาเสน่ห์ เป็นที่นิยมในหมู่นักสะสมและผู้บูชาทั่วโลก',
+    keywords: ['Phra Khun Phaen amulet', 'พระขุนแผนแท้', 'Khun Phaen charm', 'metta amulet Thailand', '坤平佛牌', 'love amulet Thai'],
+  },
+  'rian-kejii': {
+    th: 'เหรียญเกจิ', en: 'Monk Coin Amulets', zh: '高僧圣币',
+    desc_en: 'Authentic Thai monk coin amulets (Rian Kaji) — rare coins featuring revered masters from temples across Thailand. Among the most collectible Thai sacred objects.',
+    desc_th: 'เหรียญพระเกจิอาจารย์ดังแท้จากวัดดังทั่วประเทศ นิยมสะสม มีพุทธคุณครบทุกด้าน คัดสรรโดยผู้เชี่ยวชาญ',
+    keywords: ['Thai monk coin amulet', 'เหรียญเกจิแท้', 'Rian Kaji', 'Buddhist coin', '高僧圣币', 'monk coin Thailand', 'rare amulet coin'],
+  },
+  'rian-phra-phut': {
+    th: 'เหรียญพระพุทธ', en: 'Buddha Coin Amulets', zh: '佛陀圣币',
+    desc_en: 'Authentic Thai Buddha coin amulets — sacred coins featuring Buddha images from revered temples across Thailand. Blessed for protection, merit, and good fortune.',
+    desc_th: 'เหรียญพระพุทธแท้จากวัดดังทั่วประเทศ ผ่านพิธีปลุกเสก มีพุทธคุณด้านคุ้มครอง บุญบารมี และเสริมโชคลาภ',
+    keywords: ['Buddha coin amulet Thailand', 'เหรียญพระพุทธแท้', 'Buddhist coin', '佛陀圣币', 'sacred coin Thai', 'Buddha amulet coin'],
+  },
+  'rup-lor-phra-phut': {
+    th: 'รูปหล่อพระพุทธ', en: 'Buddha Cast Images', zh: '铸造佛陀像',
+    desc_en: 'Authentic cast metal Buddha images — handcrafted bronze and brass Buddha figurines from revered Thai temples. Each piece is blessed and comes with certificate of authenticity.',
+    desc_th: 'รูปหล่อพระพุทธแท้จากวัดดัง หล่อด้วยโลหะมวลสาร ผ่านพิธีปลุกเสก มีพุทธคุณครบทุกด้าน',
+    keywords: ['Buddha cast image Thailand', 'รูปหล่อพระพุทธแท้', 'bronze Buddha figurine', '铸造佛陀像', 'Thai Buddha statue amulet'],
+  },
+  'rup-lor-kejii': {
+    th: 'รูปหล่อเกจิ', en: 'Monk Cast Images', zh: '铸造高僧像',
+    desc_en: 'Authentic cast metal monk images — handcrafted bronze figurines of Thailand\'s most revered masters. Each piece is blessed by monks and certified genuine.',
+    desc_th: 'รูปหล่อพระเกจิอาจารย์ดังแท้ หล่อด้วยโลหะมวลสาร ผ่านพิธีปลุกเสก มีพุทธคุณครบทุกด้าน',
+    keywords: ['monk cast image Thailand', 'รูปหล่อเกจิแท้', 'bronze monk figurine', '铸造高僧像', 'Thai monk statue amulet'],
+  },
 };
 
 // slug → Thai category name used in DB
@@ -137,6 +167,11 @@ const SLUG_TO_CAT: Record<string, string> = {
   'luang-pu-ngern': 'หลวงพ่อเงิน',
   'phrakejiaachan':    'พระเกจิอาจารย์',
   'phra-sangkachai':   'พระสังกัจจายน์',
+  'phra-khun-phaen':   'พระขุนแผน',
+  'rian-kejii':        'เหรียญเกจิ',
+  'rian-phra-phut':    'เหรียญพระพุทธ',
+  'rup-lor-phra-phut': 'รูปหล่อพระพุทธ',
+  'rup-lor-kejii':     'รูปหล่อเกจิ',
 };
 
 export async function generateStaticParams() {
