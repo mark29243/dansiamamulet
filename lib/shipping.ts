@@ -184,17 +184,6 @@ export function getShippingOptions(country: string, qty: number): ShippingOption
   const [eZone, sZone] = zones;
   const options: ShippingOption[] = [];
 
-  if (sZone !== null) {
-    options.push({
-      carrier: 'spa',
-      label: 'Small Packet Air',
-      sublabel: 'Airmail — no tracking',
-      estimatedDays: '14–30',
-      cost: spaCost(sZone, weight),
-      tracked: false,
-    });
-  }
-
   if (eZone !== null) {
     options.push({
       carrier: 'epacket',
