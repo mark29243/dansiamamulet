@@ -19,10 +19,12 @@ export async function GET(req: Request) {
     .eq('published', true);
 
   if (q) {
-    // ilike search across name + category + description
-    query = query.or(
-      `name.ilike.%${q}%,name_th.ilike.%${q}%,name_zh.ilike.%${q}%,category.ilike.%${q}%,description.ilike.%${q}%,description_th.ilike.%${q}%,description_zh.ilike.%${q}%,short.ilike.%${q}%`
-    );
+    const words = q.split(/\s+/).filter(Boolean);
+    for (const word of words) {
+      query = query.or(
+        `name.ilike.%${word}%,name_th.ilike.%${word}%,name_zh.ilike.%${word}%,category.ilike.%${word}%,description.ilike.%${word}%,description_th.ilike.%${word}%,description_zh.ilike.%${word}%,short.ilike.%${word}%`
+      );
+    }
   }
 
   if (category) query = query.eq('category', category);
