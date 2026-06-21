@@ -20,11 +20,11 @@ export async function GET(req: Request) {
 
   if (q) {
     const words = q.split(/\s+/).filter(Boolean);
-    for (const word of words) {
-      query = query.or(
-        `name.ilike.%${word}%,name_th.ilike.%${word}%,name_zh.ilike.%${word}%,category.ilike.%${word}%,description.ilike.%${word}%,description_th.ilike.%${word}%,description_zh.ilike.%${word}%,short.ilike.%${word}%`
-      );
-    }
+    // Include full phrase + individual words so long names and partial words both find results
+    const terms = words.length > 1 ? [q, ...words] : words;
+    const fields = ['name', 'name_th', 'name_zh', 'description_th', 'description', 'description_zh', 'short', 'category'];
+    const clauses = terms.flatMap((t) => fields.map((f) => `${f}.ilike.%${t}%`));
+    query = query.or(clauses.join(','));
   }
 
   if (category) query = query.eq('category', category);
