@@ -21,7 +21,7 @@ export async function GET(req: Request) {
   if (q) {
     // ilike search across name + category + description
     query = query.or(
-      `name.ilike.%${q}%,name_th.ilike.%${q}%,category.ilike.%${q}%,description.ilike.%${q}%,description_th.ilike.%${q}%,short.ilike.%${q}%`
+      `name.ilike.%${q}%,name_th.ilike.%${q}%,name_zh.ilike.%${q}%,category.ilike.%${q}%,description.ilike.%${q}%,description_th.ilike.%${q}%,description_zh.ilike.%${q}%,short.ilike.%${q}%`
     );
   }
 
