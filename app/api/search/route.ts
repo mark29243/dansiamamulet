@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     const words = q.split(/\s+/).filter(Boolean);
     // Include full phrase + individual words so long names and partial words both find results
     const terms = words.length > 1 ? [q, ...words] : words;
-    const fields = ['name', 'name_th', 'name_zh', 'description_th', 'description', 'description_zh', 'short', 'category'];
+    const fields = ['name', 'name_th', 'name_zh', 'description_th', 'description', 'description_zh', 'short'];
     const clauses = terms.flatMap((t) => fields.map((f) => `${f}.ilike.%${t}%`));
     query = query.or(clauses.join(','));
   }
