@@ -1,8 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 export function toSlug(text: string | null | undefined): string {
   if (!text || typeof text !== 'string') return '';
   return text
@@ -44,6 +42,7 @@ function validateParsed(p: RawParsed): string[] {
 }
 
 async function callClaude(nameTh: string, descTh: string, category: string, attempt: number): Promise<RawParsed> {
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const retryNote = attempt > 1
     ? `\n\nPREVIOUS ATTEMPT FAILED. Fix these issues:\n- "name", "short", "description" must contain ZERO Thai characters\n- "description_zh" must contain Chinese characters\n- "description" must be at least 200 characters`
     : '';

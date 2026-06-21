@@ -5,48 +5,48 @@ export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const q = (searchParams.get('q')?.trim() ?? '').slice(0, 100).replace(/[%_\\]/g, '\\$&');
-  const limit = Math.max(1, Math.min(parseInt(searchParams.get('limit') ?? '24') || 24, 60));
+  const q = (searchParams.get('q')?.trim() ?? '').slice(0, 200);
+  const limit = Math.max(1, Math.min(parseInt(searchParams.get('limit') ?? '48') || 48, 100));
   const category = searchParams.get('category') ?? '';
   const instock = searchParams.get('instock') === '1';
   const sort = searchParams.get('sort') ?? 'default';
 
+  if (!q) {
+    return NextResponse.json({ results: [], q, total: 0 });
+  }
+
   const supabase = createClient();
 
-  let query = supabase
-    .from('products')
-    .select('id, slug, name, category, price, sale_price, stock, images, short')
-    .eq('published', true);
-
-  if (q) {
-    const words = q.split(/\s+/).filter(Boolean);
-    // Include full phrase + individual words so long names and partial words both find results
-    const terms = words.length > 1 ? [q, ...words] : words;
-    const fields = ['name', 'name_th', 'name_zh', 'description_th', 'description', 'description_zh', 'short'];
-    const clauses = terms.flatMap((t) => fields.map((f) => `${f}.ilike.%${t}%`));
-    query = query.or(clauses.join(','));
-  }
-
-  if (category) query = query.eq('category', category);
-  if (instock)  query = query.gt('stock', 0);
-
-  switch (sort) {
-    case 'price-asc':  query = query.order('price', { ascending: true });  break;
-    case 'price-desc': query = query.order('price', { ascending: false }); break;
-    case 'name':       query = query.order('name',  { ascending: true });  break;
-    default:
-      // Featured + in-stock first
-      query = query.order('stock', { ascending: false }).order('id', { ascending: true });
-  }
-
-  query = query.limit(limit);
-
-  const { data, error } = await query;
+  // Try strict (AND) search first
+  let { data, error } = await supabase.rpc('search_products', {
+    search_query: q,
+    result_limit: limit,
+  });
 
   if (error) {
-    console.error('[search] Supabase error:', error);
+    console.error('[search] search_products error:', error);
     return NextResponse.json({ error: 'Search failed' }, { status: 500 });
   }
 
-  return NextResponse.json({ results: data ?? [], q, total: (data ?? []).length });
+  // Fallback to loose (OR) search if no results
+  if (!data || data.length === 0) {
+    const fallback = await supabase.rpc('search_products_loose', {
+      search_query: q,
+      result_limit: limit,
+    });
+    if (!fallback.error && fallback.data) data = fallback.data;
+  }
+
+  let results = (data ?? []) as any[];
+
+  // Apply additional filters in JS (RPC already filtered published=true)
+  if (category) results = results.filter((p) => p.category?.includes(category));
+  if (instock) results = results.filter((p) => p.stock > 0);
+
+  // Override sort if requested (default keeps RPC's relevance order)
+  if (sort === 'price-asc') results.sort((a, b) => (a.sale_price ?? a.price) - (b.sale_price ?? b.price));
+  else if (sort === 'price-desc') results.sort((a, b) => (b.sale_price ?? b.price) - (a.sale_price ?? a.price));
+  else if (sort === 'name') results.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
+
+  return NextResponse.json({ results, q, total: results.length });
 }

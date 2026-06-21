@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import QuickView from '@/components/QuickView';
@@ -60,23 +60,39 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
 
   const [selectedCats, setSelectedCats] = useState<string[]>(defaultCategory ? [defaultCategory] : []);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, Infinity]);
+  const [searchResults, setSearchResults] = useState<Product[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const maxPrice = useMemo(() => Math.max(...products.map((p) => p.sale_price ?? p.price)) / 100, [products]);
 
-  const filtered = useMemo(() => {
-    let r = [...products];
-    const q = search.toLowerCase().trim();
-    if (q) {
-      const words = q.split(/\s+/).filter(Boolean);
-      r = r.filter((p) => {
-        const haystack = [
-          p.name, p.name_th, (p as any).name_zh,
-          p.description, (p as any).description_th, (p as any).description_zh,
-          p.short,
-        ].map((s) => (s ?? '').toLowerCase()).join(' ');
-        return words.some((w) => haystack.includes(w));
-      });
+  // Fetch search results from API when search term changes
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    if (!search.trim()) {
+      setSearchResults(null);
+      setSearchLoading(false);
+      return;
     }
+    setSearchLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(search.trim())}&limit=100`);
+        const data = await res.json();
+        setSearchResults((data.results ?? []) as Product[]);
+      } catch {
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 400);
+    return () => clearTimeout(debounceRef.current);
+  }, [search]);
+
+  const filtered = useMemo(() => {
+    // Use API search results when searching, otherwise full product list
+    let r = search.trim() ? (searchResults ?? []) : [...products];
+
     if (filter === 'instock') r = r.filter((p) => p.stock > 0);
     if (selectedCats.length > 0) r = r.filter((p) => {
       const cats = p.category.split(',').map((c) => c.trim());
@@ -91,7 +107,7 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
     else if (sort === 'name') r.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === 'newest') r.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     return r;
-  }, [products, search, filter, selectedCats, priceRange, sort]);
+  }, [products, searchResults, search, filter, selectedCats, priceRange, sort]);
 
   useEffect(() => { setPage(1); }, [search, filter, selectedCats, priceRange, sort]);
 
@@ -161,7 +177,9 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
                 style={{ paddingLeft: 38, paddingRight: search ? 38 : 14 }}
                 aria-label={t.shop.search}
               />
-              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-faint)', display: 'flex' }}><IcoSearch size={16} /></span>
+              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-faint)', display: 'flex' }}>
+                {searchLoading ? <span className="spinner" style={{ width: 16, height: 16 }} /> : <IcoSearch size={16} />}
+              </span>
               {search && (
                 <button
                   onClick={() => setSearch('')}

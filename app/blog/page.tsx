@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import './blog.css';
 import BlogGrid from './BlogGrid';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Blog · ความรู้พระเครื่อง · 佛牌知识',

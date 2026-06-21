@@ -14,14 +14,28 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   const q = searchParams.q?.trim() || '';
   const filter = searchParams.filter || 'published';
 
-  let query = admin.from('products').select('*').order('id', { ascending: false });
-  if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
-  if (filter === 'oos') query = query.eq('stock', 0);
-  else if (filter === 'published') query = query.eq('published', true);
-  else if (filter === 'unpublished') query = query.eq('published', false);
+  let list: any[] = [];
 
-  const { data: products } = await query;
-  const list = products ?? [];
+  if (q) {
+    // Use RPC for full-text search across all products (including unpublished)
+    const { data: rpcData, error: rpcError } = await admin.rpc('search_products_admin', {
+      search_query: q,
+      result_limit: 200,
+    });
+    if (rpcError) console.error('[admin search]', rpcError);
+    list = (rpcData ?? []) as any[];
+    // Apply filter tab on top of search results
+    if (filter === 'oos') list = list.filter((p: any) => p.stock === 0);
+    else if (filter === 'published') list = list.filter((p: any) => p.published === true);
+    else if (filter === 'unpublished') list = list.filter((p: any) => p.published === false);
+  } else {
+    let query = admin.from('products').select('*').order('id', { ascending: false });
+    if (filter === 'oos') query = query.eq('stock', 0);
+    else if (filter === 'published') query = query.eq('published', true);
+    else if (filter === 'unpublished') query = query.eq('published', false);
+    const { data } = await query;
+    list = data ?? [];
+  }
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
