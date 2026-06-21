@@ -67,11 +67,15 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
     let r = [...products];
     const q = search.toLowerCase().trim();
     if (q) {
-      r = r.filter((p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        (p.description ?? '').toLowerCase().includes(q)
-      );
+      const words = q.split(/\s+/).filter(Boolean);
+      r = r.filter((p) => {
+        const haystack = [
+          p.name, p.name_th, (p as any).name_zh,
+          p.description, (p as any).description_th, (p as any).description_zh,
+          p.short,
+        ].map((s) => (s ?? '').toLowerCase()).join(' ');
+        return words.some((w) => haystack.includes(w));
+      });
     }
     if (filter === 'instock') r = r.filter((p) => p.stock > 0);
     if (selectedCats.length > 0) r = r.filter((p) => {
