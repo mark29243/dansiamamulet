@@ -86,7 +86,7 @@
 
   .dashboard {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     margin-bottom: 16px;
   }
@@ -94,14 +94,14 @@
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 10px 8px;
+    padding: 8px 4px;
     text-align: center;
     cursor: pointer;
   }
   .dash-card.clickable:active { background: var(--accent-light); }
-  .dash-number { font-size: 18px; font-weight: 600; line-height: 1.2; }
+  .dash-number { font-size: 16px; font-weight: 600; line-height: 1.2; }
   .dash-number.warn { color: var(--danger); }
-  .dash-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; line-height: 1.3; }
+  .dash-label { font-size: 10px; color: var(--text-secondary); margin-top: 2px; line-height: 1.25; }
   .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .search-row input { flex: 1; }
   .search-row button { width: 44px; padding: 0; flex-shrink: 0; }
@@ -291,6 +291,7 @@
       <button class="filter-chip" data-platform="shopee2">SHOPEE 2</button>
       <button class="filter-chip" data-platform="facebook">FACEBOOK</button>
       <button class="filter-chip" data-platform="tiktok">TIKTOK</button>
+      <button class="filter-chip" data-platform="instagram">INSTAGRAM</button>
     </div>
 
     <div class="filter-row" id="location-filter-row">
@@ -346,7 +347,8 @@
     { key: 'shopee', label: 'SHOPEE', field: 'name_shopee' },
     { key: 'shopee2', label: 'SHOPEE 2', field: 'name_shopee2' },
     { key: 'facebook', label: 'FACEBOOK', field: 'name_facebook' },
-    { key: 'tiktok', label: 'TIKTOK', field: 'name_tiktok' }
+    { key: 'tiktok', label: 'TIKTOK', field: 'name_tiktok' },
+    { key: 'instagram', label: 'INSTAGRAM', field: 'name_instagram' }
   ];
 
   var activeFilters = [];
@@ -395,10 +397,12 @@
         { number: s.total_products || 0, label: 'สินค้าทั้งหมด', action: null },
         { number: s.in_stock || 0, label: 'มีสต็อก', action: 'in_stock' },
         { number: s.sold_out || 0, label: 'ขายแล้ว/หมด', action: 'sold_out' },
-        { number: s.missing_location || 0, label: 'ยังไม่มีที่เก็บ', action: 'missing_location', warn: true },
-        { number: s.has_shopee || 0, label: 'มีชื่อ Shopee', action: null },
-        { number: s.has_lazada || 0, label: 'มีชื่อ Lazada', action: null }
+        { number: s.missing_location || 0, label: 'ยังไม่มีที่เก็บ', action: 'missing_location', warn: true }
       ];
+      PLATFORMS.forEach(function(p) {
+        var summaryKey = 'has_' + p.key;
+        cards.push({ number: s[summaryKey] || 0, label: p.label, action: 'platform:' + p.key });
+      });
       dashboardEl.innerHTML = '';
       cards.forEach(function(c) {
         var card = document.createElement('div');
@@ -429,6 +433,11 @@
       missingLocationChip.classList.add('active');
     } else if (action === 'in_stock' || action === 'sold_out') {
       stockStatusFilter = action;
+    } else if (action && action.indexOf('platform:') === 0) {
+      var platformKey = action.split(':')[1];
+      activeFilters.push(platformKey);
+      var chip = filterRow.querySelector('[data-platform="' + platformKey + '"]');
+      if (chip) chip.classList.add('active');
     }
     currentPage = 1;
     loadProducts();
@@ -449,7 +458,8 @@
         filter_facebook: activeFilters.indexOf('facebook') !== -1,
         filter_tiktok: activeFilters.indexOf('tiktok') !== -1,
         filter_missing_location: missingLocationOnly,
-        filter_stock_status: stockStatusFilter
+        filter_stock_status: stockStatusFilter,
+        filter_instagram: activeFilters.indexOf('instagram') !== -1
       };
       var data = await rpcCall('get_products_paginated', params);
       totalCount = (data && data.length > 0) ? parseInt(data[0].total_count) : 0;
