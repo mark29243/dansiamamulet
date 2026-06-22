@@ -156,6 +156,10 @@
   .location { font-size: 12px; color: var(--text-secondary); }
   .card-actions { display: flex; gap: 8px; }
   .card-actions button { flex: 1; font-size: 13px; padding: 8px 10px; }
+  .confirm-row { display: flex; gap: 8px; }
+  .confirm-row button { flex: 1; font-size: 13px; padding: 8px 10px; }
+  .btn-danger-confirm { background: var(--danger) !important; }
+  .restore-btn { background: var(--card-bg); color: var(--accent); border: 1px solid var(--accent); }
 
   /* Edit overlay */
   #edit-overlay {
@@ -387,20 +391,6 @@
     return res.json();
   }
 
-  async function patchProduct(id, fields) {
-    var res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + id, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(fields)
-    });
-    if (!res.ok) throw new Error('patch failed');
-  }
-
   async function fetchLatestProducts() {
     var res = await fetch(SUPABASE_URL + '/rest/v1/products?select=id,name_th,stock,images,storage_location,name_lazada,name_shopee,name_shopee2,name_facebook,name_tiktok&order=id.desc&limit=20', {
       headers: {
@@ -485,22 +475,27 @@
     btn.disabled = true;
     btn.textContent = 'กำลังบันทึก...';
     try {
-      var fields = { storage_location: editLocation.value.trim() || null };
+      var params = { product_id_input: currentEditId, location_input: editLocation.value.trim() || null };
       PLATFORMS.forEach(function(p) {
+        var paramKey = p.key + '_input';
         if (currentEditPlatforms[p.key]) {
           var input = platformFieldsContainer.querySelector('[data-field="' + p.field + '"]');
-          fields[p.field] = (input && input.value.trim()) || null;
+          params[paramKey] = (input && input.value.trim()) || null;
         } else {
-          fields[p.field] = null;
+          params[paramKey] = null;
         }
       });
-      await patchProduct(currentEditId, fields);
-      editStatus.style.color = 'var(--success)';
-      editStatus.textContent = 'บันทึกแล้ว';
-      btn.textContent = 'บันทึก';
-      btn.disabled = false;
-      doSearch();
-      setTimeout(closeEditPanel, 700);
+      var success = await rpcCall('quick_update_platform_info', params);
+      if (success) {
+        editStatus.style.color = 'var(--success)';
+        editStatus.textContent = 'บันทึกแล้ว';
+        btn.textContent = 'บันทึก';
+        btn.disabled = false;
+        doSearch();
+        setTimeout(closeEditPanel, 700);
+      } else {
+        throw new Error('update returned false');
+      }
     } catch (e) {
       editStatus.style.color = 'var(--danger)';
       editStatus.textContent = 'บันทึกไม่สำเร็จ ลองใหม่';
@@ -548,7 +543,8 @@
         ? '<span class="location">📍 ' + escapeHtml(item.storage_location) + '</span>'
         : '';
 
-      var soldBtn = soldOut ? '' : '<button class="mark-sold-btn" data-id="' + item.id + '">ขายแล้ว</button>';
+      var soldBtn = soldOut ? '' : '<button class="mark-sold-btn" data-id="' + item.id + '" data-state="initial">ขายแล้ว</button>';
+      var restoreBtn = soldOut ? '<button class="restore-btn" data-id="' + item.id + '">↺ คืนสต็อก</button>' : '';
 
       var firstImage = (item.images && item.images.length > 0) ? item.images[0] : null;
       var thumbHtml = firstImage
@@ -577,6 +573,7 @@
         '</div>' +
         '<div class="card-actions">' +
           soldBtn +
+          restoreBtn +
           '<button class="secondary edit-btn" data-id="' + item.id + '">แก้ชื่อ/ที่เก็บ</button>' +
         '</div>';
       resultsArea.appendChild(card);
@@ -584,18 +581,53 @@
 
     var soldBtns = resultsArea.querySelectorAll('.mark-sold-btn');
     for (var i = 0; i < soldBtns.length; i++) {
-      soldBtns[i].addEventListener('click', async function() {
+      soldBtns[i].addEventListener('click', function() {
+        var btn = this;
+        var state = btn.getAttribute('data-state');
+        if (state === 'initial') {
+          // ขั้นที่ 1: เปลี่ยนเป็นแถวยืนยัน/ยกเลิก
+          var id = btn.getAttribute('data-id');
+          var wrapper = document.createElement('div');
+          wrapper.className = 'confirm-row';
+          wrapper.innerHTML =
+            '<button class="btn-danger-confirm confirm-yes" data-id="' + id + '">ยืนยันขาย</button>' +
+            '<button class="secondary confirm-no">ยกเลิก</button>';
+          btn.replaceWith(wrapper);
+
+          wrapper.querySelector('.confirm-yes').addEventListener('click', async function() {
+            var confirmBtn = this;
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'กำลังบันทึก...';
+            try {
+              var result = await rpcCall('quick_mark_sold', { product_id_input: parseInt(id) });
+              if (result === true) {
+                doSearch();
+              } else {
+                confirmBtn.textContent = 'มีคนขายไปก่อนแล้ว';
+              }
+            } catch (e) {
+              confirmBtn.textContent = 'ผิดพลาด ลองใหม่';
+              confirmBtn.disabled = false;
+            }
+          });
+
+          wrapper.querySelector('.confirm-no').addEventListener('click', function() {
+            doSearch();
+          });
+        }
+      });
+    }
+
+    var restoreBtns = resultsArea.querySelectorAll('.restore-btn');
+    for (var k = 0; k < restoreBtns.length; k++) {
+      restoreBtns[k].addEventListener('click', async function() {
         var id = this.getAttribute('data-id');
         var btn = this;
         btn.disabled = true;
-        btn.textContent = 'กำลังบันทึก...';
+        btn.textContent = 'กำลังคืนสต็อก...';
         try {
-          var result = await rpcCall('quick_mark_sold', { product_id_input: parseInt(id) });
-          if (result === true) {
-            doSearch();
-          } else {
-            btn.textContent = 'มีคนขายไปก่อนแล้ว';
-          }
+          await rpcCall('quick_restore_stock', { product_id_input: parseInt(id), new_stock: 1 });
+          doSearch();
         } catch (e) {
           btn.textContent = 'ผิดพลาด ลองใหม่';
           btn.disabled = false;
