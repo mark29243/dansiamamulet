@@ -105,6 +105,24 @@
     border-color: var(--accent);
   }
 
+  .pagination-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding-bottom: 8px;
+  }
+  .pagination-row button {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  .pagination-row button:disabled { opacity: 0.35; }
+  .pagination-info { font-size: 13px; color: var(--text-secondary); white-space: nowrap; }
+
   .hint { font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 2rem; }
   .section-label { font-size: 12px; color: var(--text-secondary); margin: 4px 0 8px; }
 
@@ -254,7 +272,12 @@
       <button class="filter-chip" data-platform="tiktok">TIKTOK</button>
     </div>
 
+    <div class="filter-row" id="location-filter-row">
+      <button class="filter-chip" id="missing-location-chip">📍 ยังไม่มีที่เก็บ</button>
+    </div>
+
     <div id="results-area"></div>
+    <div id="pagination-row" class="pagination-row"></div>
   </div>
 </div>
 
@@ -306,6 +329,11 @@
   ];
 
   var activeFilters = [];
+  var missingLocationOnly = false;
+  var currentPage = 1;
+  var pageSize = 20;
+  var totalCount = 0;
+  var pendingSearchQuery = '';
 
   var pinScreen = document.getElementById('pin-screen');
   var mainScreen = document.getElementById('main-screen');
@@ -322,6 +350,8 @@
   var addPlatformToggle = document.getElementById('add-platform-toggle');
   var platformPicker = document.getElementById('platform-picker');
   var filterRow = document.getElementById('filter-row');
+  var missingLocationChip = document.getElementById('missing-location-chip');
+  var paginationRow = document.getElementById('pagination-row');
   var currentEditId = null;
   var currentItems = [];
   var currentEditPlatforms = {}; // key -> true ถ้าช่องนี้ถูกแสดงอยู่ในแผงแก้ไข
@@ -330,22 +360,60 @@
   function showMain() {
     pinScreen.style.display = 'none';
     mainScreen.style.display = 'block';
-    loadLatest();
+    loadProducts();
   }
 
-  async function loadLatest() {
-    resultsArea.innerHTML = '<p class="hint">กำลังโหลดสินค้าล่าสุด...</p>';
+  async function loadProducts() {
+    resultsArea.innerHTML = '<p class="hint">กำลังโหลดสินค้า...</p>';
+    paginationRow.innerHTML = '';
     try {
-      var data = await fetchLatestProducts();
-      var label = document.createElement('p');
-      label.className = 'section-label';
-      label.textContent = 'สินค้าล่าสุด (ID ใหม่สุดก่อน)';
+      var params = {
+        page_number: currentPage,
+        page_size: pageSize,
+        search_query: pendingSearchQuery || null,
+        filter_lazada: activeFilters.indexOf('lazada') !== -1,
+        filter_shopee: activeFilters.indexOf('shopee') !== -1,
+        filter_shopee2: activeFilters.indexOf('shopee2') !== -1,
+        filter_facebook: activeFilters.indexOf('facebook') !== -1,
+        filter_tiktok: activeFilters.indexOf('tiktok') !== -1,
+        filter_missing_location: missingLocationOnly
+      };
+      var data = await rpcCall('get_products_paginated', params);
+      totalCount = (data && data.length > 0) ? parseInt(data[0].total_count) : 0;
       resultsArea.innerHTML = '';
-      resultsArea.appendChild(label);
       renderResults(data, true);
+      renderPagination();
     } catch (e) {
       resultsArea.innerHTML = '<p class="hint" style="color: var(--danger);">โหลดไม่สำเร็จ ลองรีเฟรชหน้า</p>';
     }
+  }
+
+  function renderPagination() {
+    paginationRow.innerHTML = '';
+    var totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+    if (totalCount === 0) return;
+
+    var prevBtn = document.createElement('button');
+    prevBtn.textContent = '← ก่อนหน้า';
+    prevBtn.disabled = currentPage <= 1;
+    prevBtn.addEventListener('click', function() {
+      if (currentPage > 1) { currentPage--; loadProducts(); }
+    });
+
+    var info = document.createElement('span');
+    info.className = 'pagination-info';
+    info.textContent = 'หน้า ' + currentPage + ' / ' + totalPages + ' (' + totalCount + ' รายการ)';
+
+    var nextBtn = document.createElement('button');
+    nextBtn.textContent = 'ถัดไป →';
+    nextBtn.disabled = currentPage >= totalPages;
+    nextBtn.addEventListener('click', function() {
+      if (currentPage < totalPages) { currentPage++; loadProducts(); }
+    });
+
+    paginationRow.appendChild(prevBtn);
+    paginationRow.appendChild(info);
+    paginationRow.appendChild(nextBtn);
   }
 
   try {
@@ -388,17 +456,6 @@
       body: JSON.stringify(params)
     });
     if (!res.ok) throw new Error('request failed');
-    return res.json();
-  }
-
-  async function fetchLatestProducts() {
-    var res = await fetch(SUPABASE_URL + '/rest/v1/products?select=id,name_th,stock,images,storage_location,name_lazada,name_shopee,name_shopee2,name_facebook,name_tiktok&order=id.desc&limit=20', {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY
-      }
-    });
-    if (!res.ok) throw new Error('fetch failed');
     return res.json();
   }
 
@@ -491,7 +548,7 @@
         editStatus.textContent = 'บันทึกแล้ว';
         btn.textContent = 'บันทึก';
         btn.disabled = false;
-        doSearch();
+        loadProducts();
         setTimeout(closeEditPanel, 700);
       } else {
         throw new Error('update returned false');
@@ -509,30 +566,19 @@
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  function applyFilters(items) {
-    if (activeFilters.length === 0) return items;
-    return items.filter(function(item) {
-      return activeFilters.every(function(key) {
-        var p = PLATFORMS.filter(function(x) { return x.key === key; })[0];
-        return p && item[p.field];
-      });
-    });
-  }
-
   function renderResults(items, isLatestView) {
     currentItems = items || [];
-    var filtered = applyFilters(currentItems);
     if (!isLatestView) {
       resultsArea.innerHTML = '';
     }
-    if (!filtered || filtered.length === 0) {
+    if (!items || items.length === 0) {
       var emptyMsg = document.createElement('p');
       emptyMsg.className = 'hint';
       emptyMsg.textContent = 'ไม่พบสินค้า';
       resultsArea.appendChild(emptyMsg);
       return;
     }
-    filtered.forEach(function(item) {
+    items.forEach(function(item) {
       var card = document.createElement('div');
       card.className = 'card';
 
@@ -601,7 +647,7 @@
             try {
               var result = await rpcCall('quick_mark_sold', { product_id_input: parseInt(id) });
               if (result === true) {
-                doSearch();
+                loadProducts();
               } else {
                 confirmBtn.textContent = 'มีคนขายไปก่อนแล้ว';
               }
@@ -612,7 +658,7 @@
           });
 
           wrapper.querySelector('.confirm-no').addEventListener('click', function() {
-            doSearch();
+            loadProducts();
           });
         }
       });
@@ -627,7 +673,7 @@
         btn.textContent = 'กำลังคืนสต็อก...';
         try {
           await rpcCall('quick_restore_stock', { product_id_input: parseInt(id), new_stock: 1 });
-          doSearch();
+          loadProducts();
         } catch (e) {
           btn.textContent = 'ผิดพลาด ลองใหม่';
           btn.disabled = false;
@@ -645,19 +691,10 @@
     }
   }
 
-  var doSearch = debounce(async function() {
-    var q = searchInput.value.trim();
-    if (!q) {
-      loadLatest();
-      return;
-    }
-    resultsArea.innerHTML = '<p class="hint">กำลังค้นหา...</p>';
-    try {
-      var data = await rpcCall('search_products_admin', { search_query: q, result_limit: 20 });
-      renderResults(data);
-    } catch (e) {
-      resultsArea.innerHTML = '<p class="hint" style="color: var(--danger);">เชื่อมต่อไม่สำเร็จ ลองใหม่</p>';
-    }
+  var doSearch = debounce(function() {
+    pendingSearchQuery = searchInput.value.trim();
+    currentPage = 1;
+    loadProducts();
   }, 400);
 
   searchInput.addEventListener('input', doSearch);
@@ -674,9 +711,16 @@
         activeFilters.splice(idx, 1);
         chip.classList.remove('active');
       }
-      resultsArea.innerHTML = '';
-      renderResults(currentItems, true);
+      currentPage = 1;
+      loadProducts();
     });
+  });
+
+  missingLocationChip.addEventListener('click', function() {
+    missingLocationOnly = !missingLocationOnly;
+    missingLocationChip.classList.toggle('active', missingLocationOnly);
+    currentPage = 1;
+    loadProducts();
   });
 })();
 </script>
