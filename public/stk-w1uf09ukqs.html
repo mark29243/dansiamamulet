@@ -83,6 +83,25 @@
   .header { padding: 4px 0 16px; }
   .header h1 { font-size: 17px; margin: 0 0 2px; }
   .header p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .dash-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .dash-card.clickable:active { background: var(--accent-light); }
+  .dash-number { font-size: 18px; font-weight: 600; line-height: 1.2; }
+  .dash-number.warn { color: var(--danger); }
+  .dash-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; line-height: 1.3; }
   .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .search-row input { flex: 1; }
   .search-row button { width: 44px; padding: 0; flex-shrink: 0; }
@@ -259,6 +278,8 @@
       <p>Dansiamamulets — สำหรับทีมขาย</p>
     </div>
 
+    <div id="dashboard" class="dashboard"></div>
+
     <div class="search-row">
       <input type="text" id="search-input" placeholder="ค้นชื่อสินค้า เช่น เต่า, หลวงพ่อหลิว" />
       <button id="search-btn" aria-label="ค้นหา">🔍</button>
@@ -330,6 +351,7 @@
 
   var activeFilters = [];
   var missingLocationOnly = false;
+  var stockStatusFilter = null; // 'in_stock' | 'sold_out' | null
   var currentPage = 1;
   var pageSize = 20;
   var totalCount = 0;
@@ -360,7 +382,57 @@
   function showMain() {
     pinScreen.style.display = 'none';
     mainScreen.style.display = 'block';
+    loadDashboard();
     loadProducts();
+  }
+
+  async function loadDashboard() {
+    var dashboardEl = document.getElementById('dashboard');
+    try {
+      var data = await rpcCall('get_stock_dashboard_summary', {});
+      var s = (data && data[0]) || {};
+      var cards = [
+        { number: s.total_products || 0, label: 'สินค้าทั้งหมด', action: null },
+        { number: s.in_stock || 0, label: 'มีสต็อก', action: 'in_stock' },
+        { number: s.sold_out || 0, label: 'ขายแล้ว/หมด', action: 'sold_out' },
+        { number: s.missing_location || 0, label: 'ยังไม่มีที่เก็บ', action: 'missing_location', warn: true },
+        { number: s.has_shopee || 0, label: 'มีชื่อ Shopee', action: null },
+        { number: s.has_lazada || 0, label: 'มีชื่อ Lazada', action: null }
+      ];
+      dashboardEl.innerHTML = '';
+      cards.forEach(function(c) {
+        var card = document.createElement('div');
+        card.className = 'dash-card' + (c.action ? ' clickable' : '');
+        card.innerHTML =
+          '<div class="dash-number' + (c.warn ? ' warn' : '') + '">' + c.number + '</div>' +
+          '<div class="dash-label">' + c.label + '</div>';
+        if (c.action) {
+          card.addEventListener('click', function() { applyDashboardFilter(c.action); });
+        }
+        dashboardEl.appendChild(card);
+      });
+    } catch (e) {
+      dashboardEl.innerHTML = '';
+    }
+  }
+
+  function applyDashboardFilter(action) {
+    // ล้าง filter เดิมทั้งหมดก่อน เพื่อให้เห็นผลของตัวเลขที่กดชัดเจน ไม่ปนกับตัวกรองอื่น
+    activeFilters = [];
+    filterRow.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); });
+    missingLocationOnly = false;
+    missingLocationChip.classList.remove('active');
+    stockStatusFilter = null;
+
+    if (action === 'missing_location') {
+      missingLocationOnly = true;
+      missingLocationChip.classList.add('active');
+    } else if (action === 'in_stock' || action === 'sold_out') {
+      stockStatusFilter = action;
+    }
+    currentPage = 1;
+    loadProducts();
+    resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   async function loadProducts() {
@@ -376,7 +448,8 @@
         filter_shopee2: activeFilters.indexOf('shopee2') !== -1,
         filter_facebook: activeFilters.indexOf('facebook') !== -1,
         filter_tiktok: activeFilters.indexOf('tiktok') !== -1,
-        filter_missing_location: missingLocationOnly
+        filter_missing_location: missingLocationOnly,
+        filter_stock_status: stockStatusFilter
       };
       var data = await rpcCall('get_products_paginated', params);
       totalCount = (data && data.length > 0) ? parseInt(data[0].total_count) : 0;
