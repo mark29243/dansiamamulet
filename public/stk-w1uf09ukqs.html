@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="robots" content="noindex, nofollow" />
+<title>เช็คสต็อก - Dansiamamulets</title>
+<style>
+  :root {
+    --bg: #f7f5f2;
+    --card-bg: #ffffff;
+    --border: #e5e1da;
+    --text-primary: #1c1917;
+    --text-secondary: #78716c;
+    --success: #15803d;
+    --danger: #b91c1c;
+    --accent: #92400e;
+    --accent-light: #fef3c7;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Sarabun", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  input {
+    font-family: inherit;
+    font-size: 15px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-primary);
+  }
+  input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: default; }
+  button.secondary {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  /* PIN screen */
+  #pin-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+  }
+  .pin-box { text-align: center; padding: 2rem 1rem; }
+  .pin-box input {
+    width: 220px;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin-top: 8px;
+  }
+  .pin-box button { margin-top: 14px; padding: 10px 28px; }
+  #pin-error { font-size: 13px; color: var(--danger); margin-top: 10px; min-height: 18px; }
+  .icon-lock { font-size: 36px; }
+
+  /* Header / search */
+  .header { padding: 4px 0 16px; }
+  .header h1 { font-size: 17px; margin: 0 0 2px; }
+  .header p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+  .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .search-row input { flex: 1; }
+  .search-row button { width: 44px; padding: 0; flex-shrink: 0; }
+
+  .filter-row { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 2px; }
+  .filter-chip {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .filter-chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .hint { font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 2rem; }
+  .section-label { font-size: 12px; color: var(--text-secondary); margin: 4px 0 8px; }
+
+  /* Result cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .card-top { display: flex; gap: 10px; margin-bottom: 10px; }
+  .card-thumb {
+    width: 56px; height: 56px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--bg);
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .card-thumb-placeholder {
+    width: 56px; height: 56px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--text-secondary);
+  }
+  .card-name { font-size: 14px; font-weight: 500; margin: 0; line-height: 1.45; }
+  .platform-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+  .platform-badge {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
+  .status { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+  .status.ok { color: var(--success); }
+  .status.sold { color: var(--danger); }
+  .location { font-size: 12px; color: var(--text-secondary); }
+  .card-actions { display: flex; gap: 8px; }
+  .card-actions button { flex: 1; font-size: 13px; padding: 8px 10px; }
+
+  /* Edit overlay */
+  #edit-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 50;
+  }
+  #edit-panel {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card-bg);
+    border-radius: 18px 18px 0 0;
+    padding: 18px 16px 24px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .edit-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 8px; }
+  .edit-header p { font-size: 14px; font-weight: 600; margin: 0; line-height: 1.4; }
+  .edit-header button { width: 32px; height: 32px; padding: 0; flex-shrink: 0; font-size: 16px; }
+  .field-label { font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px; }
+  .field-group { margin-bottom: 12px; }
+  .field-group input { width: 100%; }
+  .field-group-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .field-remove-btn {
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    padding: 2px 6px;
+    cursor: pointer;
+  }
+  .add-platform-row { margin: 10px 0 16px; }
+  .add-platform-btn {
+    width: 100%;
+    background: var(--card-bg);
+    color: var(--accent);
+    border: 1px dashed var(--border);
+    padding: 10px;
+    font-size: 13px;
+  }
+  .platform-picker {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .platform-picker.show { display: flex; }
+  .platform-pick-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-primary);
+  }
+  #edit-save { width: 100%; padding: 12px; margin-top: 4px; }
+  #edit-status { font-size: 13px; text-align: center; margin-top: 8px; min-height: 18px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div id="pin-screen">
+    <div class="pin-box">
+      <div class="icon-lock">🔒</div>
+      <p style="font-size: 15px; font-weight: 500; margin: 12px 0 4px;">ใส่ PIN เพื่อเข้าใช้งาน</p>
+      <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">ใช้ PIN เดียวกันทั้งทีม</p>
+      <input type="password" id="pin-input" maxlength="32" placeholder="PIN" />
+      <div id="pin-error"></div>
+      <button id="pin-submit">เข้าใช้งาน</button>
+    </div>
+  </div>
+
+  <div id="main-screen" style="display: none;">
+    <div class="header">
+      <h1>เช็คสต็อกสินค้า</h1>
+      <p>Dansiamamulets — สำหรับทีมขาย</p>
+    </div>
+
+    <div class="search-row">
+      <input type="text" id="search-input" placeholder="ค้นชื่อสินค้า เช่น เต่า, หลวงพ่อหลิว" />
+      <button id="search-btn" aria-label="ค้นหา">🔍</button>
+    </div>
+
+    <div class="filter-row" id="filter-row">
+      <button class="filter-chip" data-platform="lazada">LAZADA</button>
+      <button class="filter-chip" data-platform="shopee">SHOPEE</button>
+      <button class="filter-chip" data-platform="shopee2">SHOPEE 2</button>
+      <button class="filter-chip" data-platform="facebook">FACEBOOK</button>
+      <button class="filter-chip" data-platform="tiktok">TIKTOK</button>
+    </div>
+
+    <div id="results-area"></div>
+  </div>
+</div>
+
+<div id="edit-overlay">
+  <div id="edit-panel">
+    <div class="edit-header">
+      <p id="edit-title"></p>
+      <button class="secondary" id="edit-close" aria-label="ปิด">✕</button>
+    </div>
+
+    <div id="platform-fields"></div>
+
+    <div class="add-platform-row">
+      <button class="add-platform-btn" id="add-platform-toggle">+ เพิ่มแพลตฟอร์ม</button>
+      <div class="platform-picker" id="platform-picker">
+        <button class="platform-pick-btn" data-platform="lazada">LAZADA</button>
+        <button class="platform-pick-btn" data-platform="shopee">SHOPEE</button>
+        <button class="platform-pick-btn" data-platform="shopee2">SHOPEE 2</button>
+        <button class="platform-pick-btn" data-platform="facebook">FACEBOOK</button>
+        <button class="platform-pick-btn" data-platform="tiktok">TIKTOK</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">ตำแหน่งเก็บ</label>
+      <input type="text" id="edit-location" placeholder="เช่น ชั้น A ช่อง 5" />
+    </div>
+
+    <button id="edit-save">บันทึก</button>
+    <div id="edit-status"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ==== ตั้งค่า ====
+  var SUPABASE_URL = 'https://woieynotnkdgjsopknwz.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvaWV5bm90bmtkZ2pzb3Brbnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzQ3MjIsImV4cCI6MjA5NDIxMDcyMn0._zrRaNnAsnteofLeTJGLGz4XvTgm8mdMRaVOxnxWf3Y';
+  var CORRECT_PIN = 'LuckyYommy99%'; // เปลี่ยน PIN ได้ที่นี่
+  var PIN_STORAGE_KEY = 'dansiam_stock_pin_ok';
+  // ==========================
+
+  var PLATFORMS = [
+    { key: 'lazada', label: 'LAZADA', field: 'name_lazada' },
+    { key: 'shopee', label: 'SHOPEE', field: 'name_shopee' },
+    { key: 'shopee2', label: 'SHOPEE 2', field: 'name_shopee2' },
+    { key: 'facebook', label: 'FACEBOOK', field: 'name_facebook' },
+    { key: 'tiktok', label: 'TIKTOK', field: 'name_tiktok' }
+  ];
+
+  var activeFilters = [];
+
+  var pinScreen = document.getElementById('pin-screen');
+  var mainScreen = document.getElementById('main-screen');
+  var pinInput = document.getElementById('pin-input');
+  var pinError = document.getElementById('pin-error');
+  var searchInput = document.getElementById('search-input');
+  var resultsArea = document.getElementById('results-area');
+
+  var editOverlay = document.getElementById('edit-overlay');
+  var editTitle = document.getElementById('edit-title');
+  var editLocation = document.getElementById('edit-location');
+  var editStatus = document.getElementById('edit-status');
+  var platformFieldsContainer = document.getElementById('platform-fields');
+  var addPlatformToggle = document.getElementById('add-platform-toggle');
+  var platformPicker = document.getElementById('platform-picker');
+  var filterRow = document.getElementById('filter-row');
+  var currentEditId = null;
+  var currentItems = [];
+  var currentEditPlatforms = {}; // key -> true ถ้าช่องนี้ถูกแสดงอยู่ในแผงแก้ไข
+
+  // จำสถานะ login ไว้ในเครื่อง ไม่ต้องใส่ PIN ซ้ำทุกครั้ง
+  function showMain() {
+    pinScreen.style.display = 'none';
+    mainScreen.style.display = 'block';
+    loadLatest();
+  }
+
+  async function loadLatest() {
+    resultsArea.innerHTML = '<p class="hint">กำลังโหลดสินค้าล่าสุด...</p>';
+    try {
+      var data = await fetchLatestProducts();
+      var label = document.createElement('p');
+      label.className = 'section-label';
+      label.textContent = 'สินค้าล่าสุด (ID ใหม่สุดก่อน)';
+      resultsArea.innerHTML = '';
+      resultsArea.appendChild(label);
+      renderResults(data, true);
+    } catch (e) {
+      resultsArea.innerHTML = '<p class="hint" style="color: var(--danger);">โหลดไม่สำเร็จ ลองรีเฟรชหน้า</p>';
+    }
+  }
+
+  try {
+    if (localStorage.getItem(PIN_STORAGE_KEY) === '1') {
+      showMain();
+    }
+  } catch (e) {}
+
+  function checkPin() {
+    var val = pinInput.value.trim();
+    if (val === CORRECT_PIN) {
+      try { localStorage.setItem(PIN_STORAGE_KEY, '1'); } catch (e) {}
+      showMain();
+      pinError.textContent = '';
+    } else {
+      pinError.textContent = 'PIN ไม่ถูกต้อง';
+    }
+  }
+
+  document.getElementById('pin-submit').addEventListener('click', checkPin);
+  pinInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkPin(); });
+
+  function debounce(fn, wait) {
+    var t;
+    return function() {
+      var args = arguments;
+      clearTimeout(t);
+      t = setTimeout(function() { fn.apply(null, args); }, wait);
+    };
+  }
+
+  async function rpcCall(fnName, params) {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fnName, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify(params)
+    });
+    if (!res.ok) throw new Error('request failed');
+    return res.json();
+  }
+
+  async function patchProduct(id, fields) {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/products?id=eq.' + id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(fields)
+    });
+    if (!res.ok) throw new Error('patch failed');
+  }
+
+  async function fetchLatestProducts() {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/products?select=id,name_th,stock,images,storage_location,name_lazada,name_shopee,name_shopee2,name_facebook,name_tiktok&order=id.desc&limit=20', {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      }
+    });
+    if (!res.ok) throw new Error('fetch failed');
+    return res.json();
+  }
+
+  function findItemById(id) {
+    for (var i = 0; i < currentItems.length; i++) {
+      if (currentItems[i].id === id) return currentItems[i];
+    }
+    return null;
+  }
+
+  function renderPlatformField(platformKey, value) {
+    var p = PLATFORMS.filter(function(x) { return x.key === platformKey; })[0];
+    if (!p) return;
+    currentEditPlatforms[platformKey] = true;
+
+    var group = document.createElement('div');
+    group.className = 'field-group';
+    group.setAttribute('data-platform-field', platformKey);
+    group.innerHTML =
+      '<div class="field-group-row">' +
+        '<label class="field-label">ชื่อใน ' + p.label + '</label>' +
+        '<button class="field-remove-btn" data-remove="' + platformKey + '">ลบช่องนี้</button>' +
+      '</div>' +
+      '<input type="text" data-field="' + p.field + '" value="' + escapeHtml(value || '') + '" placeholder="ชื่อสินค้าใน ' + p.label + '" />';
+    platformFieldsContainer.appendChild(group);
+
+    group.querySelector('.field-remove-btn').addEventListener('click', function() {
+      delete currentEditPlatforms[platformKey];
+      group.remove();
+    });
+  }
+
+  function openEditPanel(item) {
+    currentEditId = item.id;
+    currentEditPlatforms = {};
+    editTitle.textContent = item.name_th;
+    editLocation.value = item.storage_location || '';
+    platformFieldsContainer.innerHTML = '';
+    platformPicker.classList.remove('show');
+
+    PLATFORMS.forEach(function(p) {
+      var val = item[p.field];
+      if (val) renderPlatformField(p.key, val);
+    });
+
+    editStatus.textContent = '';
+    editOverlay.style.display = 'block';
+  }
+
+  function closeEditPanel() {
+    editOverlay.style.display = 'none';
+    currentEditId = null;
+  }
+
+  document.getElementById('edit-close').addEventListener('click', closeEditPanel);
+  editOverlay.addEventListener('click', function(e) { if (e.target === editOverlay) closeEditPanel(); });
+
+  addPlatformToggle.addEventListener('click', function() {
+    platformPicker.classList.toggle('show');
+  });
+
+  platformPicker.querySelectorAll('.platform-pick-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var key = btn.getAttribute('data-platform');
+      if (currentEditPlatforms[key]) return; // มีช่องนี้อยู่แล้ว
+      renderPlatformField(key, '');
+      platformPicker.classList.remove('show');
+    });
+  });
+
+  document.getElementById('edit-save').addEventListener('click', async function() {
+    if (!currentEditId) return;
+    var btn = document.getElementById('edit-save');
+    btn.disabled = true;
+    btn.textContent = 'กำลังบันทึก...';
+    try {
+      var fields = { storage_location: editLocation.value.trim() || null };
+      PLATFORMS.forEach(function(p) {
+        if (currentEditPlatforms[p.key]) {
+          var input = platformFieldsContainer.querySelector('[data-field="' + p.field + '"]');
+          fields[p.field] = (input && input.value.trim()) || null;
+        } else {
+          fields[p.field] = null;
+        }
+      });
+      await patchProduct(currentEditId, fields);
+      editStatus.style.color = 'var(--success)';
+      editStatus.textContent = 'บันทึกแล้ว';
+      btn.textContent = 'บันทึก';
+      btn.disabled = false;
+      doSearch();
+      setTimeout(closeEditPanel, 700);
+    } catch (e) {
+      editStatus.style.color = 'var(--danger)';
+      editStatus.textContent = 'บันทึกไม่สำเร็จ ลองใหม่';
+      btn.textContent = 'บันทึก';
+      btn.disabled = false;
+    }
+  });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function applyFilters(items) {
+    if (activeFilters.length === 0) return items;
+    return items.filter(function(item) {
+      return activeFilters.every(function(key) {
+        var p = PLATFORMS.filter(function(x) { return x.key === key; })[0];
+        return p && item[p.field];
+      });
+    });
+  }
+
+  function renderResults(items, isLatestView) {
+    currentItems = items || [];
+    var filtered = applyFilters(currentItems);
+    if (!isLatestView) {
+      resultsArea.innerHTML = '';
+    }
+    if (!filtered || filtered.length === 0) {
+      var emptyMsg = document.createElement('p');
+      emptyMsg.className = 'hint';
+      emptyMsg.textContent = 'ไม่พบสินค้า';
+      resultsArea.appendChild(emptyMsg);
+      return;
+    }
+    filtered.forEach(function(item) {
+      var card = document.createElement('div');
+      card.className = 'card';
+
+      var soldOut = item.stock <= 0;
+      var statusClass = soldOut ? 'sold' : 'ok';
+      var statusText = soldOut ? '✕ ขายแล้ว / หมด' : '✓ มีสต็อก';
+      var locationHtml = item.storage_location
+        ? '<span class="location">📍 ' + escapeHtml(item.storage_location) + '</span>'
+        : '';
+
+      var soldBtn = soldOut ? '' : '<button class="mark-sold-btn" data-id="' + item.id + '">ขายแล้ว</button>';
+
+      var firstImage = (item.images && item.images.length > 0) ? item.images[0] : null;
+      var thumbHtml = firstImage
+        ? '<img class="card-thumb" src="' + escapeHtml(firstImage) + '" alt="" loading="lazy" />'
+        : '<div class="card-thumb-placeholder">🖼️</div>';
+
+      var badgesHtml = '';
+      PLATFORMS.forEach(function(p) {
+        if (item[p.field]) {
+          badgesHtml += '<span class="platform-badge">✓ ' + p.label + '</span>';
+        }
+      });
+      var badgesBlock = badgesHtml ? '<div class="platform-badges">' + badgesHtml + '</div>' : '';
+
+      card.innerHTML =
+        '<div class="card-top">' +
+          thumbHtml +
+          '<div>' +
+            '<p class="card-name">' + escapeHtml(item.name_th) + '</p>' +
+            badgesBlock +
+          '</div>' +
+        '</div>' +
+        '<div class="card-meta">' +
+          '<span class="status ' + statusClass + '">' + statusText + '</span>' +
+          locationHtml +
+        '</div>' +
+        '<div class="card-actions">' +
+          soldBtn +
+          '<button class="secondary edit-btn" data-id="' + item.id + '">แก้ชื่อ/ที่เก็บ</button>' +
+        '</div>';
+      resultsArea.appendChild(card);
+    });
+
+    var soldBtns = resultsArea.querySelectorAll('.mark-sold-btn');
+    for (var i = 0; i < soldBtns.length; i++) {
+      soldBtns[i].addEventListener('click', async function() {
+        var id = this.getAttribute('data-id');
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'กำลังบันทึก...';
+        try {
+          var result = await rpcCall('quick_mark_sold', { product_id_input: parseInt(id) });
+          if (result === true) {
+            doSearch();
+          } else {
+            btn.textContent = 'มีคนขายไปก่อนแล้ว';
+          }
+        } catch (e) {
+          btn.textContent = 'ผิดพลาด ลองใหม่';
+          btn.disabled = false;
+        }
+      });
+    }
+
+    var editBtns = resultsArea.querySelectorAll('.edit-btn');
+    for (var j = 0; j < editBtns.length; j++) {
+      editBtns[j].addEventListener('click', function() {
+        var id = parseInt(this.getAttribute('data-id'));
+        var item = findItemById(id);
+        if (item) openEditPanel(item);
+      });
+    }
+  }
+
+  var doSearch = debounce(async function() {
+    var q = searchInput.value.trim();
+    if (!q) {
+      loadLatest();
+      return;
+    }
+    resultsArea.innerHTML = '<p class="hint">กำลังค้นหา...</p>';
+    try {
+      var data = await rpcCall('search_products_admin', { search_query: q, result_limit: 20 });
+      renderResults(data);
+    } catch (e) {
+      resultsArea.innerHTML = '<p class="hint" style="color: var(--danger);">เชื่อมต่อไม่สำเร็จ ลองใหม่</p>';
+    }
+  }, 400);
+
+  searchInput.addEventListener('input', doSearch);
+  document.getElementById('search-btn').addEventListener('click', doSearch);
+
+  filterRow.querySelectorAll('.filter-chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      var key = chip.getAttribute('data-platform');
+      var idx = activeFilters.indexOf(key);
+      if (idx === -1) {
+        activeFilters.push(key);
+        chip.classList.add('active');
+      } else {
+        activeFilters.splice(idx, 1);
+        chip.classList.remove('active');
+      }
+      resultsArea.innerHTML = '';
+      renderResults(currentItems, true);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
