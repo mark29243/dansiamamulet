@@ -12,7 +12,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   const filter = searchParams.filter || 'published';
 
   let query = admin.from('products').select('*').order('id', { ascending: false });
-  if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
+  if (q) query = query.or(`name.ilike.%${q}%,name_th.ilike.%${q}%,category.ilike.%${q}%`);
   
   if (filter === 'published') query = query.eq('published', true);
   else if (filter === 'unpublished') query = query.eq('published', false);
