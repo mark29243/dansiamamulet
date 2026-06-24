@@ -88,23 +88,43 @@ export default function BlogForm({ post }: { post?: Post }) {
         body: JSON.stringify({ title_th, content_th, category }),
       });
       const genData = await genRes.json();
-      if (!genRes.ok) throw new Error(genData.error || 'Translation failed');
 
-      const body = {
-        title_th,
-        title:      genData.title,
-        title_zh:   genData.title_zh,
-        slug:       genData.slug,
-        excerpt_th: genData.excerpt_th,
-        excerpt:    genData.excerpt,
-        excerpt_zh: genData.excerpt_zh,
-        content_th,
-        content:    genData.content,
-        content_zh: genData.content_zh,
-        cover_image: cover_image || null,
-        category:   category || null,
-        published:  publish,
-      };
+      let body;
+      if (!genRes.ok) {
+        toast(`AI แปลภาษาล้มเหลว (${genData.error || 'Unknown Error'}) ระบบจะบันทึกเฉพาะภาษาไทยเท่านั้น`, 'error');
+        await new Promise(r => setTimeout(r, 1500));
+        body = {
+          title_th,
+          title:      title_th,
+          title_zh:   title_th,
+          slug:       Date.now().toString(),
+          excerpt_th: '',
+          excerpt:    '',
+          excerpt_zh: '',
+          content_th,
+          content:    content_th,
+          content_zh: content_th,
+          cover_image: cover_image || null,
+          category:   category || null,
+          published:  publish,
+        };
+      } else {
+        body = {
+          title_th,
+          title:      genData.title,
+          title_zh:   genData.title_zh,
+          slug:       genData.slug,
+          excerpt_th: genData.excerpt_th,
+          excerpt:    genData.excerpt,
+          excerpt_zh: genData.excerpt_zh,
+          content_th,
+          content:    genData.content,
+          content_zh: genData.content_zh,
+          cover_image: cover_image || null,
+          category:   category || null,
+          published:  publish,
+        };
+      }
 
       const url    = isEdit ? `/api/admin/blog/${post!.id}` : '/api/admin/blog';
       const method = isEdit ? 'PATCH' : 'POST';

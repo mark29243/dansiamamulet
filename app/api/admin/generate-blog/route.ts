@@ -33,7 +33,7 @@ function extractJson(raw: string): string {
 // ── Step 1: small JSON — title, slug, excerpts only ──────────────────────────
 async function generateMeta(title_th: string, category: string) {
   const msg = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 600,
     messages: [{
       role: 'user',
@@ -51,7 +51,7 @@ Translate to English and Chinese. Return ONLY this JSON (no markdown, no extra t
 // ── Step 2: translate content — plain text with separator, no JSON ───────────
 async function translateContent(title_th: string, content_th: string) {
   const msg = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 4000,
     messages: [{
       role: 'user',
@@ -81,7 +81,7 @@ Reply in EXACTLY this format — two sections separated by the markers, nothing 
 // ── Step 2b: write fresh content when no Thai content given ──────────────────
 async function generateContent(title_th: string, titleEn: string, category: string) {
   const msg = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 3000,
     messages: [{
       role: 'user',
