@@ -9,13 +9,15 @@ export const dynamic = 'force-dynamic';
 export default async function AdminProductsPage({ searchParams }: { searchParams: { q?: string; filter?: string } }) {
   const admin = createAdminClient();
   const q = searchParams.q?.trim() || '';
-  const filter = searchParams.filter || 'all';
+  const filter = searchParams.filter || 'published';
 
   let query = admin.from('products').select('*').order('id', { ascending: false });
   if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
-  if (filter === 'oos') query = query.eq('stock', 0);
-  else if (filter === 'low') query = query.gt('stock', 0).lte('stock', 3);
+  
+  if (filter === 'published') query = query.eq('published', true);
   else if (filter === 'unpublished') query = query.eq('published', false);
+  else if (filter === 'oos') query = query.eq('stock', 0);
+  // 'all' doesn't add any filters
 
   const { data: products } = await query;
   const list = products ?? [];
@@ -28,7 +30,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         </h1>
 
         <form action="/admin/products" method="GET" style={{ display: 'flex', gap: 8 }}>
-          {filter !== 'all' && <input type="hidden" name="filter" value={filter} />}
+          {filter !== 'published' && <input type="hidden" name="filter" value={filter} />}
           <input name="q" className="input" placeholder="Search products..." defaultValue={q} style={{ minWidth: 240 }} />
           <button type="submit" className="btn-outline" style={{ padding: '10px 18px' }}>Search</button>
         </form>
@@ -36,14 +38,14 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
 
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, overflowX: 'auto', paddingBottom: 4 }}>
         {[
-          { v: 'all', label: 'All' },
-          { v: 'oos', label: 'Out of Stock' },
-          { v: 'low', label: 'Low Stock (≤3)' },
+          { v: 'published', label: 'Published' },
           { v: 'unpublished', label: 'Unpublished' },
+          { v: 'oos', label: 'Out of Stock' },
+          { v: 'all', label: 'All' },
         ].map((f) => (
           <Link
             key={f.v}
-            href={`/admin/products${f.v === 'all' ? '' : `?filter=${f.v}`}`}
+            href={`/admin/products${f.v === 'published' ? '' : `?filter=${f.v}`}`}
             className="serif"
             style={{
               padding: '6px 14px', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase',
