@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
-import { IcoPackage } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,7 +66,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
 
       {list.length === 0 ? (
         <div className="empty-state">
-          <div className="icon" style={{ display: 'flex', justifyContent: 'center', color: 'var(--gold)' }}><IcoPackage size={56} /></div>
+          <div className="icon">📦</div>
           <p>No orders found.</p>
         </div>
       ) : (
@@ -82,7 +81,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
                   <Th>Total</Th>
                   <Th>Status</Th>
                   <Th>Date</Th>
-                  <Th></Th>
+                  <Th>&nbsp;</Th>
                 </tr>
               </thead>
               <tbody>
@@ -119,7 +118,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
   );
 }
 
-function Th({ children }: { children?: React.ReactNode }) {
+function Th({ children }: { children: React.ReactNode }) {
   return <th style={{ padding: '12px 16px', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)', fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{children}</th>;
 }
 function Td({ children, className, style }: any) {

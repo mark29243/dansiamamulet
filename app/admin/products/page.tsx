@@ -1,41 +1,24 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/server';
+import { formatPrice } from '@/lib/utils';
 import StockEditor from './StockEditor';
-import PublishButton from './PublishButton';
-import DuplicateButton from './DuplicateButton';
-import { AdminProductName, AdminProductCategory, AdminProductPrice } from './AdminProductName';
-import { IcoEye } from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProductsPage({ searchParams }: { searchParams: { q?: string; filter?: string } }) {
   const admin = createAdminClient();
   const q = searchParams.q?.trim() || '';
-  const filter = searchParams.filter || 'published';
+  const filter = searchParams.filter || 'all';
 
-  let list: any[] = [];
+  let query = admin.from('products').select('*').order('id', { ascending: true });
+  if (q) query = query.or(`name.ilike.%${q}%,category.ilike.%${q}%`);
+  if (filter === 'oos') query = query.eq('stock', 0);
+  else if (filter === 'low') query = query.gt('stock', 0).lte('stock', 3);
+  else if (filter === 'unpublished') query = query.eq('published', false);
 
-  if (q) {
-    // Use RPC for full-text search across all products (including unpublished)
-    const { data: rpcData, error: rpcError } = await admin.rpc('search_products_admin', {
-      search_query: q,
-      result_limit: 200,
-    });
-    if (rpcError) console.error('[admin search]', rpcError);
-    list = (rpcData ?? []) as any[];
-    // Apply filter tab on top of search results
-    if (filter === 'oos') list = list.filter((p: any) => p.stock === 0);
-    else if (filter === 'published') list = list.filter((p: any) => p.published === true);
-    else if (filter === 'unpublished') list = list.filter((p: any) => p.published === false);
-  } else {
-    let query = admin.from('products').select('*').order('id', { ascending: false });
-    if (filter === 'oos') query = query.eq('stock', 0);
-    else if (filter === 'published') query = query.eq('published', true);
-    else if (filter === 'unpublished') query = query.eq('published', false);
-    const { data } = await query;
-    list = data ?? [];
-  }
+  const { data: products } = await query;
+  const list = products ?? [];
 
   return (
     <div className="container" style={{ padding: '32px 24px 60px' }}>
@@ -53,14 +36,14 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
 
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, overflowX: 'auto', paddingBottom: 4 }}>
         {[
-          { v: 'published', label: 'Published' },
-          { v: 'unpublished', label: 'Unpublished' },
           { v: 'all', label: 'All' },
           { v: 'oos', label: 'Out of Stock' },
+          { v: 'low', label: 'Low Stock (≤3)' },
+          { v: 'unpublished', label: 'Unpublished' },
         ].map((f) => (
           <Link
             key={f.v}
-            href={`/admin/products${f.v === 'published' ? '' : `?filter=${f.v}`}`}
+            href={`/admin/products${f.v === 'all' ? '' : `?filter=${f.v}`}`}
             className="serif"
             style={{
               padding: '6px 14px', fontSize: 11, letterSpacing: 1.5, textTransform: 'uppercase',
@@ -81,14 +64,13 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
             <thead>
               <tr style={{ background: 'var(--cream-dark)', textAlign: 'left' }}>
-                <Th></Th>
+                <Th>&nbsp;</Th>
                 <Th>Name</Th>
                 <Th>Category</Th>
                 <Th>Price</Th>
                 <Th>Stock</Th>
-                <Th>Views</Th>
                 <Th>Status</Th>
-                <Th></Th>
+                <Th>&nbsp;</Th>
               </tr>
             </thead>
             <tbody>
@@ -103,31 +85,23 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                   </Td>
                   <Td>
                     <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
-                      <AdminProductName name_th={p.name_th || p.name} name={p.name || p.name_th} />
+                      {p.name.slice(0, 50)}{p.name.length > 50 ? '…' : ''}
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
-                  <Td style={{ color: 'var(--text-muted)' }}><AdminProductCategory category={p.category} /></Td>
+                  <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>
                   <Td className="serif" style={{ color: 'var(--gold-dark)', fontWeight: 600 }}>
-                    <AdminProductPrice satang={p.sale_price ?? p.price} />
+                    {formatPrice(p.sale_price ?? p.price)}
                   </Td>
                   <Td>
                     <StockEditor productId={p.id} stock={p.stock} />
-                  </Td>
-                  <Td style={{ color: 'var(--text-muted)', fontSize: 12 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IcoEye size={13} /> {p.views ?? 0}</span>
                   </Td>
                   <Td>
                     {p.stock === 0 ? <span className="badge badge-oos">OOS</span> : p.stock <= 3 ? <span className="badge badge-warning">LOW</span> : <span className="badge badge-success">OK</span>}
                     {!p.published && <span className="badge" style={{ background: 'var(--text-faint)', color: '#fff', marginLeft: 4 }}>HIDDEN</span>}
                   </Td>
                   <Td>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      {!p.published && <PublishButton productId={p.id} />}
-                      <Link href={`/admin/products/${p.id}`} className="btn-outline" style={{ padding: '4px 12px', fontSize: 11 }}>แก้ไข</Link>
-                      <DuplicateButton productId={p.id} />
-                      {p.published && <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View</Link>}
-                    </div>
+                    <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View ↗</Link>
                   </Td>
                 </tr>
               ))}
@@ -137,13 +111,13 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       </div>
 
       <p style={{ fontSize: 11, color: 'var(--text-faint)', marginTop: 16, textAlign: 'center' }}>
-        Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
+        💡 Tip: To add new products in bulk, update <code>scripts/products.csv</code> and run <code>npm run seed</code>.
       </p>
     </div>
   );
 }
 
-function Th({ children }: { children?: React.ReactNode }) {
+function Th({ children }: { children: React.ReactNode }) {
   return <th style={{ padding: '12px 16px', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)', fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{children}</th>;
 }
 function Td({ children, style }: any) {
