@@ -63,5 +63,13 @@ export async function POST(req: Request) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   console.log('[audit] blog-create', { admin: ctx.user.id, id: data.id, slug: data.slug });
+  
+  // Revalidate cache
+  try {
+    const { revalidatePath } = require('next/cache');
+    revalidatePath('/blog');
+    revalidatePath('/admin/blog');
+  } catch (err) {}
+
   return NextResponse.json({ post: data });
 }
