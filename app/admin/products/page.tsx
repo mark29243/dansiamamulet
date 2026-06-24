@@ -87,6 +87,11 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>
                       {p.name.slice(0, 50)}{p.name.length > 50 ? '…' : ''}
                     </Link>
+                    {p.name_th && (
+                      <div className="serif" style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 2 }}>
+                        {p.name_th.slice(0, 50)}{p.name_th.length > 50 ? '…' : ''}
+                      </div>
+                    )}
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
                   <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>
