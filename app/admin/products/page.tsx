@@ -100,8 +100,9 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     {p.stock === 0 ? <span className="badge badge-oos">OOS</span> : p.stock <= 3 ? <span className="badge badge-warning">LOW</span> : <span className="badge badge-success">OK</span>}
                     {!p.published && <span className="badge" style={{ background: 'var(--text-faint)', color: '#fff', marginLeft: 4 }}>HIDDEN</span>}
                   </Td>
-                  <Td>
-                    <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11 }}>View ↗</Link>
+                  <Td style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                    <Link href={`/admin/products/${p.id}`} className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--gold-dark)', fontWeight: 600 }}>Edit ✎</Link>
+                    <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--text-muted)' }}>View ↗</Link>
                   </Td>
                 </tr>
               ))}
