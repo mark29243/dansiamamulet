@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/lib/utils';
 import StockEditor from './StockEditor';
+import PublishButton from './PublishButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -109,6 +110,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     {!p.published && <span className="badge" style={{ background: 'var(--text-faint)', color: '#fff', marginLeft: 4 }}>HIDDEN</span>}
                   </Td>
                   <Td style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                    {!p.published && <PublishButton productId={p.id} />}
                     <Link href={`/admin/products/${p.id}`} className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--gold-dark)', fontWeight: 600 }}>Edit ✎</Link>
                     <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--text-muted)' }}>View ↗</Link>
                   </Td>
