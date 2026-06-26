@@ -62,6 +62,11 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (typeof body.is_featured === 'boolean') allowed.is_featured = body.is_featured;
   if (typeof body.name_th === 'string') allowed.name_th = body.name_th.trim();
   if (typeof body.description_th === 'string') allowed.description_th = body.description_th.trim();
+  if (typeof body.name === 'string') allowed.name = body.name.trim();
+  if (typeof body.description === 'string') allowed.description = body.description.trim();
+  if (typeof body.name_zh === 'string') allowed.name_zh = body.name_zh.trim();
+  if (typeof body.description_zh === 'string') allowed.description_zh = body.description_zh.trim();
+  if (typeof body.short === 'string') allowed.short = body.short.trim();
   if (typeof body.category === 'string') allowed.category = body.category.trim();
   if (Array.isArray(body.images) && body.images.every((u: unknown) => typeof u === 'string' && u.length > 0 && u.length <= 1000)) {
     allowed.images = body.images.slice(0, 12);

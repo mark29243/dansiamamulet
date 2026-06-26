@@ -16,6 +16,9 @@ export default function EditProductForm({ product }: { product: any }) {
   const [images, setImages] = useState<string[]>(Array.isArray(product.images) ? product.images : []);
   const [uploading, setUploading] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
+  
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [autoTranslate, setAutoTranslate] = useState(!product.name || /[ก-๙]/.test(product.name));
 
   const [selectedCats, setSelectedCats] = useState<string[]>(
     (product.category || '').split(',').map((c: string) => c.trim()).filter(Boolean)
@@ -24,6 +27,11 @@ export default function EditProductForm({ product }: { product: any }) {
   const [form, setForm] = useState({
     name_th: product.name_th || '',
     description_th: product.description_th || '',
+    name: product.name || '',
+    description: product.description || '',
+    name_zh: product.name_zh || '',
+    description_zh: product.description_zh || '',
+    short: product.short || '',
     price: ((product.price ?? 0) / 100).toFixed(2),
     sale_price: product.sale_price ? (product.sale_price / 100).toFixed(2) : '',
     stock: product.stock ?? 0,
@@ -87,6 +95,11 @@ export default function EditProductForm({ product }: { product: any }) {
       const body: any = {
         name_th: form.name_th,
         description_th: form.description_th,
+        name: form.name,
+        description: form.description,
+        name_zh: form.name_zh,
+        description_zh: form.description_zh,
+        short: form.short,
         category: selectedCats.join(','),
         price: Math.round(Number(form.price) * 100),
         sale_price: form.sale_price === '' ? null : Math.round(Number(form.sale_price) * 100),
@@ -102,16 +115,18 @@ export default function EditProductForm({ product }: { product: any }) {
       if (!res.ok) throw new Error(data.error || 'Failed');
 
       // Step 2: regenerate SEO via Claude
-      toast('Claude กำลังอัพเดท SEO...', 'success');
-      const seoRes = await fetch('/api/admin/process-draft', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: product.id }),
-      });
-      const seoData = await seoRes.json();
-      if (!seoRes.ok) throw new Error(seoData.error || 'SEO failed');
+      if (autoTranslate) {
+        toast('Claude กำลังอัพเดท SEO และแปลภาษา...', 'success');
+        const seoRes = await fetch('/api/admin/process-draft', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: product.id }),
+        });
+        const seoData = await seoRes.json();
+        if (!seoRes.ok) throw new Error(seoData.error || 'SEO failed');
+      }
 
-      toast('บันทึกและอัพเดท SEO เรียบร้อยแล้ว', 'success');
+      toast('บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
       setTimeout(() => router.push('/admin/products'), 800);
     } catch (e: any) {
       toast(e.message, 'error');
@@ -214,6 +229,37 @@ export default function EditProductForm({ product }: { product: any }) {
         <textarea className="input" rows={3} value={form.description_th} onChange={(e) => set('description_th', e.target.value)} style={{ resize: 'vertical' }} />
       </Field>
 
+      <div style={{ background: 'var(--cream-light)', padding: 16, borderRadius: 'var(--radius)' }}>
+        <button
+          type="button"
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', fontSize: 13, fontWeight: 600, color: 'var(--text)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}
+        >
+          <span>🌐 แก้ไขภาษาอังกฤษและจีนเอง (Advanced)</span>
+          <span>{showAdvanced ? '▲' : '▼'}</span>
+        </button>
+        
+        {showAdvanced && (
+          <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <Field label="ชื่อ (English)">
+              <input className="input" value={form.name} onChange={(e) => set('name', e.target.value)} />
+            </Field>
+            <Field label="รายละเอียด (English)">
+              <textarea className="input" rows={3} value={form.description} onChange={(e) => set('description', e.target.value)} style={{ resize: 'vertical' }} />
+            </Field>
+            <Field label="ชื่อ (中文)">
+              <input className="input" value={form.name_zh} onChange={(e) => set('name_zh', e.target.value)} />
+            </Field>
+            <Field label="รายละเอียด (中文)">
+              <textarea className="input" rows={3} value={form.description_zh} onChange={(e) => set('description_zh', e.target.value)} style={{ resize: 'vertical' }} />
+            </Field>
+            <Field label="SEO Description (Short)">
+              <input className="input" value={form.short} onChange={(e) => set('short', e.target.value)} maxLength={160} />
+            </Field>
+          </div>
+        )}
+      </div>
+
       <Field label={`หมวดหมู่ (เลือกได้สูงสุด 3 — เลือกแล้ว ${selectedCats.length}/3)`}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
           {CATEGORIES.map((c) => {
@@ -287,14 +333,20 @@ export default function EditProductForm({ product }: { product: any }) {
             </div>
           )}
 
-          <button
-            onClick={handleSave}
-            disabled={busy}
-            className="btn-primary"
-            style={{ padding: '10px 24px', opacity: busy ? 0.7 : 1 }}
-          >
-            {busy ? 'กำลังบันทึก + SEO...' : 'บันทึก'}
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)', cursor: 'pointer' }}>
+              <input type="checkbox" checked={autoTranslate} onChange={(e) => setAutoTranslate(e.target.checked)} />
+              ใช้ AI แปลภาษาให้ทับของเดิม (แนะนำ)
+            </label>
+            <button
+              onClick={handleSave}
+              disabled={busy}
+              className="btn-primary"
+              style={{ padding: '10px 24px', opacity: busy ? 0.7 : 1 }}
+            >
+              {busy ? 'กำลังบันทึก...' : autoTranslate ? 'บันทึก + ให้ AI แปลภาษา' : 'บันทึกอย่างเดียว'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
