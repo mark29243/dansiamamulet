@@ -233,6 +233,14 @@ export default function AdminProductTable({ products }: { products: any[] }) {
                       {(p.name_th || p.name).slice(0, 60)}{(p.name_th || p.name).length > 60 ? '…' : ''}
                     </Link>
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
+                    <div style={{ display: 'flex', gap: 4, marginTop: 6, flexWrap: 'wrap' }}>
+                      {p.name_lazada && <span style={{ fontSize: 9, padding: '2px 6px', background: '#e0f2fe', color: '#0369a1', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`LAZADA: ${p.name_lazada}`}>LAZADA</span>}
+                      {p.name_shopee && <span style={{ fontSize: 9, padding: '2px 6px', background: '#ffedd5', color: '#c2410c', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`SHOPEE: ${p.name_shopee}`}>SHOPEE</span>}
+                      {p.name_shopee2 && <span style={{ fontSize: 9, padding: '2px 6px', background: '#ffedd5', color: '#c2410c', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`SHOPEE 2: ${p.name_shopee2}`}>SHOPEE 2</span>}
+                      {p.name_facebook && <span style={{ fontSize: 9, padding: '2px 6px', background: '#dbeafe', color: '#1d4ed8', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`FB: ${p.name_facebook}`}>FB</span>}
+                      {p.name_tiktok && <span style={{ fontSize: 9, padding: '2px 6px', background: '#f1f5f9', color: '#0f172a', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`TIKTOK: ${p.name_tiktok}`}>TIKTOK</span>}
+                      {p.name_instagram && <span style={{ fontSize: 9, padding: '2px 6px', background: '#fce7f3', color: '#be185d', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`IG: ${p.name_instagram}`}>IG</span>}
+                    </div>
                   </Td>
                   <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>
                   <Td className="serif">
