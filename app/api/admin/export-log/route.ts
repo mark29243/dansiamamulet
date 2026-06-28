@@ -61,14 +61,25 @@ export async function POST(req: Request) {
     });
 
     const spreadsheetId = '1-Ir2GIIszELvRvDlRgj6uK0triZjU9OuL1_1J-ryVkA';
-    // If it's Shopee, use MARK sheet. If it's Shopee 2, use JUNE sheet.
-    const range = platform === 'shopee' ? 'MARK!A:H' : 'JUNE!A:F';
-
-    await sheets.spreadsheets.values.append({
+    const sheetName = platform === 'shopee' ? 'MARK' : 'JUNE';
+    
+    // Fetch Column A to find the true last row with data
+    const getRes = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range,
+      range: `${sheetName}!A:A`,
+    });
+    
+    const numRows = getRes.data.values ? getRes.data.values.length : 0;
+    const startRow = numRows + 1;
+    const endRow = startRow + rows.length - 1;
+    
+    // Write exactly at the first empty row
+    const writeRange = `${sheetName}!A${startRow}:I${endRow}`;
+
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: writeRange,
       valueInputOption: 'USER_ENTERED',
-      insertDataOption: 'INSERT_ROWS',
       requestBody: {
         values: rows,
       },
