@@ -18,7 +18,12 @@ const SHOPEE_ROW_4 = ['กรอกรหัสหมวดหมู่สิน
 
 export default function AdminProductTable({ products }: { products: any[] }) {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [customPrices, setCustomPrices] = useState<Record<number, string>>({});
   const { toast } = useToast();
+
+  function handlePriceChange(id: number, value: string) {
+    setCustomPrices(prev => ({ ...prev, [id]: value }));
+  }
 
   function toggleAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
@@ -61,8 +66,9 @@ export default function AdminProductTable({ products }: { products: any[] }) {
         row[0] = '101394'; // Category Code
         row[1] = p.name_th || p.name || '';
         row[2] = p.description_th || p.description || '';
-        const price = (p.sale_price || p.price || 0) / 100;
-        row[15] = price.toString();
+        const basePrice = (p.sale_price || p.price || 0) / 100;
+        const finalPrice = customPrices[p.id] ? parseFloat(customPrices[p.id]) : basePrice;
+        row[15] = finalPrice.toString();
         row[16] = (p.stock || 0).toString();
         row[17] = p.slug || p.id.toString();
         
@@ -143,8 +149,20 @@ export default function AdminProductTable({ products }: { products: any[] }) {
                     <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
                   </Td>
                   <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>
-                  <Td className="serif" style={{ color: 'var(--gold-dark)', fontWeight: 600 }}>
-                    {formatPrice(p.sale_price ?? p.price)}
+                  <Td className="serif">
+                    <div style={{ color: 'var(--gold-dark)', fontWeight: 600 }}>
+                      {formatPrice(p.sale_price ?? p.price)}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                      <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>Shopee: ฿</span>
+                      <input 
+                        type="number" 
+                        placeholder={((p.sale_price || p.price || 0) / 100).toString()}
+                        value={customPrices[p.id] || ''}
+                        onChange={(e) => handlePriceChange(p.id, e.target.value)}
+                        style={{ width: 60, padding: '2px 4px', fontSize: 12, border: '1px solid var(--cream-dark)', borderRadius: 2, outline: 'none' }}
+                      />
+                    </div>
                   </Td>
                   <Td>
                     <StockEditor productId={p.id} stock={p.stock} />
