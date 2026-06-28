@@ -61,7 +61,19 @@ export default function AdminProductTable({ products }: { products: any[] }) {
             })
           )
         );
-        toast(`บันทึกชื่อ ${exportName} ลง ${exportPlatform === 'shopee' ? 'Shopee' : 'Shopee 2'} เรียบร้อยแล้ว`, 'success');
+
+        // Send to Google Sheets
+        await fetch('/api/admin/export-log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            products: selectedProds,
+            platform: exportPlatform,
+            exporterName: exportName.trim()
+          })
+        });
+
+        toast(`บันทึกชื่อ ${exportName} ลง ${exportPlatform === 'shopee' ? 'Shopee' : 'Shopee 2'} และลง Sheet เรียบร้อยแล้ว`, 'success');
       } catch (e) {
         console.error('Error saving name to platform', e);
         toast('เกิดข้อผิดพลาดในการบันทึกชื่อ', 'error');
