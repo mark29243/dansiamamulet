@@ -19,6 +19,10 @@ const SHOPEE_ROW_4 = ['กรอกรหัสหมวดหมู่สิน
 export default function AdminProductTable({ products }: { products: any[] }) {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [customPrices, setCustomPrices] = useState<Record<number, string>>({});
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const [exportName, setExportName] = useState('');
+  const [exportPlatform, setExportPlatform] = useState<'shopee' | 'shopee2'>('shopee');
+  const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
 
   function handlePriceChange(id: number, value: string) {
@@ -40,9 +44,29 @@ export default function AdminProductTable({ products }: { products: any[] }) {
     setSelectedIds(next);
   }
 
-  async function exportShopee() {
+  async function exportShopeeAndSaveName() {
     if (selectedIds.size === 0) return;
+    setIsExporting(true);
     const selectedProds = products.filter(p => selectedIds.has(p.id));
+    
+    if (exportName.trim()) {
+      try {
+        const updateField = exportPlatform === 'shopee' ? 'name_shopee' : 'name_shopee2';
+        await Promise.all(
+          Array.from(selectedIds).map(id =>
+            fetch(`/api/admin/products/${id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ [updateField]: exportName.trim() })
+            })
+          )
+        );
+        toast(`บันทึกชื่อ ${exportName} ลง ${exportPlatform === 'shopee' ? 'Shopee' : 'Shopee 2'} เรียบร้อยแล้ว`, 'success');
+      } catch (e) {
+        console.error('Error saving name to platform', e);
+        toast('เกิดข้อผิดพลาดในการบันทึกชื่อ', 'error');
+      }
+    }
     
     try {
       // Load the original template file
@@ -131,6 +155,9 @@ export default function AdminProductTable({ products }: { products: any[] }) {
     } catch (error) {
       console.error('Error generating Shopee export:', error);
       toast('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel', 'error');
+    } finally {
+      setIsExporting(false);
+      setShowExportOptions(false);
     }
   }
 
@@ -139,9 +166,35 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       {selectedIds.size > 0 && (
         <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--cream-light)', padding: '12px 16px', borderRadius: 'var(--radius)', border: '1px solid var(--gold)' }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--gold-dark)' }}>เลือกไว้ {selectedIds.size} รายการ</span>
-          <button onClick={exportShopee} className="btn-primary" style={{ padding: '8px 16px', fontSize: 12 }}>
-            📥 Export to Shopee
-          </button>
+          {showExportOptions ? (
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <input 
+                type="text" 
+                placeholder="ชื่อคนลง (จะไปโผล่หน้าเช็คสต็อก)" 
+                value={exportName} 
+                onChange={e => setExportName(e.target.value)} 
+                style={{ padding: '6px 12px', fontSize: 12, borderRadius: 4, border: '1px solid var(--cream-dark)' }} 
+              />
+              <select 
+                value={exportPlatform} 
+                onChange={e => setExportPlatform(e.target.value as any)} 
+                style={{ padding: '6px 12px', fontSize: 12, borderRadius: 4, border: '1px solid var(--cream-dark)' }}
+              >
+                <option value="shopee">Shopee</option>
+                <option value="shopee2">Shopee 2</option>
+              </select>
+              <button onClick={exportShopeeAndSaveName} disabled={isExporting} className="btn-primary" style={{ padding: '6px 16px', fontSize: 12 }}>
+                {isExporting ? 'กำลังประมวลผล...' : 'ยืนยัน Export'}
+              </button>
+              <button onClick={() => setShowExportOptions(false)} disabled={isExporting} className="btn-outline" style={{ padding: '6px 16px', fontSize: 12, background: 'transparent', border: 'none', color: 'var(--text-muted)' }}>
+                ยกเลิก
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => setShowExportOptions(true)} className="btn-primary" style={{ padding: '8px 16px', fontSize: 12 }}>
+              📥 Export to Shopee
+            </button>
+          )}
         </div>
       )}
 
