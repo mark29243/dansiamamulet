@@ -81,13 +81,13 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       }
 
       // 30: น้ำหนัก (Weight in kg)
-      row[30] = '0.5';
+      row[30] = '0.30';
       // 31: ความยาว (Length cm)
-      row[31] = '14';
+      row[31] = '16';
       // 32: ความกว้าง (Width cm)
       row[32] = '10';
       // 33: ความสูง (Height cm)
-      row[33] = '6';
+      row[33] = '7';
       // 34: Standard Delivery
       row[34] = 'เปิด';
 
