@@ -58,7 +58,7 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       for (const p of selectedProds) {
         const row = new Array(38).fill('');
         // Column mappings:
-        row[0] = ''; // Category Code
+        row[0] = '101394'; // Category Code
         row[1] = p.name_th || p.name || '';
         row[2] = p.description_th || p.description || '';
         const price = (p.sale_price || p.price || 0) / 100;
