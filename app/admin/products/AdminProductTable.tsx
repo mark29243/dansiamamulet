@@ -45,11 +45,11 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       const arrayBuffer = await response.arrayBuffer();
       const wb = XLSX.read(arrayBuffer);
       
-      const wsName = 'Template'; // Shopee's main data sheet
+      const wsName = 'แบบฟอร์มการลงสินค้า'; // Shopee's main data sheet
       const ws = wb.Sheets[wsName];
       
       if (!ws) {
-        throw new Error("ไม่พบชีต 'Template' ในแบบฟอร์มต้นฉบับ");
+        throw new Error("ไม่พบชีต 'แบบฟอร์มการลงสินค้า' ในแบบฟอร์มต้นฉบับ");
       }
 
       const rows: any[][] = [];
@@ -82,8 +82,8 @@ export default function AdminProductTable({ products }: { products: any[] }) {
         rows.push(row);
       }
 
-      // Append data to the 'Template' sheet (starts after headers)
-      XLSX.utils.sheet_add_aoa(ws, rows, { origin: -1 });
+      // Append data to the sheet starting at row index 4 (row 5 in Excel)
+      XLSX.utils.sheet_add_aoa(ws, rows, { origin: 4 });
       
       const fileName = `shopee_export_${new Date().toISOString().split('T')[0]}.xlsx`;
       XLSX.writeFile(wb, fileName);
