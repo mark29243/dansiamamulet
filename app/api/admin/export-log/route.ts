@@ -37,12 +37,11 @@ export async function POST(req: Request) {
     // Handle escaped newlines in the private key if necessary
     key = key.replace(/\\n/g, '\n');
 
-    const auth = new google.auth.JWT(
+    const auth = new google.auth.JWT({
       email,
-      undefined,
       key,
-      ['https://www.googleapis.com/auth/spreadsheets']
-    );
+      scopes: ['https://www.googleapis.com/auth/spreadsheets']
+    });
 
     const sheets = google.sheets({ version: 'v4', auth });
     
