@@ -39,13 +39,13 @@ export default function AdminProductTable({ products }: { products: any[] }) {
     if (selectedIds.size === 0) return;
     const selectedProds = products.filter(p => selectedIds.has(p.id));
     
-    let csvContent = '\uFEFF'; // BOM for Excel UTF-8
+    const rows: any[][] = [];
     
     // Add headers
-    csvContent += SHOPEE_ROW_1.map(escapeCsv).join(',') + '\n';
-    csvContent += SHOPEE_ROW_2.map(escapeCsv).join(',') + '\n';
-    csvContent += SHOPEE_ROW_3.map(escapeCsv).join(',') + '\n';
-    csvContent += SHOPEE_ROW_4.map(escapeCsv).join(',') + '\n';
+    rows.push(SHOPEE_ROW_1);
+    rows.push(SHOPEE_ROW_2);
+    rows.push(SHOPEE_ROW_3);
+    rows.push(SHOPEE_ROW_4);
 
     // Add data rows
     for (const p of selectedProds) {
@@ -85,19 +85,17 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       // 34: Standard Delivery
       row[34] = 'เปิด';
 
-      csvContent += row.map(escapeCsv).join(',') + '\n';
+      rows.push(row);
     }
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `shopee_export_${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, 'Template');
     
+    const fileName = `shopee_export_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+    
+
     toast('ดาวน์โหลดไฟล์ CSV สำหรับ Shopee เรียบร้อยแล้ว', 'success');
   }
 
