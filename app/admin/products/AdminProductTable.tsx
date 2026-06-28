@@ -59,6 +59,26 @@ export default function AdminProductTable({ products }: { products: any[] }) {
 
       const rows: any[][] = [];
 
+      // Helper for smart Thai word truncation
+      const truncateThaiText = (text: string, maxLength: number) => {
+        if (text.length <= maxLength) return text;
+        try {
+          const segmenter = new Intl.Segmenter('th', { granularity: 'word' });
+          let result = '';
+          for (const segment of segmenter.segment(text)) {
+            if (result.length + segment.segment.length + 3 > maxLength) break;
+            result += segment.segment;
+          }
+          return (result || text.substring(0, maxLength - 3)) + '...';
+        } catch (e) {
+          // Fallback if browser doesn't support Intl.Segmenter
+          const truncated = text.substring(0, maxLength - 3);
+          const lastSpace = truncated.lastIndexOf(' ');
+          if (lastSpace > 0) return truncated.substring(0, lastSpace) + '...';
+          return truncated + '...';
+        }
+      };
+
       // Add data rows
       for (const p of selectedProds) {
         const row = new Array(38).fill('');
@@ -68,7 +88,7 @@ export default function AdminProductTable({ products }: { products: any[] }) {
         // Name must be 20-120 chars
         let shopeeName = p.name_th || p.name || '';
         if (shopeeName.length > 120) {
-          shopeeName = shopeeName.substring(0, 117) + '...';
+          shopeeName = truncateThaiText(shopeeName, 120);
         } else if (shopeeName.length < 20) {
           shopeeName = shopeeName + ' (แท้ 100% พร้อมส่ง)';
         }
