@@ -35,68 +35,64 @@ export default function AdminProductTable({ products }: { products: any[] }) {
     setSelectedIds(next);
   }
 
-  function exportShopee() {
+  async function exportShopee() {
     if (selectedIds.size === 0) return;
     const selectedProds = products.filter(p => selectedIds.has(p.id));
     
-    const rows: any[][] = [];
-    
-    // Add headers
-    rows.push(SHOPEE_ROW_1);
-    rows.push(SHOPEE_ROW_2);
-    rows.push(SHOPEE_ROW_3);
-    rows.push(SHOPEE_ROW_4);
-
-    // Add data rows
-    for (const p of selectedProds) {
-      const row = new Array(38).fill('');
-      // Column mappings:
-      // 0: หมวดหมู่สินค้า (Category Code) - Leave blank for user to fill
-      row[0] = ''; 
-      // 1: ชื่อสินค้า (Product Name)
-      row[1] = p.name_th || p.name || '';
-      // 2: รายละเอียดสินค้า (Description)
-      row[2] = p.description_th || p.description || '';
-      // 15: ราคา (Price) - Shopee wants full baht
-      const price = (p.sale_price || p.price || 0) / 100;
-      row[15] = price.toString();
-      // 16: คลังสินค้า (Stock)
-      row[16] = (p.stock || 0).toString();
-      // 17: เลข SKU (SKU)
-      row[17] = p.slug || p.id.toString();
+    try {
+      // Load the original template file
+      const response = await fetch('/shopee_template.xlsx');
+      const arrayBuffer = await response.arrayBuffer();
+      const wb = XLSX.read(arrayBuffer);
       
-      // 21: ภาพปก (Cover Image)
-      if (p.images && p.images.length > 0) row[21] = p.images[0];
-      // 22-29: รูปภาพ 1-8 (Images 1-8)
-      for (let i = 1; i <= 8; i++) {
-        if (p.images && p.images.length > i) {
-          row[21 + i] = p.images[i];
-        }
+      const wsName = 'Template'; // Shopee's main data sheet
+      const ws = wb.Sheets[wsName];
+      
+      if (!ws) {
+        throw new Error("ไม่พบชีต 'Template' ในแบบฟอร์มต้นฉบับ");
       }
 
-      // 30: น้ำหนัก (Weight in kg)
-      row[30] = '0.30';
-      // 31: ความยาว (Length cm)
-      row[31] = '16';
-      // 32: ความกว้าง (Width cm)
-      row[32] = '10';
-      // 33: ความสูง (Height cm)
-      row[33] = '7';
-      // 34: Standard Delivery
-      row[34] = 'เปิด';
+      const rows: any[][] = [];
 
-      rows.push(row);
+      // Add data rows
+      for (const p of selectedProds) {
+        const row = new Array(38).fill('');
+        // Column mappings:
+        row[0] = ''; // Category Code
+        row[1] = p.name_th || p.name || '';
+        row[2] = p.description_th || p.description || '';
+        const price = (p.sale_price || p.price || 0) / 100;
+        row[15] = price.toString();
+        row[16] = (p.stock || 0).toString();
+        row[17] = p.slug || p.id.toString();
+        
+        if (p.images && p.images.length > 0) row[21] = p.images[0];
+        for (let i = 1; i <= 8; i++) {
+          if (p.images && p.images.length > i) {
+            row[21 + i] = p.images[i];
+          }
+        }
+
+        row[30] = '0.30'; // Weight
+        row[31] = '16'; // Length
+        row[32] = '10'; // Width
+        row[33] = '7'; // Height
+        row[34] = 'เปิด'; // Standard Delivery
+
+        rows.push(row);
+      }
+
+      // Append data to the 'Template' sheet (starts after headers)
+      XLSX.utils.sheet_add_aoa(ws, rows, { origin: -1 });
+      
+      const fileName = `shopee_export_${new Date().toISOString().split('T')[0]}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+      
+      toast('ดาวน์โหลดไฟล์ Excel สำหรับ Shopee เรียบร้อยแล้ว', 'success');
+    } catch (error) {
+      console.error('Error generating Shopee export:', error);
+      toast('เกิดข้อผิดพลาดในการสร้างไฟล์ Excel', 'error');
     }
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(rows);
-    XLSX.utils.book_append_sheet(wb, ws, 'Template');
-    
-    const fileName = `shopee_export_${new Date().toISOString().split('T')[0]}.xlsx`;
-    XLSX.writeFile(wb, fileName);
-    
-
-    toast('ดาวน์โหลดไฟล์ CSV สำหรับ Shopee เรียบร้อยแล้ว', 'success');
   }
 
   return (
