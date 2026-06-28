@@ -50,10 +50,11 @@ export async function POST(req: Request) {
     // Shopee (MARK sheet): A: WEB, H: Exporter Name
     // Shopee 2 (JUNE sheet): A: WEB, F: Exporter Name
     const rows = products.map((p: any) => {
+      const productName = p.name_th || p.name || '';
       if (platform === 'shopee') {
-        return ['WEB', '', '', '', '', '', '', exporterName || '']; // A to H
+        return ['WEB', '', '', '', '', '', '', productName]; // A to H
       } else if (platform === 'shopee2') {
-        return ['WEB', '', '', '', '', exporterName || '']; // A to F
+        return ['WEB', '', '', '', '', productName]; // A to F
       }
       return ['WEB'];
     });
