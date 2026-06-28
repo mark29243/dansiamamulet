@@ -64,13 +64,26 @@ export default function AdminProductTable({ products }: { products: any[] }) {
         const row = new Array(38).fill('');
         // Column mappings:
         row[0] = '101394'; // Category Code
-        row[1] = p.name_th || p.name || '';
-        row[2] = p.description_th || p.description || '';
+        
+        // Name must be 20-120 chars
+        let shopeeName = p.name_th || p.name || '';
+        if (shopeeName.length > 120) {
+          shopeeName = shopeeName.substring(0, 117) + '...';
+        } else if (shopeeName.length < 20) {
+          shopeeName = shopeeName + ' (แท้ 100% พร้อมส่ง)';
+        }
+        row[1] = shopeeName;
+        
+        row[2] = p.description_th || p.description || shopeeName;
         const basePrice = (p.sale_price || p.price || 0) / 100;
         const finalPrice = customPrices[p.id] ? parseFloat(customPrices[p.id]) : basePrice;
         row[15] = finalPrice.toString();
         row[16] = (p.stock || 0).toString();
-        row[17] = p.slug || p.id.toString();
+        
+        // SKU must not exceed 100 chars
+        let sku = p.slug || p.id.toString();
+        if (sku.length > 100) sku = sku.substring(0, 100);
+        row[17] = sku;
         
         if (p.images && p.images.length > 0) row[21] = p.images[0];
         for (let i = 1; i <= 8; i++) {
