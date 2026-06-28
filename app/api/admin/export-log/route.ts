@@ -46,33 +46,21 @@ export async function POST(req: Request) {
 
     const sheets = google.sheets({ version: 'v4', auth });
     
-    // Format rows: 
-    // A: WEB
-    // B: Product ID
-    // C: Product Name
-    // D: Price
-    // E-G: Blank
-    // H: Exporter Name (if Shopee)
-    // I: Exporter Name (if Shopee 2)
+    // Format rows based on platform:
+    // Shopee (MARK sheet): A: WEB, H: Exporter Name
+    // Shopee 2 (JUNE sheet): A: WEB, F: Exporter Name
     const rows = products.map((p: any) => {
-      const row = ['WEB', p.id?.toString() || '', p.name_th || p.name || '', (p.sale_price ?? p.price ?? 0) / 100, '', '', ''];
-      
       if (platform === 'shopee') {
-        row.push(exporterName || '');
-        row.push(''); // I is empty
+        return ['WEB', '', '', '', '', '', '', exporterName || '']; // A to H
       } else if (platform === 'shopee2') {
-        row.push(''); // H is empty
-        row.push(exporterName || '');
-      } else {
-        row.push('');
-        row.push('');
+        return ['WEB', '', '', '', '', exporterName || '']; // A to F
       }
-
-      return row;
+      return ['WEB'];
     });
 
     const spreadsheetId = '1-Ir2GIIszELvRvDlRgj6uK0triZjU9OuL1_1J-ryVkA';
-    const range = 'MARK!A:I';
+    // If it's Shopee, use MARK sheet. If it's Shopee 2, use JUNE sheet.
+    const range = platform === 'shopee' ? 'MARK!A:H' : 'JUNE!A:F';
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
