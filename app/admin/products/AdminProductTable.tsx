@@ -82,8 +82,8 @@ export default function AdminProductTable({ products }: { products: any[] }) {
         rows.push(row);
       }
 
-      // Append data to the sheet starting at row index 4 (row 5 in Excel)
-      XLSX.utils.sheet_add_aoa(ws, rows, { origin: 4 });
+      // Append data to the sheet starting at row index 6 (row 7 in Excel)
+      XLSX.utils.sheet_add_aoa(ws, rows, { origin: 6 });
       
       const fileName = `shopee_export_${new Date().toISOString().split('T')[0]}.xlsx`;
       XLSX.writeFile(wb, fileName);
