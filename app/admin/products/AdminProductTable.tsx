@@ -63,7 +63,7 @@ export default function AdminProductTable({ products }: { products: any[] }) {
         );
 
         // Send to Google Sheets
-        await fetch('/api/admin/export-log', {
+        const sheetRes = await fetch('/api/admin/export-log', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -73,10 +73,15 @@ export default function AdminProductTable({ products }: { products: any[] }) {
           })
         });
 
+        if (!sheetRes.ok) {
+          const errData = await sheetRes.json();
+          throw new Error(errData.error || 'Failed to save to Google Sheets');
+        }
+
         toast(`บันทึกชื่อ ${exportName} ลง ${exportPlatform === 'shopee' ? 'Shopee' : 'Shopee 2'} และลง Sheet เรียบร้อยแล้ว`, 'success');
       } catch (e) {
         console.error('Error saving name to platform', e);
-        toast('เกิดข้อผิดพลาดในการบันทึกชื่อ', 'error');
+        toast(e instanceof Error ? e.message : 'เกิดข้อผิดพลาดในการบันทึกชื่อ', 'error');
       }
     }
     

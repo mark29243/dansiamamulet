@@ -60,42 +60,47 @@ export async function POST(req: Request) {
       return ['WEB'];
     });
 
-    const spreadsheetId = '1-Ir2GIIszELvRvDlRgj6uK0triZjU9OuL1_1J-ryVkA';
-    const sheetName = platform === 'shopee' ? 'MARK' : 'JUNE';
-    const checkColumn = platform === 'shopee' ? 'H' : 'F';
-    
-    // Fetch the specific column to find the true last row with data
-    const getRes = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: `${sheetName}!${checkColumn}:${checkColumn}`,
-    });
-    
-    // Google sheets might return trailing empty arrays or empty strings.
-    // We find the last row that actually has some text.
-    let numRows = 0;
-    if (getRes.data.values) {
-      numRows = getRes.data.values.length;
-      while (numRows > 0 && (!getRes.data.values[numRows - 1][0] || getRes.data.values[numRows - 1][0].trim() === '')) {
-        numRows--;
+    try {
+      const spreadsheetId = '1-Ir2GIIszELvRvDlRgj6uK0triZjU9OuL1_1J-ryVkA';
+      const sheetName = platform === 'shopee' ? 'MARK' : 'JUNE';
+      const checkColumn = platform === 'shopee' ? 'H' : 'F';
+      
+      // Fetch the specific column to find the true last row with data
+      const getRes = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: `${sheetName}!${checkColumn}:${checkColumn}`,
+      });
+      
+      // Google sheets might return trailing empty arrays or empty strings.
+      // We find the last row that actually has some text.
+      let numRows = 0;
+      if (getRes.data.values) {
+        numRows = getRes.data.values.length;
+        while (numRows > 0 && (!getRes.data.values[numRows - 1][0] || getRes.data.values[numRows - 1][0].trim() === '')) {
+          numRows--;
+        }
       }
+
+      const startRow = numRows + 1;
+      const endRow = startRow + rows.length - 1;
+      
+      // Write exactly at the first empty row
+      const writeRange = `${sheetName}!A${startRow}:I${endRow}`;
+
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: writeRange,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: {
+          values: rows,
+        },
+      });
+
+      return NextResponse.json({ ok: true, rowsAppended: rows.length });
+    } catch (e: any) {
+      console.error('Google Sheets Error:', e);
+      return NextResponse.json({ ok: false, error: e.message || 'Unknown error' }, { status: 500 });
     }
-
-    const startRow = numRows + 1;
-    const endRow = startRow + rows.length - 1;
-    
-    // Write exactly at the first empty row
-    const writeRange = `${sheetName}!A${startRow}:I${endRow}`;
-
-    await sheets.spreadsheets.values.update({
-      spreadsheetId,
-      range: writeRange,
-      valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values: rows,
-      },
-    });
-
-    return NextResponse.json({ ok: true, rowsAppended: rows.length });
   } catch (error: any) {
     console.error('Error writing to Google Sheets:', error);
     return NextResponse.json({ error: error.message || 'Unknown error' }, { status: 500 });
