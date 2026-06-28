@@ -5,6 +5,8 @@ import { formatPrice } from '@/lib/utils';
 import StockEditor from './StockEditor';
 import PublishButton from './PublishButton';
 
+import AdminProductTable from './AdminProductTable';
+
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProductsPage({ searchParams }: { searchParams: { q?: string; filter?: string; page?: string } }) {
@@ -68,58 +70,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
         ))}
       </div>
 
-      <div className="card" style={{ overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
-            <thead>
-              <tr style={{ background: 'var(--cream-dark)', textAlign: 'left' }}>
-                <Th>&nbsp;</Th>
-                <Th>Name</Th>
-                <Th>Category</Th>
-                <Th>Price</Th>
-                <Th>Stock</Th>
-                <Th>Status</Th>
-                <Th>&nbsp;</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.map((p: any) => (
-                <tr key={p.id} style={{ borderTop: '1px solid var(--cream-dark)' }}>
-                  <Td style={{ width: 60 }}>
-                    {p.images?.[0] && (
-                      <div style={{ width: 48, height: 48, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)' }}>
-                        <Image src={p.images[0]} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} unoptimized />
-                      </div>
-                    )}
-                  </Td>
-                  <Td>
-                    <Link href={`/product/${p.slug}`} target="_blank" className="serif" style={{ color: 'var(--text)', fontWeight: 600, fontSize: 14 }}>
-                      {(p.name_th || p.name).slice(0, 60)}{(p.name_th || p.name).length > 60 ? '…' : ''}
-                    </Link>
-                    <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 2 }}>ID #{p.id}</div>
-                  </Td>
-                  <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>
-                  <Td className="serif" style={{ color: 'var(--gold-dark)', fontWeight: 600 }}>
-                    {formatPrice(p.sale_price ?? p.price)}
-                  </Td>
-                  <Td>
-                    <StockEditor productId={p.id} stock={p.stock} />
-                  </Td>
-                  <Td>
-                    {p.stock === 0 ? <span className="badge badge-oos">OOS</span> : p.stock <= 3 ? <span className="badge badge-warning">LOW</span> : <span className="badge badge-success">OK</span>}
-                    {!p.published && <span className="badge" style={{ background: 'var(--text-faint)', color: '#fff', marginLeft: 4 }}>HIDDEN</span>}
-                  </Td>
-                  <Td style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    {!p.published && <PublishButton productId={p.id} />}
-                    <Link href={`/admin/products/${p.id}`} className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--gold-dark)', fontWeight: 600 }}>Edit ✎</Link>
-                    <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--text-muted)' }}>View ↗</Link>
-                  </Td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <AdminProductTable products={list} />
       
       {totalPages > 1 && (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 24 }}>
@@ -140,11 +91,4 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
       </p>
     </div>
   );
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return <th style={{ padding: '12px 16px', fontSize: 10, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--text-muted)', fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{children}</th>;
-}
-function Td({ children, style }: any) {
-  return <td style={{ padding: '12px 16px', fontSize: 13, verticalAlign: 'middle', ...style }}>{children}</td>;
 }
