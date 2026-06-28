@@ -62,12 +62,11 @@ export async function POST(req: Request) {
 
     const spreadsheetId = '1-Ir2GIIszELvRvDlRgj6uK0triZjU9OuL1_1J-ryVkA';
     const sheetName = platform === 'shopee' ? 'MARK' : 'JUNE';
-    const checkColumn = platform === 'shopee' ? 'H' : 'F';
     
-    // Fetch the specific column to find the true last row with data
+    // Fetch Column A to find the true last row with data
     const getRes = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${sheetName}!${checkColumn}:${checkColumn}`,
+      range: `${sheetName}!A:A`,
     });
     
     const numRows = getRes.data.values ? getRes.data.values.length : 0;
