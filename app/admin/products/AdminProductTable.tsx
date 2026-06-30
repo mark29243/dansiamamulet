@@ -44,6 +44,37 @@ export default function AdminProductTable({ products }: { products: any[] }) {
     setSelectedIds(next);
   }
 
+  async function copyForFacebook(p: any) {
+    const text = `${p.name_th || p.name}\n\n${p.description_th || p.description || ''}\n\n💰 ราคา: ${formatPrice(p.sale_price ?? p.price)}\n\nรหัสอ้างอิง: #${p.id}\n📍 ดูรายละเอียดหน้าเว็บ: https://dansiamamulets.com/product/${p.slug}`;
+    
+    try {
+      await navigator.clipboard.writeText(text);
+      toast('คัดลอกรายละเอียดสำหรับ Facebook แล้ว', 'success');
+      
+      if (p.images && p.images.length > 0) {
+        try {
+          const res = await fetch(p.images[0]);
+          if (!res.ok) throw new Error('Network response was not ok');
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = `fb_${p.slug}.jpg`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        } catch (e) {
+          // Fallback if CORS prevents blob download
+          window.open(p.images[0], '_blank');
+        }
+      }
+    } catch (e) {
+      toast('ไม่สามารถคัดลอกข้อความได้', 'error');
+    }
+  }
+
   async function exportShopeeAndSaveName() {
     if (selectedIds.size === 0) return;
     setIsExporting(true);
@@ -284,6 +315,9 @@ export default function AdminProductTable({ products }: { products: any[] }) {
                   </Td>
                   <Td style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                     {!p.published && <PublishButton productId={p.id} />}
+                    <button onClick={() => copyForFacebook(p)} className="btn-text" style={{ padding: 0, fontSize: 11, color: '#1d4ed8', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }} title="คัดลอกข้อความและโหลดรูปภาพเพื่อลง Facebook">
+                      FB 📘
+                    </button>
                     <Link href={`/admin/products/${p.id}`} className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--gold-dark)', fontWeight: 600 }}>Edit ✎</Link>
                     <Link href={`/product/${p.slug}`} target="_blank" className="btn-text" style={{ padding: 0, fontSize: 11, color: 'var(--text-muted)' }}>View ↗</Link>
                   </Td>
