@@ -161,7 +161,7 @@ function FooterCol({ title, children }: { title: string; children: React.ReactNo
         {children}
       </ul>
       <style>{`
-        ul li, ul li a { font-size: 12px; font-family: 'Sarabun', sans-serif; color: #8A7050; transition: color 0.2s; }
+        ul li, ul li a { font-size: 12px; font-family: Sarabun, sans-serif; color: #8A7050; transition: color 0.2s; }
         ul li:hover, ul li a:hover { color: var(--gold); }
       `}</style>
     </div>

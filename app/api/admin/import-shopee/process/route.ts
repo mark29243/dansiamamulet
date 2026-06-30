@@ -70,7 +70,7 @@ export async function POST(req: Request) {
 
         // Find existing product by name
         const { data: existing } = await ctx.admin
-          .from('products')
+          .from('shopee_products')
           .select('id, images')
           .eq('name', name)
           .single();
@@ -91,11 +91,11 @@ export async function POST(req: Request) {
         if (existing) {
           // Update
           if (Object.keys(updateData).length > 0) {
-            await ctx.admin.from('products').update(updateData).eq('id', existing.id);
+            await ctx.admin.from('shopee_products').update(updateData).eq('id', existing.id);
           }
         } else {
           // Insert new
-          await ctx.admin.from('products').insert({
+          await ctx.admin.from('shopee_products').insert({
             name: name,
             name_th: name,
             ...updateData,

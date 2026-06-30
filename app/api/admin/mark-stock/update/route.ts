@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
 
     const { error } = await ctx.admin
-      .from('products')
+      .from('shopee_products')
       .update(fieldsToUpdate)
       .eq('id', id);
 

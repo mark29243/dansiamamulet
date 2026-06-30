@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     let updateCount = 0;
 
     // Fetch all products to match by name
-    const { data: allProducts } = await ctx.admin.from('products').select('id, name');
+    const { data: allProducts } = await ctx.admin.from('shopee_products').select('id, name');
     if (!allProducts) {
       return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
     }
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       const product = allProducts.find(p => p.name.trim() === productName.trim());
       if (product) {
         // Update product
-        const { error } = await ctx.admin.from('products').update({
+        const { error } = await ctx.admin.from('shopee_products').update({
           mark_location: location,
           mark_shopee2: shopee2Checked,
           mark_fb: fbChecked,

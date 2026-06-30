@@ -29,12 +29,13 @@ export function createClient() {
 
 // Admin client — uses service role key, bypasses RLS. SERVER ONLY.
 export function createAdminClient() {
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!key) {
+    throw new Error('Supabase keys are not set in .env.local');
   }
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    key,
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
 }
