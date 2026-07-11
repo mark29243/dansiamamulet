@@ -1,0 +1,137 @@
+[
+  {
+    "type": "img",
+    "src": "https://down-sg.img.susercontent.com/tw-11134211-81z1k-mnkx7trbf28111",
+    "className": "download-app-bg"
+  },
+  {
+    "type": "img",
+    "src": "https://cf.shopee.co.th/file/th-11134233-7r98z-lpfb6a69wu3tae",
+    "className": "account-avatar"
+  },
+  {
+    "type": "img",
+    "src": "https://cf.shopee.co.th/file/th-11134233-7r98z-lpfb6a69wu3tae",
+    "className": "account-avatar"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zti-mn2hh1hsy0p019",
+    "className": "shopee-image-manager__image"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zth-mn2hh1hu9s06d4",
+    "className": "shopee-image-manager__image"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zti-mn2hh1hyrbbc14",
+    "className": "shopee-image-manager__image"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81ztq-mn2hh2auof0l53",
+    "className": "shopee-image-manager__image"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/modules/product/image/quality-no-ai-task.d6473b4.png",
+    "className": ""
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zti-mn2hh1hyrbbc14",
+    "className": "product-image-thumbnail"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zti-mn2hh1hsy0p019",
+    "className": "product-image-thumbnail"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zth-mn2hh1hu9s06d4",
+    "className": "product-image-thumbnail"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zti-mn2hh1hyrbbc14",
+    "className": "product-image-thumbnail"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134207-81zti-mn2hh1hsy0p019",
+    "className": "product-image-thumbnail"
+  },
+  {
+    "type": "img",
+    "src": "https://down-th.img.susercontent.com/th-11134233-7r98z-lpfb6a69wu3tae",
+    "className": "avatar"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/modules/product/image/example1.a516105.png",
+    "className": "image"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/modules/product/image/example2.a516105.png",
+    "className": "image"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/remote-component/platform-remote-component/image/diagnose.7b7e139.png",
+    "className": "card_img"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/remote-component/platform-remote-component/image/bug.949cb33.png",
+    "className": "card_img"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/remote-component/platform-remote-component/image/suggest.7c2e83a.png",
+    "className": "card_img"
+  },
+  {
+    "type": "img",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/remote-component/platform-remote-component/image/fraudulent.cf4162a.png",
+    "className": "card_img"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-order.cef78d8.png",
+    "className": "item-icon"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-product.eacab26.png",
+    "className": "item-icon"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-market.bd9cddb.png",
+    "className": "item-icon"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-balance.fde429b.png",
+    "className": "item-icon"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-business.663a821.png",
+    "className": "item-icon"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-settings.36ae7e0.png",
+    "className": "item-icon"
+  },
+  {
+    "type": "bg",
+    "src": "https://deo.shopeemobile.com/shopee/shopee-seller-live-sg/mmf_portal_seller_root_dir/static/portal/local-seller-center/image/bg-feedback.f6f97ef.png",
+    "className": "item-icon"
+  }
+]

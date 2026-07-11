@@ -18,7 +18,6 @@ export default function EditProductForm({ product }: { product: any }) {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [autoTranslate, setAutoTranslate] = useState(!product.name || /[ก-๙]/.test(product.name));
 
   const [selectedCats, setSelectedCats] = useState<string[]>(
     (product.category || '').split(',').map((c: string) => c.trim()).filter(Boolean)
@@ -88,7 +87,7 @@ export default function EditProductForm({ product }: { product: any }) {
     setDragIdx(null);
   }
 
-  async function handleSave() {
+  async function handleSave(shouldGenSeo: boolean) {
     setBusy(true);
     try {
       // Step 1: save basic fields
@@ -115,7 +114,7 @@ export default function EditProductForm({ product }: { product: any }) {
       if (!res.ok) throw new Error(data.error || 'Failed');
 
       // Step 2: regenerate SEO via Claude
-      if (autoTranslate) {
+      if (shouldGenSeo) {
         toast('Claude กำลังอัพเดท SEO และแปลภาษา...', 'success');
         const seoRes = await fetch('/api/admin/process-draft', {
           method: 'POST',
@@ -333,18 +332,22 @@ export default function EditProductForm({ product }: { product: any }) {
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)', cursor: 'pointer' }}>
-              <input type="checkbox" checked={autoTranslate} onChange={(e) => setAutoTranslate(e.target.checked)} />
-              ใช้ AI แปลภาษาให้ทับของเดิม (แนะนำ)
-            </label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button
-              onClick={handleSave}
+              onClick={() => handleSave(false)}
+              disabled={busy}
+              className="btn-outline"
+              style={{ padding: '10px 20px', opacity: busy ? 0.7 : 1, borderColor: 'var(--cream-dark)', color: 'var(--text)' }}
+            >
+              {busy ? 'กำลังบันทึก...' : 'บันทึกข้อมูลเฉยๆ'}
+            </button>
+            <button
+              onClick={() => handleSave(true)}
               disabled={busy}
               className="btn-primary"
               style={{ padding: '10px 24px', opacity: busy ? 0.7 : 1 }}
             >
-              {busy ? 'กำลังบันทึก...' : autoTranslate ? 'บันทึก + ให้ AI แปลภาษา' : 'บันทึกอย่างเดียว'}
+              {busy ? 'กำลังทำงาน...' : '✨ บันทึก + ให้ AI สร้าง SEO'}
             </button>
           </div>
         </div>

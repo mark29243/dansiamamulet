@@ -88,7 +88,44 @@ export async function POST(req: Request) {
           console.error('[webhook] Stock decrement failed:', stockErr);
         }
 
-        // 3. Send emails (non-blocking)
+        // 3. Auto-sync to accounting
+        try {
+          // Check if already exists to prevent duplicates
+          const { data: existing } = await admin.from('accounting_records').select('id').eq('order_id', order.id).limit(1);
+          
+          if (!existing || existing.length === 0) {
+            const accountingInserts = order.items.map((item: any) => {
+              // Determine price per unit, default to full item price if no quantity, otherwise divide.
+              // But usually item.price is the unit price. Let's assume item.price is unit price.
+              // If item has quantity, we should ideally insert QTY rows or just 1 row with total amount?
+              // "ตอนขายสินค้าได้ต้องให้มาเพิ่มต้นทุนของสินค้าแต่ละองค์ด้วย" - "each amulet". 
+              // So if quantity > 1, maybe create multiple rows. 
+              const qty = item.quantity || 1;
+              const rows = [];
+              for (let i = 0; i < qty; i++) {
+                rows.push({
+                  date: new Date().toISOString().split('T')[0],
+                  type: 'SALE',
+                  category: 'หน้าเว็บ',
+                  product_name: item.name,
+                  amount: item.price,
+                  cost: 0,
+                  order_id: order.id,
+                });
+              }
+              return rows;
+            }).flat();
+
+            if (accountingInserts.length > 0) {
+              const { error: accErr } = await admin.from('accounting_records').insert(accountingInserts);
+              if (accErr) console.warn('[webhook] Accounting sync failed:', accErr);
+            }
+          }
+        } catch (accE) {
+          console.warn('[webhook] Accounting sync error:', accE);
+        }
+
+        // 4. Send emails (non-blocking)
         const [emailRes, adminEmailRes] = await Promise.all([
           sendOrderConfirmation(order as Order),
           sendAdminOrderNotification(order as Order),

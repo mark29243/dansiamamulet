@@ -13,9 +13,15 @@ async function requireAdmin() {
 }
 
 function extractIds(url: string): { shopId: string; itemId: string } | null {
-  const match = url.match(/i\.(\d+)\.(\d+)/);
-  if (!match) return null;
-  return { shopId: match[1], itemId: match[2] };
+  // Pattern 1: i.SHOP_ID.ITEM_ID
+  const match1 = url.match(/i\.(\d+)\.(\d+)/);
+  if (match1) return { shopId: match1[1], itemId: match1[2] };
+
+  // Pattern 2: product/SHOP_ID/ITEM_ID
+  const match2 = url.match(/\/product\/(\d+)\/(\d+)/);
+  if (match2) return { shopId: match2[1], itemId: match2[2] };
+
+  return null;
 }
 
 function toSlug(name: string): string {
@@ -117,7 +123,17 @@ export async function POST(req: Request) {
   const { url } = await req.json();
   if (!url) return NextResponse.json({ error: 'URL required' }, { status: 400 });
 
-  const ids = extractIds(url);
+  let finalUrl = url;
+  if (url.includes('shp.ee')) {
+    try {
+      const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+      finalUrl = res.url;
+    } catch (e) {
+      console.error('Failed to expand short url:', e);
+    }
+  }
+
+  const ids = extractIds(finalUrl);
   if (!ids) return NextResponse.json({ error: 'Cannot parse Shopee URL — must contain i.SHOPID.ITEMID' }, { status: 400 });
 
   // Try API first, then page scrape

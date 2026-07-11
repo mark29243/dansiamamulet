@@ -11,6 +11,7 @@ const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '◈' },
   { href: '/admin/orders', label: 'Orders', icon: '📦', badge: true },
   { href: '/admin/products', label: 'Products', icon: '🪬' },
+  { href: '/admin/accounting', label: 'Accounting', icon: '💰' },
   { href: '/admin/blog', label: 'Blog', icon: '✍︎' },
   { href: '/admin/import', label: 'Import', icon: '⬆︎' },
   { href: '/admin/reviews', label: 'Reviews', icon: '★' },

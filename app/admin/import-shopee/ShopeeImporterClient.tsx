@@ -10,6 +10,8 @@ export default function ShopeeImporterClient() {
   const [total, setTotal] = useState(0);
   const [successCount, setSuccessCount] = useState(0);
   const [errorCount, setErrorCount] = useState(0);
+  const [targetStore, setTargetStore] = useState<'shopee1' | 'shopee2' | 'june'>('shopee1');
+  const [isClearing, setIsClearing] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -47,12 +49,21 @@ export default function ShopeeImporterClient() {
       const nameIdx = headers.indexOf('ชื่อสินค้า');
       const priceIdx = headers.indexOf('ราคา');
       const stockIdx = headers.indexOf('คลัง');
-      const coverIdx = headers.indexOf('ภาพปก');
-      const img1Idx = headers.indexOf('รูปภาพ 1');
-      const img2Idx = headers.indexOf('รูปภาพ 2');
-      const img3Idx = headers.indexOf('รูปภาพ 3');
-      const img4Idx = headers.indexOf('รูปภาพ 4');
-      const img5Idx = headers.indexOf('รูปภาพ 5');
+      const getHeaderIdx = (thPattern: string, enPattern: string, altThPattern = '') => headers.findIndex((h: any) => {
+        if (typeof h !== 'string') return false;
+        const lower = h.toLowerCase();
+        return lower.includes(thPattern) || lower.includes(enPattern) || (altThPattern && lower.includes(altThPattern));
+      });
+
+      const coverIdx = getHeaderIdx('ภาพปก', 'cover image', 'รูปภาพหน้าปก');
+      const img1Idx = getHeaderIdx('รูปภาพ 1', 'image 1');
+      const img2Idx = getHeaderIdx('รูปภาพ 2', 'image 2');
+      const img3Idx = getHeaderIdx('รูปภาพ 3', 'image 3');
+      const img4Idx = getHeaderIdx('รูปภาพ 4', 'image 4');
+      const img5Idx = getHeaderIdx('รูปภาพ 5', 'image 5');
+      const img6Idx = getHeaderIdx('รูปภาพ 6', 'image 6');
+      const img7Idx = getHeaderIdx('รูปภาพ 7', 'image 7');
+      const img8Idx = getHeaderIdx('รูปภาพ 8', 'image 8');
 
       // Process rows below headers
       for (let r = headerRowIndex + 1; r < json.length; r++) {
@@ -82,6 +93,9 @@ export default function ShopeeImporterClient() {
         if (img3Idx >= 0 && row[img3Idx]) imgUrls.push(row[img3Idx]);
         if (img4Idx >= 0 && row[img4Idx]) imgUrls.push(row[img4Idx]);
         if (img5Idx >= 0 && row[img5Idx]) imgUrls.push(row[img5Idx]);
+        if (img6Idx >= 0 && row[img6Idx]) imgUrls.push(row[img6Idx]);
+        if (img7Idx >= 0 && row[img7Idx]) imgUrls.push(row[img7Idx]);
+        if (img8Idx >= 0 && row[img8Idx]) imgUrls.push(row[img8Idx]);
 
         if (imgUrls.length > 0) {
           // Merge images (some URLs might be comma separated or multiline, but Shopee usually puts 1 URL per column)
@@ -101,8 +115,25 @@ export default function ShopeeImporterClient() {
 
   const productsList = Object.values(productsMap);
 
+  const handleClearAll = async () => {
+    if (!confirm('⚠️ คำเตือน: คุณต้องการล้าง "สินค้าทั้งหมด" ออกจากระบบใช่หรือไม่?\n\n(ทำเพื่อรีเซ็ตระบบแก้ปัญหาข้อมูลเพี้ยน หลังจากล้างเสร็จแล้ว ให้นำเข้า Shopee 1 และ Shopee 2 ใหม่อีกครั้ง)')) return;
+    
+    setIsClearing(true);
+    try {
+      const res = await fetch('/api/admin/clear-products', { method: 'POST' });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error);
+      alert('ล้างข้อมูลทั้งหมดเรียบร้อยแล้ว! กรุณานำเข้าไฟล์ Excel ใหม่ครับ');
+    } catch (err: any) {
+      alert('Error: ' + err.message);
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
   const handleStartImport = async () => {
-    if (!confirm(`ต้องการนำเข้าข้อมูล ${productsList.length} รายการใช่ไหม?\nขั้นตอนนี้อาจใช้เวลาหลายนาที (เพราะต้องดึงรูปภาพจาก Shopee ทีละรูป)`)) return;
+    const storeName = targetStore === 'shopee1' ? 'Shopee 1' : targetStore === 'shopee2' ? 'Shopee 2' : 'ร้าน June';
+    if (!confirm(`ต้องการนำเข้าข้อมูล ${productsList.length} รายการเข้า ${storeName} ใช่ไหม?\nขั้นตอนนี้อาจใช้เวลาหลายนาที`)) return;
 
     setIsProcessing(true);
     setTotal(productsList.length);
@@ -122,7 +153,7 @@ export default function ShopeeImporterClient() {
         const res = await fetch('/api/admin/import-shopee/process', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ products: batch })
+          body: JSON.stringify({ products: batch, targetStore })
         });
         
         const data = await res.json();
@@ -165,6 +196,46 @@ export default function ShopeeImporterClient() {
           style={{ display: 'none' }}
           id="file-upload"
         />
+
+        <div style={{ marginBottom: 20, padding: 16, background: '#f8fafc', borderRadius: 8, border: '1px solid #e2e8f0', textAlign: 'left' }}>
+          <h3 style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 12, color: '#334155' }}>เลือกร้านที่จะนำเข้า:</h3>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 15 }}>
+              <input 
+                type="radio" 
+                name="store" 
+                value="shopee1" 
+                checked={targetStore === 'shopee1'} 
+                onChange={() => setTargetStore('shopee1')}
+                style={{ width: 18, height: 18, accentColor: '#ea580c' }}
+              />
+              🟠 Shopee 1 (ร้านหลัก)
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 15 }}>
+              <input 
+                type="radio" 
+                name="store" 
+                value="shopee2" 
+                checked={targetStore === 'shopee2'} 
+                onChange={() => setTargetStore('shopee2')}
+                style={{ width: 18, height: 18, accentColor: '#ea580c' }}
+              />
+              🟡 Shopee 2 (ร้านรอง)
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 15 }}>
+              <input 
+                type="radio" 
+                name="store" 
+                value="june" 
+                checked={targetStore === 'june'} 
+                onChange={() => setTargetStore('june')}
+                style={{ width: 18, height: 18, accentColor: '#ea580c' }}
+              />
+              🟢 ร้านของ June
+            </label>
+          </div>
+        </div>
+
         <label htmlFor="file-upload" style={{ cursor: 'pointer', display: 'inline-block' }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>📤</div>
           <div style={{ fontSize: 18, fontWeight: 'bold', color: '#ff7300', marginBottom: 8 }}>คลิกเพื่อเลือกไฟล์ Excel หรือลากไฟล์มาวางตรงนี้</div>
@@ -215,17 +286,17 @@ export default function ShopeeImporterClient() {
 
             <button 
               onClick={handleStartImport}
-              disabled={isProcessing}
+              disabled={isProcessing || isClearing}
               style={{ 
                 width: '100%', 
                 padding: '12px', 
-                background: isProcessing ? '#ccc' : '#ff7300', 
+                background: isProcessing || isClearing ? '#ccc' : '#ff7300', 
                 color: 'white', 
                 border: 'none', 
                 borderRadius: 8, 
                 fontWeight: 'bold', 
                 fontSize: 16,
-                cursor: isProcessing ? 'not-allowed' : 'pointer'
+                cursor: isProcessing || isClearing ? 'not-allowed' : 'pointer'
               }}
             >
               {isProcessing && progress === 0 ? 'กำลังเตรียมข้อมูล...' : isProcessing ? 'กำลังทำงาน...' : '🚀 เริ่มนำเข้าข้อมูลเข้าสู่ระบบ'}
@@ -233,6 +304,19 @@ export default function ShopeeImporterClient() {
           </div>
         </div>
       )}
+
+      <div style={{ marginTop: 40, paddingTop: 20, borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
+        <button 
+          onClick={handleClearAll} 
+          disabled={isClearing || isProcessing}
+          style={{ padding: '8px 16px', background: '#ef4444', color: 'white', border: 'none', borderRadius: 6, fontSize: 13, cursor: isClearing || isProcessing ? 'not-allowed' : 'pointer' }}
+        >
+          {isClearing ? 'กำลังล้างข้อมูล...' : '⚠️ ล้างฐานข้อมูลทั้งหมด (Reset System)'}
+        </button>
+        <p style={{ fontSize: 12, color: '#64748b', marginTop: 8 }}>
+          *กดปุ่มนี้ถ้าตัวเลขสินค้าเพี้ยน ระบบจะล้างข้อมูลเก่าทิ้งทั้งหมดเพื่อให้คุณนำเข้าไฟล์ Excel ใหม่ตั้งแต่ต้น
+        </p>
+      </div>
     </div>
   );
 }

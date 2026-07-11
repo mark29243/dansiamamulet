@@ -96,6 +96,45 @@ export async function POST(req: Request) {
         },
       });
 
+      // === ADDED LOGIC: Insert into new stock tables ===
+      const tableName = platform === 'shopee' ? 'shopee_products' : 'june_products';
+      
+      for (const p of products) {
+        const name = (p.name_th || p.name || '').trim();
+        if (!name) continue;
+
+        const { data: existing } = await ctx.admin.from(tableName).select('id').eq('name', name).single();
+        
+        const price = p.sale_price !== null && p.sale_price !== undefined ? p.sale_price : p.price;
+        const finalPrice = price ? price / 100 : 0;
+        
+        const updateData: any = {
+          price: finalPrice,
+          stock: p.stock !== undefined && p.stock !== null ? p.stock : 1,
+          images: p.images || [],
+          description: p.description || '',
+          description_th: p.description_th || p.description || '',
+          mark_location: 'WEB'
+        };
+        
+        if (platform === 'shopee') {
+          updateData.name_shopee = exporterName;
+        } else if (platform === 'shopee2') {
+          updateData.name_shopee = 'SHOPEE';
+        }
+
+        if (existing) {
+          await ctx.admin.from(tableName).update(updateData).eq('id', existing.id);
+        } else {
+          await ctx.admin.from(tableName).insert({
+            name: name,
+            name_th: name,
+            ...updateData
+          });
+        }
+      }
+      // === END ADDED LOGIC ===
+
       return NextResponse.json({ ok: true, rowsAppended: rows.length });
     } catch (e: any) {
       console.error('Google Sheets Error:', e);

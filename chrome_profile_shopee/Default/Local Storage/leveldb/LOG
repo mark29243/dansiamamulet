@@ -1,0 +1,18 @@
+2026/07/11-22:02:59.886 3774 Reusing MANIFEST C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Local Storage\leveldb/MANIFEST-000001
+2026/07/11-22:02:59.902 3774 Recovering log #54
+2026/07/11-22:02:59.908 3774 Reusing old log C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Local Storage\leveldb/000054.log 
+2026/07/11-22:03:59.924 420 Level-0 table #57: started
+2026/07/11-22:03:59.940 420 Level-0 table #57: 25852 bytes OK
+2026/07/11-22:03:59.943 420 Delete type=0 #54
+2026/07/11-22:03:59.944 3774 Compacting 4@0 + 1@1 files
+2026/07/11-22:03:59.964 3774 Generated table #58@0: 237 keys, 158753 bytes
+2026/07/11-22:03:59.964 3774 Compacted 4@0 + 1@1 files => 158753 bytes
+2026/07/11-22:03:59.966 3774 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/07/11-22:03:59.967 3774 Delete type=2 #47
+2026/07/11-22:03:59.967 3774 Delete type=2 #49
+2026/07/11-22:03:59.967 3774 Delete type=2 #51
+2026/07/11-22:03:59.967 3774 Delete type=2 #53
+2026/07/11-22:03:59.967 3774 Delete type=2 #57
+2026/07/11-22:08:01.369 420 Level-0 table #60: started
+2026/07/11-22:08:01.376 420 Level-0 table #60: 25475 bytes OK
+2026/07/11-22:08:01.378 420 Delete type=0 #56

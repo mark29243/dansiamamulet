@@ -47,6 +47,38 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   console.log('[audit] order-update', { admin: ctx.user.id, orderId: params.id, updates });
 
+  // Sync to accounting if marked paid
+  if (status === 'paid') {
+    try {
+      // check if already exists to prevent duplicates
+      const { data: existing } = await ctx.admin.from('accounting_records').select('id').eq('order_id', params.id).limit(1);
+      if (!existing || existing.length === 0) {
+        const accountingInserts = (data.items || []).map((item: any) => {
+          const qty = item.quantity || 1;
+          const rows = [];
+          for (let i = 0; i < qty; i++) {
+            rows.push({
+              date: new Date().toISOString().split('T')[0],
+              type: 'SALE',
+              category: 'แอดมินอนุมัติ',
+              product_name: item.name,
+              amount: item.price,
+              cost: 0,
+              order_id: params.id,
+            });
+          }
+          return rows;
+        }).flat();
+
+        if (accountingInserts.length > 0) {
+          await ctx.admin.from('accounting_records').insert(accountingInserts);
+        }
+      }
+    } catch (e) {
+      console.warn('[admin] Accounting sync failed:', e);
+    }
+  }
+
   // Send shipping email if requested
   if (sendEmail && status === 'shipped' && tracking_number && carrier) {
     const emailRes = await sendOrderShipped(data as Order, tracking_number, carrier);
