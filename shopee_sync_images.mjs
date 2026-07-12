@@ -57,7 +57,7 @@ async function main() {
   const shopChoice = await askQuestion("เลือกร้านที่ต้องการดึงรูป (พิมพ์ 1 สำหรับ Shopee ร้านหลัก, พิมพ์ 2 สำหรับ Shopee ร้าน 2): ");
   const isShop2 = shopChoice.trim() === '2';
 
-  console.log(`\nกำลังดึงข้อมูลสินค้าที่มี 1 รูป จากร้าน ${isShop2 ? '2' : '1'}...`);
+  console.log("กำลังดึงข้อมูลสินค้าจากฐานข้อมูล (ดึงใหม่ทั้งหมด 775 รายการเพื่ออัปเดตภาพใหม่)...");
   
   const { data: allProducts, error } = await supabase
     .from('shopee_products')
@@ -69,16 +69,24 @@ async function main() {
     return;
   }
 
-  // Filter products with exactly 1 image and matching shop
+  // Filter products by shop only (process ALL items to fix duplicates)
   const products = allProducts.filter(p => {
     const matchShop = isShop2 ? p.mark_shopee2 === true : !p.mark_shopee2;
-    return matchShop && p.images && p.images.length === 1 && (!p.mark_location || p.mark_location.toLowerCase() !== 'sold');
+    return matchShop && (!p.mark_location || p.mark_location.toLowerCase() !== 'sold');
   });
 
-  console.log(`พบสินค้าที่ต้องอัปเดตรูปภาพ: ${products.length} รายการ`);
+  console.log(`\nพบสินค้าที่ต้องอัปเดตรูปภาพ: ${products.length} รายการ`);
+  
+  // Ask for starting index
+  const startIndexStr = await askQuestion("\nคุณต้องการเริ่มจากรายการที่เท่าไหร่? (พิมพ์ตัวเลขเช่น 500 แล้วกด Enter, หรือกด Enter เฉยๆ เพื่อเริ่มจาก 1): ");
+  let startIndex = parseInt(startIndexStr.trim(), 10);
+  if (isNaN(startIndex) || startIndex < 1) {
+    startIndex = 1;
+  }
+  
   if (products.length === 0) return;
 
-  console.log("กำลังเปิดเบราว์เซอร์...");
+  console.log(`\nกำลังเปิดเบราว์เซอร์... (เริ่มที่รายการ ${startIndex}/${products.length})`);
   // Use a local folder for the bot's Chrome profile to avoid conflicting with the user's main Chrome.
   // The user will need to log in to Shopee once, and it will be saved here.
   const userDataDir = path.join(process.cwd(), 'chrome_profile_shopee');
@@ -106,9 +114,16 @@ async function main() {
   // Wait for user to manually confirm login
   await askQuestion("\n*** สำคัญมาก ***\nกรุณาล็อกอินเข้าระบบ Shopee ให้เสร็จสมบูรณ์ (สแกน QR หรือใส่รหัสให้ผ่านหน้า Verify)\nหากล็อกอินเสร็จแล้ว ให้กด Enter ที่นี่เพื่อเริ่มให้บอทดึงรูปภาพ...");
   
-  for (let i = 0; i < products.length; i++) {
+  for (let i = startIndex - 1; i < products.length; i++) {
     const product = products[i];
-    console.log(`\n[${i + 1}/${products.length}] กำลังค้นหา: ${product.name}`);
+    
+    // Determine search keyword (use Shopee ID if it's a number, else use first 30 chars of name)
+    let searchKeyword = product.name.substring(0, 30).trim();
+    if (product.name_shopee && /^\s*\d+\s*$/.test(product.name_shopee)) {
+      searchKeyword = product.name_shopee.trim();
+    }
+    
+    console.log(`\n[${i + 1}/${products.length}] กำลังค้นหา (รหัส): ${searchKeyword}`);
     
     try {
       await page.goto('https://seller.shopee.co.th/portal/product/list/all', { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -116,12 +131,6 @@ async function main() {
       // Wait for search input
       const searchInput = page.getByPlaceholder('ค้นหา').first();
       await searchInput.waitFor({ state: 'visible', timeout: 30000 });
-      
-      // Determine search keyword (use Shopee ID if it's a number, else use first 30 chars of name)
-      let searchKeyword = product.name.substring(0, 30).trim();
-      if (product.name_shopee && /^\d+$/.test(product.name_shopee)) {
-        searchKeyword = product.name_shopee;
-      }
       
       // Clear and type search keyword
       await searchInput.fill('');
@@ -142,8 +151,13 @@ async function main() {
           productLink.click()
         ]);
         
-        // Wait for edit page to load (look for image section)
-        await newPage.waitForTimeout(5000);
+        // Wait for edit page to load (look for image section explicitly)
+        try {
+            await newPage.waitForSelector('.shopee-image-manager__image', { timeout: 15000 });
+            await newPage.waitForTimeout(3000); // Give it an extra 3 seconds for all images in the array to fully render
+        } catch (e) {
+            console.log("รอหน้าเว็บโหลดนานเกินไป หรือไม่มีรูปภาพ...");
+        }
         
         // Find images
         console.log("กำลังดึง URL รูปภาพ...");
@@ -151,30 +165,26 @@ async function main() {
         // Extract images using a precise DOM search inside the browser
         let rawImages = await newPage.evaluate(() => {
            let urls = [];
-           // Look for the label "ภาพสินค้า" or "Product Images"
-           const labels = Array.from(document.querySelectorAll('label, div, span'));
-           const targetLabel = labels.find(l => 
-               l.textContent && 
-               (l.textContent.includes('ภาพสินค้า') || l.textContent.includes('Product Images')) &&
-               !l.children.length // find the most specific element
-           );
            
-           let container = document.body;
-           if (targetLabel) {
-               // Find the closest parent that contains both the label and the image list
-               container = targetLabel.closest('.product-edit-item') || targetLabel.closest('.form-item') || targetLabel.closest('.panel') || document.body;
-           }
-
-           // Find images (Shopee changed classes to shopee-image-manager__image, so we grab all imgs and let the URL filter handle it)
-           const imgs = container.querySelectorAll('img');
-           imgs.forEach(img => {
-               if (img.src && !img.src.includes('data:image')) urls.push(img.src);
-           });
+           // Shopee uses specific classes for product images:
+           // .shopee-image-manager__image : The images inside the upload boxes
+           // We explicitly DO NOT include .product-image-thumbnail because it's from the phone preview pane.
+           // Find ALL image manager containers on the page.
+           // The first one is ALWAYS "ภาพสินค้า" (Product Images). 
+           // The second one is "รูปโปรโมต" (Promotional Image) which we want to ignore!
+           const imageManagers = document.querySelectorAll('.shopee-image-manager');
+           const firstContainer = imageManagers.length > 0 ? imageManagers[0] : document;
            
-           const bgs = container.querySelectorAll('div[style*="background-image"]');
-           bgs.forEach(bg => {
-               const match = bg.style.backgroundImage.match(/url\("?([^"\)]+)"?\)/);
-               if (match && match[1] && !match[1].includes('data:image')) urls.push(match[1]);
+           // Now get all images ONLY from the first container
+           const targetImageElements = Array.from(firstContainer.querySelectorAll('.shopee-image-manager__image'));
+           
+           targetImageElements.forEach(el => {
+               if (el.tagName.toLowerCase() === 'img' && el.src) {
+                   if (!el.src.includes('data:image')) urls.push(el.src);
+               } else if (el.style && el.style.backgroundImage) {
+                   const match = el.style.backgroundImage.match(/url\("?([^"\)]+)"?\)/);
+                   if (match && match[1] && !match[1].includes('data:image')) urls.push(match[1]);
+               }
            });
            
            return urls;

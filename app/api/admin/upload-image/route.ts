@@ -9,7 +9,13 @@ export const maxDuration = 60;
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 const MAX_WIDTH = 1600; // enough for the 2.5x zoom viewer
 
-async function requireAdmin() {
+import { cookies } from 'next/headers';
+
+async function requireAdminOrStaff() {
+  const cookieStore = cookies();
+  const isStaff = cookieStore.get('staff_auth')?.value === 'true';
+  if (isStaff) return { isStaff: true };
+
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
@@ -20,7 +26,7 @@ async function requireAdmin() {
 }
 
 export async function POST(req: Request) {
-  const ctx = await requireAdmin();
+  const ctx = await requireAdminOrStaff();
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const form = await req.formData();

@@ -12,7 +12,7 @@ export default function ShopeeStockClient({ initialProducts, isStaffRoute = fals
   const [loading, setLoading] = useState(false);
   const [shopeeUrl, setShopeeUrl] = useState('');
   const [isImporting, setIsImporting] = useState(false);
-  const [previewImages, setPreviewImages] = useState<string[] | null>(null);
+  const [previewProduct, setPreviewProduct] = useState<any | null>(null);
 
   const handleClearEmpty = async () => {
     if (!confirm('ยืนยันที่จะลบสินค้าที่ยอดสต็อกเป็น 0 ออกจากระบบทั้งหมดหรือไม่? (ข้อมูลที่จัดเก็บจะหายไปด้วย)')) return;
@@ -502,7 +502,7 @@ export default function ShopeeStockClient({ initialProducts, isStaffRoute = fals
                 <div 
                   onClick={() => {
                     if (p.images && p.images.length > 0) {
-                      setPreviewImages(p.images);
+                      setPreviewProduct({ id: p.id, images: p.images, _field: 'images' });
                     }
                   }}
                   style={{ width: 80, height: 80, borderRadius: 8, overflow: 'hidden', position: 'relative', flexShrink: 0, border: '1px solid #f0f0f0', background: '#fafafa', cursor: 'pointer' }}
@@ -522,7 +522,7 @@ export default function ShopeeStockClient({ initialProducts, isStaffRoute = fals
                   <button 
                     onClick={() => {
                       if (p.images && p.images.length > 0) {
-                        setPreviewImages(p.images);
+                        setPreviewProduct({ id: p.id, images: p.images, _field: 'images' });
                       }
                     }}
                     style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '4px 8px', borderRadius: 6, fontSize: 11, color: '#475569', cursor: 'pointer', marginBottom: 8, display: 'inline-flex', alignItems: 'center', gap: 4 }}
@@ -552,10 +552,25 @@ export default function ShopeeStockClient({ initialProducts, isStaffRoute = fals
                     type="text" 
                     value={p.mark_location || ''}
                     onChange={e => setProducts(prev => prev.map(x => x.id === p.id ? { ...x, mark_location: e.target.value } : x))}
-                    onBlur={e => handleUpdate(p.id, 'mark_location', e.target.value)}
                     placeholder="ใส่ตำแหน่งที่เก็บ..."
                     style={{ flex: 1, padding: '6px 10px', fontSize: 13, border: '1px solid #ddd', borderRadius: 6 }}
                   />
+                  <button 
+                    onClick={() => handleUpdate(p.id, 'mark_location', p.mark_location)}
+                    style={{ 
+                      padding: '6px 12px', 
+                      fontSize: 12, 
+                      fontWeight: 'bold', 
+                      background: '#10b981', 
+                      color: 'white', 
+                      border: 'none', 
+                      borderRadius: 6, 
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    บันทึก
+                  </button>
                   <button 
                     onClick={() => {
                       setProducts(prev => prev.map(x => x.id === p.id ? { ...x, mark_location: 'Sold' } : x));
@@ -612,17 +627,32 @@ export default function ShopeeStockClient({ initialProducts, isStaffRoute = fals
       </div>
 
       {/* Image Preview Modal */}
-      {previewImages && (
+      {previewProduct && previewProduct.images && (
         <div 
           style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 20, overflowY: 'auto' }}
-          onClick={() => setPreviewImages(null)}
+          onClick={() => setPreviewProduct(null)}
         >
           <div style={{ width: '100%', maxWidth: 600, display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
-            <button onClick={() => setPreviewImages(null)} style={{ background: 'none', border: 'none', color: 'white', fontSize: 24, cursor: 'pointer', fontWeight: 'bold' }}>✕ ปิด</button>
+            <button onClick={() => setPreviewProduct(null)} style={{ background: 'none', border: 'none', color: 'white', fontSize: 24, cursor: 'pointer', fontWeight: 'bold' }}>✕ ปิด</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 600 }} onClick={e => e.stopPropagation()}>
-            {previewImages.map((src, i) => (
-              <img key={i} src={src} alt={`preview ${i}`} style={{ width: '100%', height: 'auto', borderRadius: 8, objectFit: 'contain', background: 'white' }} />
+            {previewProduct.images.map((src: string, i: number) => (
+              <div key={i} style={{ position: 'relative' }}>
+                <img src={src} alt={`preview ${i}`} style={{ width: '100%', height: 'auto', borderRadius: 8, objectFit: 'contain', background: 'white', display: 'block' }} />
+                <button 
+                  onClick={async () => {
+                    if (!confirm('ยืนยันที่จะลบรูปภาพนี้ใช่หรือไม่?')) return;
+                    const newImages = previewProduct.images.filter((img: string) => img !== src);
+                    setPreviewProduct({ ...previewProduct, images: newImages });
+                    // Update state and DB
+                    await handleUpdate(previewProduct.id, previewProduct._field, newImages);
+                    if (newImages.length === 0) setPreviewProduct(null);
+                  }}
+                  style={{ position: 'absolute', top: 12, right: 12, background: '#ef4444', color: 'white', border: '2px solid white', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.2)' }}
+                >
+                  🗑️ ลบรูปนี้
+                </button>
+              </div>
             ))}
           </div>
         </div>
