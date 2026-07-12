@@ -546,51 +546,12 @@ export default function ShopeeStockClient({ initialProducts, isStaffRoute = fals
               <div style={{ borderTop: '1px dashed #eaeaea', paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 
                 {/* Location Input */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: '#666', whiteSpace: 'nowrap' }}>📍 ที่จัดเก็บ:</span>
-                  <input 
-                    type="text" 
-                    value={p.mark_location || ''}
-                    onChange={e => setProducts(prev => prev.map(x => x.id === p.id ? { ...x, mark_location: e.target.value } : x))}
-                    placeholder="ใส่ตำแหน่งที่เก็บ..."
-                    style={{ flex: 1, padding: '6px 10px', fontSize: 13, border: '1px solid #ddd', borderRadius: 6 }}
-                  />
-                  <button 
-                    onClick={() => handleUpdate(p.id, 'mark_location', p.mark_location)}
-                    style={{ 
-                      padding: '6px 12px', 
-                      fontSize: 12, 
-                      fontWeight: 'bold', 
-                      background: '#10b981', 
-                      color: 'white', 
-                      border: 'none', 
-                      borderRadius: 6, 
-                      cursor: 'pointer',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    บันทึก
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setProducts(prev => prev.map(x => x.id === p.id ? { ...x, mark_location: 'Sold' } : x));
-                      handleUpdate(p.id, 'mark_location', 'Sold');
-                    }}
-                    style={{ 
-                      padding: '6px 12px', 
-                      fontSize: 12, 
-                      fontWeight: 'bold', 
-                      background: p.mark_location === 'Sold' ? '#ef4444' : '#f1f5f9', 
-                      color: p.mark_location === 'Sold' ? 'white' : '#64748b', 
-                      border: '1px solid #e2e8f0', 
-                      borderRadius: 6, 
-                      cursor: 'pointer',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    Sold
-                  </button>
-                </div>
+                <LocationInput 
+                  product={p} 
+                  onSave={async (newVal: string) => {
+                    await handleUpdate(p.id, 'mark_location', newVal);
+                  }} 
+                />
 
                 {/* Platform Checkboxes */}
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginTop: 4 }}>
@@ -681,6 +642,81 @@ function StatBox({ label, value, color = '#111', onClick, active = false }: any)
     >
       <div style={{ fontSize: 16, fontWeight: 'bold', color }}>{value}</div>
       <div style={{ fontSize: 9, color: '#666', textTransform: 'uppercase', marginTop: 2, textAlign: 'center' }}>{label}</div>
+    </div>
+  );
+}
+
+function LocationInput({ product, onSave }: any) {
+  const [val, setVal] = useState(product.mark_location || '');
+  const [saving, setSaving] = useState(false);
+  
+  const isDirty = val !== (product.mark_location || '');
+
+  const handleSave = async () => {
+    setSaving(true);
+    await onSave(val);
+    setSaving(false);
+  };
+
+  const handleSold = async () => {
+    setSaving(true);
+    setVal('Sold');
+    await onSave('Sold');
+    setSaving(false);
+  };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <span style={{ fontSize: 12, color: '#666', whiteSpace: 'nowrap' }}>📍 ที่จัดเก็บ:</span>
+      <input 
+        type="text" 
+        value={val}
+        onChange={e => setVal(e.target.value)}
+        placeholder="ใส่ตำแหน่งที่เก็บ..."
+        style={{ 
+          flex: 1, 
+          padding: '6px 10px', 
+          fontSize: 13, 
+          border: '1px solid', 
+          borderColor: isDirty ? '#f59e0b' : '#ddd',
+          borderRadius: 6,
+          backgroundColor: isDirty ? '#fffbeb' : '#fff'
+        }}
+      />
+      <button 
+        onClick={handleSave}
+        disabled={!isDirty || saving}
+        style={{ 
+          padding: '6px 12px', 
+          fontSize: 12, 
+          fontWeight: 'bold', 
+          background: isDirty ? '#10b981' : '#cbd5e1', 
+          color: 'white', 
+          border: 'none', 
+          borderRadius: 6, 
+          cursor: isDirty && !saving ? 'pointer' : 'not-allowed',
+          transition: 'all 0.2s'
+        }}
+      >
+        {saving ? '...' : isDirty ? 'บันทึก' : '✓ บันทึกแล้ว'}
+      </button>
+      <button 
+        onClick={handleSold}
+        disabled={saving}
+        style={{ 
+          padding: '6px 12px', 
+          fontSize: 12, 
+          fontWeight: 'bold', 
+          background: val === 'Sold' ? '#ef4444' : '#f1f5f9', 
+          color: val === 'Sold' ? 'white' : '#64748b', 
+          border: '1px solid #e2e8f0', 
+          borderRadius: 6, 
+          cursor: saving ? 'not-allowed' : 'pointer',
+          transition: 'all 0.2s'
+        }}
+      >
+        Sold
+      </button>
     </div>
   );
 }
