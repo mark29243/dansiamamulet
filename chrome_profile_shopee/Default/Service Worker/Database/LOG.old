@@ -1,3 +1,6 @@
-2026/07/11-21:58:57.092 1c30 Reusing MANIFEST C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Service Worker\Database/MANIFEST-000001
-2026/07/11-21:58:57.093 1c30 Recovering log #3
-2026/07/11-21:58:57.094 1c30 Reusing old log C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Service Worker\Database/000003.log 
+2026/07/12-11:17:09.962 4060 Reusing MANIFEST C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Service Worker\Database/MANIFEST-000001
+2026/07/12-11:17:09.963 4060 Recovering log #3
+2026/07/12-11:17:09.965 4060 Reusing old log C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Service Worker\Database/000003.log 
+2026/07/12-12:14:43.887 3ca0 Level-0 table #5: started
+2026/07/12-12:14:43.894 3ca0 Level-0 table #5: 63486 bytes OK
+2026/07/12-12:14:43.898 3ca0 Delete type=0 #3

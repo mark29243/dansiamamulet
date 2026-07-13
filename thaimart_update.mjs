@@ -59,6 +59,11 @@ async function run() {
     return;
   }
 
+  const startIndexStr = await askQuestion(`\nพบสินค้าทั้งหมด ${products.length} รายการ\nเริ่มทำจากรายการที่เท่าไหร่? (พิมพ์ตัวเลข 1-${products.length} แล้วกด Enter / หากเริ่มจากแรกสุดพิมพ์ 1): `);
+  let startIndex = parseInt(startIndexStr);
+  if (isNaN(startIndex) || startIndex < 1) startIndex = 1;
+  console.log(`\n=> จะเริ่มทำจากรายการที่ ${startIndex} เป็นต้นไป...\n`);
+
   console.log("กำลังเปิดเบราว์เซอร์...");
   const userDataDir = path.join(process.cwd(), 'chrome_profile_thaimart');
   
@@ -81,7 +86,7 @@ async function run() {
   
   await askQuestion("\n*** สำคัญมาก ***\nกรุณาล็อกอินเข้าระบบ Thaimart ให้เสร็จสมบูรณ์\nหากถึงหน้าจอ 'รายการสินค้า' แล้ว ให้กด Enter ที่นี่เพื่อเริ่มให้บอททำงาน...");
   
-  for (let i = 0; i < products.length; i++) {
+  for (let i = startIndex - 1; i < products.length; i++) {
     const product = products[i];
     console.log(`\n[${i + 1}/${products.length}] กำลังค้นหา: ${product.name}`);
     
@@ -99,73 +104,110 @@ async function run() {
         console.log("Warning: Could not find search box, skipping search.");
       }
 
-      // Click Edit button
-      // Look for a link or button that says 'แก้ไข' (Edit) in the row that has the product name
-      const editBtn = page.getByRole('link', { name: /แก้ไข|Edit/i }).first();
-      // Alternatively, try to find an 'Edit' button
-      if (await editBtn.isVisible()) {
-        await editBtn.click();
+      // Check and click "เผยแพร่สินค้า" on the list page if it exists
+      console.log("Checking if product needs publishing...");
+      const publishBtnOnList = page.getByText('เผยแพร่สินค้า').first();
+      if (await publishBtnOnList.isVisible()) {
+        console.log("Clicking 'เผยแพร่สินค้า'...");
+        await publishBtnOnList.click();
+        await page.waitForTimeout(2000);
+        // Handle confirmation popup if any
+        const confirmBtn = page.getByRole('button', { name: /ยืนยัน|ตกลง|บันทึก|ใช่|Yes/i }).last();
+        if (await confirmBtn.isVisible()) {
+           await confirmBtn.click();
+           await page.waitForTimeout(2000);
+        }
+      }
+
+      // We need to click the product to view details (this page has the upload inputs)
+      console.log("Clicking 'ดูรายละเอียด' to view details...");
+      
+      const detailBtn = page.getByText('ดูรายละเอียด').first();
+      if (await detailBtn.isVisible()) {
+        await detailBtn.click();
+        await page.waitForTimeout(4000); // Wait for details page to load
       } else {
-        const btn = page.locator('button, a').filter({ hasText: /แก้ไข|Edit/i }).first();
+        const btn = page.locator('button, a').filter({ hasText: /ดูรายละเอียด|Details/i }).first();
         if (await btn.isVisible()) {
           await btn.click();
+          await page.waitForTimeout(4000); // Wait for details page to load
         } else {
-          console.log(`ไม่พบปุ่มแก้ไขสำหรับสินค้า: ${product.name}`);
+          console.log(`ไม่พบปุ่ม 'ดูรายละเอียด' สำหรับสินค้า: ${product.name}`);
+          continue; // Skip this product if we can't view details
+        }
+      }
+
+      // Click Edit button
+      console.log("Clicking 'แก้ไข' (Edit)...");
+      const editBtn = page.getByText('แก้ไข').first();
+      if (await editBtn.isVisible()) {
+        await editBtn.click();
+        await page.waitForTimeout(4000); // Wait for edit page to load
+      } else {
+        const btn = page.locator('button, a, span').filter({ hasText: /แก้ไข|Edit/i }).first();
+        if (await btn.isVisible()) {
+          await btn.click();
+          await page.waitForTimeout(4000); // Wait for edit page to load
+        } else {
+          console.log(`ไม่พบปุ่ม 'แก้ไข' สำหรับสินค้า: ${product.name}`);
           continue;
         }
       }
-      
-      await page.waitForTimeout(4000); // Wait for edit page to load
 
-      // Upload missing images (Start from index 1)
-      console.log("Downloading new images...");
-      // Max 4 new images (Thaimart usually max 5 total, we already have 1)
-      const imagesToUpload = product.images.slice(1, 5);
-      const imgPaths = [];
+      // Check existing images
+      const existingImages = await page.$$eval('img', imgs => imgs.filter(img => img.src.includes('img-cdn.thaimart.com')).length);
+      console.log(`พบรูปภาพที่มีอยู่แล้ว ${existingImages} รูป`);
       
-      for (let j = 0; j < imagesToUpload.length; j++) {
-        const imgUrl = imagesToUpload[j];
-        const imgPath = path.join(TEMP_IMG_DIR, `temp_${product.id}_${j}.jpg`);
-        await downloadImage(imgUrl, imgPath);
-        imgPaths.push(imgPath);
-      }
-      
-      console.log("Uploading images sequentially...");
-      const fileInput = await page.$('input[type="file"]');
-      if (fileInput) {
-        for (const imgPath of imgPaths) {
-          console.log(`Uploading ${imgPath}...`);
-          await fileInput.setInputFiles(imgPath);
+      const targetImageCount = Math.min(product.images.length, 5);
+      let imgPaths = [];
+
+      if (existingImages >= targetImageCount) {
+        console.log("รูปภาพครบแล้ว ข้ามการอัปโหลดรูปภาพ...");
+      } else {
+        // Upload missing images (Start from index: existingImages)
+        console.log("Downloading new images...");
+        const imagesToUpload = product.images.slice(existingImages, 5);
+        
+        for (let j = 0; j < imagesToUpload.length; j++) {
+          const imgUrl = imagesToUpload[j];
+          const imgPath = path.join(TEMP_IMG_DIR, `temp_${product.id}_${j}.jpg`);
+          await downloadImage(imgUrl, imgPath);
+          imgPaths.push(imgPath);
+        }
+        
+        console.log("Uploading images...");
+        const fileInput = await page.$('input[type="file"]');
+        if (fileInput) {
+          console.log(`Uploading ${imgPaths.length} images...`);
+          await fileInput.setInputFiles(imgPaths);
           await page.waitForTimeout(3000);
+        } else {
+          console.log("Warning: Could not find image upload input.");
         }
-      } else {
-        console.log("Warning: Could not find image upload input.");
-      }
-      
-      // Clean up temp images
-      for (const imgPath of imgPaths) {
-        if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+        
+        // Clean up temp images
+        for (const imgPath of imgPaths) {
+          if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+        }
+
+        // Check for upload error popup
+        const errorBtn = page.getByRole('button', { name: /รับทราบ/i }).first();
+        if (await errorBtn.isVisible()) {
+           console.log("Upload failed (network error popup). Skipping save for this product.");
+           await errorBtn.click();
+           continue; // Skip to next product
+        }
       }
 
-      // Toggle status to "เปิดใช้งาน" (Enable)
-      console.log("Setting status to Enabled...");
-      // The switch might be a button with aria-checked="false", or label "ปิดใช้งาน"
-      // Let's look for a switch near "สถานะสินค้า"
-      const statusSwitch = page.getByRole('switch').last();
-      if (await statusSwitch.isVisible()) {
-        const isChecked = await statusSwitch.getAttribute('aria-checked');
-        if (isChecked === 'false') {
-          await statusSwitch.click();
-          await page.waitForTimeout(1000);
-        }
-      } else {
-         // Try clicking label if switch role fails
-         await page.getByText(/ปิดใช้งาน/i).last().click().catch(() => {});
+      // If we didn't upload any new images, we don't need to save
+      if (existingImages >= targetImageCount) {
+        console.log("No new images uploaded, skipping save...");
+        continue;
       }
 
       // Submit
       console.log("Submitting...");
-      const publishBtn = page.getByRole('button', { name: /บันทึก|เผยแพร่|อัปเดต|Submit/i }).last();
+      const publishBtn = page.getByRole('button', { name: /บันทึก|อัปเดต|Submit/i }).last();
       await publishBtn.click();
 
       // Handle confirmation popup ("ใช่")

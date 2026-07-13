@@ -1,2 +1,63 @@
-2026/07/11-22:02:59.902 420 Creating DB C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Session Storage since it was missing.
-2026/07/11-22:02:59.933 420 Reusing MANIFEST C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Session Storage/MANIFEST-000001
+2026/07/12-20:34:15.034 730 Reusing MANIFEST C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Session Storage/MANIFEST-000001
+2026/07/12-20:34:15.038 730 Recovering log #84
+2026/07/12-20:34:15.043 730 Reusing old log C:\Users\mark2\Downloads\dansiam-amulets_3\dansiamamulet\chrome_profile_shopee\Default\Session Storage/000084.log 
+2026/07/12-20:35:42.734 aa0 Level-0 table #88: started
+2026/07/12-20:35:42.765 aa0 Level-0 table #88: 17873 bytes OK
+2026/07/12-20:35:42.769 aa0 Delete type=0 #84
+2026/07/12-20:35:42.818 730 Compacting 4@0 + 1@1 files
+2026/07/12-20:35:42.852 730 Generated table #89@0: 8483 keys, 106619 bytes
+2026/07/12-20:35:42.852 730 Compacted 4@0 + 1@1 files => 106619 bytes
+2026/07/12-20:35:42.853 730 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/07/12-20:35:42.855 730 Delete type=2 #79
+2026/07/12-20:35:42.855 730 Delete type=2 #81
+2026/07/12-20:35:42.855 730 Delete type=2 #83
+2026/07/12-20:35:42.855 730 Delete type=2 #85
+2026/07/12-20:35:42.855 730 Delete type=2 #88
+2026/07/12-20:44:18.564 aa0 Level-0 table #91: started
+2026/07/12-20:44:18.572 aa0 Level-0 table #91: 21497 bytes OK
+2026/07/12-20:44:18.574 aa0 Delete type=0 #87
+2026/07/12-20:51:17.018 aa0 Level-0 table #93: started
+2026/07/12-20:51:17.064 aa0 Level-0 table #93: 19873 bytes OK
+2026/07/12-20:51:17.067 aa0 Delete type=0 #90
+2026/07/12-20:58:13.138 aa0 Level-0 table #95: started
+2026/07/12-20:58:13.147 aa0 Level-0 table #95: 19521 bytes OK
+2026/07/12-20:58:13.150 aa0 Delete type=0 #92
+2026/07/12-21:05:51.038 aa0 Level-0 table #97: started
+2026/07/12-21:05:51.049 aa0 Level-0 table #97: 20590 bytes OK
+2026/07/12-21:05:51.052 aa0 Delete type=0 #94
+2026/07/12-21:05:51.117 aa0 Compacting 4@0 + 1@1 files
+2026/07/12-21:05:51.151 aa0 Generated table #98@0: 9473 keys, 133197 bytes
+2026/07/12-21:05:51.151 aa0 Compacted 4@0 + 1@1 files => 133197 bytes
+2026/07/12-21:05:51.152 aa0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/07/12-21:05:51.153 aa0 Delete type=2 #89
+2026/07/12-21:05:51.154 aa0 Delete type=2 #91
+2026/07/12-21:05:51.154 aa0 Delete type=2 #93
+2026/07/12-21:05:51.154 aa0 Delete type=2 #95
+2026/07/12-21:05:51.154 aa0 Delete type=2 #97
+2026/07/12-21:12:53.939 730 Level-0 table #100: started
+2026/07/12-21:12:53.952 730 Level-0 table #100: 20013 bytes OK
+2026/07/12-21:12:53.956 730 Delete type=0 #96
+2026/07/12-21:19:42.997 aa0 Level-0 table #102: started
+2026/07/12-21:19:43.007 aa0 Level-0 table #102: 20109 bytes OK
+2026/07/12-21:19:43.009 aa0 Delete type=0 #99
+2026/07/12-21:27:02.227 aa0 Level-0 table #104: started
+2026/07/12-21:27:02.251 aa0 Level-0 table #104: 20180 bytes OK
+2026/07/12-21:27:02.255 aa0 Delete type=0 #101
+2026/07/12-21:34:20.879 aa0 Level-0 table #106: started
+2026/07/12-21:34:20.888 aa0 Level-0 table #106: 20026 bytes OK
+2026/07/12-21:34:20.891 aa0 Delete type=0 #103
+2026/07/12-21:34:20.892 aa0 Compacting 4@0 + 1@1 files
+2026/07/12-21:34:20.919 aa0 Generated table #107@0: 10393 keys, 142798 bytes
+2026/07/12-21:34:20.919 aa0 Compacted 4@0 + 1@1 files => 142798 bytes
+2026/07/12-21:34:20.921 aa0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/07/12-21:34:20.922 aa0 Delete type=2 #98
+2026/07/12-21:34:20.922 aa0 Delete type=2 #100
+2026/07/12-21:34:20.922 aa0 Delete type=2 #102
+2026/07/12-21:34:20.923 aa0 Delete type=2 #104
+2026/07/12-21:34:20.923 aa0 Delete type=2 #106
+2026/07/12-21:43:00.145 aa0 Level-0 table #109: started
+2026/07/12-21:43:00.179 aa0 Level-0 table #109: 19910 bytes OK
+2026/07/12-21:43:00.182 aa0 Delete type=0 #105
+2026/07/12-21:55:03.692 aa0 Level-0 table #111: started
+2026/07/12-21:55:03.798 aa0 Level-0 table #111: 17952 bytes OK
+2026/07/12-21:55:03.801 aa0 Delete type=0 #108

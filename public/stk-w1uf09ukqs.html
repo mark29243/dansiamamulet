@@ -103,8 +103,16 @@
   .dash-number.warn { color: var(--danger); }
   .dash-label { font-size: 10px; color: var(--text-secondary); margin-top: 2px; line-height: 1.25; }
   .search-row { display: flex; gap: 8px; margin-bottom: 12px; }
-  .search-row input { flex: 1; }
+  .search-row input[type="text"] { flex: 1; }
   .search-row button { width: 44px; padding: 0; flex-shrink: 0; }
+  .image-search-btn {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border) !important;
+    font-size: 18px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   .filter-row { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 2px; }
   .filter-chip {
@@ -282,7 +290,9 @@
 
     <div class="search-row">
       <input type="text" id="search-input" placeholder="ค้นชื่อสินค้า เช่น เต่า, หลวงพ่อหลิว" />
+      <input type="file" id="image-upload" accept="image/*" style="display: none;" />
       <button id="search-btn" aria-label="ค้นหา">🔍</button>
+      <button id="image-search-btn" class="image-search-btn" aria-label="ค้นหาด้วยรูปภาพ" title="ค้นหาด้วยรูปภาพ">📷</button>
     </div>
 
     <div class="filter-row" id="filter-row">
@@ -782,6 +792,68 @@
 
   searchInput.addEventListener('input', doSearch);
   document.getElementById('search-btn').addEventListener('click', doSearch);
+
+  // --- Image Search Logic ---
+  var imageSearchBtn = document.getElementById('image-search-btn');
+  var imageUploadInput = document.getElementById('image-upload');
+  var clipExtractor = null;
+
+  imageSearchBtn.addEventListener('click', function() {
+    imageUploadInput.click();
+  });
+
+  imageUploadInput.addEventListener('change', async function(e) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    var file = e.target.files[0];
+    
+    // Clear input so same file can be selected again
+    imageUploadInput.value = '';
+
+    var reader = new FileReader();
+    reader.onload = async function(event) {
+       var imageUrl = event.target.result;
+       
+       resultsArea.innerHTML = '<p class="hint">กำลังวิเคราะห์รูปภาพด้วย AI... <br><br><small>(ถ้าเพิ่งเคยใช้ครั้งแรก บราว์เซอร์กำลังโหลดสมอง AI ขนาด 150MB อาจใช้เวลา 10-20 วินาทีครับ... ครั้งต่อไปจะปรู๊ดปร๊าดเลย!)</small></p>';
+       paginationRow.innerHTML = '';
+       
+       try {
+         // Load transformers.js dynamically
+         const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2');
+         
+         if (!clipExtractor) {
+            clipExtractor = await pipeline('image-feature-extraction', 'Xenova/clip-vit-base-patch32');
+         }
+         
+         resultsArea.innerHTML = '<p class="hint">กำลังเทียบรูปภาพกับสินค้าในสต็อก...</p>';
+         
+         // Extract features directly from Data URL string
+         const output = await clipExtractor(imageUrl);
+         const embeddingArray = Array.from(output.data);
+         
+         // Search in Supabase
+         const result = await rpcCall('match_products', {
+            query_embedding: embeddingArray,
+            match_threshold: 0.1, // accept anything with slight resemblance
+            match_count: 8,
+            target_table: 'products'
+         });
+         
+         resultsArea.innerHTML = '<p class="section-label" style="text-align: center;">🔍 พบ ' + (result ? result.length : 0) + ' รายการที่มีลักษณะใกล้เคียง</p>';
+         
+         if (result && result.length > 0) {
+             renderResults(result, true);
+         } else {
+             resultsArea.innerHTML += '<p class="hint">ไม่พบสินค้าที่ใกล้เคียง</p>';
+         }
+         
+       } catch (err) {
+         console.error(err);
+         resultsArea.innerHTML = '<p class="hint" style="color:var(--danger)">เกิดข้อผิดพลาด: ' + err.message + '</p>';
+       }
+    };
+    reader.readAsDataURL(file);
+  });
+  // -------------------------
 
   filterRow.querySelectorAll('.filter-chip').forEach(function(chip) {
     chip.addEventListener('click', function() {
