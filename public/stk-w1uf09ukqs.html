@@ -796,7 +796,6 @@
   // --- Image Search Logic ---
   var imageSearchBtn = document.getElementById('image-search-btn');
   var imageUploadInput = document.getElementById('image-upload');
-  var clipExtractor = null;
 
   imageSearchBtn.addEventListener('click', function() {
     imageUploadInput.click();
@@ -811,31 +810,26 @@
 
     var reader = new FileReader();
     reader.onload = async function(event) {
-       var imageUrl = event.target.result;
+       const imageUrl = event.target.result;
        
-       resultsArea.innerHTML = '<p class="hint">กำลังวิเคราะห์รูปภาพด้วย AI... <br><br><small>(ถ้าเพิ่งเคยใช้ครั้งแรก บราว์เซอร์กำลังโหลดสมอง AI ขนาด 150MB อาจใช้เวลา 10-20 วินาทีครับ... ครั้งต่อไปจะปรู๊ดปร๊าดเลย!)</small></p>';
+       resultsArea.innerHTML = '<p class="hint">กำลังวิเคราะห์รูปภาพด้วย AI...</p>';
        paginationRow.innerHTML = '';
        
        try {
-         // Load transformers.js pipeline
-         if (!clipExtractor) {
-            let pipeline;
-            try {
-               const mod = await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm');
-               pipeline = mod.pipeline;
-            } catch (cdnErr) {
-               console.warn("jsDelivr failed, trying esm.sh...", cdnErr);
-               const mod = await import('https://esm.sh/@xenova/transformers@2.17.2');
-               pipeline = mod.pipeline;
-            }
-            clipExtractor = await pipeline('image-feature-extraction', 'Xenova/clip-vit-base-patch32');
-         }
-         
+         // Instead of loading AI in the browser (which is blocked by some networks),
+         // we send the image URL to our Vercel server to process the AI embedding!
          resultsArea.innerHTML = '<p class="hint">กำลังเทียบรูปภาพกับสินค้าในสต็อก...</p>';
          
          // Extract features directly from Data URL string
-         const output = await clipExtractor(imageUrl);
-         const embeddingArray = Array.from(output.data);
+         // Call our server API to get the embedding
+         const embedRes = await fetch('/api/embed-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: imageUrl })
+         });
+         const embedData = await embedRes.json();
+         if (embedData.error) throw new Error(embedData.error);
+         const embeddingArray = embedData.embedding;
          
          // Search in Supabase
          const result = await rpcCall('match_products', {
