@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { pipeline, env, RawImage } from '@xenova/transformers';
-import Jimp from 'jimp';
+import { Jimp } from 'jimp';
 
 // Configure transformers cache directory to /tmp which is writable in Vercel Serverless
 env.cacheDir = '/tmp';
