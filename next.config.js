@@ -46,6 +46,13 @@ const nextConfig = {
       '/api/label-pdf/[id]': ['./app/api/label-pdf/[id]/fonts/**'],
     },
   },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'sharp$': false,
+    };
+    return config;
+  },
 };
 
 module.exports = nextConfig;
