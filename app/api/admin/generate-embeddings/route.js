@@ -28,7 +28,7 @@ export async function GET(request) {
     // Fetch up to 10 products missing embeddings
     const { data: products, error } = await supabase
       .from('products')
-      .select('id, thumbnail_url, images')
+      .select('id, images')
       .is('image_embedding', null)
       .limit(10);
 
@@ -40,8 +40,7 @@ export async function GET(request) {
 
     const results = [];
     for (const p of products) {
-      let imageUrl = p.thumbnail_url;
-      if (!imageUrl && p.images && p.images.length > 0) imageUrl = p.images[0];
+      let imageUrl = p.images && p.images.length > 0 ? p.images[0] : null;
       
       if (!imageUrl) {
         results.push({ id: p.id, status: 'skipped (no image)' });
