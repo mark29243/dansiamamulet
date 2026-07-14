@@ -809,25 +809,32 @@
     imageUploadInput.value = '';
 
     var reader = new FileReader();
-    reader.onload = async function(event) {
-       const imageUrl = event.target.result;
-       
-       resultsArea.innerHTML = '<p class="hint">กำลังวิเคราะห์รูปภาพด้วย AI...</p>';
-       paginationRow.innerHTML = '';
-       
-       try {
-         // Instead of loading AI in the browser (which is blocked by some networks),
-         // we send the image URL to our Vercel server to process the AI embedding!
-         resultsArea.innerHTML = '<p class="hint">กำลังเทียบรูปภาพกับสินค้าในสต็อก...</p>';
-         
-         // Extract features directly from Data URL string
-         // Call our server API to get the embedding
-         const embedRes = await fetch('/api/embed-image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: imageUrl })
-         });
-         const embedData = await embedRes.json();
+    reader.onload = function(event) {
+       const img = new Image();
+       img.onload = async function() {
+           const canvas = document.createElement('canvas');
+           canvas.width = img.width;
+           canvas.height = img.height;
+           const ctx = canvas.getContext('2d');
+           ctx.drawImage(img, 0, 0);
+           const imageUrl = canvas.toDataURL('image/jpeg', 0.9);
+           
+           resultsArea.innerHTML = '<p class="hint">กำลังวิเคราะห์รูปภาพด้วย AI...</p>';
+           paginationRow.innerHTML = '';
+           
+           try {
+             // Instead of loading AI in the browser (which is blocked by some networks),
+             // we send the image URL to our Vercel server to process the AI embedding!
+             resultsArea.innerHTML = '<p class="hint">กำลังเทียบรูปภาพกับสินค้าในสต็อก...</p>';
+             
+             // Extract features directly from Data URL string
+             // Call our server API to get the embedding
+             const embedRes = await fetch('/api/embed-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: imageUrl })
+             });
+             const embedData = await embedRes.json();
          if (embedData.error) throw new Error(embedData.error);
          const embeddingArray = embedData.embedding;
          
@@ -846,11 +853,12 @@
          } else {
              resultsArea.innerHTML += '<p class="hint">ไม่พบสินค้าที่ใกล้เคียง</p>';
          }
-         
        } catch (err) {
          console.error(err);
          resultsArea.innerHTML = '<p class="hint" style="color:var(--danger)">เกิดข้อผิดพลาด: ' + err.message + '</p>';
        }
+     };
+     img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   });
