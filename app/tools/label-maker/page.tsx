@@ -17,6 +17,7 @@ export default function LabelMakerPage() {
 
   const [senderId, setSenderId] = useState('dansiam');
   const [customSender, setCustomSender] = useState({ name: '', phone: '', address: '' });
+  const [savedSenders, setSavedSenders] = useState<{id: string, name: string, phone: string, address: string}[]>([]);
   
   const [receiverText, setReceiverText] = useState('');
   const [orderNo, setOrderNo] = useState('');
@@ -25,10 +26,16 @@ export default function LabelMakerPage() {
   const [savedReceivers, setSavedReceivers] = useState<{id: string, name: string, text: string}[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('dansiam_saved_receivers');
-    if (saved) {
+    const savedRec = localStorage.getItem('dansiam_saved_receivers');
+    if (savedRec) {
       try {
-        setSavedReceivers(JSON.parse(saved));
+        setSavedReceivers(JSON.parse(savedRec));
+      } catch(e) {}
+    }
+    const savedSen = localStorage.getItem('dansiam_saved_senders');
+    if (savedSen) {
+      try {
+        setSavedSenders(JSON.parse(savedSen));
       } catch(e) {}
     }
   }, []);
@@ -50,7 +57,7 @@ export default function LabelMakerPage() {
 
     setIsGenerating(true);
     try {
-      let sender = DEFAULT_SENDERS.find(s => s.id === senderId);
+      let sender = DEFAULT_SENDERS.find(s => s.id === senderId) || savedSenders.find(s => s.id === senderId);
       if (senderId === 'custom') {
         sender = { id: 'custom', ...customSender };
       }
@@ -105,6 +112,27 @@ export default function LabelMakerPage() {
     const newSaved = savedReceivers.filter(r => r.id !== id);
     setSavedReceivers(newSaved);
     localStorage.setItem('dansiam_saved_receivers', JSON.stringify(newSaved));
+  };
+
+  const saveCustomSender = () => {
+    if (!customSender.name.trim() || !customSender.phone.trim() || !customSender.address.trim()) {
+      alert('กรุณากรอกข้อมูลผู้ส่งให้ครบถ้วนก่อนบันทึก');
+      return;
+    }
+    const newId = 'sender_' + Date.now().toString();
+    const newSaved = [...savedSenders, { id: newId, ...customSender }];
+    setSavedSenders(newSaved);
+    localStorage.setItem('dansiam_saved_senders', JSON.stringify(newSaved));
+    setSenderId(newId);
+    setCustomSender({ name: '', phone: '', address: '' });
+  };
+
+  const removeSavedSender = (id: string) => {
+    if (!window.confirm('ต้องการลบข้อมูลผู้ส่งนี้ใช่หรือไม่?')) return;
+    const newSaved = savedSenders.filter(s => s.id !== id);
+    setSavedSenders(newSaved);
+    localStorage.setItem('dansiam_saved_senders', JSON.stringify(newSaved));
+    setSenderId('dansiam');
   };
 
   const currentSavedReceiver = savedReceivers.find(r => r.text === receiverText);
@@ -176,17 +204,36 @@ export default function LabelMakerPage() {
           {/* Sender Section */}
           <div style={{ marginBottom: '32px' }}>
             <label className="label">ข้อมูลผู้ส่ง (From)</label>
-            <select 
-              value={senderId}
-              onChange={e => setSenderId(e.target.value)}
-              className="input"
-              style={{ cursor: 'pointer', marginBottom: senderId === 'custom' ? '16px' : '0' }}
-            >
-              {DEFAULT_SENDERS.map(s => (
-                <option key={s.id} value={s.id}>{s.name} ({s.phone})</option>
-              ))}
-              <option value="custom">+ กำหนดเอง (พิมพ์ใหม่)</option>
-            </select>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: senderId === 'custom' ? '16px' : '0' }}>
+              <select 
+                value={senderId}
+                onChange={e => setSenderId(e.target.value)}
+                className="input"
+                style={{ cursor: 'pointer', flex: 1 }}
+              >
+                {DEFAULT_SENDERS.map(s => (
+                  <option key={s.id} value={s.id}>{s.name} ({s.phone})</option>
+                ))}
+                {savedSenders.map(s => (
+                  <option key={s.id} value={s.id}>{s.name} ({s.phone})</option>
+                ))}
+                <option value="custom">+ กำหนดเอง (พิมพ์ใหม่)</option>
+              </select>
+              
+              {senderId !== 'dansiam' && senderId !== 'custom' && (
+                <button 
+                  type="button" 
+                  onClick={() => removeSavedSender(senderId)}
+                  className="btn-outline" 
+                  style={{ padding: '0 16px', borderColor: 'var(--burgundy)', color: 'var(--burgundy)' }}
+                  title="ลบข้อมูลผู้ส่งนี้"
+                >
+                  <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              )}
+            </div>
 
             {senderId === 'custom' && (
               <div style={{ background: 'rgba(201, 168, 76, 0.05)', border: '1px solid var(--border)', padding: '20px', borderRadius: 'var(--radius)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -216,6 +263,17 @@ export default function LabelMakerPage() {
                   className="input"
                   style={{ background: '#fff', resize: 'none' }}
                 />
+                <button 
+                  type="button" 
+                  onClick={saveCustomSender}
+                  className="btn-text"
+                  style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '6px', padding: 0 }}
+                >
+                  <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+                  </svg>
+                  บันทึกเป็นผู้ส่งประจำ
+                </button>
               </div>
             )}
           </div>
