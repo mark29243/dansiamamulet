@@ -13,91 +13,52 @@ export function registerSarabunFont(fontDir: string) {
 // 130mm × 76mm landscape (1mm = 2.8346pt)
 const W = 368.5;  // 130mm
 const H = 215.4;  // 76mm
+const mm = 2.8346;
 
 const s = StyleSheet.create({
   page: {
     width: W, height: H,
-    flexDirection: 'column',
     backgroundColor: 'white',
     fontFamily: 'Sarabun',
-    padding: 10,
-  },
-  topSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
   },
   fromBox: {
-    width: 70.4 * 2.8346,
-    height: 16.9 * 2.8346,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#000',
-    padding: 3,
-    borderRadius: 4,
+    position: 'absolute',
+    left: 2 * mm, top: 2 * mm,
+    width: 68 * mm, height: 22 * mm,
+    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
+    borderRadius: 4, padding: 3,
   },
-  fromText: {
-    fontSize: 6,
-    color: '#000',
-    lineHeight: 1.3,
-  },
+  fromTextBold: { fontSize: 8, fontWeight: 700, color: '#000', lineHeight: 1.3 },
+  fromText: { fontSize: 8, color: '#000', lineHeight: 1.3 },
   rightBox: {
-    width: 55 * 2.8346,
-    height: 32 * 2.8346,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#000',
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'absolute',
+    left: 73 * mm, top: 2 * mm,
+    width: 55 * mm, height: 32 * mm,
+    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
+    borderRadius: 4, alignItems: 'center', justifyContent: 'center',
   },
-  orderNoText: {
-    fontSize: 8,
-    color: '#666',
-  },
-  toSection: {
-    flexDirection: 'column',
-    marginTop: 2,
-  },
-  toNameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
+  orderNoText: { fontSize: 10, color: '#666' },
   toLabel: {
-    fontSize: 10,
-    fontWeight: 700,
-    marginRight: 4,
+    position: 'absolute',
+    left: 2 * mm, top: 38 * mm,
+    fontSize: 10, fontWeight: 700, color: '#000',
   },
   nameBox: {
-    width: 80 * 2.8346,
-    height: 11 * 2.8346, // slightly taller than 9mm to fit font properly
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#000',
-    paddingHorizontal: 4,
-    justifyContent: 'center',
-    borderRadius: 4,
+    position: 'absolute',
+    left: 12 * mm, top: 36 * mm,
+    width: 116 * mm, height: 11 * mm,
+    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
+    borderRadius: 4, paddingHorizontal: 4, justifyContent: 'center',
   },
-  nameText: {
-    fontSize: 10,
-    fontWeight: 700,
-  },
+  nameText: { fontSize: 10, fontWeight: 700 },
   addressBox: {
-    width: 109 * 2.8346,
-    height: 27 * 2.8346,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: '#000',
-    padding: 4,
-    borderRadius: 4,
-    marginLeft: 14, // align with name box
+    position: 'absolute',
+    left: 12 * mm, top: 49 * mm,
+    width: 116 * mm, height: 25 * mm,
+    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
+    borderRadius: 4, padding: 4,
   },
-  addressText: {
-    fontSize: 10,
-    fontWeight: 700,
-    lineHeight: 1.4,
-  }
+  addressText: { fontSize: 10, fontWeight: 700, lineHeight: 1.4 }
 });
 
 interface Props {
@@ -113,38 +74,34 @@ export function LabelPDF({ order, lang }: Props) {
   return (
     <Document>
       <Page size={[W, H]} style={s.page}>
+        
+        {/* From Box */}
+        <View style={s.fromBox}>
+          <Text style={s.fromTextBold}>From : Dansiamamulets (+66898157535)</Text>
+          <Text style={s.fromText}>105/1 M.2, NONGPHO, PHOTHARAM,</Text>
+          <Text style={s.fromText}>RATCHABURI, THAILAND 70120</Text>
+        </View>
 
-        {/* Top Section */}
-        <View style={s.topSection}>
-          <View style={s.fromBox}>
-            <Text style={s.fromText}>
-              From : Dansiamamulets (+66898157535){'\n'}
-              105/1 M.2, NONGPHO, PHOTHARAM,{'\n'}
-              RATCHABURI, THAILAND 70120
-            </Text>
-          </View>
-          <View style={s.rightBox}>
-             <Text style={s.orderNoText}>#{orderNo}</Text>
-          </View>
+        {/* Right Box (Sticker) */}
+        <View style={s.rightBox}>
+          <Text style={s.orderNoText}>#{orderNo}</Text>
         </View>
 
         {/* To Section */}
-        <View style={s.toSection}>
-          <View style={s.toNameRow}>
-            <Text style={s.toLabel}>To :</Text>
-            <View style={s.nameBox}>
-              <Text style={s.nameText}>{order.customer_name}</Text>
-            </View>
-          </View>
-          <View style={s.addressBox}>
-            <Text style={s.addressText}>
-              {addr.line1}
-              {addr.line2 ? ' ' + addr.line2 : ''}
-              {' '}{addrLine3}
-              {'\n'}{addr.country}
-              {order.customer_phone ? `\nTel: ${order.customer_phone}` : ''}
-            </Text>
-          </View>
+        <Text style={s.toLabel}>To :</Text>
+        <View style={s.nameBox}>
+          <Text style={s.nameText}>{order.customer_name}</Text>
+        </View>
+
+        {/* Address Box */}
+        <View style={s.addressBox}>
+          <Text style={s.addressText}>
+            {addr.line1}
+            {addr.line2 ? ' ' + addr.line2 : ''}
+            {' '}{addrLine3}
+            {'\n'}{addr.country}
+            {order.customer_phone ? `\nTel: ${order.customer_phone}` : ''}
+          </Text>
         </View>
 
       </Page>

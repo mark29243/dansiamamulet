@@ -58,32 +58,32 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   <rect width="130" height="76" fill="white"/>
 
   <!-- From Box -->
-  <g transform="translate(2, 4)">
-    <rect width="70.4" height="16.9" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
-    <text x="2" y="4.5" ${font} font-size="2" fill="#000" font-weight="700">From : Dansiamamulets (+66898157535)</text>
-    <text x="2" y="8" ${font} font-size="2" fill="#000">105/1 M.2, NONGPHO, PHOTHARAM,</text>
-    <text x="2" y="11.5" ${font} font-size="2" fill="#000">RATCHABURI, THAILAND 70120</text>
+  <g transform="translate(2, 2)">
+    <rect width="68" height="22" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
+    <text x="2" y="6" ${font} font-size="2.5" fill="#000" font-weight="700">From : Dansiamamulets (+66898157535)</text>
+    <text x="2" y="10.5" ${font} font-size="2.5" fill="#000">105/1 M.2, NONGPHO, PHOTHARAM,</text>
+    <text x="2" y="15" ${font} font-size="2.5" fill="#000">RATCHABURI, THAILAND 70120</text>
   </g>
 
   <!-- Right Box -->
-  <g transform="translate(73, 4)">
-    <rect width="55" height="16.9" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
-    <text x="27.5" y="9.5" text-anchor="middle" ${font} font-size="3" fill="#666">#${orderNo}</text>
+  <g transform="translate(73, 2)">
+    <rect width="55" height="32" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
+    <text x="27.5" y="17" text-anchor="middle" ${font} font-size="3" fill="#666">#${orderNo}</text>
   </g>
 
   <!-- To Section -->
-  <g transform="translate(2, 24)">
+  <g transform="translate(2, 36)">
     <!-- To Name Row -->
     <text x="0" y="7.5" ${font} font-size="3.5" font-weight="700" fill="#000">To :</text>
-    <g transform="translate(9, 0)">
-      <rect width="80" height="11" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
+    <g transform="translate(10, 0)">
+      <rect width="116" height="11" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
       <text x="2" y="7.5" ${font} font-size="3.5" font-weight="700" fill="#000">${esc(data.customer_name)}</text>
     </g>
   </g>
 
   <!-- Address Box -->
-  <g transform="translate(11, 37)">
-    <rect width="109" height="36" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
+  <g transform="translate(12, 49)">
+    <rect width="116" height="25" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
     <text x="2" y="6" ${font} font-size="3.5" font-weight="700" fill="#000">
       <tspan x="2" dy="0">${esc(addr.line1)} ${esc(addr.line2 || '')} ${esc(addrCity)}</tspan>
       <tspan x="2" dy="5">${esc(addr.country)}</tspan>
