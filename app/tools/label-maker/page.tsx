@@ -17,28 +17,49 @@ export default function LabelMakerPage() {
 
   const [senderId, setSenderId] = useState('dansiam');
   const [customSender, setCustomSender] = useState({ name: '', phone: '', address: '' });
-  const [savedSenders, setSavedSenders] = useState<{id: string, name: string, phone: string, address: string}[]>([]);
+  const [savedSenders, setSavedSenders] = useState<any[]>([]);
   
   const [receiverText, setReceiverText] = useState('');
   const [orderNo, setOrderNo] = useState('');
   
   const [isGenerating, setIsGenerating] = useState(false);
-  const [savedReceivers, setSavedReceivers] = useState<{id: string, name: string, text: string}[]>([]);
+  const [savedReceivers, setSavedReceivers] = useState<any[]>([]);
 
   useEffect(() => {
-    const savedRec = localStorage.getItem('dansiam_saved_receivers');
-    if (savedRec) {
-      try {
-        setSavedReceivers(JSON.parse(savedRec));
-      } catch(e) {}
+    const migrateAndFetchData = async () => {
+      const localReceivers = JSON.parse(localStorage.getItem('dansiam_saved_receivers') || '[]');
+      const localSenders = JSON.parse(localStorage.getItem('dansiam_saved_senders') || '[]');
+      
+      if (localReceivers.length > 0 || localSenders.length > 0) {
+        const payload = [
+          ...localSenders.map((s: any) => ({ ...s, type: 'sender' })),
+          ...localReceivers.map((r: any) => ({ ...r, type: 'receiver' }))
+        ];
+        
+        try {
+          await fetch('/api/tools/label-contacts', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          localStorage.removeItem('dansiam_saved_receivers');
+          localStorage.removeItem('dansiam_saved_senders');
+        } catch (e) {
+          console.error('Migration failed', e);
+        }
+      }
+      
+      const res = await fetch('/api/tools/label-contacts');
+      if (res.ok) {
+        const data = await res.json();
+        setSavedSenders(data.filter((d: any) => d.type === 'sender'));
+        setSavedReceivers(data.filter((d: any) => d.type === 'receiver'));
+      }
+    };
+
+    if (isAuthenticated) {
+      migrateAndFetchData();
     }
-    const savedSen = localStorage.getItem('dansiam_saved_senders');
-    if (savedSen) {
-      try {
-        setSavedSenders(JSON.parse(savedSen));
-      } catch(e) {}
-    }
-  }, []);
+  }, [isAuthenticated]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,43 +117,45 @@ export default function LabelMakerPage() {
     }
   };
 
-  const saveReceiver = () => {
+  const saveReceiver = async () => {
     if (!receiverText.trim()) return;
     const firstLine = receiverText.split('\n')[0].trim() || 'ผู้รับ';
     const name = window.prompt('ตั้งชื่อเพื่อบันทึกผู้รับรายนี้ (เช่น ชื่อลูกค้า):', firstLine);
     if (!name) return;
     
-    const newSaved = [...savedReceivers, { id: Date.now().toString(), name, text: receiverText }];
-    setSavedReceivers(newSaved);
-    localStorage.setItem('dansiam_saved_receivers', JSON.stringify(newSaved));
+    const newId = Date.now().toString();
+    const newObj = { id: newId, type: 'receiver', name, text: receiverText };
+    
+    setSavedReceivers([...savedReceivers, newObj]);
+    await fetch('/api/tools/label-contacts', { method: 'POST', body: JSON.stringify(newObj) });
   };
 
-  const removeSavedReceiver = (id: string) => {
+  const removeSavedReceiver = async (id: string) => {
     if (!window.confirm('ต้องการลบผู้รับรายนี้ออกจากที่บันทึกไว้ใช่หรือไม่?')) return;
-    const newSaved = savedReceivers.filter(r => r.id !== id);
-    setSavedReceivers(newSaved);
-    localStorage.setItem('dansiam_saved_receivers', JSON.stringify(newSaved));
+    setSavedReceivers(savedReceivers.filter(r => r.id !== id));
+    await fetch(`/api/tools/label-contacts?id=${id}`, { method: 'DELETE' });
   };
 
-  const saveCustomSender = () => {
+  const saveCustomSender = async () => {
     if (!customSender.name.trim() || !customSender.phone.trim() || !customSender.address.trim()) {
       alert('กรุณากรอกข้อมูลผู้ส่งให้ครบถ้วนก่อนบันทึก');
       return;
     }
     const newId = 'sender_' + Date.now().toString();
-    const newSaved = [...savedSenders, { id: newId, ...customSender }];
-    setSavedSenders(newSaved);
-    localStorage.setItem('dansiam_saved_senders', JSON.stringify(newSaved));
+    const newObj = { id: newId, type: 'sender', ...customSender };
+    
+    setSavedSenders([...savedSenders, newObj]);
     setSenderId(newId);
     setCustomSender({ name: '', phone: '', address: '' });
+    
+    await fetch('/api/tools/label-contacts', { method: 'POST', body: JSON.stringify(newObj) });
   };
 
-  const removeSavedSender = (id: string) => {
+  const removeSavedSender = async (id: string) => {
     if (!window.confirm('ต้องการลบข้อมูลผู้ส่งนี้ใช่หรือไม่?')) return;
-    const newSaved = savedSenders.filter(s => s.id !== id);
-    setSavedSenders(newSaved);
-    localStorage.setItem('dansiam_saved_senders', JSON.stringify(newSaved));
+    setSavedSenders(savedSenders.filter(s => s.id !== id));
     setSenderId('dansiam');
+    await fetch(`/api/tools/label-contacts?id=${id}`, { method: 'DELETE' });
   };
 
   const currentSavedReceiver = savedReceivers.find(r => r.text === receiverText);
