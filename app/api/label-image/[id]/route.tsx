@@ -66,8 +66,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
   <!-- Right Box -->
   <g transform="translate(73, 2)">
-    <rect width="55" height="32" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
-    <text x="27.5" y="17" text-anchor="middle" ${font} font-size="3" fill="#666">#${orderNo}</text>
+    <!-- Reserved empty space for sticker -->
   </g>
 
   <!-- To Section -->

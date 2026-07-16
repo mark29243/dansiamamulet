@@ -46,8 +46,6 @@ const s = StyleSheet.create({
     position: 'absolute',
     left: 73 * mm, top: 2 * mm,
     width: 55 * mm, height: 32 * mm,
-    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
-    borderRadius: 4, alignItems: 'center', justifyContent: 'center',
   },
   orderNoText: { fontSize: 10, color: '#666' },
   toLabel: {
@@ -102,10 +100,8 @@ export function LabelPDF({ order, lang, sender }: Props) {
           ))}
         </View>
 
-        {/* Right Box (Sticker) */}
-        <View style={s.rightBox}>
-          <Text style={s.orderNoText}>#{orderNo}</Text>
-        </View>
+        {/* Right Box (Sticker Area) */}
+        <View style={s.rightBox}></View>
 
         {/* To Section */}
         <Text style={s.toLabel}>To :</Text>
