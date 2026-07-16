@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { orderNo, senderName, senderPhone, senderAddress, receiverText } = body;
+    const { orderNo, senderName, senderPhone, senderAddress, receiverText, isCod } = body;
 
     let text = receiverText || '';
     
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     };
 
     const buffer = await (renderToBuffer as any)(
-      createElement(LabelPDF as any, { order: mockOrder, lang: 'th', sender })
+      createElement(LabelPDF as any, { order: mockOrder, lang: 'th', sender, isCod: !!isCod })
     );
 
     return new NextResponse(buffer as unknown as BodyInit, {

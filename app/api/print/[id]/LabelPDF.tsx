@@ -71,9 +71,10 @@ interface Props {
     phone: string;
     address: string;
   };
+  isCod?: boolean;
 }
 
-export function LabelPDF({ order, lang, sender }: Props) {
+export function LabelPDF({ order, lang, sender, isCod }: Props) {
   const orderNo = order.id.slice(0, 8).toUpperCase();
   const addr = order.shipping_address;
   const addrLine3 = [addr.city, addr.state, addr.postal_code].filter(Boolean).join(', ');
@@ -83,6 +84,14 @@ export function LabelPDF({ order, lang, sender }: Props) {
   const senderPhone = sender?.phone || '+66898157535';
   const senderAddress = sender?.address || '105/1 M.2, NONGPHO, PHOTHARAM,\nRATCHABURI, THAILAND 70120';
   const senderAddressLines = senderAddress.split('\n');
+
+  // If COD, we leave 50x50mm at bottom-left, so we shift "To" section to the right (e.g. left 52mm instead of 2/12mm).
+  const dynamicToLabelStyle = isCod 
+    ? { ...s.toLabel, left: 52 * mm } 
+    : s.toLabel;
+  const dynamicToBoxStyle = isCod 
+    ? { ...s.toBox, left: 62 * mm, width: 66 * mm } 
+    : s.toBox;
 
   return (
     <Document>
@@ -104,8 +113,8 @@ export function LabelPDF({ order, lang, sender }: Props) {
         <View style={s.rightBox}></View>
 
         {/* To Section */}
-        <Text style={s.toLabel}>To :</Text>
-        <View style={s.toBox}>
+        <Text style={dynamicToLabelStyle}>To :</Text>
+        <View style={dynamicToBoxStyle}>
           <Text style={{ ...s.toName, fontFamily: getFontFamily(order.customer_name) }}>
             {order.customer_name} {order.customer_phone ? `${order.customer_phone}` : ''}
           </Text>

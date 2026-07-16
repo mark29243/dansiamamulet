@@ -21,6 +21,7 @@ export default function LabelMakerPage() {
   
   const [receiverText, setReceiverText] = useState('');
   const [orderNo, setOrderNo] = useState('');
+  const [isCod, setIsCod] = useState(false);
   
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedReceivers, setSavedReceivers] = useState<any[]>([]);
@@ -92,6 +93,7 @@ export default function LabelMakerPage() {
           senderPhone: sender?.phone,
           senderAddress: sender?.address,
           receiverText,
+          isCod,
         }),
       });
 
@@ -377,6 +379,30 @@ export default function LabelMakerPage() {
 
           {/* Actions */}
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: '32px' }}>
+            <div style={{ marginBottom: '24px' }}>
+              <label className="label">รูปแบบใบปะหน้า</label>
+              <div style={{ display: 'flex', gap: '16px', marginTop: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input 
+                    type="radio" 
+                    checked={!isCod} 
+                    onChange={() => setIsCod(false)} 
+                    style={{ accentColor: 'var(--gold)' }}
+                  />
+                  <span>แบบปกติ (ชำระแล้ว)</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input 
+                    type="radio" 
+                    checked={isCod} 
+                    onChange={() => setIsCod(true)} 
+                    style={{ accentColor: 'var(--gold)' }}
+                  />
+                  <span>แบบเก็บเงินปลายทาง (เว้นที่แปะ COD)</span>
+                </label>
+              </div>
+            </div>
+
             <button 
               onClick={handlePrint}
               disabled={isGenerating || !receiverText.trim()}
