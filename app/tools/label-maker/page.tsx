@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const DEFAULT_SENDERS = [
   {
@@ -22,6 +22,16 @@ export default function LabelMakerPage() {
   const [orderNo, setOrderNo] = useState('');
   
   const [isGenerating, setIsGenerating] = useState(false);
+  const [savedReceivers, setSavedReceivers] = useState<{id: string, name: string, text: string}[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('dansiam_saved_receivers');
+    if (saved) {
+      try {
+        setSavedReceivers(JSON.parse(saved));
+      } catch(e) {}
+    }
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +80,26 @@ export default function LabelMakerPage() {
       setIsGenerating(false);
     }
   };
+
+  const saveReceiver = () => {
+    if (!receiverText.trim()) return;
+    const firstLine = receiverText.split('\n')[0].trim() || 'ผู้รับ';
+    const name = window.prompt('ตั้งชื่อเพื่อบันทึกผู้รับรายนี้ (เช่น ชื่อลูกค้า):', firstLine);
+    if (!name) return;
+    
+    const newSaved = [...savedReceivers, { id: Date.now().toString(), name, text: receiverText }];
+    setSavedReceivers(newSaved);
+    localStorage.setItem('dansiam_saved_receivers', JSON.stringify(newSaved));
+  };
+
+  const removeSavedReceiver = (id: string) => {
+    if (!window.confirm('ต้องการลบผู้รับรายนี้ออกจากที่บันทึกไว้ใช่หรือไม่?')) return;
+    const newSaved = savedReceivers.filter(r => r.id !== id);
+    setSavedReceivers(newSaved);
+    localStorage.setItem('dansiam_saved_receivers', JSON.stringify(newSaved));
+  };
+
+  const currentSavedReceiver = savedReceivers.find(r => r.text === receiverText);
 
   if (!isAuthenticated) {
     return (
@@ -184,9 +214,31 @@ export default function LabelMakerPage() {
 
           {/* Receiver Section */}
           <div style={{ marginBottom: '40px' }}>
-            <label className="label">
-              ข้อมูลผู้รับ (To)
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+              <label className="label" style={{ marginBottom: 0 }}>
+                ข้อมูลผู้รับ (To)
+              </label>
+              
+              {savedReceivers.length > 0 && (
+                <select 
+                  onChange={(e) => {
+                    if (!e.target.value) return;
+                    const found = savedReceivers.find(r => r.id === e.target.value);
+                    if (found) setReceiverText(found.text);
+                    e.target.value = ""; 
+                  }}
+                  className="input"
+                  style={{ width: 'auto', padding: '6px 12px', fontSize: '13px', minWidth: '200px', cursor: 'pointer', background: 'var(--cream)' }}
+                  defaultValue=""
+                >
+                  <option value="" disabled>⭐ เลือกผู้รับที่ส่งบ่อย...</option>
+                  {savedReceivers.map(r => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+
             <textarea 
               value={receiverText}
               onChange={e => setReceiverText(e.target.value)}
@@ -195,11 +247,42 @@ export default function LabelMakerPage() {
               className="input"
               style={{ resize: 'none', lineHeight: '1.6' }}
             />
-            <div className="helper" style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
-              <svg style={{ width: '14px', height: '14px', color: 'var(--gold)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              เคล็ดลับ: สามารถก๊อปปี้ชื่อ ที่อยู่ และเบอร์โทรมาวางรวมกันได้เลย
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', flexWrap: 'wrap', gap: '12px' }}>
+              <div className="helper" style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
+                <svg style={{ width: '14px', height: '14px', color: 'var(--gold)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                เคล็ดลับ: สามารถก๊อปปี้ชื่อและที่อยู่มาวางรวมกันได้เลย
+              </div>
+              
+              {receiverText.trim() && (
+                currentSavedReceiver ? (
+                  <button 
+                    type="button" 
+                    onClick={() => removeSavedReceiver(currentSavedReceiver.id)}
+                    className="btn-text"
+                    style={{ color: 'var(--burgundy)', padding: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px', textDecorationColor: 'rgba(92, 26, 26, 0.3)' }}
+                  >
+                    <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    ลบออกจากรายชื่อโปรด
+                  </button>
+                ) : (
+                  <button 
+                    type="button" 
+                    onClick={saveReceiver}
+                    className="btn-text"
+                    style={{ padding: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                    </svg>
+                    บันทึกเป็นรายชื่อโปรด
+                  </button>
+                )
+              )}
             </div>
           </div>
 
