@@ -71,12 +71,16 @@ export async function GET(req: NextRequest) {
       let text = rawText || '';
       
       // Auto formatting logic just like route.tsx
-      text = text.replace(/([^\s])(ตำบล|แขวง|อำเภอ|เขต|จังหวัด|ต\.|อ\.|จ\.|รหัส)/g, '$1 $2');
+      text = text.replace(/([^\s])(ตำบล|แขวง|อำเภอ|เขต|จังหวัด|ต\.|อ\.|จ\.|รหัส|กรุงเทพ|กทม)/g, '$1 $2');
       text = text.replace(/([^\s])(\d{5})(?!\d)/g, '$1 $2');
 
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       const customer_name = lines.length > 0 ? lines[0] : 'Unknown';
-      const addressLines = lines.slice(1).join(' ');
+      let addressLines = lines.slice(1).join(' ');
+
+      // Smart split to ensure at least 3 logical lines for Thai addresses
+      addressLines = addressLines.replace(/\s+(ตำบล|แขวง|ต\.)/g, '\n$1');
+      addressLines = addressLines.replace(/\s+(จังหวัด|จ\.|กรุงเทพ|กทม)/g, '\n$1');
 
       const orderNo = `TEST${(index + 1).toString().padStart(4, '0')}`;
 
