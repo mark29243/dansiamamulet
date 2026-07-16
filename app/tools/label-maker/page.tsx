@@ -97,8 +97,8 @@ export default function LabelMakerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-gray-100 via-gray-50 to-gray-200 py-12 px-4 sm:px-6 lg:px-8 font-sans flex items-center justify-center">
-      <div className="max-w-2xl w-full mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100 py-8 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-2xl w-full mx-auto my-auto">
         <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-gray-100 overflow-hidden">
           
           {/* Header */}
