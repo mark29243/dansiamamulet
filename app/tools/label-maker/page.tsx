@@ -73,7 +73,15 @@ export default function LabelMakerPage() {
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `label_${orderNo.trim() || 'custom'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (e: any) {
       alert('เกิดข้อผิดพลาด: ' + e.message);
     } finally {
