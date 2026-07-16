@@ -28,6 +28,8 @@ export async function POST(req: NextRequest) {
         addressLines = addressLines.replace(/\s+(ตำบล|แขวง|ต\.)/g, '\n$1');
         addressLines = addressLines.replace(/\s+(อำเภอ|เขต|อ\.)/g, '\n$1');
         addressLines = addressLines.replace(/\s+(จังหวัด|จ\.|กรุงเทพ|กทม)/g, '\n$1');
+      } else {
+        addressLines = addressLines.replace(/,\s+/g, ',\n'); // Foreign addresses
       }
     }
     // Clean up empty lines
