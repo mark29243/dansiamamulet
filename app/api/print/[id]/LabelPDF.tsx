@@ -58,8 +58,8 @@ const s = StyleSheet.create({
     width: 116 * mm, height: 38 * mm,
     padding: 2,
   },
-  toName: { fontSize: 10, fontWeight: 700, lineHeight: 1.4 },
-  toAddress: { fontSize: 10, fontWeight: 400, lineHeight: 1.4 }
+  toName: { fontSize: 12, fontWeight: 700, lineHeight: 1.3 },
+  toAddress: { fontSize: 9.5, fontWeight: 400, lineHeight: 1.4 }
 });
 
 interface Props {
