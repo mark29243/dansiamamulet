@@ -7,11 +7,11 @@ import QuickContact from './QuickContact';
 
 export default function ConditionalSiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith('/admin') || pathname?.startsWith('/print') || pathname?.startsWith('/staff');
+  const isAdmin = pathname?.startsWith('/admin') || pathname?.startsWith('/print') || pathname?.startsWith('/staff') || pathname?.startsWith('/tools');
 
   if (isAdmin) {
     return (
-      <main id="main" style={{ minHeight: '100vh' }}>
+      <main id="main" style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
         {children}
       </main>
     );
