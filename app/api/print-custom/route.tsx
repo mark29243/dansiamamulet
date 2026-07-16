@@ -18,8 +18,6 @@ export async function POST(req: NextRequest) {
     
     // Add natural spaces before common Thai address keywords to fix PDF word-wrap cutoffs
     text = text.replace(/([^\s])(ตำบล|แขวง|อำเภอ|เขต|จังหวัด|ต\.|อ\.|จ\.|รหัส|กรุงเทพ|กทม)/g, '$1 $2');
-    // Add space before 5-digit postal code if missing (ensure it is preceded by non-digit to avoid splitting phone numbers)
-    text = text.replace(/([^\d\s])(\d{5})(?!\d)/g, '$1 $2');
 
     const lines = text.split('\n').map((l: string) => l.trim()).filter(Boolean);
     const customer_name = lines.length > 0 ? lines[0] : 'Unknown';

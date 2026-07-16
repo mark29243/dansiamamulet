@@ -72,7 +72,6 @@ export async function GET(req: NextRequest) {
       
       // Auto formatting logic just like route.tsx
       text = text.replace(/([^\s])(ตำบล|แขวง|อำเภอ|เขต|จังหวัด|ต\.|อ\.|จ\.|รหัส|กรุงเทพ|กทม)/g, '$1 $2');
-      text = text.replace(/([^\d\s])(\d{5})(?!\d)/g, '$1 $2');
 
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       const customer_name = lines.length > 0 ? lines[0] : 'Unknown';
