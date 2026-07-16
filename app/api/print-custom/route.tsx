@@ -14,14 +14,30 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { orderNo, senderName, senderPhone, senderAddress, receiverText } = body;
 
-    const lines = (receiverText || '').split('\n').map((l: string) => l.trim()).filter(Boolean);
+    let text = receiverText || '';
+    
+    // Extract phone number (look for 0 followed by 8-9 digits, allowing spaces/dashes)
+    let customer_phone = '';
+    const phoneRegex = /(?:โทร\.?|Tel\.?|เบอร์)?[:\s]*((?:0|\+66)(?:\s*-?\s*\d){8,9})/i;
+    const phoneMatch = text.match(phoneRegex);
+    if (phoneMatch) {
+      customer_phone = phoneMatch[1].trim();
+      text = text.replace(phoneMatch[0], ''); // remove phone from text
+    }
+
+    // Add natural spaces before common Thai address keywords to fix PDF word-wrap cutoffs
+    text = text.replace(/([^\s])(ตำบล|แขวง|อำเภอ|เขต|จังหวัด|ต\.|อ\.|จ\.|รหัส)/g, '$1 $2');
+    // Add space before 5-digit postal code if missing
+    text = text.replace(/([^\s])(\d{5})(?!\d)/g, '$1 $2');
+
+    const lines = text.split('\n').map((l: string) => l.trim()).filter(Boolean);
     const customer_name = lines.length > 0 ? lines[0] : 'Unknown';
-    const addressLines = lines.slice(1).join('\n');
+    const addressLines = lines.slice(1).join(' ');
 
     const mockOrder = {
       id: orderNo || 'CUSTOM00',
       customer_name,
-      customer_phone: '',
+      customer_phone,
       shipping_address: {
         line1: addressLines,
         line2: '',
