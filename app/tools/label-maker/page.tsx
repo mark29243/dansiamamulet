@@ -76,9 +76,9 @@ export default function LabelMakerPage() {
       <div className="min-h-screen bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
         <form onSubmit={handleLogin} className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 sm:p-10 rounded-3xl shadow-2xl max-w-sm w-full transform transition-all hover:scale-105 duration-500">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-            <span className="text-3xl">🔒</span>
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
           </div>
-          <h1 className="text-2xl font-bold text-center mb-8 text-white tracking-wide">Enter Passcode</h1>
+          <h1 className="text-2xl font-bold text-center mb-8 text-white tracking-wide">กรุณาใส่รหัสผ่าน</h1>
           <input
             type="password"
             value={passcode}
@@ -89,7 +89,7 @@ export default function LabelMakerPage() {
             autoFocus
           />
           <button type="submit" className="w-full bg-gradient-to-r from-amber-600 to-yellow-500 text-white py-4 rounded-xl font-bold text-lg hover:from-amber-500 hover:to-yellow-400 transform transition-all shadow-lg hover:shadow-amber-500/50">
-            Access System
+            เข้าสู่ระบบ
           </button>
         </form>
       </div>
@@ -107,12 +107,12 @@ export default function LabelMakerPage() {
             <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
             
             <div className="relative z-10 flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner">
-                <span className="text-2xl">🖨️</span>
+              <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20 shadow-inner text-white">
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
               </div>
               <div>
-                <h1 className="text-3xl font-extrabold text-white tracking-tight">Label Maker Pro</h1>
-                <p className="text-gray-400 mt-1">Generate high-quality shipping labels instantly</p>
+                <h1 className="text-3xl font-extrabold text-white tracking-tight">ระบบสร้างใบปะหน้า</h1>
+                <p className="text-gray-400 mt-1">สร้าง PDF สำหรับปริ้นท์ใบปะหน้าอย่างรวดเร็ว</p>
               </div>
             </div>
           </div>
@@ -123,14 +123,14 @@ export default function LabelMakerPage() {
             <div className="group">
               <label className="flex items-center text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">
                 <span className="w-2 h-2 rounded-full bg-amber-500 mr-2 group-hover:scale-150 transition-transform"></span>
-                Order Reference <span className="text-gray-400 ml-2 font-normal lowercase">(Optional)</span>
+                Order No. <span className="text-gray-400 ml-2 font-normal lowercase">(ไม่บังคับ)</span>
               </label>
               <div className="relative">
                 <input 
                   type="text" 
                   value={orderNo}
                   onChange={e => setOrderNo(e.target.value)}
-                  placeholder="e.g. CUSTOM01"
+                  placeholder="เช่น CUSTOM01"
                   maxLength={8}
                   className="w-full px-5 py-4 bg-gray-50/50 border border-gray-200 rounded-2xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all shadow-sm font-medium"
                 />
@@ -141,7 +141,7 @@ export default function LabelMakerPage() {
             <div className="group">
               <label className="flex items-center text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">
                 <span className="w-2 h-2 rounded-full bg-blue-500 mr-2 group-hover:scale-150 transition-transform"></span>
-                Sender Details
+                ข้อมูลผู้ส่ง (From)
               </label>
               
               <div className="relative">
@@ -153,7 +153,7 @@ export default function LabelMakerPage() {
                   {DEFAULT_SENDERS.map(s => (
                     <option key={s.id} value={s.id}>{s.name} ({s.phone})</option>
                   ))}
-                  <option value="custom">✨ Custom Sender (Enter manually)</option>
+                  <option value="custom">กำหนดเอง (พิมพ์ใหม่)</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-5 pointer-events-none text-gray-400">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -165,21 +165,21 @@ export default function LabelMakerPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input 
                       type="text" 
-                      placeholder="Sender Name" 
+                      placeholder="ชื่อผู้ส่ง" 
                       value={customSender.name}
                       onChange={e => setCustomSender({...customSender, name: e.target.value})}
                       className="w-full px-4 py-3 bg-white border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-shadow"
                     />
                     <input 
                       type="text" 
-                      placeholder="Phone Number" 
+                      placeholder="เบอร์โทร" 
                       value={customSender.phone}
                       onChange={e => setCustomSender({...customSender, phone: e.target.value})}
                       className="w-full px-4 py-3 bg-white border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-shadow"
                     />
                   </div>
                   <textarea 
-                    placeholder="Full Address" 
+                    placeholder="ที่อยู่ผู้ส่ง" 
                     rows={2}
                     value={customSender.address}
                     onChange={e => setCustomSender({...customSender, address: e.target.value})}
@@ -193,7 +193,7 @@ export default function LabelMakerPage() {
             <div className="group">
               <label className="flex items-center text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wider">
                 <span className="w-2 h-2 rounded-full bg-green-500 mr-2 group-hover:scale-150 transition-transform"></span>
-                Receiver Information
+                ข้อมูลผู้รับ (To)
               </label>
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
@@ -201,13 +201,13 @@ export default function LabelMakerPage() {
                   value={receiverText}
                   onChange={e => setReceiverText(e.target.value)}
                   rows={5}
-                  placeholder="Paste name, address, and phone number here..."
+                  placeholder="นาย สมชาย ใจดี\n123/45 ถนน... แขวง... เขต... กทม. 10000\nโทร 0812345678"
                   className="relative w-full px-5 py-4 bg-white/90 border border-gray-200 rounded-2xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all shadow-sm font-medium resize-none leading-relaxed"
                 />
               </div>
               <p className="mt-3 text-sm text-gray-500 flex items-center">
                 <svg className="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Pro tip: Just copy and paste the entire customer details block at once.
+                เคล็ดลับ: สามารถก๊อปปี้ชื่อ ที่อยู่ และเบอร์โทรมาวางรวมกันได้เลย
               </p>
             </div>
 
@@ -226,12 +226,12 @@ export default function LabelMakerPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Generating PDF...
+                      กำลังสร้าง PDF...
                     </>
                   ) : (
                     <>
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                      Generate Label Now
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                      สร้างไฟล์ PDF
                     </>
                   )}
                 </span>
