@@ -118,7 +118,7 @@ export function LabelPDF({ order, lang, sender, isCod }: Props) {
           <Text style={{ ...s.toName, fontFamily: getFontFamily(order.customer_name) }}>
             {order.customer_name} {order.customer_phone ? `${order.customer_phone}` : ''}
           </Text>
-          <Text style={{ ...s.toAddress, fontFamily: getFontFamily(fullAddress) }}>
+          <Text style={{ ...s.toAddress, fontSize: fullAddress.length > 120 ? 8 : 9.5, lineHeight: fullAddress.length > 120 ? 1.2 : 1.4, fontFamily: getFontFamily(fullAddress) }}>
             {addr.line1}
             {addr.line2 ? ' ' + addr.line2 : ''}
             {' '}{addrLine3}
