@@ -35,11 +35,10 @@ const s = StyleSheet.create({
     position: 'absolute',
     left: 2 * mm, top: 2 * mm,
     width: 68 * mm, height: 22 * mm,
-    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
-    borderRadius: 4, padding: 3,
+    padding: 3,
   },
-  fromTextBold: { fontSize: 8, fontWeight: 700, color: '#000', lineHeight: 1.3 },
-  fromText: { fontSize: 8, color: '#000', lineHeight: 1.3 },
+  fromTextBold: { fontSize: 10, fontWeight: 700, color: '#000', lineHeight: 1.3 },
+  fromText: { fontSize: 9, color: '#000', lineHeight: 1.3 },
   rightBox: {
     position: 'absolute',
     left: 73 * mm, top: 2 * mm,
@@ -53,22 +52,13 @@ const s = StyleSheet.create({
     left: 2 * mm, top: 38 * mm,
     fontSize: 10, fontWeight: 700, color: '#000',
   },
-  nameBox: {
+  toBox: {
     position: 'absolute',
     left: 12 * mm, top: 36 * mm,
-    width: 116 * mm, height: 11 * mm,
-    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
-    borderRadius: 4, paddingHorizontal: 4, justifyContent: 'center',
+    width: 116 * mm, height: 38 * mm,
+    padding: 2,
   },
-  nameText: { fontSize: 10, fontWeight: 700 },
-  addressBox: {
-    position: 'absolute',
-    left: 12 * mm, top: 49 * mm,
-    width: 116 * mm, height: 25 * mm,
-    borderWidth: 1, borderStyle: 'dashed', borderColor: '#000',
-    borderRadius: 4, padding: 4,
-  },
-  addressText: { fontSize: 10, fontWeight: 700, lineHeight: 1.4 }
+  toText: { fontSize: 10, fontWeight: 700, lineHeight: 1.4 }
 });
 
 interface Props {
@@ -115,20 +105,14 @@ export function LabelPDF({ order, lang, sender }: Props) {
 
         {/* To Section */}
         <Text style={s.toLabel}>To :</Text>
-        <View style={s.nameBox}>
-          <Text style={{ ...s.nameText, fontFamily: getFontFamily(order.customer_name) }}>
-            {order.customer_name}
-          </Text>
-        </View>
-
-        {/* Address Box */}
-        <View style={s.addressBox}>
-          <Text style={{ ...s.addressText, fontFamily: getFontFamily(fullAddress) }}>
+        <View style={s.toBox}>
+          <Text style={{ ...s.toText, fontFamily: getFontFamily(order.customer_name + fullAddress) }}>
+            {order.customer_name} {order.customer_phone ? `${order.customer_phone}` : ''}
+            {'\n'}
             {addr.line1}
             {addr.line2 ? ' ' + addr.line2 : ''}
             {' '}{addrLine3}
             {'\n'}{addr.country}
-            {order.customer_phone ? `\nTel: ${order.customer_phone}` : ''}
           </Text>
         </View>
 

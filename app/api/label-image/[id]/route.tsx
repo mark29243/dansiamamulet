@@ -59,10 +59,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
   <!-- From Box -->
   <g transform="translate(2, 2)">
-    <rect width="68" height="22" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
-    <text x="2" y="6" ${font} font-size="2.5" fill="#000" font-weight="700">From : Dansiamamulets (+66898157535)</text>
-    <text x="2" y="10.5" ${font} font-size="2.5" fill="#000">105/1 M.2, NONGPHO, PHOTHARAM,</text>
-    <text x="2" y="15" ${font} font-size="2.5" fill="#000">RATCHABURI, THAILAND 70120</text>
+    <text x="2" y="6.5" ${font} font-size="3" fill="#000" font-weight="700">From : Dansiamamulets (+66898157535)</text>
+    <text x="2" y="11" ${font} font-size="2.7" fill="#000">105/1 M.2, NONGPHO, PHOTHARAM,</text>
+    <text x="2" y="15.5" ${font} font-size="2.7" fill="#000">RATCHABURI, THAILAND 70120</text>
   </g>
 
   <!-- Right Box -->
@@ -73,22 +72,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
   <!-- To Section -->
   <g transform="translate(2, 36)">
-    <!-- To Name Row -->
-    <text x="0" y="7.5" ${font} font-size="3.5" font-weight="700" fill="#000">To :</text>
+    <!-- To Label -->
+    <text x="0" y="7.5" ${font} font-size="3" font-weight="700" fill="#000">To :</text>
     <g transform="translate(10, 0)">
-      <rect width="116" height="11" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
-      <text x="2" y="7.5" ${font} font-size="3.5" font-weight="700" fill="#000">${esc(data.customer_name)}</text>
+      <text x="0" y="7.5" ${font} font-size="3" font-weight="700" fill="#000">
+        <tspan x="0" dy="0">${esc(data.customer_name)} ${data.customer_phone ? esc(data.customer_phone) : ''}</tspan>
+        <tspan x="0" dy="5">${esc(addr.line1)} ${esc(addr.line2 || '')} ${esc(addrCity)}</tspan>
+        <tspan x="0" dy="5">${esc(addr.country)}</tspan>
+      </text>
     </g>
-  </g>
-
-  <!-- Address Box -->
-  <g transform="translate(12, 49)">
-    <rect width="116" height="25" fill="none" stroke="black" stroke-dasharray="1 1" stroke-width="0.3" rx="1.5"/>
-    <text x="2" y="6" ${font} font-size="3.5" font-weight="700" fill="#000">
-      <tspan x="2" dy="0">${esc(addr.line1)} ${esc(addr.line2 || '')} ${esc(addrCity)}</tspan>
-      <tspan x="2" dy="5">${esc(addr.country)}</tspan>
-      ${data.customer_phone ? `<tspan x="2" dy="6">Tel: ${esc(data.customer_phone)}</tspan>` : ''}
-    </text>
   </g>
 </svg>`;
 
