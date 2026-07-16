@@ -16,13 +16,29 @@ export async function POST(req: NextRequest) {
 
     let text = receiverText || '';
     
-    // Extract phone number (look for 0 followed by 8-9 digits, allowing spaces/dashes)
+    // Extract phone number (support international + and no-prefix numbers)
     let customer_phone = '';
-    const phoneRegex = /(?:โทร\.?|Tel\.?|เบอร์)?[:\s]*((?:0|\+66)(?:\s*-?\s*\d){8,9})/i;
-    const phoneMatch = text.match(phoneRegex);
-    if (phoneMatch) {
-      customer_phone = phoneMatch[1].trim();
-      text = text.replace(phoneMatch[0], ''); // remove phone from text
+    
+    const explicitPhoneRegex = /(?:โทร\.?|tel\.?|เบอร์|phone)[:\s]*(\+?[\d\s-]{8,16})/i;
+    const plusOrZeroRegex = /(?:\b|^|\s)(\+(?:\d\s*){8,15}|0(?:\d\s*-?\s*){8,11})(?:\b|$|\n)/;
+    const anyLongDigitRegex = /(?:\b|^|\n)(?!\d{5}-\d{4}\b)((?:\d\s*){8,15})(?:\b|$|\n)/;
+
+    const explicitMatch = text.match(explicitPhoneRegex);
+    if (explicitMatch) {
+      customer_phone = explicitMatch[1].trim();
+      text = text.replace(explicitMatch[0], '');
+    } else {
+      const pzMatch = text.match(plusOrZeroRegex);
+      if (pzMatch) {
+        customer_phone = pzMatch[1].trim();
+        text = text.replace(pzMatch[0], '');
+      } else {
+        const anyMatch = text.match(anyLongDigitRegex);
+        if (anyMatch) {
+          customer_phone = anyMatch[1].trim();
+          text = text.replace(anyMatch[0], '');
+        }
+      }
     }
 
     // Add natural spaces before common Thai address keywords to fix PDF word-wrap cutoffs
