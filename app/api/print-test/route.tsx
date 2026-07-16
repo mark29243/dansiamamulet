@@ -72,15 +72,24 @@ export async function GET(req: NextRequest) {
       
       // Auto formatting logic just like route.tsx
       text = text.replace(/([^\s])(ตำบล|แขวง|อำเภอ|เขต|จังหวัด|ต\.|อ\.|จ\.|รหัส|กรุงเทพ|กทม)/g, '$1 $2');
-      text = text.replace(/([^\s])(\d{5})(?!\d)/g, '$1 $2');
+      text = text.replace(/([^\d\s])(\d{5})(?!\d)/g, '$1 $2');
 
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       const customer_name = lines.length > 0 ? lines[0] : 'Unknown';
-      let addressLines = lines.slice(1).join(' ');
+      let addressLines = lines.slice(1).join('\n'); // Preserve original newlines if any
 
-      // Smart split to ensure at least 3 logical lines for Thai addresses
-      addressLines = addressLines.replace(/\s+(ตำบล|แขวง|ต\.)/g, '\n$1');
-      addressLines = addressLines.replace(/\s+(จังหวัด|จ\.|กรุงเทพ|กทม)/g, '\n$1');
+      // If address has very few lines, smart split it to prevent word cutting at the right edge
+      if ((addressLines.match(/\n/g) || []).length < 2) {
+        if (/(ตำบล|แขวง|ต\.|อำเภอ|เขต|อ\.|จังหวัด|จ\.|กรุงเทพ|กทม)/.test(addressLines)) {
+          addressLines = addressLines.replace(/\s+(ตำบล|แขวง|ต\.)/g, '\n$1');
+          addressLines = addressLines.replace(/\s+(อำเภอ|เขต|อ\.)/g, '\n$1');
+          addressLines = addressLines.replace(/\s+(จังหวัด|จ\.|กรุงเทพ|กทม)/g, '\n$1');
+        } else {
+          addressLines = addressLines.replace(/,\s+/g, ',\n'); // Foreign addresses
+        }
+      }
+      // Clean up empty lines
+      addressLines = addressLines.replace(/\n{2,}/g, '\n');
 
       const orderNo = `TEST${(index + 1).toString().padStart(4, '0')}`;
 
