@@ -10,7 +10,10 @@ export function registerSarabunFont(fontDir: string) {
   });
   Font.register({
     family: 'SimHei',
-    src: `${fontDir}/SimHei.ttf`,
+    fonts: [
+      { src: `${fontDir}/SimHei.ttf` },
+      { src: `${fontDir}/NotoSansSC-Bold.otf`, fontWeight: 700 }
+    ]
   });
 }
 
@@ -49,13 +52,13 @@ const s = StyleSheet.create({
   orderNoText: { fontSize: 10, color: '#666' },
   toLabel: {
     position: 'absolute',
-    left: 2 * mm, top: 38 * mm,
+    left: 2 * mm, top: 44 * mm,
     fontSize: 10, fontWeight: 700, color: '#000',
   },
   toBox: {
     position: 'absolute',
-    left: 12 * mm, top: 36 * mm,
-    width: 116 * mm, height: 38 * mm,
+    left: 12 * mm, top: 42 * mm,
+    width: 116 * mm, height: 32 * mm,
     padding: 2,
   },
   toName: { fontSize: 12, fontWeight: 700, lineHeight: 1.3 },

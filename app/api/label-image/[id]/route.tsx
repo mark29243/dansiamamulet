@@ -71,7 +71,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   </g>
 
   <!-- To Section -->
-  <g transform="translate(2, 36)">
+  <g transform="translate(2, 42)">
     <!-- To Label -->
     <text x="0" y="7.5" ${font} font-size="3" font-weight="700" fill="#000">To :</text>
     <g transform="translate(10, 0)">
