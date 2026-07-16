@@ -8,6 +8,16 @@ export function registerSarabunFont(fontDir: string) {
       { src: `${fontDir}/Sarabun-Bold.ttf`, fontWeight: 700 },
     ],
   });
+  Font.register({
+    family: 'SimHei',
+    src: `${fontDir}/SimHei.ttf`,
+  });
+}
+
+function getFontFamily(text: string) {
+  if (!text) return 'Sarabun';
+  if (/[\u4e00-\u9fa5]/.test(text)) return 'SimHei';
+  return 'Sarabun';
 }
 
 // 130mm × 76mm landscape (1mm = 2.8346pt)
@@ -70,6 +80,7 @@ export function LabelPDF({ order, lang }: Props) {
   const orderNo = order.id.slice(0, 8).toUpperCase();
   const addr = order.shipping_address;
   const addrLine3 = [addr.city, addr.state, addr.postal_code].filter(Boolean).join(', ');
+  const fullAddress = `${addr.line1 || ''} ${addr.line2 || ''} ${addrLine3} ${addr.country || ''}`;
 
   return (
     <Document>
@@ -90,12 +101,14 @@ export function LabelPDF({ order, lang }: Props) {
         {/* To Section */}
         <Text style={s.toLabel}>To :</Text>
         <View style={s.nameBox}>
-          <Text style={s.nameText}>{order.customer_name}</Text>
+          <Text style={{ ...s.nameText, fontFamily: getFontFamily(order.customer_name) }}>
+            {order.customer_name}
+          </Text>
         </View>
 
         {/* Address Box */}
         <View style={s.addressBox}>
-          <Text style={s.addressText}>
+          <Text style={{ ...s.addressText, fontFamily: getFontFamily(fullAddress) }}>
             {addr.line1}
             {addr.line2 ? ' ' + addr.line2 : ''}
             {' '}{addrLine3}
