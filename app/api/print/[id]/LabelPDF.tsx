@@ -74,13 +74,23 @@ const s = StyleSheet.create({
 interface Props {
   order: { id: string; customer_name: string; customer_phone?: string; shipping_address: any };
   lang: 'th' | 'en';
+  sender?: {
+    name: string;
+    phone: string;
+    address: string;
+  };
 }
 
-export function LabelPDF({ order, lang }: Props) {
+export function LabelPDF({ order, lang, sender }: Props) {
   const orderNo = order.id.slice(0, 8).toUpperCase();
   const addr = order.shipping_address;
   const addrLine3 = [addr.city, addr.state, addr.postal_code].filter(Boolean).join(', ');
   const fullAddress = `${addr.line1 || ''} ${addr.line2 || ''} ${addrLine3} ${addr.country || ''}`;
+
+  const senderName = sender?.name || 'Dansiamamulets';
+  const senderPhone = sender?.phone || '+66898157535';
+  const senderAddress = sender?.address || '105/1 M.2, NONGPHO, PHOTHARAM,\nRATCHABURI, THAILAND 70120';
+  const senderAddressLines = senderAddress.split('\n');
 
   return (
     <Document>
@@ -88,9 +98,14 @@ export function LabelPDF({ order, lang }: Props) {
         
         {/* From Box */}
         <View style={s.fromBox}>
-          <Text style={s.fromTextBold}>From : Dansiamamulets (+66898157535)</Text>
-          <Text style={s.fromText}>105/1 M.2, NONGPHO, PHOTHARAM,</Text>
-          <Text style={s.fromText}>RATCHABURI, THAILAND 70120</Text>
+          <Text style={{ ...s.fromTextBold, fontFamily: getFontFamily(senderName) }}>
+            From : {senderName} {senderPhone ? `(${senderPhone})` : ''}
+          </Text>
+          {senderAddressLines.map((line, i) => (
+            <Text key={i} style={{ ...s.fromText, fontFamily: getFontFamily(line) }}>
+              {line}
+            </Text>
+          ))}
         </View>
 
         {/* Right Box (Sticker) */}
