@@ -58,7 +58,8 @@ const s = StyleSheet.create({
     width: 116 * mm, height: 38 * mm,
     padding: 2,
   },
-  toText: { fontSize: 10, fontWeight: 700, lineHeight: 1.4 }
+  toName: { fontSize: 10, fontWeight: 700, lineHeight: 1.4 },
+  toAddress: { fontSize: 10, fontWeight: 400, lineHeight: 1.4 }
 });
 
 interface Props {
@@ -106,9 +107,10 @@ export function LabelPDF({ order, lang, sender }: Props) {
         {/* To Section */}
         <Text style={s.toLabel}>To :</Text>
         <View style={s.toBox}>
-          <Text style={{ ...s.toText, fontFamily: getFontFamily(order.customer_name + fullAddress) }}>
+          <Text style={{ ...s.toName, fontFamily: getFontFamily(order.customer_name) }}>
             {order.customer_name} {order.customer_phone ? `${order.customer_phone}` : ''}
-            {'\n'}
+          </Text>
+          <Text style={{ ...s.toAddress, fontFamily: getFontFamily(fullAddress) }}>
             {addr.line1}
             {addr.line2 ? ' ' + addr.line2 : ''}
             {' '}{addrLine3}

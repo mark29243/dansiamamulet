@@ -75,10 +75,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     <!-- To Label -->
     <text x="0" y="7.5" ${font} font-size="3" font-weight="700" fill="#000">To :</text>
     <g transform="translate(10, 0)">
-      <text x="0" y="7.5" ${font} font-size="3" font-weight="700" fill="#000">
-        <tspan x="0" dy="0">${esc(data.customer_name)} ${data.customer_phone ? esc(data.customer_phone) : ''}</tspan>
-        <tspan x="0" dy="5">${esc(addr.line1)} ${esc(addr.line2 || '')} ${esc(addrCity)}</tspan>
-        <tspan x="0" dy="5">${esc(addr.country)}</tspan>
+      <text x="0" y="7.5" ${font} font-size="3" fill="#000">
+        <tspan x="0" dy="0" font-weight="700">${esc(data.customer_name)} ${data.customer_phone ? esc(data.customer_phone) : ''}</tspan>
+        <tspan x="0" dy="5" font-weight="400">${esc(addr.line1)} ${esc(addr.line2 || '')} ${esc(addrCity)}</tspan>
+        <tspan x="0" dy="5" font-weight="400">${esc(addr.country)}</tspan>
       </text>
     </g>
   </g>
