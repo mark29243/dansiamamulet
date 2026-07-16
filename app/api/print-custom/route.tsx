@@ -23,13 +23,11 @@ export async function POST(req: NextRequest) {
     const customer_name = lines.length > 0 ? lines[0] : 'Unknown';
     let addressLines = lines.slice(1).join('\n'); // Preserve original newlines if any
 
-    if ((addressLines.match(/\n/g) || []).length < 2) {
+    if ((addressLines.match(/\n/g) || []).length < 1) {
       if (/(ตำบล|แขวง|ต\.|อำเภอ|เขต|อ\.|จังหวัด|จ\.|กรุงเทพ|กทม)/.test(addressLines)) {
         addressLines = addressLines.replace(/\s+(ตำบล|แขวง|ต\.)/g, '\n$1');
         addressLines = addressLines.replace(/\s+(อำเภอ|เขต|อ\.)/g, '\n$1');
         addressLines = addressLines.replace(/\s+(จังหวัด|จ\.|กรุงเทพ|กทม)/g, '\n$1');
-      } else {
-        addressLines = addressLines.replace(/,\s+/g, ',\n'); // Foreign addresses
       }
     }
     // Clean up empty lines
