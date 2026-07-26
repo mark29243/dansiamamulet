@@ -108,7 +108,7 @@ export async function POST(req: Request) {
                   type: 'SALE',
                   category: 'หน้าเว็บ',
                   product_name: item.name,
-                  amount: item.price,
+                  amount: item.price / 100,
                   cost: 0,
                   order_id: order.id,
                 });
