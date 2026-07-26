@@ -47,7 +47,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { type, date, category, product_name, amount, cost, description, image_url, order_id } = body;
+    const { type, date, category, product_name, amount, cost, fee, description, image_url, order_id } = body;
 
     if (!type || !['INCOME', 'EXPENSE', 'SALE'].includes(type)) {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
@@ -66,6 +66,7 @@ export async function POST(req: Request) {
         product_name: product_name || null,
         amount: parseFloat(amount) || 0,
         cost: parseFloat(cost) || 0,
+        fee: parseFloat(fee) || 0,
         description: description || null,
         image_url: image_url || null,
         order_id: order_id || null
