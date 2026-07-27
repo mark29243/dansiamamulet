@@ -14,6 +14,7 @@ export default function OrderActions({ order }: { order: Order }) {
   const { toast } = useToast();
   const [status, setStatus] = useState<Status>(order.status);
   const [tracking, setTracking] = useState(order.tracking_number || '');
+  const [trackingUrl, setTrackingUrl] = useState(order.tracking_url || '');
   const [carrier, setCarrier] = useState(order.carrier || '');
   const [busy, setBusy] = useState(false);
   const [showShip, setShowShip] = useState(false);
@@ -40,8 +41,8 @@ export default function OrderActions({ order }: { order: Order }) {
 
   async function markShipped(e: React.FormEvent) {
     e.preventDefault();
-    if (!tracking || !carrier) {
-      toast('Tracking number and carrier required', 'error');
+    if (!tracking || !carrier || !trackingUrl) {
+      toast('Tracking number, link, and carrier are required', 'error');
       return;
     }
     setBusy(true);
@@ -49,7 +50,7 @@ export default function OrderActions({ order }: { order: Order }) {
       const res = await fetch(`/api/admin/orders/${order.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'shipped', tracking_number: tracking, carrier, sendEmail: true }),
+        body: JSON.stringify({ status: 'shipped', tracking_number: tracking, tracking_url: trackingUrl, carrier, sendEmail: true }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
@@ -92,10 +93,12 @@ export default function OrderActions({ order }: { order: Order }) {
           <div className="serif" style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 12 }}>
             Shipping Info
           </div>
-          <label className="label">Carrier *</label>
-          <input className="input" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="DHL, FedEx, Thailand Post..." style={{ marginBottom: 10 }} />
-          <label className="label">Tracking number *</label>
-          <input className="input" value={tracking} onChange={(e) => setTracking(e.target.value)} placeholder="..." style={{ marginBottom: 12 }} />
+          <label className="label">Carrier (Courier) *</label>
+          <input className="input" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="Thailand Post, FedEx..." style={{ marginBottom: 10 }} />
+          <label className="label">Tracking Number *</label>
+          <input className="input" value={tracking} onChange={(e) => setTracking(e.target.value)} placeholder="LP1201..." style={{ marginBottom: 10 }} />
+          <label className="label">Tracking Link *</label>
+          <input className="input" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://track..." style={{ marginBottom: 12 }} />
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="submit" className="btn-gold" disabled={busy} style={{ flex: 1, padding: '10px 14px', fontSize: 11 }}>
               {busy ? '...' : 'Ship + Email'}

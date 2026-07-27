@@ -20,7 +20,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const body = await req.json();
-  const { status, tracking_number, carrier, sendEmail } = body;
+  const { status, tracking_number, tracking_url, carrier, sendEmail } = body;
 
   const VALID_STATUSES = ['pending', 'paid', 'pending_alipay', 'pending_review', 'shipped', 'delivered', 'cancelled', 'refunded'];
 
@@ -32,6 +32,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     updates.status = status;
   }
   if (tracking_number !== undefined) updates.tracking_number = String(tracking_number).slice(0, 100);
+  if (tracking_url !== undefined) updates.tracking_url = String(tracking_url).slice(0, 200);
   if (carrier !== undefined) updates.carrier = String(carrier).slice(0, 50);
 
   const { data, error } = await ctx.admin
@@ -80,8 +81,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
 
   // Send shipping email if requested
-  if (sendEmail && status === 'shipped' && tracking_number && carrier) {
-    const emailRes = await sendOrderShipped(data as Order, tracking_number, carrier);
+  if (sendEmail && status === 'shipped' && tracking_number) {
+    const emailRes = await sendOrderShipped(data as Order);
     if (!emailRes.ok) {
       console.warn('[admin] Shipping email failed:', emailRes.error);
     }

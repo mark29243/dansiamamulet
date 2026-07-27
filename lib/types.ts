@@ -47,6 +47,7 @@ export type Order = {
   payment_slip_url: string | null;
   payment_slip_uploaded_at: string | null;
   tracking_number: string | null;
+  tracking_url: string | null;
   carrier: string | null;
   created_at: string;
   updated_at: string;

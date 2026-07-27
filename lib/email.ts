@@ -157,33 +157,43 @@ export async function sendAdminOrderNotification(order: Order): Promise<EmailRes
   return send(adminEmail, `🛒 New Order #${orderNo} — ฿${(order.total / 100).toLocaleString()}`, html);
 }
 
-export async function sendOrderShipped(order: Order, tracking: string, carrier: string): Promise<EmailResult> {
+export async function sendOrderShipped(order: Order): Promise<EmailResult> {
   const orderNo = order.id.slice(0, 8).toUpperCase();
+  const itemName = order.items.map(i => i.name).join(', ');
+  const carrier = order.carrier || 'N/A';
+  const tracking = order.tracking_number || 'N/A';
+  const trackingLink = order.tracking_url || trackUrl(order);
+
   const html = baseEmail(
     'Your order has shipped',
     `
     <p style="color:#2A1E06;font-size:16px;">
-      Hi ${escapeHtml(order.customer_name || 'there')},
+      Dear ${escapeHtml(order.customer_name || 'Customer')},
     </p>
     <p style="color:#6B5730;font-size:14px;line-height:1.7;">
-      Good news! Your order <strong>#${orderNo}</strong> is on its way.
+      Thank you for your purchase! We are excited to let you know that your order has been shipped.
     </p>
-    <div style="background:#F7F0E3;padding:20px;margin:24px 0;border-left:3px solid #2D5A3D;">
-      <div style="font-size:11px;color:#2D5A3D;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Tracking</div>
-      <div style="font-size:13px;color:#6B5730;margin-bottom:6px;">Carrier: <strong>${escapeHtml(carrier)}</strong></div>
-      <div style="font-size:16px;font-weight:600;color:#8B6914;font-family:monospace;">${escapeHtml(tracking)}</div>
-    </div>
-    <div style="text-align:center;margin:28px 0;">
-      <a href="${trackUrl(order)}" style="display:inline-block;background:#C9A84C;color:#2A1E06;text-decoration:none;padding:12px 32px;font-size:14px;font-weight:600;border-radius:4px;">
-        ติดตามสถานะออเดอร์ · Track Your Order
-      </a>
-    </div>
-    <p style="color:#6B5730;font-size:13px;">
-      Thank you for shopping with us 🙏
+    <p style="color:#6B5730;font-size:14px;line-height:1.7;">
+      Here are your shipping details:<br><br>
+      <strong>Order Number:</strong> #${orderNo}<br>
+      <strong>Item:</strong> ${escapeHtml(itemName)}<br>
+      <strong>Courier:</strong> ${escapeHtml(carrier)}<br>
+      <strong>Tracking Number:</strong> ${escapeHtml(tracking)}<br>
+      <strong>Track Your Order Here:</strong> <a href="${escapeHtml(trackingLink)}" style="color:#8B6914;">${escapeHtml(trackingLink)}</a>
+    </p>
+    <p style="color:#6B5730;font-size:14px;line-height:1.7;">
+      Estimated delivery time is approximately 14-21 business days, depending on customs clearance in your country.
+    </p>
+    <p style="color:#6B5730;font-size:14px;line-height:1.7;">
+      If you have any questions, please feel free to contact us.
+    </p>
+    <p style="color:#6B5730;font-size:14px;line-height:1.7;">
+      Best regards,<br>
+      Dan Siam Amulets
     </p>
     `
   );
-  return send(order.customer_email, `Your order #${orderNo} has shipped`, html);
+  return send(order.customer_email, `Shipping Update for Order #${orderNo}`, html);
 }
 
 function baseEmail(title: string, body: string): string {
