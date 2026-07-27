@@ -24,6 +24,7 @@ export async function GET(req: Request) {
     const { data: products, error } = await admin
       .from('products')
       .select('name_th, name, stock, mark_location')
+      .eq('published', true) // Only published products
       .gt('stock', 0); // Only active stock
 
     if (error) {
