@@ -56,23 +56,33 @@ export async function GET(req: Request) {
     }
 
     // 4. Send to LINE Notify
-    const lineToken = process.env.LINE_NOTIFY_TOKEN;
-    if (!lineToken) {
-      console.warn('[cron] LINE_NOTIFY_TOKEN not set');
+    const lineToken = process.env.LINE_MESSAGING_TOKEN;
+    const lineUserId = process.env.LINE_USER_ID;
+
+    if (!lineToken || !lineUserId) {
+      console.warn('LINE_MESSAGING_TOKEN or LINE_USER_ID is not configured');
       return NextResponse.json({ 
         success: false, 
-        message: 'LINE_NOTIFY_TOKEN is missing',
-        mockMessage: message
+        message: 'LINE_MESSAGING_TOKEN or LINE_USER_ID is missing', 
+        mockMessage: message 
       });
     }
 
-    const lineRes = await fetch('https://notify-api.line.me/api/notify', {
+    const lineRes = await fetch('https://api.line.me/v2/bot/message/push', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Authorization': `Bearer ${lineToken}`
       },
-      body: new URLSearchParams({ message }).toString()
+      body: JSON.stringify({
+        to: lineUserId,
+        messages: [
+          {
+            type: 'text',
+            text: message
+          }
+        ]
+      })
     });
 
     if (!lineRes.ok) {
