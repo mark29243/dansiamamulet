@@ -20,6 +20,8 @@ export default function AdminProductTable({ products }: { products: any[] }) {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [customPrices, setCustomPrices] = useState<Record<number, string>>({});
   const [showExportOptions, setShowExportOptions] = useState(false);
+  const [editingLocationId, setEditingLocationId] = useState<number | null>(null);
+  const [editingLocationValue, setEditingLocationValue] = useState('');
   const [exportName, setExportName] = useState('');
   const [exportPlatform, setExportPlatform] = useState<'shopee' | 'shopee2'>('shopee');
   const [isExporting, setIsExporting] = useState(false);
@@ -42,6 +44,27 @@ export default function AdminProductTable({ products }: { products: any[] }) {
     if (next.has(id)) next.delete(id);
     else next.add(id);
     setSelectedIds(next);
+  }
+
+  async function handleUpdateLocation(id: number) {
+    try {
+      const res = await fetch(`/api/admin/products/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mark_location: editingLocationValue })
+      });
+      if (res.ok) {
+        toast('บันทึกที่จัดเก็บเรียบร้อยแล้ว', 'success');
+        // A full state reload isn't easily possible here without modifying the parent,
+        // but we can optimistic UI update it if we mutate the products prop or window.location.reload()
+        window.location.reload();
+      } else {
+        toast('บันทึกไม่สำเร็จ', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      toast('บันทึกไม่สำเร็จ', 'error');
+    }
   }
 
   async function exportShopeeAndSaveName() {
@@ -257,6 +280,34 @@ export default function AdminProductTable({ products }: { products: any[] }) {
                       {p.name_facebook && <span style={{ fontSize: 9, padding: '2px 6px', background: '#dbeafe', color: '#1d4ed8', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`FB: ${p.name_facebook}`}>FB</span>}
                       {p.name_tiktok && <span style={{ fontSize: 9, padding: '2px 6px', background: '#f1f5f9', color: '#0f172a', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`TIKTOK: ${p.name_tiktok}`}>TIKTOK</span>}
                       {p.name_instagram && <span style={{ fontSize: 9, padding: '2px 6px', background: '#fce7f3', color: '#be185d', borderRadius: 4, fontWeight: 500, letterSpacing: 0.5 }} title={`IG: ${p.name_instagram}`}>IG</span>}
+                    </div>
+                    <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>📍 จัดเก็บ:</span>
+                      {editingLocationId === p.id ? (
+                        <div style={{ display: 'flex', gap: 4 }}>
+                          <input 
+                            type="text" 
+                            value={editingLocationValue} 
+                            onChange={e => setEditingLocationValue(e.target.value)}
+                            style={{ width: 100, padding: '2px 4px', fontSize: 11, border: '1px solid var(--cream-dark)', borderRadius: 2, outline: 'none' }}
+                            autoFocus
+                          />
+                          <button onClick={() => handleUpdateLocation(p.id)} style={{ background: '#059669', color: 'white', border: 'none', borderRadius: 2, padding: '2px 6px', fontSize: 10, cursor: 'pointer' }}>✓</button>
+                          <button onClick={() => setEditingLocationId(null)} style={{ background: '#9ca3af', color: 'white', border: 'none', borderRadius: 2, padding: '2px 6px', fontSize: 10, cursor: 'pointer' }}>✕</button>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: p.mark_location ? 'var(--gold-dark)' : '#ef4444' }}>
+                            {p.mark_location || 'ยังไม่ระบุ'}
+                          </span>
+                          <button 
+                            onClick={() => { setEditingLocationId(p.id); setEditingLocationValue(p.mark_location || ''); }}
+                            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 10, textDecoration: 'underline' }}
+                          >
+                            แก้ไข
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </Td>
                   <Td style={{ color: 'var(--text-muted)' }}>{p.category}</Td>

@@ -70,6 +70,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (typeof body.category === 'string') allowed.category = body.category.trim();
   if (typeof body.name_shopee === 'string' || body.name_shopee === null) allowed.name_shopee = typeof body.name_shopee === 'string' ? body.name_shopee.trim() : null;
   if (typeof body.name_shopee2 === 'string' || body.name_shopee2 === null) allowed.name_shopee2 = typeof body.name_shopee2 === 'string' ? body.name_shopee2.trim() : null;
+  if (typeof body.mark_location === 'string') allowed.mark_location = body.mark_location.trim();
   if (Array.isArray(body.images) && body.images.every((u: unknown) => typeof u === 'string' && u.length > 0 && u.length <= 1000)) {
     allowed.images = body.images.slice(0, 12);
   }
