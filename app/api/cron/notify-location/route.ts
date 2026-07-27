@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     const admin = createAdminClient();
     const { data: products, error } = await admin
       .from('products')
-      .select('name_th, name, stock, mark_location')
+      .select('name_th, name, stock, storage_location')
       .eq('published', true) // Only published products
       .gt('stock', 0); // Only active stock
 
@@ -32,9 +32,9 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Filter products where mark_location is null or empty
+    // Filter products where storage_location is null or empty
     const missingLocation = (products || []).filter(
-      p => !p.mark_location || p.mark_location.trim() === '' || p.mark_location.trim() === '-'
+      p => !p.storage_location || p.storage_location.trim() === '' || p.storage_location.trim() === '-'
     );
 
     // 3. Prepare LINE message
