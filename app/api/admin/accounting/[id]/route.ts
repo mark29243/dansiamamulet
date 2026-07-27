@@ -19,12 +19,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   try {
     const body = await req.json();
-    const { cost, fee } = body;
+    const { cost, fee, shipping } = body;
     
     // Create update object with provided fields
     const updates: any = {};
     if (cost !== undefined) updates.cost = parseFloat(cost) || 0;
     if (fee !== undefined) updates.fee = parseFloat(fee) || 0;
+    if (shipping !== undefined) updates.shipping = parseFloat(shipping) || 0;
 
     const { data, error } = await ctx.admin
       .from('accounting_records')

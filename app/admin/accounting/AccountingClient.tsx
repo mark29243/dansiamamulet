@@ -13,6 +13,7 @@ type AccountingRecord = {
   amount: number;
   cost: number;
   fee: number;
+  shipping: number;
   description: string;
   image_url: string;
   order_id: string;
@@ -33,6 +34,7 @@ export default function AccountingClient() {
   const [addAmount, setAddAmount] = useState('');
   const [addCost, setAddCost] = useState('');
   const [addFee, setAddFee] = useState('');
+  const [addShipping, setAddShipping] = useState('');
   const [addDescription, setAddDescription] = useState('');
   const [addImageUrl, setAddImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -42,6 +44,8 @@ export default function AccountingClient() {
   const [editingCostValue, setEditingCostValue] = useState('');
   const [editingFeeId, setEditingFeeId] = useState<string | null>(null);
   const [editingFeeValue, setEditingFeeValue] = useState('');
+  const [editingShippingId, setEditingShippingId] = useState<string | null>(null);
+  const [editingShippingValue, setEditingShippingValue] = useState('');
 
   const fetchRecords = async () => {
     setLoading(true);
@@ -102,6 +106,7 @@ export default function AccountingClient() {
           amount: addAmount,
           cost: addType === 'SALE' ? addCost : 0,
           fee: addType === 'SALE' ? addFee : 0,
+          shipping: addType === 'SALE' ? addShipping : 0,
           description: addDescription,
           image_url: addImageUrl
         })
@@ -169,6 +174,24 @@ export default function AccountingClient() {
     }
   };
 
+  const handleUpdateShipping = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/accounting/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ shipping: editingShippingValue })
+      });
+      if (res.ok) {
+        setRecords(prev => prev.map(r => r.id === id ? { ...r, shipping: parseFloat(editingShippingValue) || 0 } : r));
+        setEditingShippingId(null);
+      } else {
+        alert('Failed to update shipping');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const resetForm = () => {
     setAddType('INCOME');
     setAddDate(new Date().toISOString().split('T')[0]);
@@ -177,6 +200,7 @@ export default function AccountingClient() {
     setAddAmount('');
     setAddCost('');
     setAddFee('');
+    setAddShipping('');
     setAddDescription('');
     setAddImageUrl('');
   };
@@ -184,7 +208,7 @@ export default function AccountingClient() {
   // Calculations
   const totalIncome = records.filter(r => r.type === 'INCOME' || r.type === 'SALE').reduce((sum, r) => sum + Number(r.amount), 0);
   const totalExpense = records.filter(r => r.type === 'EXPENSE').reduce((sum, r) => sum + Number(r.amount), 0) + 
-                       records.filter(r => r.type === 'SALE').reduce((sum, r) => sum + Number(r.cost) + Number(r.fee || 0), 0);
+                       records.filter(r => r.type === 'SALE').reduce((sum, r) => sum + Number(r.cost) + Number(r.fee || 0) + Number(r.shipping || 0), 0);
   const netProfit = totalIncome - totalExpense;
 
   return (
@@ -263,7 +287,7 @@ export default function AccountingClient() {
                   <th style={{ padding: '12px 16px', fontWeight: 600 }}>ประเภท</th>
                   <th style={{ padding: '12px 16px', fontWeight: 600 }}>รายละเอียด</th>
                   <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'right' }}>รายรับ</th>
-                  <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'right' }}>ต้นทุน / ค่าธรรมเนียม / รายจ่าย</th>
+                  <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'right' }}>ต้นทุน / ธรรมเนียม / ขนส่ง / จ่าย</th>
                   <th style={{ padding: '12px 16px', fontWeight: 600, textAlign: 'center' }}>หลักฐาน</th>
                   <th style={{ padding: '12px 16px', fontWeight: 600 }}></th>
                 </tr>
@@ -339,6 +363,33 @@ export default function AccountingClient() {
                                )}</span>
                                <button 
                                  onClick={() => { setEditingFeeId(record.id); setEditingFeeValue(record.fee?.toString() || ''); }}
+                                 style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: 12, textDecoration: 'underline' }}
+                               >
+                                 ✏️
+                               </button>
+                             </div>
+                           )}
+
+                           {editingShippingId === record.id ? (
+                             <div style={{ display: 'flex', gap: 4 }}>
+                               <input 
+                                 type="number" 
+                                 value={editingShippingValue} 
+                                 onChange={e => setEditingShippingValue(e.target.value)}
+                                 style={{ width: 80, padding: 4, border: '1px solid #ddd', borderRadius: 4, textAlign: 'right' }}
+                                 autoFocus
+                               />
+                               <button onClick={() => handleUpdateShipping(record.id)} style={{ background: '#059669', color: 'white', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}>✓</button>
+                               <button onClick={() => setEditingShippingId(null)} style={{ background: '#9ca3af', color: 'white', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}>✕</button>
+                             </div>
+                           ) : (
+                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                               <span style={{ fontSize: 13, color: '#6b7280', fontWeight: 'normal' }}>ค่าจัดส่ง:</span>
+                               <span>{record.shipping > 0 ? `-${Number(record.shipping).toLocaleString()}` : (
+                                 <span style={{ color: '#9ca3af', fontSize: 12 }}>-</span>
+                               )}</span>
+                               <button 
+                                 onClick={() => { setEditingShippingId(record.id); setEditingShippingValue(record.shipping?.toString() || ''); }}
                                  style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: 12, textDecoration: 'underline' }}
                                >
                                  ✏️
@@ -421,6 +472,10 @@ export default function AccountingClient() {
                     <div style={{ flex: 1 }}>
                       <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 4 }}>ค่าธรรมเนียม</label>
                       <input type="number" value={addFee} onChange={e => setAddFee(e.target.value)} style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #d1d5db' }} placeholder="0.00 (ใส่ทีหลังได้)" />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 4 }}>ค่าจัดส่ง</label>
+                      <input type="number" value={addShipping} onChange={e => setAddShipping(e.target.value)} style={{ width: '100%', padding: '10px 12px', borderRadius: 8, border: '1px solid #d1d5db' }} placeholder="0.00 (ใส่ทีหลังได้)" />
                     </div>
                   </>
                 )}
