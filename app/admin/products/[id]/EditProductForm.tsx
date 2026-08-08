@@ -61,7 +61,7 @@ export default function EditProductForm({ product }: { product: any }) {
           // Use native browser import to bypass Webpack entirely and avoid Terser build errors
           const imglyPath = '/imgly/index.mjs';
           const imglyBackgroundRemoval = await import(/* webpackIgnore: true */ imglyPath);
-          const removeBackground = imglyBackgroundRemoval.default;
+          const removeBackground = imglyBackgroundRemoval.removeBackground || imglyBackgroundRemoval.default;
           
           const config = {
             publicPath: '/api/imgly/', // Proxy to avoid adblockers
