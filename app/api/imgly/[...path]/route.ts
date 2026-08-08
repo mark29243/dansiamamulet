@@ -6,7 +6,7 @@ export async function GET(
 ) {
   const path = params.path.join('/');
   // Models and WASM files are hosted in the -data package, not the main package
-  const url = `https://static.imgly.com/@imgly/background-removal-data/1.4.3/dist/${path}`;
+  const url = `https://staticimgly.com/@imgly/background-removal-data/1.4.3/dist/${path}`;
 
   try {
     const response = await fetch(url);
