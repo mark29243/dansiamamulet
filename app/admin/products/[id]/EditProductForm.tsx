@@ -62,7 +62,7 @@ export default function EditProductForm({ product }: { product: any }) {
           if (!(window as any).imglyRemoveBackground) {
             await new Promise((resolve, reject) => {
               const script = document.createElement('script');
-              script.src = 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
+              script.src = '/imgly_dist/imgly-background-removal.js';
               script.onload = resolve;
               script.onerror = reject;
               document.head.appendChild(script);
@@ -70,7 +70,7 @@ export default function EditProductForm({ product }: { product: any }) {
           }
           
           const config = {
-            publicPath: 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/',
+            publicPath: '/imgly_dist/',
             model: 'small', // Use small model for much faster processing
           };
           

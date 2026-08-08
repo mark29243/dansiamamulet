@@ -26,20 +26,20 @@ export default function RemoveBgTool() {
       toast(`กำลังตัดพื้นหลัง ${item.name} (อาจใช้เวลาสักครู่)...`, 'success');
       try {
         // Load script dynamically
-        if (!(window as any).imglyRemoveBackground) {
-          await new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-          });
-        }
-        
-        const config = {
-          publicPath: 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/',
-          model: 'small', // Use small model for much faster processing on multiple files
-        };
+          if (!(window as any).imglyRemoveBackground) {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = '/imgly_dist/imgly-background-removal.js';
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+          
+          const config = {
+            publicPath: '/imgly_dist/',
+            model: 'small', // Use small model for much faster processing on multiple files
+          };
         
         const blob = await (window as any).imglyRemoveBackground(item.file, config);
         const processedUrl = URL.createObjectURL(blob);
