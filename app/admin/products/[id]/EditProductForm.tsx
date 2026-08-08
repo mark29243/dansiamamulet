@@ -18,6 +18,7 @@ export default function EditProductForm({ product }: { product: any }) {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [autoRemoveBg, setAutoRemoveBg] = useState(false);
 
   const [selectedCats, setSelectedCats] = useState<string[]>(
     (product.category || '').split(',').map((c: string) => c.trim()).filter(Boolean)
@@ -53,15 +54,35 @@ export default function EditProductForm({ product }: { product: any }) {
     setUploading(true);
     const uploaded: string[] = [];
     for (const file of Array.from(files)) {
+      let finalFile = file;
+      if (autoRemoveBg) {
+        toast(`กำลังตัดพื้นหลัง ${file.name} (อาจใช้เวลาสักครู่)...`, 'success');
+        try {
+          // Load script dynamically to avoid Next.js Webpack errors with onnxruntime
+          if (!(window as any).imglyRemoveBackground) {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+          const blob = await (window as any).imglyRemoveBackground(file);
+          finalFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + "-nobg.png", { type: "image/png" });
+        } catch (e: any) {
+          toast(`ตัดพื้นหลังล้มเหลว: ${e.message}`, 'error');
+        }
+      }
       const fd = new FormData();
-      fd.append('file', file);
+      fd.append('file', finalFile);
       try {
         const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || 'Upload failed');
         uploaded.push(json.url);
       } catch (e: any) {
-        toast(`อัพโหลด ${file.name} ล้มเหลว: ${e.message}`, 'error');
+        toast(`อัพโหลด ${finalFile.name} ล้มเหลว: ${e.message}`, 'error');
       }
     }
     if (uploaded.length) setImages((prev) => [...prev, ...uploaded]);
@@ -204,20 +225,32 @@ export default function EditProductForm({ product }: { product: any }) {
             ))}
           </div>
         )}
-        <label
-          className="btn-outline"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', cursor: uploading ? 'wait' : 'pointer', fontSize: 13, opacity: uploading ? 0.6 : 1, alignSelf: 'flex-start' }}
-        >
-          {uploading ? 'กำลังอัพโหลด...' : '+ เพิ่มรูป'}
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            disabled={uploading}
-            onChange={(e) => { handleImageFiles(e.target.files); e.target.value = ''; }}
-            style={{ display: 'none' }}
-          />
-        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, alignSelf: 'flex-start' }}>
+          <label
+            className="btn-outline"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', cursor: uploading ? 'wait' : 'pointer', fontSize: 13, opacity: uploading ? 0.6 : 1 }}
+          >
+            {uploading ? 'กำลังอัพโหลด...' : '+ เพิ่มรูป'}
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              disabled={uploading}
+              onChange={(e) => { handleImageFiles(e.target.files); e.target.value = ''; }}
+              style={{ display: 'none' }}
+            />
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, cursor: 'pointer', color: 'var(--text)' }}>
+            <input
+              type="checkbox"
+              checked={autoRemoveBg}
+              onChange={(e) => setAutoRemoveBg(e.target.checked)}
+              disabled={uploading}
+              style={{ width: 16, height: 16, accentColor: 'var(--gold-dark)' }}
+            />
+            ✨ ตัดพื้นหลังภาพอัตโนมัติ (AI)
+          </label>
+        </div>
       </Field>
 
       <Field label="ชื่อภาษาไทย">

@@ -50,6 +50,7 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       'sharp$': false,
+      'onnxruntime-node$': false,
     };
     return config;
   },
