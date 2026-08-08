@@ -25,8 +25,9 @@ export default function RemoveBgTool() {
     for (const item of newImages) {
       toast(`กำลังตัดพื้นหลัง ${item.name} (อาจใช้เวลาสักครู่)...`, 'success');
       try {
-        // Load the module dynamically to avoid SSR/Webpack issues
-        const imglyBackgroundRemoval = await import('@imgly/background-removal');
+        // Use native browser import to bypass Webpack entirely and avoid Terser build errors
+        const imglyPath = '/imgly/index.mjs';
+        const imglyBackgroundRemoval = await import(/* webpackIgnore: true */ imglyPath);
         const removeBackground = imglyBackgroundRemoval.default;
         
         const config = {

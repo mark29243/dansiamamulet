@@ -52,6 +52,16 @@ const nextConfig = {
       'sharp$': false,
       'onnxruntime-node$': false,
     };
+    
+    config.module.rules.push({
+      test: /@imgly[\\/]background-removal/,
+      parser: {
+        javascript: {
+          url: false, // Prevents Webpack from bundling new URL("ort.node.min.mjs", import.meta.url)
+        }
+      }
+    });
+    
     return config;
   },
 };

@@ -58,9 +58,9 @@ export default function EditProductForm({ product }: { product: any }) {
       if (autoRemoveBg) {
         toast(`กำลังตัดพื้นหลัง ${file.name} (อาจใช้เวลาสักครู่)...`, 'success');
         try {
-          // Load script dynamically to avoid Next.js Webpack errors with onnxruntime
-          // Load the module dynamically to avoid SSR/Webpack issues
-          const imglyBackgroundRemoval = await import('@imgly/background-removal');
+          // Use native browser import to bypass Webpack entirely and avoid Terser build errors
+          const imglyPath = '/imgly/index.mjs';
+          const imglyBackgroundRemoval = await import(/* webpackIgnore: true */ imglyPath);
           const removeBackground = imglyBackgroundRemoval.default;
           
           const config = {
