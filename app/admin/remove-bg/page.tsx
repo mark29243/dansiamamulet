@@ -25,23 +25,16 @@ export default function RemoveBgTool() {
     for (const item of newImages) {
       toast(`กำลังตัดพื้นหลัง ${item.name} (อาจใช้เวลาสักครู่)...`, 'success');
       try {
-        // Load script dynamically
-          if (!(window as any).imglyRemoveBackground) {
-            await new Promise((resolve, reject) => {
-              const script = document.createElement('script');
-              script.src = '/api/imgly/imgly-background-removal.js';
-              script.onload = resolve;
-              script.onerror = () => reject(new Error("โหลดระบบ AI ล้มเหลว กรุณาตรวจสอบอินเทอร์เน็ต"));
-              document.head.appendChild(script);
-            });
-          }
-          
-          const config = {
-            publicPath: '/api/imgly/',
-            model: 'small', // Use small model for much faster processing on multiple files
-          };
+        // Load the module dynamically to avoid SSR/Webpack issues
+        const imglyBackgroundRemoval = await import('@imgly/background-removal');
+        const removeBackground = imglyBackgroundRemoval.default;
         
-        const blob = await (window as any).imglyRemoveBackground(item.file, config);
+        const config = {
+          publicPath: '/api/imgly/', // Proxy to avoid adblockers
+          model: 'small', // Use small model for much faster processing on multiple files
+        };
+        
+        const blob = await removeBackground(item.file, config);
         const processedUrl = URL.createObjectURL(blob);
         
         setImages(prev => prev.map(img => img.id === item.id ? { ...img, processed: processedUrl } : img));

@@ -59,22 +59,16 @@ export default function EditProductForm({ product }: { product: any }) {
         toast(`กำลังตัดพื้นหลัง ${file.name} (อาจใช้เวลาสักครู่)...`, 'success');
         try {
           // Load script dynamically to avoid Next.js Webpack errors with onnxruntime
-          if (!(window as any).imglyRemoveBackground) {
-            await new Promise((resolve, reject) => {
-              const script = document.createElement('script');
-              script.src = '/api/imgly/imgly-background-removal.js';
-              script.onload = resolve;
-              script.onerror = () => reject(new Error("โหลดระบบ AI ล้มเหลว กรุณาตรวจสอบอินเทอร์เน็ต"));
-              document.head.appendChild(script);
-            });
-          }
+          // Load the module dynamically to avoid SSR/Webpack issues
+          const imglyBackgroundRemoval = await import('@imgly/background-removal');
+          const removeBackground = imglyBackgroundRemoval.default;
           
           const config = {
-            publicPath: '/api/imgly/',
+            publicPath: '/api/imgly/', // Proxy to avoid adblockers
             model: 'small', // Use small model for much faster processing
           };
           
-          const blob = await (window as any).imglyRemoveBackground(file, config);
+          const blob = await removeBackground(file, config);
           finalFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + "-nobg.png", { type: "image/png" });
         } catch (e: any) {
           toast(`ตัดพื้นหลังล้มเหลว: ${e.message}`, 'error');
