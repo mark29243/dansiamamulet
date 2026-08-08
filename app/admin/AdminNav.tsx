@@ -16,6 +16,7 @@ const NAV = [
   { href: '/admin/import', label: 'Import', icon: '⬆︎' },
   { href: '/admin/reviews', label: 'Reviews', icon: '★' },
   { href: '/admin/description-review', label: 'SEO Review', icon: '📝' },
+  { href: '/admin/remove-bg', label: 'BG Remover', icon: '✂️' },
 ];
 
 export default function AdminNav({ email, role }: { email: string; role: string }) {
