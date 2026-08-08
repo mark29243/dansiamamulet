@@ -997,9 +997,9 @@ var getOrt = async (useWebGPU) => {
     return ort;
   }
   if (useWebGPU) {
-    ort = (await import("onnxruntime-web/webgpu")).default;
+    ort = (await import("https://esm.sh/onnxruntime-web@1.21.0/webgpu")).default;
   } else {
-    ort = (await import("onnxruntime-web")).default;
+    ort = (await import("https://esm.sh/onnxruntime-web@1.21.0")).default;
   }
   return ort;
 };
