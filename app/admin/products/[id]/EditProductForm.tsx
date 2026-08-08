@@ -62,15 +62,15 @@ export default function EditProductForm({ product }: { product: any }) {
           if (!(window as any).imglyRemoveBackground) {
             await new Promise((resolve, reject) => {
               const script = document.createElement('script');
-              script.src = '/imgly_dist/imgly-background-removal.js';
+              script.src = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
               script.onload = resolve;
-              script.onerror = reject;
+              script.onerror = () => reject(new Error("โหลดระบบ AI ล้มเหลว กรุณาตรวจสอบอินเทอร์เน็ต"));
               document.head.appendChild(script);
             });
           }
           
           const config = {
-            publicPath: '/imgly_dist/',
+            publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/',
             model: 'small', // Use small model for much faster processing
           };
           
