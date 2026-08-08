@@ -64,8 +64,8 @@ export default function EditProductForm({ product }: { product: any }) {
           const removeBackground = imglyBackgroundRemoval.removeBackground || imglyBackgroundRemoval.default;
           
           const config = {
-            publicPath: '/api/imgly/', // Proxy to avoid adblockers
-            model: 'small', // Use small model for much faster processing
+            publicPath: window.location.origin + '/api/imgly/', // Must be absolute URL for URL constructor
+            model: 'small' as const, // Use small model for much faster processing
           };
           
           const blob = await removeBackground(file, config);

@@ -31,8 +31,8 @@ export default function RemoveBgTool() {
         const removeBackground = imglyBackgroundRemoval.removeBackground || imglyBackgroundRemoval.default;
         
         const config = {
-          publicPath: '/api/imgly/', // Proxy to avoid adblockers
-          model: 'small', // Use small model for much faster processing on multiple files
+          publicPath: window.location.origin + '/api/imgly/', // Must be absolute URL for URL constructor
+          model: 'small' as const, // Use small model for much faster processing on multiple files
         };
         
         const blob = await removeBackground(item.file, config);
