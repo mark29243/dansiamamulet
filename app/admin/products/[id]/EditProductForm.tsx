@@ -62,7 +62,7 @@ export default function EditProductForm({ product }: { product: any }) {
           if (!(window as any).imglyRemoveBackground) {
             await new Promise((resolve, reject) => {
               const script = document.createElement('script');
-              script.src = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
+              script.src = '/api/imgly/imgly-background-removal.js';
               script.onload = resolve;
               script.onerror = () => reject(new Error("โหลดระบบ AI ล้มเหลว กรุณาตรวจสอบอินเทอร์เน็ต"));
               document.head.appendChild(script);
@@ -70,7 +70,7 @@ export default function EditProductForm({ product }: { product: any }) {
           }
           
           const config = {
-            publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.3/dist/',
+            publicPath: '/api/imgly/',
             model: 'small', // Use small model for much faster processing
           };
           
