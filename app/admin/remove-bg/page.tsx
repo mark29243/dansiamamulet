@@ -35,7 +35,13 @@ export default function RemoveBgTool() {
             document.head.appendChild(script);
           });
         }
-        const blob = await (window as any).imglyRemoveBackground(item.file);
+        
+        const config = {
+          publicPath: 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/',
+          model: 'small', // Use small model for much faster processing on multiple files
+        };
+        
+        const blob = await (window as any).imglyRemoveBackground(item.file, config);
         const processedUrl = URL.createObjectURL(blob);
         
         setImages(prev => prev.map(img => img.id === item.id ? { ...img, processed: processedUrl } : img));

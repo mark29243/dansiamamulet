@@ -68,7 +68,13 @@ export default function EditProductForm({ product }: { product: any }) {
               document.head.appendChild(script);
             });
           }
-          const blob = await (window as any).imglyRemoveBackground(file);
+          
+          const config = {
+            publicPath: 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/',
+            model: 'small', // Use small model for much faster processing
+          };
+          
+          const blob = await (window as any).imglyRemoveBackground(file, config);
           finalFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + "-nobg.png", { type: "image/png" });
         } catch (e: any) {
           toast(`ตัดพื้นหลังล้มเหลว: ${e.message}`, 'error');
