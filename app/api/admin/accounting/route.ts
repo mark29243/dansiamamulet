@@ -24,12 +24,13 @@ export async function GET(req: Request) {
   let query = ctx.admin.from('accounting_records').select('*').order('date', { ascending: false }).order('created_at', { ascending: false });
 
   if (month && year) {
-    const startDate = new Date(`${year}-${month}-01`);
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0); // last day of month
+    const paddedMonth = month.padStart(2, '0');
+    const startDate = new Date(`${year}-${paddedMonth}-01T00:00:00Z`);
+    const endDate = new Date(parseInt(year), parseInt(month), 0); // last day of month
     
     query = query
-      .gte('date', startDate.toISOString().split('T')[0])
-      .lte('date', endDate.toISOString().split('T')[0]);
+      .gte('date', `${year}-${paddedMonth}-01`)
+      .lte('date', `${year}-${paddedMonth}-${endDate.getDate().toString().padStart(2, '0')}`);
   }
 
   const { data, error } = await query;

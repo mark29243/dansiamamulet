@@ -16,14 +16,14 @@ export default async function PrintAccountingPage({ searchParams }: { searchPara
   const month = parseInt(searchParams.month || (new Date().getMonth() + 1).toString());
   const year = parseInt(searchParams.year || new Date().getFullYear().toString());
 
-  const startDate = new Date(`${year}-${month.toString().padStart(2, '0')}-01`);
+  const paddedMonth = month.toString().padStart(2, '0');
   const endDate = new Date(year, month, 0); // last day of month
 
   const { data: records, error } = await admin
     .from('accounting_records')
     .select('*')
-    .gte('date', startDate.toISOString().split('T')[0])
-    .lte('date', endDate.toISOString().split('T')[0])
+    .gte('date', `${year}-${paddedMonth}-01`)
+    .lte('date', `${year}-${paddedMonth}-${endDate.getDate().toString().padStart(2, '0')}`)
     .order('date', { ascending: true })
     .order('created_at', { ascending: true });
 
