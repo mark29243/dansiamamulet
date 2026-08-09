@@ -48,15 +48,42 @@ export default async function PrintAccountingPage({ searchParams }: { searchPara
     <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'sans-serif', background: 'white' }}>
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          body { background: white; margin: 0; padding: 0; }
-          .no-print { display: none !important; }
-          .print-container { padding: 0 !important; max-width: none !important; }
-          table { page-break-inside: auto; }
+          @page { size: landscape; margin: 10mm; }
+          html, body { 
+            background: white !important; 
+            margin: 0 !important; 
+            padding: 0 !important; 
+            min-width: 100% !important; 
+            height: auto !important; 
+            overflow: visible !important; 
+          }
+          * { overflow: visible !important; }
+          
+          /* Hide navigation and UI */
+          .no-print, nav, aside { display: none !important; }
+          
+          /* Force layout to not restrict width/height */
+          body > div, main { 
+            display: block !important; 
+            width: 100% !important; 
+            max-width: none !important;
+            height: auto !important; 
+            padding: 0 !important; 
+            margin: 0 !important;
+          }
+
+          table { 
+            page-break-inside: auto; 
+            width: 100% !important; 
+            max-width: 100% !important; 
+            table-layout: auto !important;
+          }
           tr { page-break-inside: avoid; page-break-after: auto; }
           thead { display: table-header-group; }
           tfoot { display: table-footer-group; }
+          td, th { white-space: normal !important; word-break: break-word !important; }
         }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; table-layout: auto; }
         th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
         th { background-color: #f9fafb; font-weight: 600; color: #374151; }
         .text-right { text-align: right; }
