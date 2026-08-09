@@ -4,6 +4,8 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 export async function GET(req: Request) {
   try {
@@ -15,11 +17,26 @@ export async function GET(req: Request) {
     const { data: adminCheck } = await admin.from('admins').select('role').eq('user_id', user.id).single();
     if (!adminCheck) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-    // Fetch all products, sorted by created_at DESC so recent ones are at the top
-    const { data: products, error } = await admin
+    const { searchParams } = new URL(req.url);
+    const q = searchParams.get('q');
+
+    let query = admin
       .from('products')
       .select('id, name, images, created_at')
       .order('created_at', { ascending: false });
+
+    if (q) {
+      // search by ID or name
+      if (!isNaN(Number(q))) {
+        query = query.eq('id', Number(q));
+      } else {
+        query = query.ilike('name', `%${q}%`);
+      }
+    } else {
+      query = query.limit(200); // default limit if no search
+    }
+
+    const { data: products, error } = await query;
 
     if (error) throw error;
     

@@ -18,13 +18,16 @@ export default function FixImagesPage() {
 
   const [dragItem, setDragItem] = useState<{ productId: number; imageIndex: number } | null>(null);
 
+  const [search, setSearch] = useState('');
+
   useEffect(() => {
-    fetchProducts();
+    fetchProducts('');
   }, []);
 
-  async function fetchProducts() {
+  async function fetchProducts(q: string = '') {
+    setLoading(true);
     try {
-      const res = await fetch('/api/admin/fix-images');
+      const res = await fetch(`/api/admin/fix-images${q ? `?q=${encodeURIComponent(q)}` : ''}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to fetch products');
       setProducts(json.products || []);
@@ -33,6 +36,11 @@ export default function FixImagesPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    fetchProducts(search);
   }
 
   async function handleSave(product: Product) {
@@ -117,10 +125,23 @@ export default function FixImagesPage() {
       <h1 className="serif" style={{ fontSize: 24, marginBottom: 10, color: 'var(--gold-dark)' }}>
         กระดานสลับรูปภาพ (Cross-Product Image Swap)
       </h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 30, fontSize: 14 }}>
+      <p style={{ color: 'var(--text-muted)', marginBottom: 20, fontSize: 14 }}>
         สามารถคลิกค้างที่รูปภาพ แล้วลากไปใส่ในช่องของสินค้าชิ้นอื่นได้เลย 
         เมื่อจัดเรียงเสร็จแล้วให้กดปุ่ม "บันทึก" ที่สินค้านั้นๆ (ไม่ต้องรีเฟรชหน้าเว็บ)
       </p>
+
+      <form onSubmit={handleSearch} style={{ display: 'flex', gap: 10, marginBottom: 30 }}>
+        <input 
+          type="text" 
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="ค้นหาชื่อสินค้า หรือ ID... (เว้นว่างเพื่อดู 200 รายการล่าสุด)"
+          style={{ padding: '10px 16px', borderRadius: 'var(--radius)', border: '1px solid var(--cream-dark)', width: 400, fontSize: 14 }}
+        />
+        <button type="submit" style={{ padding: '10px 20px', background: 'var(--burgundy)', color: '#fff', border: 'none', borderRadius: 'var(--radius)', cursor: 'pointer', fontWeight: 600 }}>
+          ค้นหา
+        </button>
+      </form>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         {products.map(product => (
