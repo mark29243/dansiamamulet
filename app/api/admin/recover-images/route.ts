@@ -38,7 +38,7 @@ export async function GET(req: Request) {
     let continuationToken = undefined;
 
     while (isTruncated) {
-      const res = await s3.send(new ListObjectsV2Command({
+      const res: any = await s3.send(new ListObjectsV2Command({
         Bucket: process.env.R2_BUCKET!,
         ContinuationToken: continuationToken,
       }));
