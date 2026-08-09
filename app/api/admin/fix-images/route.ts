@@ -22,7 +22,7 @@ export async function GET(req: Request) {
 
     let query = admin
       .from('products')
-      .select('id, name, images, created_at')
+      .select('id, name, name_th, images, created_at')
       .order('created_at', { ascending: false });
 
     if (q) {

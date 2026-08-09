@@ -6,6 +6,7 @@ import { useToast } from '@/components/ToastProvider';
 type Product = {
   id: number;
   name: string;
+  name_th?: string;
   images: string[];
   created_at: string;
 };
@@ -160,9 +161,14 @@ export default function FixImagesPage() {
             <div style={{ width: 280, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRight: '1px solid var(--cream-dark)', paddingRight: 20 }}>
               <div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>ID: {product.id}</div>
-                <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', lineHeight: 1.4, margin: 0 }}>
+                {product.name_th && (
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', lineHeight: 1.4, margin: '0 0 4px 0' }}>
+                    {product.name_th}
+                  </h3>
+                )}
+                <h4 style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-muted)', lineHeight: 1.4, margin: 0 }}>
                   {product.name}
-                </h3>
+                </h4>
               </div>
               <button
                 onClick={() => handleSave(product)}
