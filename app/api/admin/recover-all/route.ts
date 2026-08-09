@@ -48,7 +48,7 @@ export async function GET(req: Request) {
       },
     });
 
-    const { data: products, error } = await admin.from('products').select('id, name, images');
+    const { data: products, error } = await admin.from('products').select('id, name, name_th, images');
     if (error) return NextResponse.json({ error: error.message });
 
     const brokenProducts = products.filter(p => 
@@ -59,14 +59,15 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: "No broken images found! Everything is fixed." });
     }
 
-    const { data: shopeeProducts } = await admin.from('shopee_products').select('name, shopee_images, images');
-    const { data: juneProducts } = await admin.from('june_products').select('name, shopee_images, images');
+    const { data: shopeeProducts } = await admin.from('shopee_products').select('name, name_th, shopee_images, images');
+    const { data: juneProducts } = await admin.from('june_products').select('name, name_th, shopee_images, images');
     
     const allStock = [...(shopeeProducts || []), ...(juneProducts || [])];
     const results = [];
 
     for (const p of brokenProducts) {
-      const stockItem = allStock.find(s => s.name === p.name);
+      // Match by name_th because the English name might have been changed by Claude SEO
+      const stockItem = allStock.find(s => s.name_th === p.name_th || s.name === p.name_th);
       if (stockItem && stockItem.shopee_images && stockItem.shopee_images.length > 0) {
         
         let newImages = [];
