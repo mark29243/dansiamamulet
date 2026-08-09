@@ -18,6 +18,7 @@ export default function FixImagesPage() {
   const { toast } = useToast();
 
   const [dragItem, setDragItem] = useState<{ productId: number; imageIndex: number } | null>(null);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   const [search, setSearch] = useState('');
 
@@ -126,6 +127,29 @@ export default function FixImagesPage() {
 
   return (
     <div style={{ padding: '20px 40px', maxWidth: 1400, margin: '0 auto' }}>
+      
+      {expandedImage && (
+        <div 
+          onClick={() => setExpandedImage(null)}
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.85)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'zoom-out'
+          }}
+        >
+          <img 
+            src={expandedImage} 
+            alt="Expanded view" 
+            style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', borderRadius: 8, boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }} 
+          />
+        </div>
+      )}
+
       <h1 className="serif" style={{ fontSize: 24, marginBottom: 10, color: 'var(--gold-dark)' }}>
         กระดานสลับรูปภาพ (Cross-Product Image Swap)
       </h1>
@@ -248,13 +272,14 @@ export default function FixImagesPage() {
                   <img
                     src={img}
                     alt=""
+                    onClick={() => setExpandedImage(img)}
                     style={{
                       width: '100%',
                       height: '100%',
                       objectFit: 'cover',
                       borderRadius: 8,
                       border: '1px solid rgba(0,0,0,0.1)',
-                      pointerEvents: 'none'
+                      cursor: 'zoom-in'
                     }}
                   />
                   <button
