@@ -239,7 +239,7 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       )}
 
       <div className="card" style={{ overflow: 'hidden' }}>
-        <div style={{ overflowX: 'auto' }}>
+        <div className="table-responsive">
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
             <thead>
               <tr style={{ background: 'var(--cream-dark)', textAlign: 'left' }}>

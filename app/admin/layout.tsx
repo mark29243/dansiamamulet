@@ -30,7 +30,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F9F7F4', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#F9F7F4', fontFamily: 'system-ui, -apple-system, sans-serif', width: '100vw', maxWidth: '100vw', overflowX: 'hidden' }}>
       <AdminNav email={admin.email} role={admin.role} />
       <div style={{ paddingTop: 88 }}>
         {children}

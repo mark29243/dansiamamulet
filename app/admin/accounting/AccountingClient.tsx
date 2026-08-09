@@ -212,7 +212,7 @@ export default function AccountingClient() {
   const netProfit = totalIncome - totalExpense;
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '24px 16px', fontFamily: 'sans-serif' }}>
+    <div className="admin-page-container" style={{ maxWidth: 1000, margin: '0 auto', padding: '24px 16px', fontFamily: 'sans-serif' }}>
       
       {/* Header & Controls */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
@@ -286,8 +286,8 @@ export default function AccountingClient() {
         ) : records.length === 0 ? (
           <div style={{ padding: 40, textAlign: 'center', color: '#6b7280' }}>ยังไม่มีรายการบัญชีในเดือนนี้</div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 14 }}>
+          <div className="table-responsive">
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 14, minWidth: 800 }}>
               <thead>
                 <tr style={{ background: '#f9fafb', color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
                   <th style={{ padding: '12px 16px', fontWeight: 600 }}>วันที่</th>
