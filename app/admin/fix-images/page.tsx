@@ -55,6 +55,9 @@ export default function FixImagesPage() {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to save');
       toast(`บันทึกรูปของ ${product.name} แล้ว!`, 'success');
+      
+      // Remove the product from the UI so they don't have to scroll past it
+      setProducts(prev => prev.filter(p => p.id !== product.id));
     } catch (e: any) {
       toast(e.message, 'error');
     } finally {
