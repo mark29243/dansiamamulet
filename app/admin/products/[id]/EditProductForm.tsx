@@ -35,6 +35,7 @@ export default function EditProductForm({ product }: { product: any }) {
     price: ((product.price ?? 0) / 100).toFixed(2),
     sale_price: product.sale_price ? (product.sale_price / 100).toFixed(2) : '',
     stock: product.stock ?? 0,
+    published: product.published ?? true,
   });
 
   function toggleCat(cat: string) {
@@ -124,6 +125,7 @@ export default function EditProductForm({ product }: { product: any }) {
         price: Math.round(Number(form.price) * 100),
         sale_price: form.sale_price === '' ? null : Math.round(Number(form.sale_price) * 100),
         stock: Number(form.stock),
+        published: form.published,
         images,
       };
       const res = await fetch(`/api/admin/products/${product.id}`, {
@@ -251,6 +253,20 @@ export default function EditProductForm({ product }: { product: any }) {
             ✨ ตัดพื้นหลังภาพอัตโนมัติ (AI)
           </label>
         </div>
+      </Field>
+
+      <Field label="สถานะสินค้า (การแสดงผลหน้าร้าน)">
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, cursor: 'pointer', padding: '12px 16px', background: form.published ? 'var(--cream-light)' : '#f3f4f6', borderRadius: 'var(--radius)', border: '1px solid ' + (form.published ? 'var(--cream-dark)' : '#e5e7eb'), width: 'fit-content' }}>
+          <input
+            type="checkbox"
+            checked={form.published}
+            onChange={(e) => set('published', e.target.checked)}
+            style={{ width: 18, height: 18, accentColor: 'var(--gold-dark)' }}
+          />
+          <span style={{ fontWeight: 500, color: form.published ? 'var(--text)' : 'var(--text-muted)' }}>
+            {form.published ? '👁️ แสดงสินค้านี้หน้าร้าน' : '🙈 ซ่อนสินค้านี้ (Unpublished)'}
+          </span>
+        </label>
       </Field>
 
       <Field label="ชื่อภาษาไทย">
