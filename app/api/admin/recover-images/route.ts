@@ -43,7 +43,7 @@ export async function GET(req: Request) {
         ContinuationToken: continuationToken,
       }));
       if (res.Contents) {
-        r2Files.push(...res.Contents.map(c => c.Key!).filter(k => k.match(/^\d+-/)));
+        r2Files.push(...res.Contents.map((c: any) => c.Key!).filter((k: any) => k.match(/^\d+-/)));
       }
       isTruncated = res.IsTruncated ?? false;
       continuationToken = res.NextContinuationToken;
