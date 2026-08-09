@@ -5,6 +5,7 @@ import { uploadToR2 } from '@/lib/r2';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 const MAX_WIDTH = 1600; // enough for the 2.5x zoom viewer
