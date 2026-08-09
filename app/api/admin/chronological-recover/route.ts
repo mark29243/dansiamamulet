@@ -4,6 +4,7 @@ import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300;
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   try {

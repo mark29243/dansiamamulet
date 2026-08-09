@@ -4,6 +4,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300;
+export const dynamic = 'force-dynamic';
 
 async function uploadToR2(s3: S3Client, key: string, body: Buffer | Uint8Array, contentType: string): Promise<string> {
   await s3.send(new PutObjectCommand({
