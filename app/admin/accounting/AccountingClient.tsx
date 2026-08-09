@@ -242,6 +242,13 @@ export default function AccountingClient() {
           </select>
           
           <button 
+            onClick={() => window.open(`/admin/accounting/print?month=${currentMonth}&year=${currentYear}`, '_blank')}
+            style={{ padding: '8px 16px', background: 'white', color: '#374151', border: '1px solid #d1d5db', borderRadius: 8, fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}
+          >
+            🖨️ พิมพ์รายงาน / PDF
+          </button>
+          
+          <button 
             onClick={() => setShowAddModal(true)}
             style={{ padding: '8px 16px', background: '#059669', color: 'white', border: 'none', borderRadius: 8, fontWeight: 'bold', cursor: 'pointer' }}
           >
