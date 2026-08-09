@@ -51,7 +51,7 @@ export default function AdminProductTable({ products }: { products: any[] }) {
       const res = await fetch(`/api/admin/products/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mark_location: editingLocationValue })
+        body: JSON.stringify({ storage_location: editingLocationValue })
       });
       if (res.ok) {
         toast('บันทึกที่จัดเก็บเรียบร้อยแล้ว', 'success');
@@ -297,11 +297,11 @@ export default function AdminProductTable({ products }: { products: any[] }) {
                         </div>
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ fontSize: 11, fontWeight: 600, color: p.mark_location ? 'var(--gold-dark)' : '#ef4444' }}>
-                            {p.mark_location || 'ยังไม่ระบุ'}
+                          <span style={{ fontSize: 11, fontWeight: 600, color: p.storage_location ? 'var(--gold-dark)' : '#ef4444' }}>
+                            {p.storage_location || 'ยังไม่ระบุ'}
                           </span>
                           <button 
-                            onClick={() => { setEditingLocationId(p.id); setEditingLocationValue(p.mark_location || ''); }}
+                            onClick={() => { setEditingLocationId(p.id); setEditingLocationValue(p.storage_location || ''); }}
                             style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 10, textDecoration: 'underline' }}
                           >
                             แก้ไข
