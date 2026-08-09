@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import Image from 'next/image';
+import PrintButtons from './PrintButtons';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,14 +64,7 @@ export default async function PrintAccountingPage({ searchParams }: { searchPara
         .summary-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-top: 32px; display: flex; justify-content: space-between; page-break-inside: avoid; }
       `}} />
 
-      <div className="no-print" style={{ marginBottom: 20, display: 'flex', gap: 12 }}>
-        <button onClick={() => window.print()} style={{ padding: '10px 20px', background: '#059669', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 'bold' }}>
-          🖨️ พิมพ์หน้านี้ (Print)
-        </button>
-        <button onClick={() => window.close()} style={{ padding: '10px 20px', background: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer' }}>
-          ปิดหน้าต่าง
-        </button>
-      </div>
+      <PrintButtons />
 
       <div style={{ textAlign: 'center', marginBottom: 30 }}>
         <h1 style={{ fontSize: 24, margin: '0 0 8px 0', color: '#111' }}>รายงานบัญชี (Accounting Report)</h1>
