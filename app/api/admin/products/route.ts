@@ -17,50 +17,7 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif
 const BLOCKED_HOSTS = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|0\.0\.0\.0|::1)/i;
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10 MB
 
-async function rehostImage(url: string, admin: ReturnType<typeof createAdminClient>): Promise<string> {
-  try {
-    // SSRF prevention: only allow http/https, block private IPs
-    const parsed = new URL(url);
-    if (!['http:', 'https:'].includes(parsed.protocol)) return url;
-    if (BLOCKED_HOSTS.test(parsed.hostname)) return url;
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10_000); // 10s timeout
-
-    const res = await fetch(url, {
-      headers: { 'Referer': 'https://shopee.co.th/', 'User-Agent': 'Mozilla/5.0' },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-
-    if (!res.ok) return url;
-
-    // Validate content-type is an image
-    const contentType = (res.headers.get('content-type') || '').split(';')[0].trim();
-    if (!ALLOWED_IMAGE_TYPES.includes(contentType)) return url;
-
-    // Guard against huge files
-    const contentLength = Number(res.headers.get('content-length') || 0);
-    if (contentLength > MAX_IMAGE_BYTES) return url;
-
-    const buffer = await res.arrayBuffer();
-    if (buffer.byteLength > MAX_IMAGE_BYTES) return url;
-
-    const ext = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-    const { error } = await admin.storage
-      .from('products')
-      .upload(filename, buffer, { contentType, upsert: false });
-
-    if (error) return url;
-
-    const { data } = admin.storage.from('products').getPublicUrl(filename);
-    return data.publicUrl;
-  } catch {
-    return url;
-  }
-}
 
 export async function POST(req: Request) {
   const ctx = await requireAdmin();
@@ -82,10 +39,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Name or slug too long' }, { status: 400 });
   }
 
-  // Rehost all images from Shopee CDN → Supabase Storage
-  const rehostedImages = await Promise.all(
-    (images ?? []).map((url: string) => rehostImage(url, ctx.admin))
-  );
+
 
   const { data, error } = await ctx.admin
     .from('products')
@@ -100,7 +54,7 @@ export async function POST(req: Request) {
       description: description || '',
       description_th: description_th || '',
       short: short || '',
-      images: rehostedImages,
+      images: images ?? [],
       published: published ?? false,
     })
     .select('id, slug')
