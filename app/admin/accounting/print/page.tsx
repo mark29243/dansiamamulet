@@ -157,10 +157,11 @@ export default async function PrintAccountingPage({ searchParams }: { searchPara
                     {r.description && <div style={{ color: '#4b5563', fontSize: 12, marginTop: r.product_name ? 4 : 0 }}>{r.description}</div>}
                     {expenseDetails && <div style={{ color: '#dc2626', fontSize: 11, marginTop: 4 }}>{expenseDetails}</div>}
                   </td>
-                  <td className="text-center" style={{ padding: '4px' }}>
+                  <td className="text-center" style={{ padding: '4px', verticalAlign: 'middle' }}>
                     {r.image_url ? (
-                      <div style={{ width: 60, height: 60, position: 'relative', margin: '0 auto', borderRadius: 4, overflow: 'hidden', border: '1px solid #eee' }}>
-                        <Image src={r.image_url} alt="" fill sizes="60px" style={{ objectFit: 'cover' }} />
+                      <div style={{ width: 60, height: 60, margin: '0 auto', borderRadius: 4, overflow: 'hidden', border: '1px solid #eee' }}>
+                        {/* Use standard img tag instead of Next.js Image for printing reliability */}
+                        <img src={r.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} loading="eager" crossOrigin="anonymous" />
                       </div>
                     ) : (
                       <span style={{ color: '#d1d5db', fontSize: 11 }}>-</span>
