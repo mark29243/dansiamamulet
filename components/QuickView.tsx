@@ -118,12 +118,12 @@ export default function QuickView({ product, onClose }: { product: Product | nul
           <div style={{ background: 'var(--cream-dark)', display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1, position: 'relative', minHeight: 320, overflow: 'hidden' }}>
               {product.images[imgIdx] ? (
-                <Image
+                <SafeImage
                   src={product.images[imgIdx]}
                   alt={product.name}
                   fill
-                  sizes="440px"
-                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width: 768px) 100vw, 500px"
+                  style={{ objectFit: 'contain' }}
                   priority
                 />
               ) : (
