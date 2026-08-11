@@ -14,17 +14,17 @@ function pickImage(products: MinProduct[], cat: string): string | null {
   return pool[0].images![0];
 }
 
-export default function HomeHero({ productCount, products }: { productCount: number; products: MinProduct[] }) {
+export default function HomeHero({ productCount, products, customImages = {} }: { productCount: number; products: MinProduct[]; customImages?: Record<string, string> }) {
   const { lang } = useLang();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   const catImages = useMemo(() => ({
-    'พระสมเด็จ': mounted ? pickImage(products, 'พระสมเด็จ') : null,
-    'หลวงพ่อทวด': mounted ? pickImage(products, 'หลวงพ่อทวด') : null,
-    'เหรียญ': mounted ? pickImage(products, 'เหรียญ') : null,
-    'พระเกจิอาจารย์': mounted ? pickImage(products, 'พระเกจิอาจารย์') : null,
-  }), [products, mounted]);
+    'พระสมเด็จ': customImages['พระสมเด็จ'] || (mounted ? pickImage(products, 'พระสมเด็จ') : null),
+    'หลวงพ่อทวด': customImages['หลวงพ่อทวด'] || (mounted ? pickImage(products, 'หลวงพ่อทวด') : null),
+    'เหรียญ': customImages['เหรียญ'] || (mounted ? pickImage(products, 'เหรียญ') : null),
+    'พระเกจิอาจารย์': customImages['พระเกจิอาจารย์'] || (mounted ? pickImage(products, 'พระเกจิอาจารย์') : null),
+  }), [products, mounted, customImages]);
 
   return (
     <>

@@ -21,11 +21,25 @@ async function getProducts(): Promise<Product[]> {
   return (data ?? []) as Product[];
 }
 
+async function getHomepageSettings(): Promise<Record<string, string>> {
+  try {
+    const res = await fetch('https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/homepage-settings.json', { next: { revalidate: 60 } });
+    if (!res.ok) return {};
+    return await res.json();
+  } catch (e) {
+    return {};
+  }
+}
+
 export default async function HomePage({ searchParams }: { searchParams?: { category?: string } }) {
-  const products = await getProducts();
+  const [products, customImages] = await Promise.all([
+    getProducts(),
+    getHomepageSettings()
+  ]);
+  
   return (
     <>
-      <HomeHero productCount={products.length} products={products} />
+      <HomeHero productCount={products.length} products={products} customImages={customImages} />
       <ReviewsSection />
       <HomeShop products={products} defaultCategory={searchParams?.category} />
     </>
