@@ -11,7 +11,7 @@ type MinProduct = { category: string; images?: string[] | null };
 function pickImage(products: MinProduct[], cat: string): string | null {
   const pool = products.filter((p) => p.category?.includes(cat) && p.images?.[0]);
   if (!pool.length) return null;
-  return pool[Math.floor(Math.random() * pool.length)].images![0];
+  return pool[0].images![0];
 }
 
 export default function HomeHero({ productCount, products }: { productCount: number; products: MinProduct[] }) {

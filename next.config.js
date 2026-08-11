@@ -11,7 +11,6 @@ const nextConfig = {
     ];
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       // WooCommerce origin
       { protocol: 'https', hostname: 'amulets-dansiam.com' },
