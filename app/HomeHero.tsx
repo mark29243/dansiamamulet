@@ -243,7 +243,7 @@ function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: st
           position: 'relative', overflow: 'hidden',
         }}>
           {image ? (
-            <Image src={image} alt={name} fill sizes="(max-width: 768px) 50vw, 25vw" style={{ objectFit: 'cover' }} />
+            <Image src={image} alt={name} fill sizes="(max-width: 768px) 50vw, 25vw" style={{ objectFit: 'cover' }} unoptimized />
           ) : (
             <span style={{ opacity: 0.25, color: 'var(--gold)', display: 'flex' }}><IcoAmulet size={44} strokeWidth={1.5} /></span>
           )}
