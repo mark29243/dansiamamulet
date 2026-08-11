@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import SafeImage from './SafeImage';
 import Link from 'next/link';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
@@ -148,7 +148,7 @@ export default function QuickView({ product, onClose }: { product: Product | nul
                       borderRadius: 3,
                     }}
                   >
-                    <Image src={url} alt="" width={56} height={56} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <SafeImage src={url} alt="" width={56} height={56} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </button>
                 ))}
               </div>

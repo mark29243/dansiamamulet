@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import { useCart } from '@/components/CartProvider';
 import { useLang } from '@/components/LangProvider';
 import { useToast } from '@/components/ToastProvider';
@@ -99,7 +99,7 @@ export default function CartPage() {
               >
                 <Link href={`/product/${item.product_id}`} style={{ width: 80, height: 80, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
                   {item.image && (
-                    <Image src={item.image} alt={item.name} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <SafeImage src={item.image} alt={item.name} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   )}
                 </Link>
 

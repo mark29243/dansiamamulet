@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import { useState, useEffect, useCallback } from 'react';
 import { useLang } from '@/components/LangProvider';
 import { getDict } from '@/lib/i18n';
@@ -557,8 +557,8 @@ export default function OrdersClient({ orders, userEmail }: { orders: Order[] | 
                       {o.items.map((i, k) => (
                         <li key={k} style={{ display: 'flex', gap: 12, padding: '8px 0', alignItems: 'center' }}>
                           {i.image && (
-                            <div style={{ width: 48, height: 48, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
-                              <Image src={i.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <div style={{ width: 48, height: 48, background: 'var(--cream-dark)', borderRadius: 'var(--radius)', overflow: 'hidden', flexShrink: 0 }}>
+                              <SafeImage src={i.image} alt={i.name} width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             </div>
                           )}
                           <div style={{ flex: 1, fontSize: 13 }}>

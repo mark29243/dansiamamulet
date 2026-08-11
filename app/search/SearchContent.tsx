@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
 import { useCart } from '@/components/CartProvider';
 import { useToast } from '@/components/ToastProvider';
@@ -191,7 +191,7 @@ function SearchContent() {
                     )}
                     <div style={{ aspectRatio: '1', background: 'linear-gradient(135deg,var(--cream-dark),var(--cream-darker))', overflow: 'hidden', position: 'relative' }}>
                       {p.images[0] ? (
-                        <Image src={p.images[0]} alt={p.name} fill sizes="220px" style={{ objectFit: 'cover', transition: 'transform 0.4s' }} />
+                        <SafeImage src={p.images[0]} alt={p.name} fill sizes="220px" style={{ objectFit: 'cover', transition: 'transform 0.4s' }} />
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                           <IcoAmulet size={48} />

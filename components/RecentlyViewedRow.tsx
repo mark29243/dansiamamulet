@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from './SafeImage';
 import { useRecentlyViewed } from './RecentlyViewedProvider';
 import { useLang } from './LangProvider';
 import { formatPrice } from '@/lib/utils';
@@ -96,7 +96,7 @@ export default function RecentlyViewedRow({ excludeId }: { excludeId?: number })
                       <Link href={`/product/${p.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
                         <div style={{ position: 'relative', width: '100%', aspectRatio: '1', background: 'var(--cream)' }}>
                           {p.images?.[0] ? (
-                            <Image
+                            <SafeImage
                               src={p.images[0]}
                               alt={displayName}
                               fill

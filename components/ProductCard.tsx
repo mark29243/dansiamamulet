@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from './SafeImage';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
 import { useToast } from './ToastProvider';
@@ -104,7 +104,7 @@ const priceDisplay = useLocalPrice(displayPrice, lang);
         <div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden', background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           {!imgLoaded && p.images[0] && <div className="skeleton" style={{ position: 'absolute', inset: 0 }} />}
           {p.images[0] ? (
-            <Image src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'contain', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} />
+            <SafeImage src={p.images[0]} alt={p.name} fill sizes="(max-width: 768px) 50vw, 260px" style={{ objectFit: 'contain', transition: 'transform 0.5s ease', opacity: imgLoaded ? 1 : 0 }} onLoad={() => setImgLoaded(true)} />
           ) : (
             <IcoAmulet size={56} />
           )}

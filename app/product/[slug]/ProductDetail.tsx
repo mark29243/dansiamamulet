@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import Link from 'next/link';
 import { useLang } from '@/components/LangProvider';
 import { useCart } from '@/components/CartProvider';
@@ -125,7 +125,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 }}
               >
                 {p.images[activeImg] ? (
-                  <Image src={p.images[activeImg]} alt={p.name} fill sizes="(max-width: 768px) 100vw, 500px" style={{ objectFit: 'contain' }} priority />
+                  <SafeImage src={p.images[activeImg]} alt={p.name} fill sizes="(max-width: 768px) 100vw, 500px" style={{ objectFit: 'contain' }} priority />
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                     <IcoAmulet size={80} />
@@ -151,7 +151,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                         overflow: 'hidden', borderRadius: 'var(--radius)', transition: 'border-color 0.2s',
                       }}
                     >
-                      <Image src={url} alt={`${p.name} — รูปที่ ${i + 1}`} width={76} height={76} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <SafeImage src={url} alt={`${p.name} — รูปที่ ${i + 1}`} width={76} height={76} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </button>
                   ))}
                 </div>
@@ -272,7 +272,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                     <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
                       <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>
                         {r.images[0] && (
-                          <Image src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <SafeImage src={r.images[0]} alt={rName} width={220} height={220} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         )}
                       </div>
                       <div style={{ padding: 14 }}>
@@ -333,7 +333,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
             }}
             style={{ overflow: 'hidden', maxWidth: '90vw', maxHeight: '90vh', cursor: zoomedIn ? 'zoom-out' : 'zoom-in', touchAction: zoomedIn ? 'none' : 'auto' }}
           >
-            <Image
+            <SafeImage
               src={p.images[activeImg]}
               alt={p.name}
               width={1000}

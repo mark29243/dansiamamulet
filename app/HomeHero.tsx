@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
 import { IcoAmulet } from '@/components/icons';
 
@@ -243,7 +243,7 @@ function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: st
           position: 'relative', overflow: 'hidden',
         }}>
           {image ? (
-            <Image src={image} alt={name} fill sizes="(max-width: 768px) 50vw, 25vw" style={{ objectFit: 'cover' }} unoptimized />
+            <SafeImage src={image} alt={`${cat} amulet`} fill sizes="(max-width: 768px) 30vw, 15vw" style={{ objectFit: 'cover' }} unoptimized={true} />
           ) : (
             <span style={{ opacity: 0.25, color: 'var(--gold)', display: 'flex' }}><IcoAmulet size={44} strokeWidth={1.5} /></span>
           )}
