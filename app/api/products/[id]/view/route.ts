@@ -14,9 +14,17 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
   const admin = createAdminClient();
   // Update counter + log timestamped event in parallel
-  await Promise.all([
+  const [rpcRes, insertRes] = await Promise.all([
     admin.rpc('increment_product_views', { product_id: productId }),
     admin.from('product_view_events').insert({ product_id: productId }),
   ]);
-  return NextResponse.json({ ok: true });
+
+  if (rpcRes.error) {
+    console.error('[view-counter] Error in increment_product_views RPC:', rpcRes.error);
+  }
+  if (insertRes.error) {
+    console.error('[view-counter] Error in product_view_events insert:', insertRes.error);
+  }
+
+  return NextResponse.json({ ok: !rpcRes.error && !insertRes.error });
 }

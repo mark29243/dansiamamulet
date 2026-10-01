@@ -96,14 +96,34 @@ export async function GET(req: Request) {
       ? new Date(Date.now() - 84 * 86400000)
       : new Date(Date.now() - 366 * 86400000);
 
-  const { data: rows } = await admin
-    .from('product_view_events')
-    .select('created_at')
-    .gte('created_at', since.toISOString());
+  const allRows: Row[] = [];
+  const pageSize = 1000;
+  let offset = 0;
+  let hasMore = true;
 
-  const buckets = period === 'day' ? byDay(rows ?? [], 14)
-    : period === 'week' ? byWeek(rows ?? [], 12)
-    : byMonth(rows ?? [], 12);
+  while (hasMore) {
+    const { data: batch, error } = await admin
+      .from('product_view_events')
+      .select('created_at')
+      .gte('created_at', since.toISOString())
+      .order('created_at', { ascending: false })
+      .range(offset, offset + pageSize - 1);
+
+    if (error || !batch || batch.length === 0) {
+      break;
+    }
+    allRows.push(...batch);
+    if (batch.length < pageSize) {
+      hasMore = false;
+    } else {
+      offset += pageSize;
+      if (offset >= 50000) break;
+    }
+  }
+
+  const buckets = period === 'day' ? byDay(allRows, 14)
+    : period === 'week' ? byWeek(allRows, 12)
+    : byMonth(allRows, 12);
 
   const total = buckets.reduce((s, b) => s + b.count, 0);
   return NextResponse.json({ period, buckets, total });
