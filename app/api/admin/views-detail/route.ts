@@ -22,36 +22,24 @@ export async function GET(req: Request) {
   if (!from || !to) return NextResponse.json({ error: 'Missing from/to' }, { status: 400 });
 
   // Get all view events in the range
-  const allEvents: { product_id: number }[] = [];
-  const pageSize = 1000;
-  let offset = 0;
-  let hasMore = true;
+  const { data: events, error } = await admin
+    .from('product_view_events')
+    .select('product_id')
+    .gte('created_at', from)
+    .lt('created_at', to)
+    .limit(5000);
 
-  while (hasMore) {
-    const { data: batch, error } = await admin
-      .from('product_view_events')
-      .select('product_id')
-      .gte('created_at', from)
-      .lt('created_at', to)
-      .range(offset, offset + pageSize - 1);
-
-    if (error || !batch || batch.length === 0) break;
-    allEvents.push(...batch);
-    if (batch.length < pageSize) {
-      hasMore = false;
-    } else {
-      offset += pageSize;
-      if (offset >= 50000) break;
-    }
+  if (error) {
+    console.error('[views-detail] Supabase query error:', error);
   }
 
-  if (allEvents.length === 0) {
+  if (!events || events.length === 0) {
     return NextResponse.json({ products: [] });
   }
 
   // Count per product_id
   const countMap: Record<number, number> = {};
-  for (const e of allEvents) {
+  for (const e of events) {
     countMap[e.product_id] = (countMap[e.product_id] ?? 0) + 1;
   }
 
