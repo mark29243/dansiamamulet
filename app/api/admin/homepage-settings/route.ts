@@ -7,11 +7,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-async function requireAdminOrStaff() {
-  const cookieStore = cookies();
-  const isStaff = cookieStore.get('staff_auth')?.value === 'true';
-  if (isStaff) return { isStaff: true };
-
+async function requireAdmin() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
@@ -22,7 +18,7 @@ async function requireAdminOrStaff() {
 }
 
 export async function POST(req: Request) {
-  const ctx = await requireAdminOrStaff();
+  const ctx = await requireAdmin();
   if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {

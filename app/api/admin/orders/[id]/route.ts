@@ -48,14 +48,25 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   console.log('[audit] order-update', { admin: ctx.user.id, orderId: params.id, updates });
 
-  // Sync to accounting if marked paid
+  // Sync to accounting and decrement stock if marked paid
   if (status === 'paid') {
+    // 1. Decrement stock
+    try {
+      const { error: stockErr } = await ctx.admin.rpc('decrement_stock', { items: data.items });
+      if (stockErr) {
+        console.error('[admin] Stock decrement failed on manual approval:', stockErr.message);
+      }
+    } catch (sErr: any) {
+      console.warn('[admin] Stock decrement error:', sErr.message);
+    }
+
+    // 2. Sync to accounting
     try {
       // check if already exists to prevent duplicates
       const { data: existing } = await ctx.admin.from('accounting_records').select('id').eq('order_id', params.id).limit(1);
       if (!existing || existing.length === 0) {
         const accountingInserts = (data.items || []).map((item: any) => {
-          const qty = item.quantity || 1;
+          const qty = item.qty || item.quantity || 1;
           const rows = [];
           for (let i = 0; i < qty; i++) {
             rows.push({
@@ -63,7 +74,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
               type: 'SALE',
               category: 'แอดมินอนุมัติ',
               product_name: item.name,
-              amount: item.price,
+              amount: item.price / 100, // Price in DB is satang -> convert to Baht
               cost: 0,
               order_id: params.id,
             });

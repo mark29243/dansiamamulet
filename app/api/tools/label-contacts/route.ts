@@ -1,17 +1,39 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const supabase = createClient(supabaseUrl, supabaseKey);
+async function verifyAuth(req: Request) {
+  // Check header passcode
+  const passcode = req.headers.get('x-label-passcode');
+  const expectedPasscode = process.env.LABEL_TOOL_PASSCODE || '454545';
+  if (passcode && passcode === expectedPasscode) {
+    return true;
+  }
+
+  // Check admin session
+  try {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+    const admin = createAdminClient();
+    const { data } = await admin.from('admins').select('role').eq('user_id', user.id).maybeSingle();
+    return !!data;
+  } catch {
+    return false;
+  }
+}
+
+export async function GET(req: Request) {
+  if (!(await verifyAuth(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const supabase = createAdminClient();
   const { data, error } = await supabase.from('label_contacts').select('*').order('created_at', { ascending: true });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   
-  const mappedData = data.map(item => {
+  const mappedData = (data || []).map(item => {
     if (item.type === 'sender' && item.text) {
       try {
         const parsed = JSON.parse(item.text);
@@ -25,7 +47,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  if (!(await verifyAuth(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const supabase = createAdminClient();
   const body = await req.json();
   
   const processItem = (item: any) => {
@@ -54,7 +80,11 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  if (!(await verifyAuth(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const supabase = createAdminClient();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });

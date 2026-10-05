@@ -26,6 +26,16 @@ export default function LabelMakerPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [savedReceivers, setSavedReceivers] = useState<any[]>([]);
 
+  const authFetch = (url: string, options: RequestInit = {}) => {
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        'x-label-passcode': passcode,
+      },
+    });
+  };
+
   useEffect(() => {
     const migrateAndFetchData = async () => {
       const localReceivers = JSON.parse(localStorage.getItem('dansiam_saved_receivers') || '[]');
@@ -38,7 +48,7 @@ export default function LabelMakerPage() {
         ];
         
         try {
-          await fetch('/api/tools/label-contacts', {
+          await authFetch('/api/tools/label-contacts', {
             method: 'POST',
             body: JSON.stringify(payload)
           });
@@ -49,7 +59,7 @@ export default function LabelMakerPage() {
         }
       }
       
-      const res = await fetch('/api/tools/label-contacts');
+      const res = await authFetch('/api/tools/label-contacts');
       if (res.ok) {
         const data = await res.json();
         setSavedSenders(data.filter((d: any) => d.type === 'sender'));
@@ -129,13 +139,13 @@ export default function LabelMakerPage() {
     const newObj = { id: newId, type: 'receiver', name, text: receiverText };
     
     setSavedReceivers([...savedReceivers, newObj]);
-    await fetch('/api/tools/label-contacts', { method: 'POST', body: JSON.stringify(newObj) });
+    await authFetch('/api/tools/label-contacts', { method: 'POST', body: JSON.stringify(newObj) });
   };
 
   const removeSavedReceiver = async (id: string) => {
     if (!window.confirm('ต้องการลบผู้รับรายนี้ออกจากที่บันทึกไว้ใช่หรือไม่?')) return;
     setSavedReceivers(savedReceivers.filter(r => r.id !== id));
-    await fetch(`/api/tools/label-contacts?id=${id}`, { method: 'DELETE' });
+    await authFetch(`/api/tools/label-contacts?id=${id}`, { method: 'DELETE' });
   };
 
   const saveCustomSender = async () => {
@@ -150,14 +160,14 @@ export default function LabelMakerPage() {
     setSenderId(newId);
     setCustomSender({ name: '', phone: '', address: '' });
     
-    await fetch('/api/tools/label-contacts', { method: 'POST', body: JSON.stringify(newObj) });
+    await authFetch('/api/tools/label-contacts', { method: 'POST', body: JSON.stringify(newObj) });
   };
 
   const removeSavedSender = async (id: string) => {
     if (!window.confirm('ต้องการลบข้อมูลผู้ส่งนี้ใช่หรือไม่?')) return;
     setSavedSenders(savedSenders.filter(s => s.id !== id));
     setSenderId('dansiam');
-    await fetch(`/api/tools/label-contacts?id=${id}`, { method: 'DELETE' });
+    await authFetch(`/api/tools/label-contacts?id=${id}`, { method: 'DELETE' });
   };
 
   const currentSavedReceiver = savedReceivers.find(r => r.text === receiverText);

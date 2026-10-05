@@ -1,11 +1,31 @@
 import { NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
+async function requireOwner() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  const admin = createAdminClient();
+  const { data } = await admin.from('admins').select('role').eq('user_id', user.id).single();
+  if (data?.role !== 'owner') return null;
+  return { user, admin };
+}
+
 export async function POST(req: Request) {
+  const ctx = await requireOwner();
+  if (!ctx) {
+    return NextResponse.json({ error: 'Forbidden: Owner role required' }, { status: 403 });
+  }
+
   try {
-    const admin = createAdminClient();
+    const body = await req.json().catch(() => ({}));
+    if (body?.confirm !== 'CONFIRM_DELETE_ALL') {
+      return NextResponse.json({ error: 'Action requires confirmation token: CONFIRM_DELETE_ALL' }, { status: 400 });
+    }
+
+    const admin = ctx.admin;
     
     // fetch all ids
     const { data: products, error: fetchError } = await admin.from('shopee_products').select('id');

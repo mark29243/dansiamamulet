@@ -27,23 +27,20 @@ export async function POST(req: Request) {
 
   const admin = createAdminClient();
 
-  // Idempotency: reject duplicate event deliveries (Stripe retries)
+  // Idempotency: check if event was already successfully processed
   try {
-    const { error: insertErr } = await admin
+    const { data: existingEvent } = await admin
       .from('processed_webhook_events')
-      .insert({ stripe_event_id: event.id, event_type: event.type });
+      .select('stripe_event_id')
+      .eq('stripe_event_id', event.id)
+      .maybeSingle();
 
-    if (insertErr) {
-      // unique violation = already processed → return 200 so Stripe stops retrying
-      if (insertErr.code === '23505') {
-        console.log(`[webhook] Duplicate event ${event.id} — skipping`);
-        return NextResponse.json({ received: true, duplicate: true });
-      }
-      // other DB error — still try to process but log it
-      console.warn('[webhook] Could not record event id:', insertErr.message);
+    if (existingEvent) {
+      console.log(`[webhook] Event ${event.id} already processed — skipping duplicate`);
+      return NextResponse.json({ received: true, duplicate: true });
     }
   } catch (e: any) {
-    console.warn('[webhook] Idempotency check failed:', e.message);
+    console.warn('[webhook] Idempotency check error:', e.message);
   }
 
   try {
@@ -85,7 +82,14 @@ export async function POST(req: Request) {
         // 2. Atomically decrement stock via RPC (prevents oversell race)
         const { error: stockErr } = await admin.rpc('decrement_stock', { items: order.items });
         if (stockErr) {
-          console.error('[webhook] Stock decrement failed:', stockErr);
+          console.error('[webhook] Stock decrement failed (OVERSELL ALERT):', stockErr.message);
+          await admin
+            .from('orders')
+            .update({
+              notes: `[OVERSELL WARNING]: Stock deduction failed: ${stockErr.message}`,
+              status: 'pending_review',
+            })
+            .eq('id', orderId);
         }
 
         // 3. Auto-sync to accounting
@@ -95,12 +99,7 @@ export async function POST(req: Request) {
           
           if (!existing || existing.length === 0) {
             const accountingInserts = order.items.map((item: any) => {
-              // Determine price per unit, default to full item price if no quantity, otherwise divide.
-              // But usually item.price is the unit price. Let's assume item.price is unit price.
-              // If item has quantity, we should ideally insert QTY rows or just 1 row with total amount?
-              // "ตอนขายสินค้าได้ต้องให้มาเพิ่มต้นทุนของสินค้าแต่ละองค์ด้วย" - "each amulet". 
-              // So if quantity > 1, maybe create multiple rows. 
-              const qty = item.quantity || 1;
+              const qty = item.qty || item.quantity || 1;
               const rows = [];
               for (let i = 0; i < qty; i++) {
                 rows.push({
@@ -169,6 +168,15 @@ export async function POST(req: Request) {
         }
         break;
       }
+    }
+
+    // Record event as processed once handled successfully
+    try {
+      await admin
+        .from('processed_webhook_events')
+        .insert({ stripe_event_id: event.id, event_type: event.type });
+    } catch (recErr: any) {
+      console.warn('[webhook] Failed to record processed event:', recErr.message);
     }
 
     return NextResponse.json({ received: true });

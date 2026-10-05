@@ -2,12 +2,14 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase/server';
 import ShopeeStockClient from '@/app/admin/shopee-stock/ShopeeStockClient';
+import { verifyStaffSession } from '@/lib/staff-auth';
 
 export const dynamic = 'force-dynamic';
 
 export default async function StaffStockPage() {
   const cookieStore = cookies();
-  const isStaff = cookieStore.get('staff_auth')?.value === 'true';
+  const staffToken = cookieStore.get('staff_token')?.value;
+  const isStaff = verifyStaffSession(staffToken) || cookieStore.get('staff_auth')?.value === 'true';
 
   if (!isStaff) {
     redirect('/staff/login');

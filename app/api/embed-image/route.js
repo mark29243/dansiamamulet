@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { pipeline, env, RawImage } from '@xenova/transformers';
 import { Jimp } from 'jimp';
+import { rateLimit, getIp } from '@/lib/rate-limit';
 
 // Configure transformers cache directory to /tmp which is writable in Vercel Serverless
 env.cacheDir = '/tmp';
@@ -12,6 +13,11 @@ let extractorPromise = null;
 
 export async function POST(request) {
   try {
+    const ip = getIp(request);
+    if (!(await rateLimit(`embed-img:${ip}`, 10, 60_000))) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const { url } = await request.json();
     
     if (!url) {

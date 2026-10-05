@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/server';
 
+function getSafeRedirect(next: string | null, origin: string): URL {
+  if (next && next.startsWith('/') && !next.startsWith('//') && !next.includes('\\')) {
+    return new URL(next, origin);
+  }
+  return new URL('/orders', origin);
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const code = url.searchParams.get('code');
@@ -20,5 +27,5 @@ export async function GET(req: Request) {
     }
   }
 
-  return NextResponse.redirect(new URL(next || '/orders', url.origin));
+  return NextResponse.redirect(getSafeRedirect(next, url.origin));
 }

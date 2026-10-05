@@ -46,11 +46,16 @@ export async function POST(req: Request) {
     if (items.length > 50) {
       return NextResponse.json({ error: 'Too many items in cart' }, { status: 400 });
     }
+    // Deduplicate and aggregate items by product_id to prevent duplicate item stock bypass
+    const aggregatedItemsMap = new Map<number, number>();
     for (const item of items) {
       if (!Number.isInteger(item.qty) || item.qty < 1 || item.qty > 99) {
         return NextResponse.json({ error: 'Invalid item quantity' }, { status: 400 });
       }
+      const existing = aggregatedItemsMap.get(item.product_id) ?? 0;
+      aggregatedItemsMap.set(item.product_id, existing + item.qty);
     }
+
     if (!customer?.email || !customer?.name || !customer?.address) {
       return NextResponse.json({ error: 'Missing required customer fields' }, { status: 400 });
     }
@@ -71,7 +76,7 @@ export async function POST(req: Request) {
     }
 
     // Server-side shipping validation: recalculate and verify the sent cost
-    const totalQty = items.reduce((s, i) => s + (i.qty ?? 1), 0);
+    const totalQty = Array.from(aggregatedItemsMap.values()).reduce((s, q) => s + q, 0);
     const effectiveCarrier = carrier ?? (customer.country === 'TH' ? 'thaipost' : null);
     if (!effectiveCarrier) {
       return NextResponse.json({ error: 'Shipping carrier is required' }, { status: 400 });
@@ -97,7 +102,7 @@ export async function POST(req: Request) {
 
     // Re-validate inventory + prices from DB (don't trust client)
     const admin = createAdminClient();
-    const ids = items.map((i) => i.product_id);
+    const ids = Array.from(aggregatedItemsMap.keys());
     const { data: dbProducts, error } = await admin
       .from('products')
       .select('id, name, price, sale_price, stock, images, published')
@@ -109,12 +114,12 @@ export async function POST(req: Request) {
 
     // Check stock & build canonical items list
     const canonicalItems: CartItem[] = [];
-    for (const item of items) {
-      const dbp = dbProducts.find((p) => p.id === item.product_id);
+    for (const [productId, qty] of aggregatedItemsMap.entries()) {
+      const dbp = dbProducts.find((p) => p.id === productId);
       if (!dbp || !dbp.published) {
-        return NextResponse.json({ error: `Product ${item.product_id} is unavailable` }, { status: 400 });
+        return NextResponse.json({ error: `Product ${productId} is unavailable` }, { status: 400 });
       }
-      if (dbp.stock < item.qty) {
+      if (dbp.stock < qty) {
         return NextResponse.json({ error: `${dbp.name} — only ${dbp.stock} in stock` }, { status: 400 });
       }
       canonicalItems.push({
@@ -122,7 +127,7 @@ export async function POST(req: Request) {
         name: dbp.name,
         price: dbp.sale_price ?? dbp.price,                // server-trusted price
         image: (dbp.images as string[])?.[0] ?? '',
-        qty: item.qty,
+        qty: qty,
       });
     }
 

@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimit, getIp } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 export async function GET(req: Request) {
+  const ip = getIp(req);
+  if (!(await rateLimit(`search:${ip}`, 60, 60_000))) {
+    return NextResponse.json({ error: 'Too many search requests' }, { status: 429 });
+  }
+
   const { searchParams } = new URL(req.url);
   const q = (searchParams.get('q')?.trim() ?? '').slice(0, 200);
   const limit = Math.max(1, Math.min(parseInt(searchParams.get('limit') ?? '48') || 48, 100));

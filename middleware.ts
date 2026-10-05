@@ -29,6 +29,13 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Guard /api/admin routes — reject unauthenticated requests with 401
+  if (pathname.startsWith('/api/admin')) {
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
   // Guard /admin routes — redirect unauthenticated users to sign-in
   if (pathname.startsWith('/admin')) {
     if (!user) {

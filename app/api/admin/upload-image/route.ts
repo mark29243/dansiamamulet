@@ -11,11 +11,12 @@ const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'im
 const MAX_WIDTH = 1600; // enough for the 2.5x zoom viewer
 
 import { cookies } from 'next/headers';
+import { verifyStaffSession } from '@/lib/staff-auth';
 
 async function requireAdminOrStaff() {
   const cookieStore = cookies();
-  const isStaff = cookieStore.get('staff_auth')?.value === 'true';
-  if (isStaff) return { isStaff: true };
+  const staffToken = cookieStore.get('staff_token')?.value;
+  if (verifyStaffSession(staffToken)) return { isStaff: true };
 
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();

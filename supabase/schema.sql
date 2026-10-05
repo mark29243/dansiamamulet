@@ -141,6 +141,10 @@ begin
 end;
 $$ language plpgsql security definer;
 
+-- Restrict decrement_stock to service_role only (prevents inventory draining attacks)
+revoke execute on function public.decrement_stock(jsonb) from public, anon, authenticated;
+grant execute on function public.decrement_stock(jsonb) to service_role;
+
 -- 8. ROW LEVEL SECURITY
 alter table public.products enable row level security;
 alter table public.orders   enable row level security;
@@ -161,9 +165,9 @@ drop policy if exists "orders_user_select" on public.orders;
 create policy "orders_user_select" on public.orders
   for select using (auth.uid() = user_id or public.is_admin(auth.uid()));
 
+-- Orders creation: orders are strictly created server-side via service role client (checkout API).
+-- Direct insertion by unauthenticated users is disabled to prevent fake paid order injection.
 drop policy if exists "orders_user_insert" on public.orders;
-create policy "orders_user_insert" on public.orders
-  for insert with check (auth.uid() = user_id or user_id is null);
 
 drop policy if exists "orders_admin_update" on public.orders;
 create policy "orders_admin_update" on public.orders

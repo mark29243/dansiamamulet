@@ -29,13 +29,24 @@ export function createClient() {
 
 // Admin client — uses service role key, bypasses RLS. SERVER ONLY.
 export function createAdminClient() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || (process.env.NODE_ENV !== 'production' ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY : undefined);
   if (!key) {
-    throw new Error('Supabase keys are not set in .env.local');
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for createAdminClient');
   }
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     key,
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
+}
+
+// Server helper to verify admin authentication
+export async function requireAdmin() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  const admin = createAdminClient();
+  const { data } = await admin.from('admins').select('role').eq('user_id', user.id).maybeSingle();
+  if (!data) return null;
+  return { user, admin, role: data.role as string };
 }

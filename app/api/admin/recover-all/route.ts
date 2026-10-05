@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '@/lib/supabase/server';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 export const runtime = 'nodejs';
@@ -34,11 +34,11 @@ async function downloadAndUploadToR2(s3: S3Client, shopeeUrl: string): Promise<s
 }
 
 export async function GET(req: Request) {
+  const ctx = await requireAdmin();
+  if (!ctx) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
   try {
-    const admin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const admin = ctx.admin;
 
     const s3 = new S3Client({
       region: 'auto',
