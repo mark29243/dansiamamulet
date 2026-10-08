@@ -74,6 +74,11 @@ create table if not exists public.shopee_products (
   name_instagram  text,
   storage_location text,
   search_text     text,
+  description     text,
+  description_th  text,
+  description_zh  text,
+  short           text,
+  image_embedding jsonb,
   created_at      timestamptz default now(),
   updated_at      timestamptz default now()
 );
@@ -101,6 +106,11 @@ create table if not exists public.june_products (
   name_instagram  text,
   storage_location text,
   search_text     text,
+  description     text,
+  description_th  text,
+  description_zh  text,
+  short           text,
+  image_embedding jsonb,
   created_at      timestamptz default now(),
   updated_at      timestamptz default now()
 );
