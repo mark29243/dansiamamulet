@@ -210,15 +210,16 @@ export default async function CategoryPage({ params }: { params: { category: str
   if (!meta || !catTh) notFound();
 
   const supabase = createClient();
-  const { data } = await supabase
+  // Get all products with only required display columns (saves egress)
+  const { data: rawProducts } = await supabase
     .from('products')
-    .select('*')
+    .select('id, slug, name, name_th, name_zh, category, price, sale_price, stock, short, images, is_featured')
     .eq('published', true)
-    .ilike('category', `%${catTh}%`)
     .order('stock', { ascending: false })
     .order('id', { ascending: true });
 
-  const products = (data ?? []) as Product[];
+  const allProducts = (rawProducts ?? []) as Product[];
+  const products = allProducts.filter(p => p.category?.toLowerCase().includes(catTh.toLowerCase()));
 
   const itemListJsonLd = {
     '@context': 'https://schema.org',
@@ -235,14 +236,6 @@ export default async function CategoryPage({ params }: { params: { category: str
     })),
   };
 
-  // Get all products for the shop component (it handles its own filter)
-  const { data: allProducts } = await supabase
-    .from('products')
-    .select('*')
-    .eq('published', true)
-    .order('stock', { ascending: false })
-    .order('id', { ascending: true });
-
   return (
     <>
       <script
@@ -250,7 +243,7 @@ export default async function CategoryPage({ params }: { params: { category: str
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd).replace(/</g, '\\u003c') }}
       />
       <HomeShop
-        products={(allProducts ?? []) as Product[]}
+        products={allProducts}
         defaultCategory={catTh}
         currentSlug={params.category}
       />

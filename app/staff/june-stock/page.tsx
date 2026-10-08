@@ -27,7 +27,7 @@ export default async function JuneStockPage() {
   while (hasMore) {
     const { data, error } = await admin
       .from('june_products')
-      .select('*')
+      .select('id, name, name_th, price, stock, mark_location, mark_fb, mark_tt, mark_ig, mark_shopee2, mark_thaimart, images, name_shopee, updated_at')
       .order('id', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -45,13 +45,34 @@ export default async function JuneStockPage() {
     }
   }
 
-  if (hasError && (hasError as any).code === '42P01') {
-     return (
+  if (hasError) {
+    if ((hasError as any).code === '42P01') {
+      return (
         <div className="container" style={{ padding: '40px 20px', textAlign: 'center' }}>
-           <h2 className="serif">June Products Table Not Found</h2>
-           <p>Please run the database migration script first.</p>
+          <h2 className="serif">June Products Table Not Found</h2>
+          <p>Please run the database migration script first.</p>
         </div>
-     );
+      );
+    }
+    const isEgress = (hasError as any).status === 402 || (hasError as any).message?.includes('exceed_egress_quota');
+    return (
+      <div className="container" style={{ padding: '40px 20px', textAlign: 'center' }}>
+        <div style={{ background: '#FEE2E2', border: '1px solid #EF4444', color: '#991B1B', padding: 24, borderRadius: 12, maxWidth: 640, margin: '20px auto', textAlign: 'left' }}>
+          <h2 style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            ⚠️ ไม่สามารถโหลดสต็อก June ได้ (Database Error)
+          </h2>
+          <p style={{ fontSize: 14, margin: '8px 0', lineHeight: 1.5 }}>
+            {(hasError as any).message || 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล'}
+          </p>
+          {isEgress && (
+            <div style={{ marginTop: 12, padding: 12, background: '#FEF2F2', borderRadius: 8, border: '1px solid #FCA5A5', fontSize: 13, color: '#7F1D1D' }}>
+              <strong>สาเหตุหลัก:</strong> โปรเจกต์ Supabase ติดจำกัด <strong>Egress Quota (HTTP 402 Payment Required)</strong><br />
+              กรุณาแจ้ง Admin ให้ตรวจสอบ Billing ใน Supabase Dashboard เพื่อปลดล็อก
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (

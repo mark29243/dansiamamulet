@@ -1,23 +1,28 @@
+import { cache } from 'react';
 import { createAdminClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { unstable_noStore as noStore } from 'next/cache';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import BlogPostClient from './BlogPostClient';
 
+export const revalidate = 60;
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  noStore();
+const getBlogPost = cache(async (slug: string) => {
   const admin = createAdminClient();
   const { data: post } = await admin
     .from('blog_posts')
-    .select('title, title_th, title_zh, excerpt, excerpt_th, cover_image')
-    .eq('slug', params.slug)
+    .select('*')
+    .eq('slug', slug)
     .eq('published', true)
     .single();
+  return post;
+});
 
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getBlogPost(params.slug);
   if (!post) notFound();
 
   const title = post.title_th || post.title;
@@ -51,19 +56,8 @@ export default async function BlogPostPage({
   params: { slug: string };
   searchParams?: { lang?: string };
 }) {
-  noStore();
-  const admin = createAdminClient();
-  const { data: post } = await admin
-    .from('blog_posts')
-    .select('*')
-    .eq('slug', params.slug)
-    .eq('published', true)
-    .single();
-
+  const post = await getBlogPost(params.slug);
   if (!post) notFound();
-
-  // Increment views (fire-and-forget)
-  admin.from('blog_posts').update({ views: (post.views || 0) + 1 }).eq('id', post.id).then(() => {});
 
   const canonicalUrl = `${siteUrl}/blog/${params.slug}`;
 

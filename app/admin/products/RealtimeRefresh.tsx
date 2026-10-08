@@ -15,10 +15,17 @@ function Inner({ tables }: { tables: string[] }) {
   }, [pathname, searchParams.toString()]);
 
   useEffect(() => {
-    const refresh = () => router.refresh();
+    let lastRefresh = Date.now();
+    const refresh = () => {
+      // Never refresh if the tab is hidden or minimized
+      if (typeof document !== 'undefined' && document.hidden) return;
+      // Throttle: don't refresh if called within last 15 seconds
+      if (Date.now() - lastRefresh < 15_000) return;
+      lastRefresh = Date.now();
+      router.refresh();
+    };
 
-    // Realtime WebSocket — may fail on iOS Safari (SecurityError: The operation is insecure)
-    // Wrap in try-catch so it degrades gracefully; fallback refreshes still work below
+    // Realtime WebSocket — only notifies when an actual change happens
     let cleanupRealtime: (() => void) | null = null;
     try {
       const supabase = createClient();
@@ -29,13 +36,23 @@ function Inner({ tables }: { tables: string[] }) {
       channel.subscribe();
       cleanupRealtime = () => supabase.removeChannel(channel);
     } catch {
-      // WebSocket unavailable — realtime disabled, interval/visibilitychange still active
+      // WebSocket unavailable
     }
 
-    // Fallback: refresh on tab focus + every 30s (works on all browsers)
-    const onVisible = () => { if (!document.hidden) refresh(); };
+    // Refresh ONLY when user switches back to this tab
+    const onVisible = () => { 
+      if (typeof document !== 'undefined' && !document.hidden) {
+        refresh();
+      }
+    };
     document.addEventListener('visibilitychange', onVisible);
-    const interval = setInterval(refresh, 30_000);
+
+    // Fallback: poll every 3 minutes (180s) ONLY when tab is actively visible
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && !document.hidden) {
+        refresh();
+      }
+    }, 180_000);
 
     return () => {
       cleanupRealtime?.();

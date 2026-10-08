@@ -27,7 +27,40 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
   const to = from + pageSize - 1;
   query = query.range(from, to);
 
-  const { data: products, count } = await query;
+  const { data: products, count, error } = await query;
+
+  if (error) {
+    const isEgress = (error as any).status === 402 || error.message?.includes('exceed_egress_quota');
+    return (
+      <div className="container" style={{ padding: '40px 20px', textAlign: 'center' }}>
+        <div style={{ background: '#FEE2E2', border: '1px solid #EF4444', color: '#991B1B', padding: 24, borderRadius: 12, maxWidth: 640, margin: '20px auto', textAlign: 'left' }}>
+          <h2 style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            ⚠️ ไม่สามารถโหลดข้อมูลสินค้าได้ (Database Error)
+          </h2>
+          <p style={{ fontSize: 14, margin: '8px 0', lineHeight: 1.5 }}>
+            {error.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล'}
+          </p>
+          {isEgress && (
+            <div style={{ marginTop: 12, padding: 12, background: '#FEF2F2', borderRadius: 8, border: '1px solid #FCA5A5', fontSize: 13, color: '#7F1D1D' }}>
+              <strong>สาเหตุหลัก:</strong> โปรเจกต์ Supabase ติดจำกัด <strong>Egress Quota (HTTP 402 Payment Required)</strong><br />
+              กรุณาเข้าไปที่ Supabase Dashboard เพื่อปลดล็อก Spend Cap หรือ Upgrade Plan:
+              <div style={{ marginTop: 6 }}>
+                <a 
+                  href="https://supabase.com/dashboard/project/woieynotnkdgjsopknwz/settings/billing" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  style={{ color: '#DC2626', textDecoration: 'underline', fontWeight: 'bold' }}
+                >
+                  เปิด Supabase Billing Settings →
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   const list = products ?? [];
   const totalPages = count ? Math.ceil(count / pageSize) : 1;
 

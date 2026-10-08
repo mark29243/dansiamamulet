@@ -1,24 +1,33 @@
+import { cache } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { unstable_noStore as noStore } from 'next/cache';
 import type { Product } from '@/lib/types';
 import ProductDetail from './ProductDetail';
 import ViewTracker from './ViewTracker';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  noStore();
+// ISR: Cache product page for 60 seconds on CDN to prevent crawler query storms
+export const revalidate = 60;
+
+// Deduplicate query so generateMetadata and ProductPage share the exact same fetch
+const getProduct = cache(async (slug: string): Promise<Product | null> => {
   const supabase = createClient();
-  const { data: p } = await supabase
+  const { data } = await supabase
     .from('products')
-    .select('name, name_th, name_zh, description, short, images, price, sale_price, stock, category')
-    .eq('slug', params.slug)
+    .select('*')
+    .eq('slug', slug)
+    .eq('published', true)
     .single();
+  return (data as Product) || null;
+});
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const p = await getProduct(params.slug);
   if (!p) notFound();
   const img = p.images?.[0] ?? '';
   // short = English meta description (new products) or Thai name (legacy) — use if English
-  const isEnglishShort = p.short && !/[฀-๿]/.test(p.short);
+  const isEnglishShort = p.short && !/[ก-๙]/.test(p.short);
   const desc = (isEnglishShort ? p.short : null)
     || p.description?.slice(0, 160)
     || p.name;
@@ -45,18 +54,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  noStore();
+  const p = await getProduct(params.slug);
+  if (!p) notFound();
+
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('slug', params.slug)
-    .eq('published', true)
-    .single();
 
-  if (error || !data) notFound();
-
-  const p = data as Product;
   const price = (p.sale_price ?? p.price) / 100;
 
   const productUrl = `${siteUrl}/product/${p.slug}`;
