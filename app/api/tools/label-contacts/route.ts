@@ -55,15 +55,16 @@ export async function POST(req: Request) {
   const body = await req.json();
   
   const processItem = (item: any) => {
+    const id = item.id || `${item.type || 'contact'}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     if (item.type === 'sender' && !item.text) {
       return {
-        id: item.id,
+        id,
         type: item.type,
         name: item.name,
         text: JSON.stringify({ phone: item.phone, address: item.address })
       };
     }
-    return item;
+    return { ...item, id: item.id || id };
   };
 
   if (Array.isArray(body)) {
