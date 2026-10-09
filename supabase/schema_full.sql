@@ -99,6 +99,8 @@ create table if not exists public.june_products (
   mark_ig         boolean default false,
   mark_shopee2    boolean default false,
   mark_thaimart   boolean default false,
+  mark_nexgen     boolean default false,
+  mark_ennxo      boolean default false,
   name_shopee2    text,
   name_lazada     text,
   name_facebook   text,
