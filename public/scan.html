@@ -23,15 +23,8 @@
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
   import { pipeline, env, RawImage } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/+esm';
 
-  const SUPABASE_URL = 'https://woieynotnkdgjsopknwz.supabase.co';
-  // Use the ANON key that has access to insert/update if RLS allows, or the service key if needed. 
-  // We'll use the service key just to be safe for updates since this is run locally by the admin.
-  // Warning: Normally don't put service role keys in HTML, but this is a temporary local file!
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvaWV5bm90bmtkZ2pzb3Brbnd6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODYzNDcyMiwiZXhwIjoyMDk0MjEwNzIyfQ.X9x6LwPZbR8d32yVqA8C23g51R1K3pT95s9jZlFm-3I'; 
-  // Wait, I don't have the real service key. I will use the ANON key, but if RLS prevents updates, it might fail.
-  // Wait, earlier I saw the user's `thaimart_update.mjs` using NEXT_PUBLIC_SUPABASE_ANON_KEY and it worked for updates? 
-  // Let me just use the anon key.
-  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvaWV5bm90bmtkZ2pzb3Brbnd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MzQ3MjIsImV4cCI6MjA5NDIxMDcyMn0._zrRaNnAsnteofLeTJGLGz4XvTgm8mdMRaVOxnxWf3Y';
+  const SUPABASE_URL = 'https://vipqvizivfzkjdqeuyhu.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpcHF2aXppdmZ6a2pkcWV1eWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NjcxMDEsImV4cCI6MjEwNzA0MzEwMX0.DiPdeXxut6qEP7NFSs4iccr4DMyC1JEoGcF7f_YHbwY';
   
   const supabase = createClient(SUPABASE_URL, ANON_KEY);
 
