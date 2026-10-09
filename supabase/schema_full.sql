@@ -364,17 +364,17 @@ begin
   begin user_id := auth.uid(); exception when others then user_id := null; end;
   if (tg_op = 'DELETE') then
     insert into public.audit_logs (table_name, action, record_id, old_data, changed_by)
-    values (tg_table_name::text, tg_op, old.id::text, row_to_json(old)::jsonb, user_id);
+    values (tg_table_name::text, tg_op, old.id::text, to_jsonb(old), user_id);
     return old;
   elsif (tg_op = 'UPDATE') then
-    if row_to_json(old) is distinct from row_to_json(new) then
+    if to_jsonb(old) is distinct from to_jsonb(new) then
       insert into public.audit_logs (table_name, action, record_id, old_data, new_data, changed_by)
-      values (tg_table_name::text, tg_op, new.id::text, row_to_json(old)::jsonb, row_to_json(new)::jsonb, user_id);
+      values (tg_table_name::text, tg_op, new.id::text, to_jsonb(old), to_jsonb(new), user_id);
     end if;
     return new;
   elsif (tg_op = 'INSERT') then
     insert into public.audit_logs (table_name, action, record_id, new_data, changed_by)
-    values (tg_table_name::text, tg_op, new.id::text, row_to_json(new)::jsonb, user_id);
+    values (tg_table_name::text, tg_op, new.id::text, to_jsonb(new), user_id);
     return new;
   end if;
   return null;

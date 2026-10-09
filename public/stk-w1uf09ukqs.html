@@ -548,7 +548,10 @@
       },
       body: JSON.stringify(params)
     });
-    if (!res.ok) throw new Error('request failed');
+    if (!res.ok) {
+      var errObj = await res.json().catch(function() { return {}; });
+      throw new Error(errObj.message || 'request failed (' + res.status + ')');
+    }
     return res.json();
   }
 
@@ -648,7 +651,7 @@
       }
     } catch (e) {
       editStatus.style.color = 'var(--danger)';
-      editStatus.textContent = 'บันทึกไม่สำเร็จ ลองใหม่';
+      editStatus.textContent = 'บันทึกไม่สำเร็จ: ' + (e.message || 'ลองใหม่');
       btn.textContent = 'บันทึก';
       btn.disabled = false;
     }
