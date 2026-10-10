@@ -29,10 +29,23 @@ export async function GET(req: Request) {
   }
 
   if (user?.id) {
-    if (!next) {
-      const admin = createAdminClient();
-      const { data } = await admin.from('admins').select('user_id').eq('user_id', user.id).maybeSingle();
-      const destination = data ? '/admin' : '/orders';
+    const admin = createAdminClient();
+    // Check if user is an admin by user_id or email
+    const query = user.email
+      ? admin.from('admins').select('*').or(`user_id.eq.${user.id},email.eq.${user.email}`).maybeSingle()
+      : admin.from('admins').select('*').eq('user_id', user.id).maybeSingle();
+
+    const { data: adminRow } = await query;
+
+    if (adminRow) {
+      // Sync user_id if changed (e.g. from Google OAuth first login)
+      if (adminRow.user_id !== user.id && user.email) {
+        await admin
+          .from('admins')
+          .update({ user_id: user.id })
+          .eq('email', user.email);
+      }
+      const destination = next && next.startsWith('/') && !next.startsWith('//') ? next : '/admin';
       return NextResponse.redirect(new URL(destination, url.origin));
     }
   }

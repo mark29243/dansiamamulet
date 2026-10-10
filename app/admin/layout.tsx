@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import AdminNav from './AdminNav';
 import RealtimeRefresh from '@/app/admin/products/RealtimeRefresh';
 
@@ -11,11 +11,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   if (!user) redirect('/signin?next=/admin');
 
-  const { data: admin } = await supabase
-    .from('admins')
-    .select('role, email')
-    .eq('user_id', user.id)
-    .single();
+  const adminClient = createAdminClient();
+  const query = user.email
+    ? adminClient.from('admins').select('role, email, user_id').or(`user_id.eq.${user.id},email.eq.${user.email}`).maybeSingle()
+    : adminClient.from('admins').select('role, email, user_id').eq('user_id', user.id).maybeSingle();
+
+  const { data: admin } = await query;
+
+  if (admin && admin.user_id !== user.id && user.email) {
+    await adminClient.from('admins').update({ user_id: user.id }).eq('email', user.email);
+  }
 
   if (!admin) {
     return (
