@@ -744,6 +744,15 @@
             try {
               var result = await rpcCall('quick_mark_sold', { product_id_input: parseInt(id) });
               if (result === true) {
+                // แจ้งเตือนไปยัง LINE ทันที
+                fetch('/api/notify-sold', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ product_id: parseInt(id) })
+                }).catch(function(err) {
+                  console.error('Notify line error:', err);
+                });
+
                 loadProducts();
               } else {
                 confirmBtn.textContent = 'มีคนขายไปก่อนแล้ว';

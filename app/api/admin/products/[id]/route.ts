@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { notifyGoogleIndex } from '@/lib/google-indexing';
 import { processDraft } from '@/lib/seo';
+import { sendLineSoldNotification } from '@/lib/line';
 
 export const runtime = 'nodejs';
 
@@ -96,6 +97,13 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   if (allowed.published === true && data?.slug) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
     await notifyGoogleIndex(`${siteUrl}/product/${data.slug}`);
+  }
+
+  // Notify LINE if stock was set to 0
+  if (allowed.stock === 0 && data) {
+    sendLineSoldNotification(data).catch((err) => {
+      console.error('[line] Failed to send LINE sold notification:', err);
+    });
   }
 
   return NextResponse.json({ product: data });
