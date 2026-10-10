@@ -112,19 +112,19 @@ export default function SignInContent() {
             </p>
             <form onSubmit={verifyOtp} style={{ textAlign: 'left' }}>
               <label className="label">
-                {lang === 'th' ? 'รหัส OTP 6 หลัก' : lang === 'zh' ? '6位验证码' : '6-digit OTP Code'}<span className="required">*</span>
+                {lang === 'th' ? 'รหัส OTP ยืนยันตัวตน' : lang === 'zh' ? 'OTP 验证码' : 'OTP Code'}<span className="required">*</span>
               </label>
               <input
                 className="input"
                 type="text"
                 inputMode="numeric"
-                maxLength={6}
+                maxLength={8}
                 required
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                 placeholder="123456"
                 autoFocus
-                style={{ fontSize: 24, letterSpacing: 8, textAlign: 'center' }}
+                style={{ fontSize: 24, letterSpacing: 6, textAlign: 'center' }}
               />
               <button type="submit" disabled={loading || otp.length < 6} className="btn-gold" style={{ width: '100%', marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                 {loading ? <><span className="spinner" /> {lang === 'th' ? 'กำลังตรวจสอบ...' : 'Verifying...'}</> : (
