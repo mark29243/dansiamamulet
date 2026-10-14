@@ -11,6 +11,8 @@ const NAV = [
   { href: '/admin', label: 'Dashboard', icon: '◈' },
   { href: '/admin/orders', label: 'Orders', icon: '📦', badge: true },
   { href: '/admin/products', label: 'Products', icon: '🪬' },
+  { href: '/admin/shopee-stock', label: 'Shopee Stock', icon: '🛍️' },
+  { href: '/admin/june-stock', label: 'June Stock', icon: '🏷️' },
   { href: '/admin/accounting', label: 'Accounting', icon: '💰' },
   { href: '/admin/homepage', label: 'Homepage', icon: '🖼️' },
   { href: '/admin/blog', label: 'Blog', icon: '✍︎' },

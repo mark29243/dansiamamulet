@@ -46,7 +46,26 @@ export async function GET(req: Request) {
           .eq('email', user.email);
       }
       const destination = next && next.startsWith('/') && !next.startsWith('//') ? next : '/admin';
-      return NextResponse.redirect(new URL(destination, url.origin));
+      const response = NextResponse.redirect(new URL(destination, url.origin));
+      try {
+        const { signStaffSession } = await import('@/lib/staff-auth');
+        const staffToken = signStaffSession();
+        response.cookies.set('staff_token', staffToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          path: '/',
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+        });
+        response.cookies.set('staff_auth', 'true', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          path: '/',
+          maxAge: 60 * 60 * 24 * 30,
+        });
+      } catch (err) {
+        console.error('Failed to set staff session cookies:', err);
+      }
+      return response;
     }
   }
 

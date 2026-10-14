@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="robots" content="noindex, nofollow" />
 <title>เช็คสต็อก - Dansiamamulets</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --bg: #f7f5f2;
@@ -60,22 +61,76 @@
     border: 1px solid var(--border);
   }
 
-  /* PIN screen */
+  /* PIN & Google screen */
   #pin-screen {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 90vh;
   }
-  .pin-box { text-align: center; padding: 2rem 1rem; }
+  .pin-box { text-align: center; padding: 2rem 1rem; width: 100%; max-width: 320px; }
+  .btn-google {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #ffffff;
+    color: #1f2937;
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: background 0.15s;
+  }
+  .btn-google:active { background: #f3f4f6; }
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .divider span { padding: 0 10px; }
+  .user-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    background: #f4efe5;
+    border: 1px solid #ebd9bf;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #5c4d2e;
+  }
+  .user-header-bar button {
+    background: none;
+    border: 1px solid #d4c4a8;
+    color: #8c6d3b;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+  }
   .pin-box input {
-    width: 220px;
+    width: 100%;
     text-align: center;
     font-size: 16px;
     letter-spacing: 1px;
     margin-top: 8px;
   }
-  .pin-box button { margin-top: 14px; padding: 10px 28px; }
+  .pin-box button#pin-submit { width: 100%; margin-top: 14px; padding: 10px 28px; }
   #pin-error { font-size: 13px; color: var(--danger); margin-top: 10px; min-height: 18px; }
   .icon-lock { font-size: 36px; }
 
@@ -272,15 +327,28 @@
   <div id="pin-screen">
     <div class="pin-box">
       <div class="icon-lock">🔒</div>
-      <p style="font-size: 15px; font-weight: 500; margin: 12px 0 4px;">ใส่ PIN เพื่อเข้าใช้งาน</p>
-      <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">ใช้ PIN เดียวกันทั้งทีม</p>
-      <input type="password" id="pin-input" maxlength="32" placeholder="PIN" />
+      <p style="font-size: 16px; font-weight: 600; margin: 12px 0 4px;">เข้าใช้งานระบบสต็อก DanSiam</p>
+      <p style="font-size: 13px; color: var(--text-secondary); margin: 0 0 16px;">กดเข้าสู่ระบบด้วย Google ได้ทันที</p>
+
+      <button id="google-login-btn" type="button" class="btn-google">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        เข้าสู่ระบบด้วย Google
+      </button>
+
+      <div class="divider"><span>หรือใส่ PIN</span></div>
+
+      <input type="password" id="pin-input" maxlength="32" placeholder="PIN สำหรับทีมงาน" />
       <div id="pin-error"></div>
-      <button id="pin-submit">เข้าใช้งาน</button>
+      <button id="pin-submit">เข้าใช้งานด้วย PIN</button>
     </div>
   </div>
 
   <div id="main-screen" style="display: none;">
+    <div id="user-header-bar" class="user-header-bar" style="display: none;">
+      <span id="user-badge-text">👤 กำลังตรวจสอบ...</span>
+      <button type="button" id="logout-btn">ออกจากระบบ</button>
+    </div>
+
     <div class="header">
       <h1>เช็คสต็อกสินค้า</h1>
       <p>Dansiamamulets — สำหรับทีมขาย</p>
@@ -391,10 +459,15 @@
   var currentItems = [];
   var currentEditPlatforms = {}; // key -> true ถ้าช่องนี้ถูกแสดงอยู่ในแผงแก้ไข
 
-  // จำสถานะ login ไว้ในเครื่อง ไม่ต้องใส่ PIN ซ้ำทุกครั้ง
-  function showMain() {
+  function showMain(email) {
     pinScreen.style.display = 'none';
     mainScreen.style.display = 'block';
+    var userBar = document.getElementById('user-header-bar');
+    var badgeText = document.getElementById('user-badge-text');
+    if (userBar && badgeText) {
+      userBar.style.display = 'flex';
+      badgeText.textContent = email ? '👤 ' + email : '👤 ทีมสต็อก DanSiam';
+    }
     loadDashboard();
     loadProducts();
   }
@@ -510,11 +583,85 @@
     paginationRow.appendChild(nextBtn);
   }
 
-  try {
-    if (localStorage.getItem(PIN_STORAGE_KEY) === '1') {
-      showMain();
+  var ALLOWED_EMAILS = [
+    'mark.29243@gmail.com',
+    'phatsara7962@gmail.com',
+    'jarunpimpru@gmail.com'
+  ];
+
+  var supabaseClient = null;
+  if (window.supabase) {
+    try {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    } catch (e) {
+      console.error('Supabase init error:', e);
     }
-  } catch (e) {}
+  }
+
+  async function checkSession() {
+    if (supabaseClient) {
+      try {
+        var { data } = await supabaseClient.auth.getSession();
+        if (data && data.session && data.session.user && data.session.user.email) {
+          var email = data.session.user.email.toLowerCase();
+          if (ALLOWED_EMAILS.indexOf(email) !== -1) {
+            showMain(email);
+            return;
+          } else {
+            pinError.textContent = 'อีเมล ' + email + ' ไม่มีสิทธิ์เข้าใช้งานระบบสต็อกนี้';
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Session check error:', err);
+      }
+    }
+
+    try {
+      if (localStorage.getItem(PIN_STORAGE_KEY) === '1') {
+        showMain();
+      }
+    } catch (e) {}
+  }
+
+  checkSession();
+
+  var googleBtn = document.getElementById('google-login-btn');
+  if (googleBtn) {
+    googleBtn.addEventListener('click', async function() {
+      if (!supabaseClient) {
+        pinError.textContent = 'กำลังโหลดระบบ Google กรุณารอสักครู่หรือใช้ PIN';
+        return;
+      }
+      googleBtn.disabled = true;
+      googleBtn.innerHTML = 'กำลังเปิดหน้าล็อกอิน Google...';
+      try {
+        var cleanUrl = window.location.href.split('#')[0];
+        var res = await supabaseClient.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: cleanUrl
+          }
+        });
+        if (res.error) throw res.error;
+      } catch (err) {
+        pinError.textContent = err.message || 'ไม่สามารถล็อกอินด้วย Google ได้';
+        googleBtn.disabled = false;
+        googleBtn.innerHTML = 'เข้าสู่ระบบด้วย Google';
+      }
+    });
+  }
+
+  var logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async function() {
+      if (supabaseClient) {
+        try { await supabaseClient.auth.signOut(); } catch (e) {}
+      }
+      try { localStorage.removeItem(PIN_STORAGE_KEY); } catch (e) {}
+      window.location.reload();
+    });
+  }
 
   function checkPin() {
     var val = pinInput.value.trim();

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import { createAdminClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import ShopeeStockClient from '@/app/admin/shopee-stock/ShopeeStockClient';
 import { verifyStaffSession } from '@/lib/staff-auth';
 
@@ -9,7 +9,22 @@ export const dynamic = 'force-dynamic';
 export default async function StaffStockPage() {
   const cookieStore = cookies();
   const staffToken = cookieStore.get('staff_token')?.value;
-  const isStaff = verifyStaffSession(staffToken) || cookieStore.get('staff_auth')?.value === 'true';
+  let isStaff = verifyStaffSession(staffToken) || cookieStore.get('staff_auth')?.value === 'true';
+
+  if (!isStaff) {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.id) {
+      const adminClient = createAdminClient();
+      const query = user.email
+        ? adminClient.from('admins').select('role').or(`user_id.eq.${user.id},email.eq.${user.email}`).maybeSingle()
+        : adminClient.from('admins').select('role').eq('user_id', user.id).maybeSingle();
+      const { data: admin } = await query;
+      if (admin) {
+        isStaff = true;
+      }
+    }
+  }
 
   if (!isStaff) {
     redirect('/staff/login');
