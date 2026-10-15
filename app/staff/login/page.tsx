@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 export default function StaffLoginPage() {
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [targetDestination, setTargetDestination] = useState('/staff/stock');
   const router = useRouter();
@@ -54,49 +52,24 @@ export default function StaffLoginPage() {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      const res = await fetch('/api/staff/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      
-      const data = await res.json();
-      
-      if (res.ok) {
-        router.push(targetDestination);
-      } else {
-        setError(data.error || 'รหัสผ่านไม่ถูกต้อง');
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const isJuneTarget = targetDestination.includes('june');
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F9F7F4', padding: '16px' }}>
-      <div style={{ background: 'white', padding: '36px 32px', borderRadius: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', maxWidth: 420, width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: 20 }}>
-          <div style={{ fontSize: 44, marginBottom: 12 }}>🔒</div>
+      <div style={{ background: 'white', padding: '40px 32px', borderRadius: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', maxWidth: 420, width: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{ fontSize: 48, marginBottom: 14 }}>🔒</div>
           <h1 style={{ fontSize: 22, fontWeight: 'bold', color: '#111', margin: 0 }}>
-            {isJuneTarget ? '📦 ระบบสต็อก June' : '📦 ระบบจัดการสต็อก DanSiam'}
+            {isJuneTarget ? '📦 ระบบสต็อก June' : '📦 ระบบสต็อก DanSiam'}
           </h1>
-          <p style={{ color: '#666', marginTop: 6, fontSize: 13 }}>
-            {isJuneTarget ? 'สำหรับคุณ June & ทีมงาน' : 'สำหรับ Mark & ทีมงาน DanSiam'}
+          <p style={{ color: '#666', marginTop: 8, fontSize: 13, lineHeight: 1.5 }}>
+            เฉพาะทีมงาน DanSiam Amulets<br />
+            (ยืนยันตัวตนด้วยบัญชี Google ที่ได้รับสิทธิ์)
           </p>
         </div>
 
         {/* Tab switcher: Mark vs June */}
-        <div style={{ display: 'flex', gap: 6, background: '#F5F5F4', padding: 4, borderRadius: 10, marginBottom: 20 }}>
+        <div style={{ display: 'flex', gap: 6, background: '#F5F5F4', padding: 4, borderRadius: 10, marginBottom: 24 }}>
           <button
             type="button"
             onClick={() => setTargetDestination('/staff/stock')}
@@ -141,7 +114,7 @@ export default function StaffLoginPage() {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={googleLoading || loading}
+          disabled={googleLoading}
           style={{
             width: '100%',
             display: 'flex',
@@ -155,7 +128,7 @@ export default function StaffLoginPage() {
             color: '#1A1208',
             fontSize: 15,
             fontWeight: 600,
-            cursor: (googleLoading || loading) ? 'not-allowed' : 'pointer',
+            cursor: googleLoading ? 'not-allowed' : 'pointer',
             transition: 'background 0.15s, border-color 0.15s',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
           }}
@@ -169,44 +142,15 @@ export default function StaffLoginPage() {
           {googleLoading ? 'กำลังเปิดหน้าล็อกอิน Google...' : 'เข้าสู่ระบบด้วย Google'}
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', color: '#999', fontSize: 13 }}>
-          <div style={{ flex: 1, height: '1px', background: '#EDEBE8' }} />
-          <span style={{ padding: '0 12px' }}>หรือใส่รหัสผ่าน</span>
-          <div style={{ flex: 1, height: '1px', background: '#EDEBE8' }} />
+        {error && (
+          <div style={{ marginTop: 16, color: '#dc2626', fontSize: 13, textAlign: 'center', background: '#fef2f2', padding: '10px 12px', borderRadius: 8, border: '1px solid #fecaca' }}>
+            {error}
+          </div>
+        )}
+
+        <div style={{ marginTop: 24, textAlign: 'center', fontSize: 12, color: '#9CA3AF' }}>
+          DanSiam Amulets Team Portal
         </div>
-
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <input
-            type="password"
-            placeholder="รหัสผ่านทีมงาน"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: '12px 16px', fontSize: 18, textAlign: 'center', borderRadius: 8, border: '1px solid #ddd', outline: 'none' }}
-          />
-          
-          {error && (
-            <div style={{ color: '#dc2626', fontSize: 13, textAlign: 'center', background: '#fef2f2', padding: 8, borderRadius: 6 }}>
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading || !password}
-            style={{
-              padding: 14,
-              background: loading ? '#ccc' : '#1a1a1a',
-              color: 'white',
-              fontSize: 15,
-              fontWeight: 'bold',
-              border: 'none',
-              borderRadius: 8,
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}
-          >
-            {loading ? 'กำลังตรวจสอบ...' : 'เข้าใช้งานด้วยรหัสผ่าน'}
-          </button>
-        </form>
       </div>
     </div>
   );
