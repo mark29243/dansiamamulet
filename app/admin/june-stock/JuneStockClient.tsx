@@ -311,6 +311,92 @@ export default function JuneStockClient({ initialProducts, isStaffRoute = false 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto', padding: '16px', fontFamily: 'sans-serif' }}>
       
+      {/* Staff Top Navigation */}
+      {isStaffRoute && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: '#FFFFFF',
+          border: '1px solid #E5E1DA',
+          borderRadius: 12,
+          padding: '8px 12px',
+          marginBottom: 16,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+          flexWrap: 'wrap',
+          gap: 8
+        }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <a
+              href="/staff/stock"
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                padding: '6px 12px',
+                borderRadius: 8,
+                textDecoration: 'none',
+                background: '#F5F5F4',
+                color: '#44403C'
+              }}
+            >
+              📦 สต็อก Mark
+            </a>
+            <a
+              href="/staff/june-stock"
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                padding: '6px 12px',
+                borderRadius: 8,
+                textDecoration: 'none',
+                background: '#92400E',
+                color: '#FFFFFF'
+              }}
+            >
+              🏷️ สต็อก June
+            </a>
+            <a
+              href="/stk-w1uf09ukqs.html"
+              target="_blank"
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                padding: '6px 12px',
+                borderRadius: 8,
+                textDecoration: 'none',
+                background: '#F5F5F4',
+                color: '#44403C'
+              }}
+            >
+              🔍 เช็คสต็อก (stk)
+            </a>
+          </div>
+
+          <button
+            type="button"
+            onClick={async () => {
+              if (confirm('ต้องการออกจากระบบใช่หรือไม่?')) {
+                try { await fetch('/api/staff/logout', { method: 'POST' }); } catch (e) {}
+                const { createClient } = await import('@/lib/supabase/client');
+                try { await createClient().auth.signOut(); } catch (e) {}
+                window.location.href = '/staff/login?next=/staff/june-stock';
+              }
+            }}
+            style={{
+              fontSize: 11,
+              color: '#78716C',
+              background: 'none',
+              border: '1px solid #D6D3D1',
+              borderRadius: 6,
+              padding: '4px 10px',
+              cursor: 'pointer'
+            }}
+          >
+            ออกจากระบบ
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: 24, fontWeight: 'bold', margin: 0, color: '#111' }}>📦 ศูนย์รวมสต็อกของ June</h1>

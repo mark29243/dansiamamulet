@@ -11,23 +11,30 @@ export default async function StaffStockPage() {
   const staffToken = cookieStore.get('staff_token')?.value;
   let isStaff = verifyStaffSession(staffToken) || cookieStore.get('staff_auth')?.value === 'true';
 
+  const ALLOWED_STAFF = ['mark.29243@gmail.com', 'phatsara7962@gmail.com', 'jarunpimpru@gmail.com'];
+
   if (!isStaff) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user?.id) {
-      const adminClient = createAdminClient();
-      const query = user.email
-        ? adminClient.from('admins').select('role').or(`user_id.eq.${user.id},email.eq.${user.email}`).maybeSingle()
-        : adminClient.from('admins').select('role').eq('user_id', user.id).maybeSingle();
-      const { data: admin } = await query;
-      if (admin) {
+      const cleanEmail = user.email ? user.email.toLowerCase().trim() : '';
+      if (ALLOWED_STAFF.includes(cleanEmail)) {
         isStaff = true;
+      } else {
+        const adminClient = createAdminClient();
+        const query = cleanEmail
+          ? adminClient.from('admins').select('role').or(`user_id.eq.${user.id},email.ilike.${cleanEmail}`).maybeSingle()
+          : adminClient.from('admins').select('role').eq('user_id', user.id).maybeSingle();
+        const { data: admin } = await query;
+        if (admin) {
+          isStaff = true;
+        }
       }
     }
   }
 
   if (!isStaff) {
-    redirect('/staff/login');
+    redirect('/staff/login?next=/staff/stock');
   }
 
   const admin = createAdminClient();

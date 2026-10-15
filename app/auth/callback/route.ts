@@ -74,20 +74,20 @@ export async function GET(req: Request) {
   if (user?.id) {
     const admin = createAdminClient();
     const cleanEmail = user.email ? user.email.toLowerCase().trim() : '';
+    const ALLOWED_STAFF = ['mark.29243@gmail.com', 'phatsara7962@gmail.com', 'jarunpimpru@gmail.com'];
 
     const { data: adminRow } = cleanEmail
       ? await admin.from('admins').select('*').or(`user_id.eq.${user.id},email.ilike.${cleanEmail}`).maybeSingle()
       : await admin.from('admins').select('*').eq('user_id', user.id).maybeSingle();
 
-    if (adminRow) {
+    if (adminRow || ALLOWED_STAFF.includes(cleanEmail)) {
       isStaffOrAdmin = true;
-      if (adminRow.user_id !== user.id && cleanEmail) {
+      if (cleanEmail && (!adminRow || adminRow.user_id !== user.id)) {
         await admin
           .from('admins')
-          .update({ user_id: user.id })
-          .eq('email', cleanEmail);
+          .upsert({ user_id: user.id, email: cleanEmail, role: adminRow?.role || 'admin' }, { onConflict: 'email' });
       }
-      finalDestination = next && next.startsWith('/') && !next.startsWith('//') ? next : '/admin';
+      finalDestination = next && next.startsWith('/') && !next.startsWith('//') ? next : '/staff/stock';
     }
   }
 

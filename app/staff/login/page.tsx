@@ -9,11 +9,15 @@ export default function StaffLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [targetDestination, setTargetDestination] = useState('/staff/stock');
   const router = useRouter();
 
-  // If already logged in as admin/staff, auto redirect, or check error query
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const nextParam = params.get('next');
+    if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) {
+      setTargetDestination(nextParam);
+    }
     const err = params.get('error');
     if (err) {
       setError(decodeURIComponent(err));
@@ -22,7 +26,8 @@ export default function StaffLoginPage() {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user?.email && !err) {
-        router.push('/staff/stock');
+        const dest = nextParam && nextParam.startsWith('/') ? nextParam : '/staff/stock';
+        router.push(dest);
       }
     });
   }, [router]);
@@ -30,18 +35,22 @@ export default function StaffLoginPage() {
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     setError('');
+    const dest = targetDestination || '/staff/stock';
+    const callbackUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(dest)}`;
+
     try {
       const supabase = createClient();
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/staff/stock`
+          redirectTo: callbackUrl
         }
       });
       if (oauthError) throw oauthError;
     } catch (err: any) {
-      setError(err.message || 'ไม่สามารถเข้าสู่ระบบด้วย Google ได้');
-      setGoogleLoading(false);
+      // Fallback direct URL redirect in case client SDK is slow or fails
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://vipqvizivfzkjdqeuyhu.supabase.co';
+      window.location.href = `${supabaseUrl}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(callbackUrl)}`;
     }
   };
 
@@ -60,7 +69,7 @@ export default function StaffLoginPage() {
       const data = await res.json();
       
       if (res.ok) {
-        router.push('/staff/stock');
+        router.push(targetDestination);
       } else {
         setError(data.error || 'รหัสผ่านไม่ถูกต้อง');
       }
@@ -71,13 +80,61 @@ export default function StaffLoginPage() {
     }
   };
 
+  const isJuneTarget = targetDestination.includes('june');
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F9F7F4' }}>
-      <div style={{ background: 'white', padding: 40, borderRadius: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', maxWidth: 400, width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
-          <h1 style={{ fontSize: 24, fontWeight: 'bold', color: '#111', margin: 0 }}>ระบบจัดการสต็อก</h1>
-          <p style={{ color: '#666', marginTop: 8, fontSize: 14 }}>เข้าสู่ระบบสำหรับทีมงาน DanSiam</p>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F9F7F4', padding: '16px' }}>
+      <div style={{ background: 'white', padding: '36px 32px', borderRadius: 16, boxShadow: '0 4px 20px rgba(0,0,0,0.05)', maxWidth: 420, width: '100%' }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <div style={{ fontSize: 44, marginBottom: 12 }}>🔒</div>
+          <h1 style={{ fontSize: 22, fontWeight: 'bold', color: '#111', margin: 0 }}>
+            {isJuneTarget ? '📦 ระบบสต็อก June' : '📦 ระบบจัดการสต็อก DanSiam'}
+          </h1>
+          <p style={{ color: '#666', marginTop: 6, fontSize: 13 }}>
+            {isJuneTarget ? 'สำหรับคุณ June & ทีมงาน' : 'สำหรับ Mark & ทีมงาน DanSiam'}
+          </p>
+        </div>
+
+        {/* Tab switcher: Mark vs June */}
+        <div style={{ display: 'flex', gap: 6, background: '#F5F5F4', padding: 4, borderRadius: 10, marginBottom: 20 }}>
+          <button
+            type="button"
+            onClick={() => setTargetDestination('/staff/stock')}
+            style={{
+              flex: 1,
+              padding: '8px 10px',
+              fontSize: 13,
+              fontWeight: 600,
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer',
+              background: !isJuneTarget ? '#FFFFFF' : 'transparent',
+              color: !isJuneTarget ? '#92400E' : '#78716C',
+              boxShadow: !isJuneTarget ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              transition: 'all 0.15s'
+            }}
+          >
+            📦 สต็อก Mark
+          </button>
+          <button
+            type="button"
+            onClick={() => setTargetDestination('/staff/june-stock')}
+            style={{
+              flex: 1,
+              padding: '8px 10px',
+              fontSize: 13,
+              fontWeight: 600,
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer',
+              background: isJuneTarget ? '#FFFFFF' : 'transparent',
+              color: isJuneTarget ? '#92400E' : '#78716C',
+              boxShadow: isJuneTarget ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              transition: 'all 0.15s'
+            }}
+          >
+            🏷️ สต็อก June
+          </button>
         </div>
 
         {/* Google 1-Click Login Button */}
@@ -93,7 +150,7 @@ export default function StaffLoginPage() {
             gap: 10,
             padding: '14px 16px',
             border: '1px solid #D5D1C8',
-            borderRadius: 8,
+            borderRadius: 10,
             background: '#ffffff',
             color: '#1A1208',
             fontSize: 15,
@@ -109,7 +166,7 @@ export default function StaffLoginPage() {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
           </svg>
-          {googleLoading ? 'กำลังเชื่อมต่อ Google...' : 'เข้าสู่ระบบด้วย Google'}
+          {googleLoading ? 'กำลังเปิดหน้าล็อกอิน Google...' : 'เข้าสู่ระบบด้วย Google'}
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', color: '#999', fontSize: 13 }}>
@@ -118,18 +175,17 @@ export default function StaffLoginPage() {
           <div style={{ flex: 1, height: '1px', background: '#EDEBE8' }} />
         </div>
 
-        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <input
             type="password"
-            placeholder="รหัสผ่าน 6 หลัก"
+            placeholder="รหัสผ่านทีมงาน"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ padding: '12px 16px', fontSize: 24, letterSpacing: '0.2em', textAlign: 'center', borderRadius: 8, border: '1px solid #ddd', outline: 'none' }}
-            autoFocus
+            style={{ padding: '12px 16px', fontSize: 18, textAlign: 'center', borderRadius: 8, border: '1px solid #ddd', outline: 'none' }}
           />
           
           {error && (
-            <div style={{ color: '#dc2626', fontSize: 14, textAlign: 'center', background: '#fef2f2', padding: 8, borderRadius: 6 }}>
+            <div style={{ color: '#dc2626', fontSize: 13, textAlign: 'center', background: '#fef2f2', padding: 8, borderRadius: 6 }}>
               {error}
             </div>
           )}
@@ -138,17 +194,17 @@ export default function StaffLoginPage() {
             type="submit"
             disabled={loading || !password}
             style={{
-              padding: 16,
+              padding: 14,
               background: loading ? '#ccc' : '#1a1a1a',
               color: 'white',
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: 'bold',
               border: 'none',
               borderRadius: 8,
               cursor: loading ? 'not-allowed' : 'pointer'
             }}
           >
-            {loading ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบด้วยรหัสผ่าน'}
+            {loading ? 'กำลังตรวจสอบ...' : 'เข้าใช้งานด้วยรหัสผ่าน'}
           </button>
         </form>
       </div>
