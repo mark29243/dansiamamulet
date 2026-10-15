@@ -11,11 +11,17 @@ export default function StaffLoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
 
-  // If already logged in as admin/staff, auto redirect
+  // If already logged in as admin/staff, auto redirect, or check error query
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get('error');
+    if (err) {
+      setError(decodeURIComponent(err));
+    }
+
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user?.email) {
+      if (user?.email && !err) {
         router.push('/staff/stock');
       }
     });

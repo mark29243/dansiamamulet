@@ -598,12 +598,38 @@
     }
   }
 
+  // ตรวจจับ Error จาก OAuth ที่ส่งกลับมาทาง Hash หรือ Search
+  try {
+    var hashStr = window.location.hash ? window.location.hash.substring(1) : '';
+    var searchStr = window.location.search ? window.location.search.substring(1) : '';
+    var hashParams = new URLSearchParams(hashStr);
+    var searchParams = new URLSearchParams(searchStr);
+    var oauthError = hashParams.get('error_description') || hashParams.get('error') || searchParams.get('error_description') || searchParams.get('error');
+    if (oauthError) {
+      pinError.textContent = 'เข้าสู่ระบบ Google ไม่สำเร็จ: ' + decodeURIComponent(oauthError.replace(/\+/g, ' '));
+    }
+  } catch (e) {}
+
+  if (supabaseClient) {
+    // ดักจับการเข้าสู่ระบบแบบเรียลไทม์ (เมื่อ Google redirect กลับมาพร้อม token)
+    supabaseClient.auth.onAuthStateChange(function(event, session) {
+      if (session && session.user && session.user.email) {
+        var email = session.user.email.toLowerCase().trim();
+        if (ALLOWED_EMAILS.indexOf(email) !== -1) {
+          showMain(email);
+        } else {
+          pinError.textContent = 'อีเมล ' + email + ' ไม่มีสิทธิ์เข้าใช้งานระบบสต็อกนี้';
+        }
+      }
+    });
+  }
+
   async function checkSession() {
     if (supabaseClient) {
       try {
         var { data } = await supabaseClient.auth.getSession();
         if (data && data.session && data.session.user && data.session.user.email) {
-          var email = data.session.user.email.toLowerCase();
+          var email = data.session.user.email.toLowerCase().trim();
           if (ALLOWED_EMAILS.indexOf(email) !== -1) {
             showMain(email);
             return;
@@ -629,6 +655,11 @@
   var googleBtn = document.getElementById('google-login-btn');
   if (googleBtn) {
     googleBtn.addEventListener('click', async function() {
+      if (window.location.protocol === 'file:') {
+        pinError.innerHTML = '⚠️ ไม่สามารถใช้ Google Login บนไฟล์ในเครื่องได้โดยตรง<br>กรุณาเข้าผ่านเว็บ: <a href="https://dansiamamulets.com/stk-w1uf09ukqs.html" target="_blank" style="color:var(--gold);text-decoration:underline;">dansiamamulets.com/stk-w1uf09ukqs.html</a> หรือใช้ PIN ด้านล่าง';
+        return;
+      }
+
       if (!supabaseClient) {
         pinError.textContent = 'กำลังโหลดระบบ Google กรุณารอสักครู่หรือใช้ PIN';
         return;
@@ -636,7 +667,7 @@
       googleBtn.disabled = true;
       googleBtn.innerHTML = 'กำลังเปิดหน้าล็อกอิน Google...';
       try {
-        var cleanUrl = window.location.href.split('#')[0];
+        var cleanUrl = window.location.origin + window.location.pathname;
         var res = await supabaseClient.auth.signInWithOAuth({
           provider: 'google',
           options: {
