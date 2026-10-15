@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="robots" content="noindex, nofollow" />
 <title>เช็คสต็อก - Dansiamamulets</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase.js"></script>
+<script>
+  if (!window.supabase) {
+    document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');
+  }
+</script>
 <style>
   :root {
     --bg: #f7f5f2;
@@ -590,12 +595,15 @@
   ];
 
   var supabaseClient = null;
-  if (window.supabase) {
-    try {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    } catch (e) {
-      console.error('Supabase init error:', e);
+  function getSupabase() {
+    if (!supabaseClient && window.supabase && typeof window.supabase.createClient === 'function') {
+      try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      } catch (e) {
+        console.error('Supabase init error:', e);
+      }
     }
+    return supabaseClient;
   }
 
   // ตรวจจับ Error จาก OAuth ที่ส่งกลับมาทาง Hash หรือ Search
@@ -610,24 +618,29 @@
     }
   } catch (e) {}
 
-  if (supabaseClient) {
-    // ดักจับการเข้าสู่ระบบแบบเรียลไทม์ (เมื่อ Google redirect กลับมาพร้อม token)
-    supabaseClient.auth.onAuthStateChange(function(event, session) {
-      if (session && session.user && session.user.email) {
-        var email = session.user.email.toLowerCase().trim();
-        if (ALLOWED_EMAILS.indexOf(email) !== -1) {
-          showMain(email);
-        } else {
-          pinError.textContent = 'อีเมล ' + email + ' ไม่มีสิทธิ์เข้าใช้งานระบบสต็อกนี้';
+  function setupAuthListener() {
+    var client = getSupabase();
+    if (client && !client._listenerAttached) {
+      client._listenerAttached = true;
+      client.auth.onAuthStateChange(function(event, session) {
+        if (session && session.user && session.user.email) {
+          var email = session.user.email.toLowerCase().trim();
+          if (ALLOWED_EMAILS.indexOf(email) !== -1) {
+            showMain(email);
+          } else {
+            pinError.textContent = 'อีเมล ' + email + ' ไม่มีสิทธิ์เข้าใช้งานระบบสต็อกนี้';
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   async function checkSession() {
-    if (supabaseClient) {
+    var client = getSupabase();
+    if (client) {
+      setupAuthListener();
       try {
-        var { data } = await supabaseClient.auth.getSession();
+        var { data } = await client.auth.getSession();
         if (data && data.session && data.session.user && data.session.user.email) {
           var email = data.session.user.email.toLowerCase().trim();
           if (ALLOWED_EMAILS.indexOf(email) !== -1) {
@@ -650,7 +663,11 @@
     } catch (e) {}
   }
 
+  // พยายามตรวจจับ session ทันที และซ้ำอีกครั้งหากสคริปต์โหลดเสร็จทีหลัง
   checkSession();
+  window.addEventListener('load', function() {
+    checkSession();
+  });
 
   var googleBtn = document.getElementById('google-login-btn');
   if (googleBtn) {
@@ -660,15 +677,37 @@
         return;
       }
 
-      if (!supabaseClient) {
-        pinError.textContent = 'กำลังโหลดระบบ Google กรุณารอสักครู่หรือใช้ PIN';
+      var client = getSupabase();
+      if (!client) {
+        googleBtn.disabled = true;
+        googleBtn.innerHTML = 'กำลังเชื่อมต่อ Google...';
+        var attempts = 0;
+        var retryTimer = setInterval(async function() {
+          attempts++;
+          var c = getSupabase();
+          if (c) {
+            clearInterval(retryTimer);
+            googleBtn.disabled = false;
+            triggerGoogleLogin(c);
+          } else if (attempts >= 10) {
+            clearInterval(retryTimer);
+            googleBtn.disabled = false;
+            googleBtn.innerHTML = 'เข้าสู่ระบบด้วย Google';
+            pinError.textContent = 'ระบบ Google ใช้เวลานาน แนะนำให้ใส่ PIN 6 หลักเพื่อเข้าใช้งานทันทีครับ';
+          }
+        }, 300);
         return;
       }
+
+      triggerGoogleLogin(client);
+    });
+
+    async function triggerGoogleLogin(client) {
       googleBtn.disabled = true;
       googleBtn.innerHTML = 'กำลังเปิดหน้าล็อกอิน Google...';
       try {
         var cleanUrl = window.location.origin + window.location.pathname;
-        var res = await supabaseClient.auth.signInWithOAuth({
+        var res = await client.auth.signInWithOAuth({
           provider: 'google',
           options: {
             redirectTo: cleanUrl
@@ -680,7 +719,7 @@
         googleBtn.disabled = false;
         googleBtn.innerHTML = 'เข้าสู่ระบบด้วย Google';
       }
-    });
+    }
   }
 
   var logoutBtn = document.getElementById('logout-btn');
