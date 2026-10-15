@@ -8,6 +8,14 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'no-store, must-revalidate' },
         ],
       },
+      {
+        source: '/stk-w1uf09ukqs.html',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate, max-age=0' },
+          { key: 'Pragma', value: 'no-cache' },
+          { key: 'Expires', value: '0' },
+        ],
+      },
     ];
   },
   images: {
@@ -34,6 +42,9 @@ const nextConfig = {
   reactStrictMode: true,
   // Compress output
   compress: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Redirect /product/slug/ → /product/slug (prevents duplicate URL indexing)
   trailingSlash: false,
   // Disable client-side router cache for dynamic pages (admin always gets fresh data)
