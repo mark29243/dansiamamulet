@@ -887,18 +887,24 @@
           wrapper.querySelector('.confirm-yes').addEventListener('click', async function() {
             var confirmBtn = this;
             confirmBtn.disabled = true;
-            confirmBtn.textContent = 'กำลังบันทึก...';
+            confirmBtn.textContent = 'กำลังบันทึกและแจ้งเตือน LINE...';
             try {
               var result = await rpcCall('quick_mark_sold', { product_id_input: parseInt(id) });
               if (result === true) {
-                // แจ้งเตือนไปยัง LINE ทันที
-                fetch('/api/notify-sold', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ product_id: parseInt(id) })
-                }).catch(function(err) {
+                // แจ้งเตือนไปยัง LINE ทันที (รองรับทั้งเปิดตรงในเว็บ, localhost และเปิดไฟล์ตรง file://)
+                var notifyUrl = (window.location.protocol === 'https:' || window.location.protocol === 'http:') && window.location.hostname === 'dansiamamulets.com'
+                  ? '/api/notify-sold'
+                  : 'https://dansiamamulets.com/api/notify-sold';
+
+                try {
+                  await fetch(notifyUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: parseInt(id) })
+                  });
+                } catch (err) {
                   console.error('Notify line error:', err);
-                });
+                }
 
                 loadProducts();
               } else {
