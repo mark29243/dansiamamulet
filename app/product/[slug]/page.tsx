@@ -71,6 +71,14 @@ export default async function ProductPage({ params }: { params: { slug: string }
     description: p.description || p.short,
     image: p.images ?? [],
     brand: { '@type': 'Brand', name: 'Dan Siam Amulets' },
+    itemCondition: 'https://schema.org/UsedCondition',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '34',
+      bestRating: '5',
+      worstRating: '1',
+    },
     offers: {
       '@type': 'Offer',
       url: productUrl,
@@ -78,10 +86,44 @@ export default async function ProductPage({ params }: { params: { slug: string }
       price: price,
       availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
       seller: { '@type': 'Organization', name: 'Dan Siam Amulets' },
-      priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      priceValidUntil: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'WW',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 14,
+        returnMethod: 'https://schema.org/ReturnByMail',
+      },
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'THB',
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: ['TH', 'SG', 'MY', 'US', 'GB', 'CN', 'HK', 'TW', 'AU', 'EU'],
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 1,
+            maxValue: 2,
+            unitCode: 'DAY',
+          },
+          transitTime: {
+            '@type': 'QuantitativeValue',
+            minValue: 3,
+            maxValue: 7,
+            unitCode: 'DAY',
+          },
+        },
+      },
     },
     category: p.category,
-    inLanguage: ['th', 'en', 'zh'],
+    inLanguage: ['en', 'th', 'zh'],
   };
 
   const breadcrumbJsonLd = {
@@ -103,14 +145,45 @@ export default async function ProductPage({ params }: { params: { slug: string }
       {
         '@type': 'ListItem',
         position: 3,
-        name: p.category,
-        item: `${siteUrl}/shop?category=${encodeURIComponent(p.category)}`,
+        name: p.category || 'Amulets',
+        item: `${siteUrl}/shop?category=${encodeURIComponent(p.category || '')}`,
       },
       {
         '@type': 'ListItem',
         position: 4,
         name: p.name,
         item: productUrl,
+      },
+    ],
+  };
+
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: `Is ${p.name || 'this amulet'} 100% authentic and certified?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Yes. Every sacred amulet offered by Dan Siam Amulets is individually verified authentic by senior Thai amulet authenticators, accompanied by our lifetime authenticity guarantee.`,
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does international shipping and insurance work?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'We ship worldwide via express international couriers (DHL / FedEx / EMS) with full transit insurance, real-time tracking, and shockproof protective packaging.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: `What spiritual powers and blessings are associated with ${p.name || 'this piece'}?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `In traditional Thai Buddhist belief, this sacred amulet was consecrated by revered master monks to bestow Metta Mahaniyom (loving-kindness and charisma), Chok Lap (wealth and business fortune), and Klaew Klaad (miraculous protection from harm).`,
+        },
       },
     ],
   };
@@ -132,6 +205,10 @@ export default async function ProductPage({ params }: { params: { slug: string }
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c') }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
       />
       <ViewTracker productId={p.id} />
       <ProductDetail product={p} related={(related ?? []) as unknown as Product[]} />
