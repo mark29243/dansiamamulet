@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 import './blog.css';
 import BlogGrid from './BlogGrid';
+import BlogHeader from './BlogHeader';
 
 export const revalidate = 60;
 
@@ -22,19 +23,7 @@ export default async function BlogPage() {
 
   return (
     <div className="container" style={{ padding: '40px 24px 80px', maxWidth: 1000 }}>
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 48 }}>
-        <div className="serif" style={{ fontSize: 10, letterSpacing: 5, color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 10 }}>
-          ✦ KNOWLEDGE ✦
-        </div>
-        <h1 className="serif" style={{ fontSize: 32, fontWeight: 500, color: 'var(--text)', marginBottom: 12 }}>
-          ความรู้พระเครื่อง
-        </h1>
-        <p style={{ fontSize: 14, color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto' }}>
-          บทความเกี่ยวกับพระเครื่องไทย ประวัติวัด หลวงพ่อ วิธีบูชา และการสะสม
-        </p>
-      </div>
-
+      <BlogHeader />
       <BlogGrid posts={posts ?? []} />
     </div>
   );

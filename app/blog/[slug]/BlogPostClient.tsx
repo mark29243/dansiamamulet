@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
+import { getDict, getCatName } from '@/lib/i18n';
 
 type BlogPostProps = {
   post: {
@@ -25,6 +26,7 @@ type BlogPostProps = {
 
 export default function BlogPostClient({ post }: BlogPostProps) {
   const { lang } = useLang();
+  const t = getDict(lang);
 
   // Pick content by lang param
   const displayTitle = lang === 'en' ? (post.title || post.title_th)
@@ -39,22 +41,24 @@ export default function BlogPostClient({ post }: BlogPostProps) {
     : lang === 'zh' ? (post.excerpt_zh || post.excerpt_th)
     : (post.excerpt_th || post.excerpt);
 
+  const displayCategory = getCatName(post.category, lang);
+
   return (
     <div className="container" style={{ padding: '32px 24px 80px', maxWidth: 760 }}>
       {/* Breadcrumb */}
       <nav className="breadcrumb" style={{ marginBottom: 24 }}>
-        <Link href="/">หน้าแรก</Link>
+        <Link href="/">{t.blog.home}</Link>
         <span className="breadcrumb-sep">/</span>
-        <Link href="/blog">Blog</Link>
+        <Link href="/blog">{t.blog.blog}</Link>
         <span className="breadcrumb-sep">/</span>
         <span style={{ color: 'var(--text)' }}>{displayTitle}</span>
       </nav>
 
       {/* Meta */}
       <div style={{ marginBottom: 28 }}>
-        {post.category && (
+        {displayCategory && (
           <span style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold-dark)', fontFamily: "'Cormorant Garamond', serif", display: 'block', marginBottom: 10 }}>
-            {post.category}
+            {displayCategory}
           </span>
         )}
         <h1 className="serif" style={{ fontSize: 32, fontWeight: 600, color: 'var(--text)', lineHeight: 1.35, marginBottom: 14 }}>
@@ -68,7 +72,7 @@ export default function BlogPostClient({ post }: BlogPostProps) {
             lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-GB', 
             { day: 'numeric', month: 'long', year: 'numeric' }
           )}</span>
-          <span>👁 {post.views} ครั้ง</span>
+          <span>👁 {post.views} {t.blog.views}</span>
         </div>
       </div>
 
@@ -99,7 +103,7 @@ export default function BlogPostClient({ post }: BlogPostProps) {
       {/* Back */}
       <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid var(--cream-dark)' }}>
         <Link href="/blog" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
-          ← กลับไปหน้า Blog
+          {t.blog.back}
         </Link>
       </div>
       

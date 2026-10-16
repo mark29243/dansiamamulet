@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
+import { getDict, getCatName } from '@/lib/i18n';
 
 type BlogPost = {
   id: number;
@@ -20,6 +21,7 @@ type BlogPost = {
 
 export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
   const { lang } = useLang();
+  const t = getDict(lang);
 
   function getTitle(post: BlogPost) {
     if (lang === 'zh') return post.title_zh || post.title_th || post.title;
@@ -37,7 +39,7 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 24px', color: 'var(--text-muted)' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
-        <p>กำลังเตรียมบทความ โปรดติดตาม...</p>
+        <p>{t.blog.emptyTitle}</p>
       </div>
     );
   }
@@ -59,7 +61,7 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
             <div style={{ padding: '18px 20px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
               {post.category && (
                 <span style={{ fontSize: 10, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--gold-dark)', fontFamily: "'Cormorant Garamond', serif" }}>
-                  {post.category}
+                  {getCatName(post.category, lang)}
                 </span>
               )}
               <h2 className="serif" style={{ fontSize: 17, fontWeight: 600, color: 'var(--text)', lineHeight: 1.4, margin: 0 }}>

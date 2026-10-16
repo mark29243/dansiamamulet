@@ -102,6 +102,16 @@ export const dict = {
       t3: 'รับประกันความแท้', d3: 'รับประกันแท้100%',
       t4: '3 ภาษา', d4: 'ไทย · อังกฤษ · จีน',
     },
+    blog: {
+      badge: '✦ KNOWLEDGE ✦',
+      title: 'ความรู้พระเครื่อง',
+      subtitle: 'บทความเกี่ยวกับพระเครื่องไทย ประวัติวัด หลวงพ่อ วิธีบูชา และการสะสม',
+      home: 'หน้าแรก',
+      blog: 'บทความ',
+      views: 'ครั้ง',
+      back: '← กลับไปหน้าบทความ',
+      emptyTitle: 'กำลังเตรียมบทความ โปรดติดตาม...',
+    },
     common: {
       loading: 'กำลังโหลด...',
       error: 'เกิดข้อผิดพลาด',
@@ -210,6 +220,16 @@ export const dict = {
       t2: 'Global Shipping', d2: 'Ships to 150+ countries',
       t3: 'Authenticity Guaranteed', d3: 'Authenticity card with every order',
       t4: 'Trilingual Support', d4: 'Thai · English · Chinese',
+    },
+    blog: {
+      badge: '✦ KNOWLEDGE ✦',
+      title: 'Amulet Knowledge & Heritage',
+      subtitle: 'Sacred insights into Thai amulets, master monks, temple histories, and veneration rituals.',
+      home: 'Home',
+      blog: 'Blog',
+      views: 'views',
+      back: '← Back to Blog',
+      emptyTitle: 'Articles coming soon, stay tuned...',
     },
     common: {
       loading: 'Loading...',
@@ -320,6 +340,16 @@ export const dict = {
       t3: '附真品证书', d3: '每件均附认证证书',
       t4: '三语客服', d4: '泰语·英语·中文',
     },
+    blog: {
+      badge: '✦ 佛牌知识 ✦',
+      title: '泰国佛牌文化与鉴赏知识',
+      subtitle: '深入探索泰国高僧传奇、寺庙历史、佩戴禁忌与古老圣物收藏指南。',
+      home: '首页',
+      blog: '专栏文章',
+      views: '次浏览',
+      back: '← 返回文章专栏',
+      emptyTitle: '文章准备中，敬请期待...',
+    },
     common: {
       loading: '加载中...',
       error: '出错了',
@@ -359,6 +389,21 @@ export const categoryNames: Record<string, { th: string; en: string; zh: string 
   'พระขุนแผน':          { th: 'พระขุนแผน',          en: 'Phra Khun Phaen',  zh: '坤平佛牌' },
   'รูปหล่อพระพุทธ':    { th: 'รูปหล่อพระพุทธ',    en: 'Buddha Cast Image', zh: '铸造佛陀像' },
   'รูปหล่อเกจิ':       { th: 'รูปหล่อเกจิ',       en: 'Monk Cast Image',   zh: '铸造高僧像' },
+  // Blog Categories
+  'ความรู้พระเครื่อง':    { th: 'ความรู้พระเครื่อง',    en: 'Amulet Knowledge',      zh: '佛牌知识' },
+  'ประวัติวัดและหลวงพ่อ': { th: 'ประวัติวัดและหลวงพ่อ', en: 'Monk & Temple History', zh: '高僧与寺庙历史' },
+  'วิธีบูชา':            { th: 'วิธีบูชา',            en: 'Veneration & Rituals',  zh: '佩戴与供奉指南' },
+  'ข่าวสารร้าน':         { th: 'ข่าวสารร้าน',         en: 'News & Updates',        zh: '店铺资讯' },
+  'สะสมพระ':            { th: 'สะสมพระ',            en: 'Collecting Guide',      zh: '佛牌收藏指南' },
+  'อื่น ๆ':              { th: 'อื่น ๆ',              en: 'Others',                zh: '其他' },
+  'อื่นๆ':              { th: 'อื่นๆ',              en: 'Others',                zh: '其他' },
+  // English aliases
+  'Amulet Knowledge':    { th: 'ความรู้พระเครื่อง',    en: 'Amulet Knowledge',      zh: '佛牌知识' },
+  'Monk & Temple History': { th: 'ประวัติวัดและหลวงพ่อ', en: 'Monk & Temple History', zh: '高僧与寺庙历史' },
+  'Veneration & Rituals': { th: 'วิธีบูชา',            en: 'Veneration & Rituals',  zh: '佩戴与供奉指南' },
+  'News & Updates':      { th: 'ข่าวสารร้าน',         en: 'News & Updates',        zh: '店铺资讯' },
+  'Collecting Guide':    { th: 'สะสมพระ',            en: 'Collecting Guide',      zh: '佛牌收藏指南' },
+  'Others':              { th: 'อื่น ๆ',              en: 'Others',                zh: '其他' },
 };
 
 // Thai DB value → URL slug
@@ -386,7 +431,8 @@ export const CAT_SLUG: Record<string, string> = {
   'รูปหล่อเกจิ':       'rup-lor-kejii',
 };
 
-export function getCatName(cat: string, lang: Lang): string {
+export function getCatName(cat: string | null | undefined, lang: Lang): string {
+  if (!cat) return '';
   const primary = cat.split(',')[0].trim();
   return categoryNames[primary]?.[lang] ?? primary;
 }
