@@ -31,3 +31,16 @@ export function verifyStaffSession(token?: string | null): boolean {
     return false;
   }
 }
+
+export const ALLOWED_STAFF_EMAILS: readonly string[] = [
+  'mark.29243@gmail.com',
+  'phatsara7962@gmail.com',
+  'jarunpimpru@gmail.com',
+  'jarun@nandx.co.th',
+];
+
+export function isAllowedStaffEmail(email?: string | null): boolean {
+  if (!email) return false;
+  const clean = email.toLowerCase().trim();
+  return ALLOWED_STAFF_EMAILS.includes(clean);
+}
