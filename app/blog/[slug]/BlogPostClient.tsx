@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
 
 type BlogPostProps = {
@@ -50,25 +50,18 @@ export default function BlogPostClient({ post }: BlogPostProps) {
         <span style={{ color: 'var(--text)' }}>{displayTitle}</span>
       </nav>
 
-      {/* Cover */}
-      {post.cover_image && (
-        <div style={{ width: '100%', height: 360, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 32, position: 'relative' }}>
-          <Image src={post.cover_image} alt={displayTitle || ''} fill sizes="(max-width: 768px) 100vw, 800px" style={{ objectFit: 'cover' }} priority />
-        </div>
-      )}
-
       {/* Meta */}
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 28 }}>
         {post.category && (
           <span style={{ fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--gold-dark)', fontFamily: "'Cormorant Garamond', serif", display: 'block', marginBottom: 10 }}>
             {post.category}
           </span>
         )}
-        <h1 className="serif" style={{ fontSize: 30, fontWeight: 600, color: 'var(--text)', lineHeight: 1.35, marginBottom: 12 }}>
+        <h1 className="serif" style={{ fontSize: 32, fontWeight: 600, color: 'var(--text)', lineHeight: 1.35, marginBottom: 14 }}>
           {displayTitle}
         </h1>
         {displayExcerpt && (
-          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 12 }}>{displayExcerpt}</p>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 14 }}>{displayExcerpt}</p>
         )}
         <div style={{ fontSize: 12, color: 'var(--text-faint)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <span>{new Date(post.created_at).toLocaleDateString(
@@ -78,6 +71,21 @@ export default function BlogPostClient({ post }: BlogPostProps) {
           <span>👁 {post.views} ครั้ง</span>
         </div>
       </div>
+
+      {/* Cover */}
+      {post.cover_image && (
+        <div style={{ width: '100%', height: 380, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 36, position: 'relative', background: 'var(--cream-dark)' }}>
+          <SafeImage
+            src={post.cover_image}
+            alt={displayTitle || ''}
+            fill
+            sizes="(max-width: 768px) 100vw, 800px"
+            style={{ objectFit: 'cover' }}
+            priority
+            unoptimized
+          />
+        </div>
+      )}
 
       <hr style={{ border: 'none', borderTop: '1px solid var(--cream-dark)', marginBottom: 32 }} />
 
