@@ -74,7 +74,7 @@ export async function GET(req: Request) {
   if (user?.id) {
     const admin = createAdminClient();
     const cleanEmail = user.email ? user.email.toLowerCase().trim() : '';
-    const ALLOWED_STAFF = ['mark.29243@gmail.com', 'phatsara7962@gmail.com', 'jarunpimpru@gmail.com', 'jarun@nandx.co.th'];
+    const ALLOWED_STAFF = ['mark.29243@gmail.com', 'phatsara7962@gmail.com', 'jarun240119@gmail.com'];
 
     const { data: adminRow } = cleanEmail
       ? await admin.from('admins').select('*').or(`user_id.eq.${user.id},email.ilike.${cleanEmail}`).maybeSingle()

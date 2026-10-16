@@ -35,8 +35,7 @@ export function verifyStaffSession(token?: string | null): boolean {
 export const ALLOWED_STAFF_EMAILS: readonly string[] = [
   'mark.29243@gmail.com',
   'phatsara7962@gmail.com',
-  'jarunpimpru@gmail.com',
-  'jarun@nandx.co.th',
+  'jarun240119@gmail.com',
 ];
 
 export function isAllowedStaffEmail(email?: string | null): boolean {

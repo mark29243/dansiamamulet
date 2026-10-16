@@ -12,7 +12,7 @@ export default async function StaffImportShopeePage() {
   const staffToken = cookieStore.get('staff_token')?.value;
   let isStaff = verifyStaffSession(staffToken) || cookieStore.get('staff_auth')?.value === 'true';
 
-  const ALLOWED_STAFF = ['mark.29243@gmail.com', 'phatsara7962@gmail.com', 'jarunpimpru@gmail.com', 'jarun@nandx.co.th'];
+  const ALLOWED_STAFF = ['mark.29243@gmail.com', 'phatsara7962@gmail.com', 'jarun240119@gmail.com'];
 
   if (!isStaff) {
     const supabase = createClient();
