@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import type { Product } from '@/lib/types';
+import { VIRTUES, isVirtueSlug, filterProductsByVirtue } from '@/lib/virtues';
 import HomeShop from '../../HomeShop';
 
 export const revalidate = 60;
@@ -175,10 +176,38 @@ const SLUG_TO_CAT: Record<string, string> = {
 };
 
 export async function generateStaticParams() {
-  return Object.keys(SLUG_TO_CAT).map(category => ({ category }));
+  const catParams = Object.keys(SLUG_TO_CAT).map(category => ({ category }));
+  const virtueParams = Object.keys(VIRTUES).map(category => ({ category }));
+  return [...catParams, ...virtueParams];
 }
 
 export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+  const slug = params.category;
+  if (isVirtueSlug(slug)) {
+    const v = VIRTUES[slug];
+    const canonicalUrl = `${siteUrl}/shop/${slug}`;
+    return {
+      title: `${v.en} · ${v.th} | Dan Siam Amulets`,
+      description: v.desc_en,
+      keywords: v.keywords,
+      alternates: {
+        canonical: canonicalUrl,
+        languages: {
+          'x-default': canonicalUrl,
+          'en': canonicalUrl,
+          'th': canonicalUrl,
+          'zh-Hans': canonicalUrl,
+        },
+      },
+      openGraph: {
+        title: `${v.en} · ${v.th} | Dan Siam Amulets`,
+        description: v.desc_en,
+        url: canonicalUrl,
+        type: 'website',
+      },
+    };
+  }
+
   const meta = CAT_META[params.category];
   if (!meta) return {};
   const canonicalUrl = `${siteUrl}/shop/${params.category}`;
@@ -205,28 +234,38 @@ export async function generateMetadata({ params }: { params: { category: string 
 }
 
 export default async function CategoryPage({ params }: { params: { category: string } }) {
-  const meta = CAT_META[params.category];
-  const catTh = SLUG_TO_CAT[params.category];
-  if (!meta || !catTh) notFound();
+  const slug = params.category;
+  const isVirtue = isVirtueSlug(slug);
+  const virtue = isVirtue ? VIRTUES[slug] : null;
+  const meta = !isVirtue ? CAT_META[slug] : null;
+  const catTh = !isVirtue ? SLUG_TO_CAT[slug] : null;
+
+  if (!isVirtue && (!meta || !catTh)) notFound();
 
   const supabase = createClient();
   // Get all products with only required display columns (saves egress)
   const { data: rawProducts } = await supabase
     .from('products')
-    .select('id, slug, name, name_th, name_zh, category, price, sale_price, stock, short, images, is_featured')
+    .select('id, slug, name, name_th, name_zh, category, price, sale_price, stock, short, description, description_th, images, is_featured')
     .eq('published', true)
     .order('stock', { ascending: false })
     .order('id', { ascending: true });
 
   const allProducts = (rawProducts ?? []) as Product[];
-  const products = allProducts.filter(p => p.category?.toLowerCase().includes(catTh.toLowerCase()));
+  const products = isVirtue
+    ? filterProductsByVirtue(allProducts, slug)
+    : allProducts.filter(p => p.category?.toLowerCase().includes((catTh ?? '').toLowerCase()));
+
+  const canonicalUrl = `${siteUrl}/shop/${slug}`;
+  const titleName = isVirtue ? virtue!.en : meta!.en;
+  const descText = isVirtue ? virtue!.desc_en : meta!.desc_en;
 
   const itemListJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `${meta.en} — Dan Siam Amulets`,
-    description: meta.desc_en,
-    url: `${siteUrl}/shop/${params.category}`,
+    name: `${titleName} — Dan Siam Amulets`,
+    description: descText,
+    url: canonicalUrl,
     numberOfItems: products.length,
     itemListElement: products.slice(0, 20).map((p, i) => ({
       '@type': 'ListItem',
@@ -236,16 +275,31 @@ export default async function CategoryPage({ params }: { params: { category: str
     })),
   };
 
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Shop', item: `${siteUrl}/shop` },
+      { '@type': 'ListItem', position: 3, name: titleName, item: canonicalUrl },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd).replace(/</g, '\\u003c') }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c') }}
+      />
       <HomeShop
         products={allProducts}
-        defaultCategory={catTh}
-        currentSlug={params.category}
+        defaultCategory={isVirtue ? undefined : (catTh ?? undefined)}
+        currentSlug={slug}
+        virtueInfo={virtue ?? undefined}
       />
     </>
   );

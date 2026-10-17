@@ -5,6 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
   const categories = [
+    'wealth-and-fortune', 'miraculous-protection', 'metta-and-charisma', 'career-and-power',
     'phra-somdej', 'luang-pu-tuad', 'rian', 'phra-pidta',
     'rup-lor', 'phra-kring', 'khruang-rang', 'phra-phong',
     'nang-phaya', 'phrakejiaachan',
@@ -22,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/shop/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
-      priority: 0.8,
+      priority: ['wealth-and-fortune', 'miraculous-protection', 'metta-and-charisma', 'career-and-power'].includes(slug) ? 0.9 : 0.8,
     })),
   ];
 

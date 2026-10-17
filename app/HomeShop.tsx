@@ -9,11 +9,22 @@ import { getDict, getCatName, CAT_SLUG } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import { IcoSearch, IcoFilter } from '@/components/icons';
 import type { Product } from '@/lib/types';
+import { VIRTUES, filterProductsByVirtue, type VirtueInfo } from '@/lib/virtues';
 
 const DESKTOP_PER_PAGE = 20;
 const MOBILE_PER_PAGE = 20;
 
-export default function HomeShop({ products, defaultCategory, currentSlug }: { products: Product[]; defaultCategory?: string; currentSlug?: string }) {
+export default function HomeShop({
+  products,
+  defaultCategory,
+  currentSlug,
+  virtueInfo,
+}: {
+  products: Product[];
+  defaultCategory?: string;
+  currentSlug?: string;
+  virtueInfo?: VirtueInfo;
+}) {
   const { lang } = useLang();
   const t = getDict(lang);
   const [search, setSearch] = useState('');
@@ -93,6 +104,10 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
     // Use API search results when searching, otherwise full product list
     let r = search.trim() ? (searchResults ?? []) : [...products];
 
+    if (virtueInfo) {
+      r = filterProductsByVirtue(r, virtueInfo.slug);
+    }
+
     if (filter === 'instock') r = r.filter((p) => p.stock > 0);
     if (selectedCats.length > 0) r = r.filter((p) => {
       const cats = p.category.split(',').map((c) => c.trim());
@@ -107,9 +122,9 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
     else if (sort === 'name') r.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === 'newest') r.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     return r;
-  }, [products, searchResults, search, filter, selectedCats, priceRange, sort]);
+  }, [products, searchResults, search, filter, selectedCats, priceRange, sort, virtueInfo]);
 
-  useEffect(() => { setPage(1); }, [search, filter, selectedCats, priceRange, sort]);
+  useEffect(() => { setPage(1); }, [search, filter, selectedCats, priceRange, sort, virtueInfo]);
 
   const pages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const start = (page - 1) * PER_PAGE;
@@ -136,15 +151,113 @@ export default function HomeShop({ products, defaultCategory, currentSlug }: { p
   return (
     <section id="shop" style={{ paddingBottom: 80 }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', padding: '56px 24px 28px' }}>
-        <div className="serif" style={{ fontSize: 10, letterSpacing: 5, color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 10 }}>
-          ✦ COLLECTION ✦
+      {virtueInfo ? (
+        <div style={{ maxWidth: 840, margin: '0 auto', textAlign: 'center', padding: '48px 24px 24px' }}>
+          <div className="serif" style={{ fontSize: 11, letterSpacing: 5, color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 12 }}>
+            ✦ SACRED VIRTUE & INTENTION · ตามพุทธคุณ ✦
+          </div>
+          <div style={{ fontSize: 36, marginBottom: 8 }}>{virtueInfo.icon}</div>
+          <h1 className={titleClass} style={{ fontSize: 32, fontWeight: 600, color: 'var(--text)', marginBottom: 12 }}>
+            {lang === 'th' ? virtueInfo.th : lang === 'zh' ? virtueInfo.zh : virtueInfo.en}
+          </h1>
+          <div style={{
+            display: 'inline-block',
+            padding: '5px 16px',
+            borderRadius: 999,
+            background: 'rgba(201, 168, 76, 0.12)',
+            border: '1px solid rgba(201, 168, 76, 0.4)',
+            color: 'var(--gold-dark)',
+            fontSize: 12,
+            fontWeight: 500,
+            marginBottom: 16
+          }}>
+            {lang === 'th' ? virtueInfo.badge_th : lang === 'zh' ? virtueInfo.badge_zh : virtueInfo.badge_en}
+          </div>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 720, margin: '0 auto 16px' }}>
+            {lang === 'th' ? virtueInfo.desc_th : lang === 'zh' ? virtueInfo.desc_zh : virtueInfo.desc_en}
+          </p>
+          <div style={{ marginTop: 8, fontSize: 13, color: 'var(--text-faint)' }}>
+            {filtered.length} {t.shop.results}
+          </div>
         </div>
-        <h2 className={titleClass} style={{ fontSize: 32, fontWeight: lang === 'en' ? 300 : 600, color: 'var(--text)', fontStyle: lang === 'en' ? 'italic' : 'normal' }}>
-          {t.shop.title}
-        </h2>
-        <div style={{ marginTop: 12, fontSize: 13, color: 'var(--text-muted)' }}>
-          {filtered.length} {t.shop.results}
+      ) : (
+        <div style={{ textAlign: 'center', padding: '56px 24px 24px' }}>
+          <div className="serif" style={{ fontSize: 10, letterSpacing: 5, color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 10 }}>
+            ✦ COLLECTION ✦
+          </div>
+          <h2 className={titleClass} style={{ fontSize: 32, fontWeight: lang === 'en' ? 300 : 600, color: 'var(--text)', fontStyle: lang === 'en' ? 'italic' : 'normal' }}>
+            {t.shop.title}
+          </h2>
+          <div style={{ marginTop: 12, fontSize: 13, color: 'var(--text-muted)' }}>
+            {filtered.length} {t.shop.results}
+          </div>
+        </div>
+      )}
+
+      {/* Quick Virtue Navigation Bar */}
+      <div className="container" style={{ marginBottom: 28, padding: '0 24px' }}>
+        <div style={{
+          display: 'flex',
+          gap: 8,
+          overflowX: 'auto',
+          paddingBottom: 6,
+          scrollbarWidth: 'none',
+          WebkitOverflowScrolling: 'touch',
+          justifyContent: isMobile ? 'flex-start' : 'center',
+          flexWrap: isMobile ? 'nowrap' : 'wrap',
+        }}>
+          <Link
+            href="/shop"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '8px 16px',
+              borderRadius: 999,
+              textDecoration: 'none',
+              fontSize: 13,
+              whiteSpace: 'nowrap',
+              background: !currentSlug ? 'var(--gold)' : 'var(--glass)',
+              backdropFilter: 'var(--glass-blur)',
+              WebkitBackdropFilter: 'var(--glass-blur)',
+              color: !currentSlug ? 'var(--deep)' : 'var(--text)',
+              fontWeight: !currentSlug ? 600 : 400,
+              border: '1px solid ' + (!currentSlug ? 'var(--gold)' : 'var(--glass-border)'),
+              boxShadow: !currentSlug ? '0 2px 8px rgba(201, 168, 76, 0.3)' : 'none',
+            }}
+          >
+            <span>✦</span>
+            <span>{lang === 'th' ? 'พระเครื่องทั้งหมด' : lang === 'zh' ? '全部圣物' : 'All Amulets'}</span>
+          </Link>
+          {Object.values(VIRTUES).map((v) => {
+            const isActive = currentSlug === v.slug;
+            return (
+              <Link
+                key={v.slug}
+                href={`/shop/${v.slug}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '8px 16px',
+                  borderRadius: 999,
+                  textDecoration: 'none',
+                  fontSize: 13,
+                  whiteSpace: 'nowrap',
+                  background: isActive ? 'var(--gold)' : 'var(--glass)',
+                  backdropFilter: 'var(--glass-blur)',
+                  WebkitBackdropFilter: 'var(--glass-blur)',
+                  color: isActive ? 'var(--deep)' : 'var(--text)',
+                  fontWeight: isActive ? 600 : 400,
+                  border: '1px solid ' + (isActive ? 'var(--gold)' : 'var(--glass-border)'),
+                  boxShadow: isActive ? '0 2px 8px rgba(201, 168, 76, 0.3)' : 'none',
+                }}
+              >
+                <span>{v.icon}</span>
+                <span>{lang === 'th' ? v.th : lang === 'zh' ? v.zh : v.en}</span>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
@@ -354,7 +467,44 @@ function FilterPanel({
 
   return (
     <>
-      <div style={{ marginBottom: 20 }}>
+      {/* By Virtue / Intention */}
+      <div style={{ marginBottom: 22 }}>
+        <h4 className="serif" style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 10 }}>
+          {lang === 'th' ? '✦ ตามพุทธคุณ' : lang === 'zh' ? '✦ 功效意愿' : '✦ BY VIRTUE'}
+        </h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {Object.values(VIRTUES).map((v) => {
+            const isActive = currentSlug === v.slug;
+            return (
+              <Link
+                key={v.slug}
+                href={`/shop/${v.slug}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '7px 8px',
+                  borderRadius: 6,
+                  textDecoration: 'none',
+                  fontSize: 13,
+                  background: isActive ? 'var(--gold-faint, #F4EFE5)' : 'transparent',
+                  color: isActive ? 'var(--gold-dark)' : 'var(--text-muted)',
+                  fontWeight: isActive ? 600 : 400,
+                  borderLeft: isActive ? '3px solid var(--gold)' : '3px solid transparent',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span style={{ fontSize: 14 }}>{v.icon}</span>
+                <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {lang === 'th' ? v.th : lang === 'zh' ? v.zh : v.en}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 20, paddingTop: 16, borderTop: '1px solid var(--cream-dark)' }}>
         <h4 className="serif" style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 10 }}>
           {t.shop.category}
         </h4>
