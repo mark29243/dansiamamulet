@@ -30,16 +30,32 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { id, stock, status, notes, price, cost } = body;
+    const { id } = body;
 
     if (!id) return NextResponse.json({ error: 'Missing ID' }, { status: 400 });
 
     const fieldsToUpdate: Record<string, any> = {};
-    if (stock !== undefined) fieldsToUpdate.stock = stock;
-    if (status !== undefined) fieldsToUpdate.status = status;
-    if (notes !== undefined) fieldsToUpdate.notes = notes;
-    if (price !== undefined) fieldsToUpdate.price = price;
-    if (cost !== undefined) fieldsToUpdate.cost = cost;
+    if (body.stock !== undefined) fieldsToUpdate.stock = Number(body.stock);
+    if (body.status !== undefined) fieldsToUpdate.status = body.status;
+    if (body.notes !== undefined) fieldsToUpdate.notes = body.notes;
+    if (body.price !== undefined) fieldsToUpdate.price = Number(body.price);
+    if (body.cost !== undefined) fieldsToUpdate.cost = Number(body.cost);
+
+    // Location (supports mark_location, location, storage_location)
+    const loc = body.mark_location !== undefined ? body.mark_location : (body.location !== undefined ? body.location : body.storage_location);
+    if (loc !== undefined) fieldsToUpdate.mark_location = loc ? String(loc).trim() : null;
+
+    // Platform tags
+    if (body.mark_fb !== undefined) fieldsToUpdate.mark_fb = Boolean(body.mark_fb);
+    if (body.mark_tt !== undefined) fieldsToUpdate.mark_tt = Boolean(body.mark_tt);
+    if (body.mark_ig !== undefined) fieldsToUpdate.mark_ig = Boolean(body.mark_ig);
+    if (body.mark_shopee2 !== undefined) fieldsToUpdate.mark_shopee2 = Boolean(body.mark_shopee2);
+    if (body.mark_thaimart !== undefined) fieldsToUpdate.mark_thaimart = Boolean(body.mark_thaimart);
+    if (body.name_shopee !== undefined) fieldsToUpdate.name_shopee = body.name_shopee ? String(body.name_shopee).trim() : null;
+    if (body.name !== undefined) fieldsToUpdate.name = body.name ? String(body.name).trim() : null;
+    if (body.name_th !== undefined) fieldsToUpdate.name_th = body.name_th ? String(body.name_th).trim() : null;
+
+    fieldsToUpdate.updated_at = new Date().toISOString();
 
     const { error } = await ctx.admin
       .from('june_products')
