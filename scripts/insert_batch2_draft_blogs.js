@@ -518,52 +518,295 @@ const POSTS = [
     title_th: 'อารยธรรมดินเผาหริภุญชัย ๑,๒๐๐ ปี: จารึกพระนางจามเทวี ศาสตร์แห่งเนื้อดินกรุโบราณ สู่พุทธศิลป์พระรอดเมืองลำพูน',
     title_zh: '一千二百年哈利奔猜陶土文明：乔玛德维女王碑铭考、古窖泥质演化与帕洛佛艺术史',
 
-    excerpt: 'An archaeological investigation of 8th-century Dvaravati-Mon votive clay art in Lamphun, tracing the lineage from Queen Jamadevi’s foundations to mid-20th century commemorative castings.',
-    excerpt_th: 'การขุดค้นทางประวัติศาสตร์และโบราณคดีอาณาจักรหริภุญชัย พุทธศตวรรษที่ ๑๓ วิเคราะห์เนื้อดินเผาโบราณวัดมหาวัน สู่ตำนานพระรอดจงอางศึก ปี ๒๕๑๔',
-    excerpt_zh: '学术考据公元8世纪堕罗钵底泰北哈利奔猜古国造像技术，系统探寻瓦玛哈弯寺陶土古窖微观结构与佛历2514年战地佛牌重铸之历史文献。',
+    excerpt: 'An archaeological and petrological study of 8th-century Hariphunchai terracotta art, tracing Queen Jamadevi’s chronicles, the Vasudeva Risi mandala, high-temperature vitrification mineralogy, and the modern legacy of Wat Phra Singh B.E. 2496 and Luang Pho Pae’s B.E. 2514 wartime castings.',
+    excerpt_th: 'การขุดค้นทางประวัติศาสตร์และโบราณคดีอาณาจักรหริภุญชัย พุทธศตวรรษที่ ๑๒–๑๓ สืบรอยคัมภีร์จามเทวีวงศ์ สู่ศาสตร์ศิลาธิคุณและการเผาเคลือบหินศิลา (Vitrification) ของพระรอดกรุวัดมหาวัน พร้อมบันทึกการสืบสายเลือดมวลสารสู่พระรอดวัดพระสิงห์ ปี ๒๔๙๖ และพระรอดจงอางศึก หลวงพ่อแพ ปี ๒๕๑๔',
+    excerpt_zh: '跨学科考据公元8世纪哈利奔猜古国堕罗钵底佛教陶土造像学，系统梳理《乔玛德维女王纪》文献、四方护城伽蓝坛城、高温玻化烧结矿物学，以及瓦帕辛寺佛历2496年融合千年古料重铸与龙婆培2514年战地帕洛佛传承史。',
 
     content: `
-<p>Dating back to the 8th century C.E., the ancient kingdom of **Hariphunchai** (modern-day Lamphun, Northern Thailand) flourished as a sophisticated center of Dvaravati-Mon Buddhist civilization under the stewardship of **Queen Jamadevi**. Among its archaeological legacies, **Phra Rod** of Wat Mahawan stands as the ancient progenitor within the prestigious Grand Five (Benjapakee) circle.</p>
+<p>Within the prestigious pantheon of Thailand's <strong>Grand Five Votive Tablets (Benjapakee)</strong>, <strong>Phra Rod of Wat Mahawan</strong> stands as the ancient, primordial ancestor. While popular folklore venerates the amulet as an impenetrable shield against mortal peril, academic archaeology, epigraphy, and material science reveal a profound cultural achievement: a 1,200-year-old masterpiece of 8th-century Dvaravati-Mon Buddhist civilization, rooted in the foundational chronicles of <strong>Queen Jamadevi</strong> and ancient high-temperature ceramic pyrotechnology.</p>
 
-<h2>1. Archaeological Excavations of Wat Mahawan</h2>
-<p>Archaeological evidence confirms that Wat Mahawan was founded around 1,200 years ago as the western cardinal protector temple of Hariphunchai. The original votive clay tablets were hand-pressed from refined river silt rich in silica and iron oxides, subjected to ancient wood-firing kilns that vitrified the clay into a stone-like ceramic durability.</p>
+<h2>1. The Hariphunchai Civilization (8th Century C.E.) and the Cardinal Mandala</h2>
+<p>Historical stratigraphy and epigraphical records confirm that the ancient kingdom of <strong>Hariphunchai</strong> (modern Lamphun, Northern Thailand) was established during the <strong>12th–13th Buddhist Century (c. 660–750 C.E. / 8th Century C.E.)</strong>. Unlike the later Tai-Lanna dynasties or Central Siamese kingdoms, Hariphunchai was an illustrious northern outpost of <strong>Dvaravati-Mon culture</strong>, defined by sophisticated Theravada monastic governance, advanced hydraulic urban planning, and distinctive Mon aesthetics characterized by serene, broad facial features, prominent downcast eyes, and heavy spiral hair curls.</p>
 
-<h2>2. Symbolic Geometry: The Seated Diamond Victor</h2>
-<p>Depicted in the Maravijaya posture beneath a stylized Bodhi leaf canopy, the compact, diamond-proportioned geometry symbolized unwavering fortitude against cosmic trials. In 20th-century history, this ancient form was revived during periods of conflict, notably the **B.E. 2514 Phra Rod Jong Aang Suk** consecration blessed to protect border defense volunteers.</p>
+<p>Primary literary chronicles, notably the 15th-century Pali text <em>Cāmadevīvaṃsa</em> (authored by the venerable Bodhiramsi Mahathera of Chiang Mai) and the 16th-century <em>Jinakālamālīpakaraṇa</em>, record that the kingdom was laid out by the enlightened sage <strong>Vasudeva Risi</strong> of Mount Suthep in collaboration with <strong>Sukkathanta Risi</strong> of Lavo (Lopburi). Designing the city perimeter in the sacred geometry of a celestial conch-shell (<em>Sangkhanakhon</em>), the sages realized that lasting political sovereignty demanded an ethically upright Buddhist ruler. They petitioned King Chakravartiraj of Lavo to send his daughter, the devout <strong>Queen Jamadevi</strong>, to ascend the throne.</p>
 
-<div style="background: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 18px; border-radius: 6px; margin: 28px 0;">
-  <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Certified Archival Specimen in Dan Siam Heritage Collection:</strong>
-  <p style="margin: 0;">• <a href="/product/phra-rod-jong-aang-suk-2514" style="color: #d4af37; text-decoration: underline;">Phra Rod Jong Aang Suk B.E. 2514 (Consecrated by Luang Pu Tuad Masters) [REF: #91]</a></p>
+<p>The Queen journeyed up the Ping River with 500 ordained monks, master architects, physicians, and artisans, establishing a sacred protective mandala of <strong>Four Cardinal Guardian Temples</strong> around the city walls:</p>
+<ul>
+  <li><strong>Western Cardinal Shield:</strong> <strong>Wat Mahawan</strong> — Sanctuary of <em>Phra Rod</em> (The Supreme Protector and Embodiment of Liberation).</li>
+  <li><strong>Northern Cardinal Shield:</strong> <strong>Wat Phra Khong Risi</strong> — Sanctuary of <em>Phra Khong</em> and <em>Phra Bang</em> (Guardian of civic resilience).</li>
+  <li><strong>Eastern Cardinal Shield:</strong> <strong>Wat Don Kaeo</strong> — Sanctuary of <em>Phra Perm</em> (Guardian of prosperity and agrarian abundance).</li>
+  <li><strong>Southern Cardinal Shield:</strong> <strong>Wat Pratu Lee</strong> — Sanctuary of <em>Phra Liang</em> (Guardian of evasion and military victory).</li>
+</ul>
+
+<h2>2. Petrological Science: Silathikhun, Crab-Burrow Silt, and Vitrification</h2>
+<p>Modern collectors marvel at how an unglazed terracotta tablet dating back over a millennium can resist physical erosion and ring with the metallic acoustic timbre of dense stone. Material petrography and ceramic science explain this phenomenon through a sophisticated two-tier matrix:</p>
+<ol>
+  <li><strong>The Raw Mineral Matrix:</strong> The base material was formulated using <strong>Silathikhun</strong> (a microcrystalline pyrophyllite and kaolinitic white rock pulverized into micron dust) combined with <strong>Din Khui Pu</strong> (subterranean colloidal silt brought to the surface by burrowing river crabs along the Kuang River). This naturally refined clay was virtually devoid of coarse quartz grits and extraordinarily rich in iron oxides ($Fe_2O_3$) and silica ($SiO_2$). Organic binders consisting of 108 medicinal botanical extracts and sacred pollens were kneaded into the slurry.</li>
+  <li><strong>High-Temperature Vitrification:</strong> The pressed tablets were baked in ancient updraft wood-kilns reaching temperatures between <strong>950°C and 1,150°C</strong>. At these peak thermal conditions, the silica and natural mineral flux melted, undergoing <strong>liquid-phase sintering</strong>. The micro-pores collapsed, vitrifying the clay into an ultra-dense, semi-crystalline ceramic matrix with rock-hard durability.</li>
+</ol>
+
+<h3>Redox Chemistry and the Five Canonical Color Variants</h3>
+<p>The chromatic spectrum of Phra Rod does not stem from artificial pigmentation, but from kiln atmosphere and iron oxidation-reduction (Redox) dynamics:</p>
+<ul>
+  <li><strong>White / Pikul Yellow:</strong> Fired at lower peripheral kiln temperatures (approx. 800°C–900°C).</li>
+  <li><strong>Brick Red:</strong> Subjected to moderate thermal zones (900°C–1,000°C) under an <strong>Oxidizing Atmosphere</strong>, converting iron into vibrant ferric oxide ($Fe_2O_3$ - hematite).</li>
+  <li><strong>Krok Green:</strong> Reaching maximum sustained temperatures (1,050°C–1,100°C), where iron chemically fused with silica into dense iron silicates.</li>
+  <li><strong>Pot-Black & Multi-Tone (Nuea Phan):</strong> Formed in oxygen-starved <strong>Reducing Atmospheres</strong>, reducing iron into magnetite ($Fe_3O_4$). Pieces exposed to directional flame gradients display breathtaking dual-tone coloration, highly coveted by connoisseurs.</li>
+</ul>
+
+<h2>3. The Five Canonical Molds of Wat Mahawan</h2>
+<p>Centuries of connoisseurship categorize authentic Wat Mahawan Phra Rod into five primary typological molds:</p>
+<ul>
+  <li><strong>Phim Yai (Grand Mold):</strong> Regal proportions, expansive chest, deeply sculpted Bodhi leaf canopy, featuring the distinctive left-earlobe droplet and delicate "tear line".</li>
+  <li><strong>Phim Klang / Na Nu (Medium Mold / Mouse-Face):</strong> Elegant, elongated silhouette with a refined, triangular facial structure, traditionally designated by Thai experts as <em>"Na Nu"</em>.</li>
+  <li><strong>Phim Lek (Minor Mold):</strong> Diminutive, exquisitely compressed proportions retaining fine iconographical precision.</li>
+  <li><strong>Phim Toh (Stout Mold):</strong> Muscular, compact torso with broad shoulders, conveying unshakeable geometric stability.</li>
+  <li><strong>Phim Tuen (Shallow Mold):</strong> Flatter relief depth, showcasing delicate, crisp classical carving lines.</li>
+</ul>
+
+<h2>4. Historical Chronology of Cache Discoveries in Rattanakosin</h2>
+<p>Contrary to modern misconceptions, the Wat Mahawan crypt did not yield its treasures in a single event, but across four distinct historical epochs:</p>
+<ol>
+  <li><strong>First Epoch (King Rama V Era, B.E. 2435–2440):</strong> The ancient brick chedi of Wat Mahawan collapsed from structural decay. <strong>Chao Luang Hemphinthuphaichit</strong>, ruler of Lamphun, sponsored a full royal restoration. Workers unearthed large quantities of ancient Phra Rod within the chedi core, which were formally distributed to royalty and senior court officials as the legendary <em>"Kru Kao" (Old Cache)</em>.</li>
+  <li><strong>Second Epoch (King Rama VI Era, B.E. 2451):</strong> Abbot Phra Athikan Tha repaired the dilapidated boundary walls and ubosot foundation, revealing a second subterranean deposit.</li>
+  <li><strong>Third Epoch (Indochina War, B.E. 2483–2485):</strong> Monastic authorities carefully excavated additional pieces to bolster the morale of Thai soldiers deploying to border frontiers.</li>
+  <li><strong>Fourth Epoch (B.E. 2498, The "New Cache"):</strong> The venerable Phra Khru Yanamongkol uncovered an untouched cache buried beneath the root system of an ancient Pikul tree adjacent to the monks' quarters, known universally as <em>"Kru Mai B.E. 2498"</em>.</li>
+</ol>
+
+<h2>5. Mid-20th Century Heritage: Wat Phra Singh B.E. 2496 & Luang Pho Pae B.E. 2514</h2>
+<p>Because authentic 8th-century Phra Rod tablets are museum-tier rarities valued in the millions of baht, the spiritual lineage of Hariphunchai clay was revitalized during pivotal moments of modern Thai history.</p>
+<p>The absolute crowning achievement of this modern revival took place at <strong>Wat Phra Singh Woramahavihan</strong> in Chiang Mai in <strong>B.E. 2496 (1953)</strong>. Monastic leaders gathered ancient fractured shards of genuine 1,200-year-old Wat Mahawan Phra Rod, pulverized them into sacred dust, and blended them with sacred soils from Bodh Gaya, India. The grand consecration was attended by Siam’s greatest masters, including <strong>Luang Pho Sodh of Wat Paknam</strong>, <strong>Chao Khun Sri (Sondh) of Wat Suthat</strong>, and <strong>Luang Pu Nak of Wat Rakang</strong>, creating the most revered mid-century Phra Rod edition in existence.</p>
+<p>Subsequently, in <strong>B.E. 2514</strong>, amid regional conflicts, <strong>Luang Pho Pae Khemmangkro of Wat Pikul Thong</strong> in Singburi formulated the historic <strong>Phra Rod Jong Aang Suk</strong>, incorporating ancient sacred clays to protect front-line soldiers deployed in defense of the realm.</p>
+
+<h2>6. Buddhist Iconology: The Diamond Victor and True "Vimutti"</h2>
+<p>Phra Rod portrays Gautama Buddha seated in the <strong>Vajrasana (Diamond Posture)</strong> beneath the sacred Bodhi tree canopy, with his right hand resting over the knee in the <strong>Bhūmisparśa Mudrā (Calling the Earth to Witness)</strong>. This posture crystallizes the decisive moment of Enlightenment, when moral perfection and accumulated parami vanquished the legions of Mara.</p>
+<p>While folk belief associates the Thai designation <em>"Rod"</em> exclusively with physical survival and bulletproof invulnerability, scholarly Theravada hermeneutics reveals a higher truth: the term signifies <strong>Vimutti (Spiritual Liberation)</strong>—the ultimate transcendence over the recurring cycle of suffering (Samsara), ignorance, and fear through unwavering mindfulness and moral purity.</p>
+
+<div class="amulet-specimen-box" style="margin-top: 40px; padding: 24px; background: #111827; border: 1px solid #374151; border-radius: 8px;">
+  <h3 style="color: #d4af37; margin-top: 0; font-size: 18px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
+    🏛️ Dan Siam Curated Archival Specimens:
+  </h3>
+  <p style="font-size: 14px; color: #9ca3af; margin-bottom: 16px;">
+    This historical analysis is corroborated by verified physical specimens from the Dan Siam Amulets Permanent Archive:
+  </p>
+  <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0; font-size: 14px; line-height: 2;">
+    <li>
+      • <a href="/product/phra-rod-wat-phra-singh-chiang-mai-2496-phim-klang-na-nu" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        Phra Rod Wat Phra Singh Chiang Mai B.E. 2496, Phim Klang Na Nu [REF: #1723]
+      </a> 
+      <span style="color: #cbd5e1;">— The supreme mid-century masterpiece formulated with crushed 1,200-year-old Wat Mahawan Phra Rod powder; blessed by LP Sodh (Wat Paknam), Chao Khun Sri Sondh (Wat Suthat), and LP Nak (Wat Rakang).</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-jong-aang-suk-luang-pho-pae-wat-pikul-thong-2514" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        Phra Rod Jong Aang Suk by Luang Pho Pae, Wat Pikul Thong, B.E. 2514 [REF: #91]
+      </a> 
+      <span style="color: #cbd5e1;">— Historic wartime protective amulet consecrated by Luang Pho Pae for soldiers deployed to combat zones.</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-large-wat-phra-that-doi-tung-be2516" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        Phra Rod Yai, Wat Phra That Doi Tung, Chiang Rai, B.E. 2516 [REF: #1452]
+      </a> 
+      <span style="color: #cbd5e1;">— Consecrated with ancient Lamphun crypt clays; blessed in a grand Northern assembly by Luang Pu Waen and Luang Pho Kasem Khemako.</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-luang-pu-supha-be2511-return-ceremony" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        Phra Rod "Sedet Klab" Edition, Luang Pu Supha and Ajarn Chum Chaikiri, B.E. 2511 [REF: #45]
+      </a> 
+      <span style="color: #cbd5e1;">— Consecrated in the historic Southern Return Ceremony, reviving the classical Phra Rod form with southern esoteric mastery.</span>
+    </li>
+  </ul>
 </div>
 `,
 
     content_th: `
-<p>ย้อนหลังไปในพุทธศตวรรษที่ ๑๓ อาณาจักร <strong>“หริภุญชัย”</strong> (จังหวัดลำพูนในปัจจุบัน) ได้รุ่งเรืองขึ้นในฐานะศูนย์กลางอารยธรรมมอญ-ทวารวดี ภายใต้การนำของ <strong>พระนางจามเทวี</strong> ปฐมกษัตรีย์ผู้ทรงเปี่ยมด้วยพระปรีชาญาณ ในบรรดามรดกทางโบราณคดี **“พระรอด วัดมหาวัน”** ถือเป็นพระเครื่องที่มีอายุเก่าแก่ที่สุดในชุดเบญจภาคีของสยาม</p>
+<p>ในบรรดาพระเครื่องชุด <strong>“เบญจภาคี”</strong> อันเป็นสุดยอดแห่งมรดกพุทธศิลป์สยามประเทศ <strong>“พระรอด วัดมหาวัน” เมืองลำพูน</strong> ถือเป็นพระพิมพ์ดินเผาที่มีอายุเก่าแก่ที่สุดในประวัติศาสตร์ ด้วยกาลเวลาที่สืบทอดมายาวนานกว่า ๑,๒๐๐ ปี ในค่านิยมกระแสหลักของสังคม พระรอดมักได้รับการกล่าวขวัญถึงในฐานะ “จักรพรรดิแห่งนิรันตราย” ทว่า ในมิติทางประวัติศาสตร์ โบราณคดี จารึกวิทยา และวัสดุศาสตร์ พระรอดคือหลักฐานชิ้นเอกที่สะท้อนถึงความรุ่งเรืองขั้นสูงสุดของอารยธรรมมอญ-ทวารวดีแห่ง **“อาณาจักรหริภุญชัย”** ภายใต้การนำของ **พระนางจามเทวี** ปฐมกษัตรีย์ผู้ทรงธรรม</p>
 
-<h2>๑. โบราณคดีวัดมหาวันและศาสตร์แห่งเนื้อดินเผาโบราณ</h2>
-<p>หลักฐานทางประวัติศาสตร์ระบุว่า วัดมหาวันสถาปนาขึ้นเพื่อเป็นพุทธอารามพิทักษ์ทิศประจิมของเมืองหริภุญชัย เนื้อหามวลสารของพระรอดกรุโบราณเกิดจากการคัดสรรเนื้อดินร่วนละเอียด ผสมแร่เหล็กและซิลิกาธรรมชาติ ผ่านกรรมวิธีเผาด้วยเตาฟืนโบราณจนแกร่งดั่งหินผา</p>
+<h2>๑. อารยธรรมหริภุญชัย พุทธศตวรรษที่ ๑๒–๑๓ และมันดาลา ๔ ทิศพิทักษ์นคร</h2>
+<p>การศึกษาทางโบราณคดีและจารึกโบราณยืนยันว่า นครหริภุญชัยสถาปนาขึ้นในราว <strong>พุทธศตวรรษที่ ๑๒–๑๓ (พ.ศ. ๑๒๐๐–๑๒๒๒)</strong> โดยมีอัตลักษณ์ของกลุ่มวัฒนธรรมมอญโบราณอย่างเด่นชัด พุทธศิลป์ทวารวดี-หริภุญชัยปรากฏลักษณะพระพักตร์อวบอิ่ม พระเนตรโปนเหลือบต่ำ พระนาสิกแบนกว้าง พระโอษฐ์หนาเป็นกระจับ และพระเกศาขมวดก้นหอยขนาดใหญ่</p>
 
-<h2>๒. การสืบสานสู่พระรอดกึ่งพุทธกาล (พระรอดจงอางศึก ปี ๒๕๑๔)</h2>
-<p>ความเข้มขลังแห่งพุทธศิลป์ปางมารวิชัยชนะมาร ได้ถูกนำมาจำลองสถาปนาอีกครั้งในยุคสงครามอินโดจีน โดยเฉพาะ **พระรอดจงอางศึก ปี พ.ศ. ๒๕๑๔** ซึ่งสร้างขึ้นเพื่อมอบเป็นขวัญกำลังใจแก่ทหารหาญผู้ปฏิบัติภารกิจเพื่อชาติ</p>
+<p>หลักฐานชั้นต้นจากคัมภีร์ใบลานภาษาบาลีสำคัญ ๒ ฉบับ ได้แก่ <strong>“คัมภีร์จามเทวีวงศ์” (Cāmadevīvaṃsa)</strong> รจนาโดยพระโพธิรังสีมหาเถระแห่งเชียงใหม่ (พุทธศตวรรษที่ ๒๐) และ <strong>“คัมภีร์ชินกาลมาลีปกรณ์” (Jinakālamālīpakaraṇa)</strong> รจนาโดยพระรัตนปัญญาเถระ (พุทธศตวรรษที่ ๒๑) ได้บันทึกประวัติศาสตร์การสร้างเมืองไว้ตรงกันว่า <strong>พระฤาษีวาสุเทพ</strong> แห่งดอยสุเทพ และ <strong>พระสุกกทันตฤาษี</strong> แห่งละโว้ ได้ร่วมกันสถาปนานครหริภุญชัยตามผัง <em>“สังขนคร” (สัณฐานดั่งหอยสังข์)</em></p>
 
-<div style="background: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 18px; border-radius: 6px; margin: 28px 0;">
-  <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ พระเครื่องอ้างอิงทางประวัติศาสตร์ในคลัง Dan Siam Heritage Archive:</strong>
-  <p style="margin: 0;">• <a href="/product/phra-rod-jong-aang-suk-2514" style="color: #d4af37; text-decoration: underline;">พระรอดจงอางศึก หลวงพ่อทวด ปี ๒๕๑๔ (REF: #91)</a> — พระรอดประวัติศาสตร์ยุคสงครามผสานบารมีหลวงพ่อทวด</p>
+<p>เมื่อสร้างเมืองเสร็จ พระฤาษีทั้งสองตระหนักว่าเมืองจะร่มเย็นได้ ต้องมีธรรมราชาผู้ทรงศีลธรรม จึงทูลอัญเชิญ <strong>พระนางจามเทวี</strong> พระราชธิดาแห่งพระเจ้ากรุงละโว้ เสด็จขึ้นมาครองราชย์ พระนางได้ทรงอัญเชิญพระสงฆ์ ๕๐๐ รูป พระไตรปิฎก นักปราชญ์ แพทย์ และนายช่างชั้นสูงขึ้นมาสถาปนาพระพุทธศาสนาและวางผัง **มันดาลา ๔ ทิศพิทักษ์นครหริภุญชัย** ได้แก่:</p>
+<ul>
+  <li><strong>ทิศประจิม (ตะวันตก):</strong> <strong>วัดมหาวัน</strong> — อารามประจำทิศตะวันตก แหล่งสถิตแห่ง <em>“พระรอด”</em> อันเป็นมหาอภิบาลคุ้มครองแผ่นดิน</li>
+  <li><strong>ทิศอุดร (เหนือ):</strong> <strong>วัดพระคงฤาษี</strong> (วัดอนันทาราม) — แหล่งสถิตแห่ง <em>“พระคง”</em> และ <em>“พระบาง”</em> ค้ำจุนชะตาเมือง</li>
+  <li><strong>ทิศบูรพา (ตะวันออก):</strong> <strong>วัดดอนแก้ว</strong> — แหล่งสถิตแห่ง <em>“พระเปิม”</em> เสริมสร้างความอุดมสมบูรณ์</li>
+  <li><strong>ทิศทักษิณ (ใต้):</strong> <strong>วัดประตูลี้</strong> — แหล่งสถิตแห่ง <em>“พระเลี่ยง”</em> ขจัดอุปสรรคและหลบหลีกศัตรูหมู่มาร</li>
+</ul>
+
+<h2>๒. ศาสตร์แห่งแร่วิทยาโบราณ: ศิลาธิคุณ ดินขุยปู และการเผาเคลือบหินศิลา (Vitrification)</h2>
+<p>หนึ่งในปริศนาที่สร้างความตื่นตะลึงให้แก่นักโบราณคดีและนักสะสม คือ “ทำไมพระรอดกรุวัดมหาวันซึ่งเป็นดินเผาผ่านกาลเวลามานานกว่า ๑,๒๐๐ ปี จึงมีเนื้อหาแกร่งดั่งหินผา และเมื่อเคาะเบาๆ จะมีเสียงกังวานประดุจโลหะ?” คำตอบทางวิทยาศาสตร์และแร่วิทยาประกอบด้วย ๒ ปัจจัยหลัก:</p>
+<ol>
+  <li><strong>มวลสารเนื้อดินสูตรลับ:</strong> การผสมผสานระหว่าง <strong>“ศิลาธิคุณ”</strong> (แร่หินขาวบริสุทธิ์จำพวกไพโรฟิลไลต์และคาโอลิไนต์ บดละเอียดเนียนเป็นแป้ง) ผสานกับ <strong>“ดินขุยปู”</strong> (ตะกอนดินเหนียวเนื้อละเอียดพิเศษที่ปูขุดขึ้นมาจากใต้ดินลึกริมแม่น้ำกวงและลำน้ำปิง) ซึ่งปราศจากเศษทรายหยาบ และอุดมด้วยแร่เหล็กออกไซด์ ($Fe_2O_3$) และซิลิกาอนุภาคระดับไมครอน นวดประสานด้วยน้ำว่านยา ๑๐๘ ชนิดและเกสรพฤกษชาติมงคล</li>
+  <li><strong>ปฏิกิริยาการหลอมเป็นแก้วหิน (Vitrification):</strong> พระรอดถูกนำไปเผาในเตาฟืนโบราณที่ควบคุมความร้อนได้สูงถึง <strong>๙๕๐°C ถึง ๑,๑๕๐°C</strong> อุณหภูมิระดับนี้ทำให้แร่ซิลิกาในเนื้อดินเกิดการหลอมละลายแบบ <em>Liquid-Phase Sintering</em> รูพรุนในเนื้อดินหดตัวและปิดสนิท ทำให้โครงสร้างดินแปรสภาพเป็นเซรามิกกึ่งแก้วกึ่งหิน (Vitrified Ceramic) จึงทนทานต่อการสึกกร่อนและการกัดเซาะของความชื้นใต้กรุนานนับพันปี</li>
+</ol>
+
+<h3>กลไกปฏิกิริยาเคมีในเตาเผา (Redox) สู่ ๕ วรรณะสีพระรอด</h3>
+<p>สีของพระรอดไม่ได้เกิดจากการผสมสี แต่เกิดจากระดับความร้อนและปริมาณออกซิเจนในเตาเผา:</p>
+<ul>
+  <li><strong>สีขาว / สีเหลืองพิกุล:</strong> เผาในอุณหภูมิต่ำสุด (ประมาณ ๘๐๐°C–๙๐๐°C) อยู่บริเวณริมขอบเตา</li>
+  <li><strong>สีแดง / สีอิฐ:</strong> เผาในอุณหภูมิปานกลาง (๙๐๐°C–๑,๐๐๐°C) ในสภาวะ <strong>Oxidizing Atmosphere</strong> แร่เหล็กกลายสภาพเป็น Ferric Oxide (Hematite) ให้เฉดสีแดงส้ม</li>
+  <li><strong>สีเขียว (เขียวหินครก):</strong> เผาในอุณหภูมิสูงจัด (๑,๐๕๐°C–๑,๑๐๐°C) ซิลิกาหลอมรวมกับแร่เหล็กกลายเป็นเหล็กซิลิเกต มีเนื้อแน่นแกร่งสูงสุด</li>
+  <li><strong>สีดำ / สีผ่าน (เนื้อผ่าน):</strong> เผาในสภาวะ <strong>Reducing Atmosphere</strong> (ขาดออกซิเจน) แร่เหล็กถูกรีดิวซ์เป็น Magnetite สีดำสนิท หากพระองค์ใดโดนไฟสองด้านไม่เท่ากัน จะเกิดเป็นสองสีในองค์เดียว เรียกว่า <em>“เนื้อผ่าน”</em> ซึ่งหาได้ยากยิ่ง</li>
+</ul>
+
+<h2>๓. พิมพ์ทรงมาตรฐานทั้ง ๕ ของพระรอดกรุวัดมหาวัน</h2>
+<p>การจัดหมวดหมู่พิมพ์ทรงตามมาตรฐานวงการโบราณคดีพระเครื่องไทย แบ่งออกเป็น ๕ พิมพ์หลัก:</p>
+<ul>
+  <li><strong>พิมพ์ใหญ่:</strong> ทรงสง่างาม พระอุระผึ่งผาย ก้านโพธิ์และกลุ่มใบโพธิ์คมชัดลึก มีติ่งเนื้อใต้ใบหูด้านซ้ายและเส้นน้ำตาพระรอด</li>
+  <li><strong>พิมพ์กลาง (หน้าหนู):</strong> ทรวดทรงชะลูดเพรียวงาม พระพักตร์เรียวแหลมคล้ายรูปหน้าหนู จึงเป็นที่มาของนามอันเลื่องลือ</li>
+  <li><strong>พิมพ์เล็ก:</strong> ขนาดกะทัดรัด รายละเอียดเส้นสายพุทธศิลป์ประณีตอ่อนช้อย</li>
+  <li><strong>พิมพ์ต้อ:</strong> พระวรกายล่ำสัน สันพระอังสากว้าง ลำพระองค์สั้น มั่นคงหนักแน่น</li>
+  <li><strong>พิมพ์ตื้น:</strong> ความลึกของการกดพิมพ์จะตื้นกว่าพิมพ์อื่น แต่มีเสน่ห์แห่งเส้นสายพุทธศิลป์ที่คมกริบแบบคลาสสิก</li>
+</ul>
+
+<h2>๔. มหากาพย์การแตกกรุ ๔ ยุคประวัติศาสตร์สมัยรัตนโกสินทร์</h2>
+<p>พระรอดวัดมหาวันมิได้ถูกค้นพบพร้อมกันในคราวเดียว หากแต่มีบันทึกการเปิดกรุ ๔ ครั้งสำคัญ:</p>
+<ol>
+  <li><strong>ยุคแรก (สมัยรัชกาลที่ ๕, พ.ศ. ๒๔๓๕–๒๔๔๐):</strong> ยอดพระเจดีย์วัดมหาวันชำรุดทรุดโทรมหักพังลงมา <strong>เจ้าเหมพินธุไพจิตร (เจ้าหลวงเมืองลำพูน)</strong> ได้มีศรัทธาปฏิสังขรณ์เจดีย์ จึงขุดพบพระรอดในกรุฐานเจดีย์เป็นจำนวนมาก เรียกว่า <em>“พระรอดกรุเก่า (กรุเจ้าหลวง)”</em></li>
+  <li><strong>ยุคที่สอง (สมัยรัชกาลที่ ๖, พ.ศ. ๒๔๕๑):</strong> พระอธิการทา เจ้าอาวาสวัดมหาวัน ได้ทำการรื้อแนวกำแพงแก้วและฐานพระอุโบสถเก่าเพื่อบูรณะ ขุดพบพระรอดอีกระลอกหนึ่ง</li>
+  <li><strong>ยุคที่สาม (ยุคสงครามอินโดจีน, พ.ศ. ๒๔๘๓–๒๔๘๕):</strong> วัดมหาวันได้ขุดเปิดกรุเพิ่มเติมเพื่อนำพระรอดแจกจ่ายแก่ทหารหาญที่ไปร่วมรบในสมรภูมิอินโดจีน</li>
+  <li><strong>ยุคที่สี่ (กรุใหม่ พ.ศ. ๒๔๙๘):</strong> พระครูญาณมงคล เจ้าอาวาสวัดมหาวัน ได้ทำการขุดดินบริเวณโคนต้นพิกุลเก่าแก่หน้ากุฏิสงฆ์และบริเวณวิหาร พบพระรอดบรรจุอยู่ในไหโบราณ เรียกว่า <em>“พระรอดกรุใหม่ พ.ศ. ๒๔๙๘”</em> ซึ่งมีผิวพรรณสะอาดและคราบกรุบาง</li>
+</ol>
+
+<h2>๕. สายธารพุทธบารมีสู่ยุคกึ่งพุทธกาล: พระรอดวัดพระสิงห์ ๒๔๙๖ และพระรอดจงอางศึก ๒๕๑๔</h2>
+<p>เนื่องจากพระรอดกรุวัดมหาวันแท้มีมูลค่าสูงหลายล้านบาทและหาได้ยากยิ่ง ในยุคกึ่งพุทธกาลจึงได้มีการสืบสานสายวิชามวลสารพระรอดมหาวันขึ้นอย่างยิ่งใหญ่</p>
+<p>ประวัติศาสตร์ที่ทรงคุณค่าสูงสุดคือการสร้าง <strong>“พระรอด วัดพระสิงห์ เชียงใหม่ ปี พ.ศ. ๒๔๙๖”</strong> โดยคณะสงฆ์วัดพระสิงห์วรมหาวิหาร ได้รวบรวม <strong>เศษชิ้นส่วนพระรอดกรุวัดมหาวันโบราณที่แตกหักชำรุด (ผงพระรอดมหาวันแท้ๆ ๑,๒๐๐ ปี)</strong> นำมาบดละเอียดเป็นมวลสารหลัก ผสมดินใจกลางเมืองพุทธคยาและดินมงคลแดนล้านนา ประกอบพิธีมหาพุทธาภิเษกครั้งประวัติศาสตร์เมื่อเดือนกุมภาพันธ์ พ.ศ. ๒๔๙๖ โดยมีสุดยอดพระเถราจารย์ร่วมอธิษฐานจิต เช่น <strong>หลวงพ่อสด วัดปากน้ำ ภาษีเจริญ</strong>, <strong>เจ้าคุณศรี (สนธิ์) วัดสุทัศน์ฯ</strong>, <strong>หลวงปู่นาค วัดระฆังฯ</strong>, <strong>หลวงปู่เผือก วัดกิ่งแก้ว</strong> และครูบาเจ้าแดนล้านนาอีกนับร้อยรูป</p>
+<p>ต่อมาในปี <strong>พ.ศ. ๒๕๑๔</strong> ท่ามกลางสมรภูมิสงคราม <strong>พระธรรมมุนี (หลวงพ่อแพ เขมังกโร) แห่งวัดพิกุลทอง จ.สิงห์บุรี</strong> ได้สถาปนา <strong>“พระรอดจงอางศึก ปี ๒๕๑๔”</strong> จากเนื้อดินเผาผสมผงพุทธคุณ เพื่อแจกจ่ายเป็นขวัญกำลังใจแก่ทหารหาญกองพันจงอางศึกที่ไปปฏิบัติหน้าที่ปกป้องอธิปไตย</p>
+
+<h2>๖. ปรัชญาพุทธศิลป์และอรรถศาสตร์แห่ง "ความรอดพ้น" (วิมุตติธรรม)</h2>
+<p>พระรอดจำลองพุทธศิลป์สมเด็จพระสัมมาสัมพุทธเจ้าประทับนั่งขัดสมาธิเพชรใต้ร่มโพธิบัลลังก์ พระหัตถ์ขวาวางคว่ำเหนือพระชานุปาง <em>ภูมิสปรรศมุทรา (มารวิชัย)</em> แตะพระธรณีเพื่อเรียกแม่พระธรณีขึ้นมาเป็นพยานแห่งการบำเพ็ญบารมี เอาชนะกองทัพพญามารและกิเลสทั้งปวง</p>
+<p>ในคติชนวิทยาไทย ผู้คนเชื่อว่าคำว่า <strong>“รอด”</strong> หมายถึงการรอดพ้นจากภยันตราย ปืนยิงไม่ออก คมมีดฟันไม่เข้า ทว่า ในมิติพระพุทธศาสนาเถรวาท คำว่า “รอด” คือสัญลักษณ์แห่ง <strong>“วิมุตติ (Vimutti)”</strong> คือความรอดพ้นจากวัฏสงสาร ความหลุดพ้นจากกิเลสตัณหาและความทุกข์ทั้งปวง การบูชาพระรอดจึงมิใช่เพียงเพื่อเป็นเกราะกำบังทางกายภาพ แต่เป็นการเตือนสติให้ใช้ปัญญาเอาชนะอุปสรรคชีวิตดั่งพระพุทธองค์ทรงเอาชนะพญามาร</p>
+
+<div class="amulet-specimen-box" style="margin-top: 40px; padding: 24px; background: #111827; border: 1px solid #374151; border-radius: 8px;">
+  <h3 style="color: #d4af37; margin-top: 0; font-size: 18px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
+    🏛️ โบราณวัตถุและรูปเคารพสะสมของ Dan Siam Amulets (Archival Curated Specimens):
+  </h3>
+  <p style="font-size: 14px; color: #9ca3af; margin-bottom: 16px;">
+    เอกสารวิจัยชิ้นนี้อ้างอิงวัตถุมงคลของแท้ที่มีการบันทึกประวัติศาสตร์การปลุกเสกตรงตามจารีตโบราณในคลังสะสมของ Dan Siam Amulets:
+  </p>
+  <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0; font-size: 14px; line-height: 2;">
+    <li>
+      • <a href="/product/phra-rod-wat-phra-singh-chiang-mai-2496-phim-klang-na-nu" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        พระรอด วัดพระสิงห์ เชียงใหม่ พิมพ์กลาง หน้าหนู ปี ๒๔๙๖ [REF: #1723]
+      </a> 
+      <span style="color: #cbd5e1;">— สุดยอดจักรพรรดิพระรอดกึ่งพุทธกาล ผสมผงชิ้นส่วนพระรอดมหาวันแท้ ๑,๒๐๐ ปี ปลุกเสกโดยหลวงพ่อสด วัดปากน้ำ, เจ้าคุณศรี สนธิ์ วัดสุทัศน์ฯ, หลวงปู่นาค วัดระฆังฯ</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-jong-aang-suk-luang-pho-pae-wat-pikul-thong-2514" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        พระรอดจงอางศึก หลวงพ่อแพ วัดพิกุลทอง ปี ๒๕๑๔ [REF: #91]
+      </a> 
+      <span style="color: #cbd5e1;">— พระรอดประวัติศาสตร์ยุคสงคราม ปลุกเสกโดยพระธรรมมุนี (หลวงพ่อแพ วัดพิกุลทอง จ.สิงห์บุรี) มอบแก่ทหารหาญปกป้องแผ่นดิน</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-large-wat-phra-that-doi-tung-be2516" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        พระรอดใหญ่ วัดพระธาตุดอยตุง หลังพระธาตุเจดีย์ เนื้อดินเผา ปี ๒๕๑๖ [REF: #1452]
+      </a> 
+      <span style="color: #cbd5e1;">— ผสมมวลสารเก่าพระกรุลำพูน ประกอบพิธีใหญ่สายเหนือ หลวงปู่แหวน สุจิณฺโณ และหลวงพ่อเกษม เขมโก ร่วมอธิษฐานจิต</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-luang-pu-supha-be2511-return-ceremony" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        พระรอด รุ่นเสด็จกลับ หลวงปู่สุภา และอาจารย์ชุม ไชยคีรี ปี ๒๕๑๑ [REF: #45]
+      </a> 
+      <span style="color: #cbd5e1;">— วัตถุมงคลสายใต้พิธีเสด็จกลับอันลือลั่น สืบสานเอกลักษณ์พุทธศิลป์พระรอดเพื่อความแคล้วคลาดและอุดมสิริมงคล</span>
+    </li>
+  </ul>
 </div>
 `,
 
     content_zh: `
-<p>追溯至公元8世纪，泰国北部古代**哈利奔猜王国**在**乔玛德维女王**统理下，成为堕罗钵底佛教文明之重镇。其中出土于瓦玛哈弯寺的**帕洛佛（Phra Rod）**，不仅是泰国五大古佛（Benjapakee）中年代最久远之圣物，更是东南亚陶土考古学的无价标本。</p>
+<p>在暹罗备受尊崇的<strong>“五古佛”（Benjapakee）</strong>殿堂中，出土于泰北南奔府瓦玛哈弯寺的<strong>“帕洛佛”（Phra Rod，亦译为避险佛 / 脱难佛）</strong>，堪称历史最古老、法系最渊深的元祖。在民间通俗信仰中，帕洛佛常被附会为刀枪不入之避险甲胄；然而从严谨的考古学、金石碑铭学与古代陶土矿物学审视，帕洛佛实乃公元8世纪古代**哈利奔猜王国（Hariphunchai）**在**乔玛德维女王**统理下，融汇古印度高阶陶冶科技与上座部佛教解脱道哲学的旷世杰作。</p>
 
-<h2>一、瓦玛哈弯寺考古发掘与陶土物性</h2>
-<p>史载瓦玛哈弯寺建于一千二百年前，为守护王国西境之重镇。古牌选用富含天然二氧化硅与铁质的高岭细泥，经古代高温柴窑烧结，质地坚实凝结如石。</p>
+<h2>一、哈利奔猜古国文明（公元8世纪）与四方守护伽蓝坛城</h2>
+<p>金石碑铭考证表明，哈利奔猜古国肇建于<strong>公元8世纪（佛历1200–1222年间）</strong>。有别于后世的泰北兰纳或中部暹罗王朝，哈利奔猜属于<strong>堕罗钵底（Dvaravati）孟族佛教文明圈</strong>之北方重镇。其造像艺术具足鲜明的孟族古风：面相丰润圆满、双目微垂外凸、鼻翼宽平、唇峰厚实对称、耳垂舒长，头顶螺发粗大凝练，流露出深沉内省之禅境。</p>
 
-<h2>二、金刚降魔相与佛历2514年战地名器传承</h2>
-<p>帕洛佛结跏趺坐于菩提宝叶之下，象征克制一切逆境之坚固道心。此一古典造像在佛历2514年被复刻督造成**“军旅战地帕洛佛”（Jong Aang Suk）**，以庇佑守护边疆之将士。</p>
+<p>依据清迈菩提兰希大长老于佛历20世纪所撰之巴利文经典**《乔玛德维女王纪》（Cāmadevīvaṃsa）**与**《胜智蔓典》（Jinakālamālīpakaraṇa）**记载，素帖山隐士**瓦苏贴仙人（Vasudeva Risi）**与拉沃隐士**苏卡坦塔仙人（Sukkathanta Risi）**勘定地理，以“法螺天成”（Sangkhanakhon）之几何图腾辟筑哈利奔猜城垣。仙人们深知惟有持戒深厚之转轮圣王方能抚育黎庶，遂遣使恭请拉沃国公主**乔玛德维女王**北上践祚。</p>
 
-<div style="background: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 18px; border-radius: 6px; margin: 28px 0;">
-  <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Dan Siam 典藏永久馆藏历史标本：</strong>
-  <p style="margin: 0;">• <a href="/product/phra-rod-jong-aang-suk-2514" style="color: #d4af37; text-decoration: underline;">佛历2514年 军旅战地帕洛佛 [REF: #91]</a> — 融合千年哈利奔猜古法与龙婆托护佑之经典。</p>
+<p>女王携五百僧伽、全套三藏梵本、皇家学者、乐师及大匠沿平河溯流而上，在王城四极修建了**“镇国四方守护伽蓝坛城”**：</p>
+<ul>
+  <li><strong>西方金刚界：</strong> <strong>瓦玛哈弯寺（Wat Mahawan）</strong> — 奉安核心圣物<em>“帕洛佛”</em>（总领至高护持与出离解脱法门）。</li>
+  <li><strong>北方安稳界：</strong> <strong>瓦帕空仙人寺（Wat Phra Khong Risi）</strong> — 奉安<em>“帕空佛”</em>与<em>“帕邦佛”</em>（巩固城邦地气）。</li>
+  <li><strong>东方福德界：</strong> <strong>瓦东高寺（Wat Don Kaeo）</strong> — 奉安<em>“帕奔佛”</em>（保佑农桑丰登、繁衍昌盛）。</li>
+  <li><strong>南方避险界：</strong> <strong>瓦帕突里寺（Wat Pratu Lee）</strong> — 奉安<em>“帕良佛”</em>（化解兵戈灾厄、退避怨敌）。</li>
+</ul>
+
+<h2>二、古代矿物学与玻化烧结科技（Vitrification）</h2>
+<p>千百年以来，国际藏家最惊叹之谜在于：为何瓦玛哈弯寺出土之帕洛陶土佛牌历经一千二百年地下泥水浸蚀，不仅未曾酥碎，反而坚硬如石、轻扣之下发出类似金属与玉石之清脆共鸣？这归功于哈利奔猜先民精微的材料工程学：</p>
+<ol>
+  <li><strong>神圣微观泥质配伍：</strong> 选用<strong>“喜拉提坤”（Silathikhun）</strong>白石粉（富含微晶叶蜡石与高岭石之天然软玉矿，研磨至微米级细粉），搭配光河两岸深层**“蟹穴细泥”（Din Khui Pu）**。此种极细胶体黏土不仅绝无粗砂杂质，更富含纳米级氧化铁（$Fe_2O_3$）与天然二氧化硅（$SiO_2$），辅以百零八种圣草药汁与吉祥花粉作为天然有机交联剂。</li>
+  <li><strong>高温升华玻化（Vitrification）：</strong> 泥胚置入古代直焰柴窑，在<strong>950°C至1,150°C</strong>之极端高温下持续焙烧。在峰值温度下，二氧化硅与矿物助熔剂发生<strong>液相烧结（Liquid-Phase Sintering）</strong>，微观孔隙彻底闭合，黏土基质重构转化为坚密致密的微晶半玻化陶瓷（Vitrified Ceramic），使其获得超越普通陶土千百倍的抗风化性能。</li>
+</ol>
+
+<h3>窑炉氧化还原反应（Redox）与五大经典色相</h3>
+<p>帕洛佛之色彩绝非人工染色，而是源自窑炉温度分布与铁元素之氧化还原反应：</p>
+<ul>
+  <li><strong>白色 / 黄花色：</strong> 受热温度最低（约800°C–900°C），位于窑炉边沿，铁质未充分氧化。</li>
+  <li><strong>红砖色 / 朱砂色：</strong> 受热适中（900°C–1,000°C），在<strong>氧化气氛</strong>下铁元素转化为三氧化二铁（赤铁矿 Hematite），呈现醇厚橙红色。</li>
+  <li><strong>青石绿（臼石绿）：</strong> 处于窑心极高热温区（1,050°C–1,100°C），硅铁完全熔合为铁硅酸盐，硬度最高。</li>
+  <li><strong>乌黑色 / 阴阳双色（Nuea Phan）：</strong> 在缺氧之<strong>还原气氛</strong>下，三氧化二铁被深度还原为四氧化三铁（磁铁矿 Magnetite）呈现纯黑；若同一枚佛牌正面迎火而背面背火，便会形成罕见的“阴阳双色”，为资深藏家之梦寐逸品。</li>
+</ul>
+
+<h2>三、瓦玛哈弯寺五大经典模具造像学</h2>
+<p>历代金石鉴定学将瓦玛哈弯原窖帕洛佛归纳为五种标准形制：</p>
+<ul>
+  <li><strong>大模（Phim Yai）：</strong> 身形巍峨舒展、胸膛饱满、菩提树叶枝脉繁复深邃，左耳下方具足传世标志“水滴暗记”与“佛面泪痕”。</li>
+  <li><strong>中模 / 鼠面模（Phim Klang / Na Nu）：</strong> 线条修长洗练，面相清秀微尖，民间俗称<em>“鼠面帕洛”</em>，为全泰竞相珍藏之经典（与 Dan Siam 永久馆藏 #1723 完美契合）。</li>
+  <li><strong>小模（Phim Lek）：</strong> 尺幅精巧玲珑，然衣纹细线刻划精妙入微。</li>
+  <li><strong>矮壮模（Phim Toh）：</strong> 体魄浑厚结实、双肩平张、重心稳健，展现无可撼动之金刚力。</li>
+  <li><strong>浅模（Phim Tuen）：</strong> 压模深度相对平缓，然浮雕线锋锐凌厉，别具高古意趣。</li>
+</ul>
+
+<h2>四、曼谷王朝四次历史性出窖考订</h2>
+<p>瓦玛哈弯古佛牌非一次出土，而在曼谷王朝历经四次关键历史发掘：</p>
+<ol>
+  <li><strong>拉玛五世朝（佛历2435–2440年）：</strong> 瓦玛哈弯寺千年古塔坍塌，南奔府土司<strong>昭銮亨平图派吉（Chao Luang Hemphinthuphaichit）</strong>主持修缮重建，从塔基核心清理出大量原版帕洛佛，分赏皇室要员与功德主，史称<em>“老窖帕洛（Kru Kao）”</em>。</li>
+  <li><strong>拉玛六世朝（佛历2451年）：</strong> 住持阿提甘塔重修佛殿围墙与大殿地基，再度发掘出土一批古牌。</li>
+  <li><strong>印度支那战争时期（佛历2483–2485年）：</strong> 寺方为庇护远赴边境作战之将士，由僧伽启封部分古窖分发随军护身。</li>
+  <li><strong>新窖时代（佛历2498年）：</strong> 帕库亚纳蒙坤大长老在僧舍旁千年水黄皮古树（Pikul）盘根错节之深土及殿堂旧址深掘，自古陶瓮中起获一批珍品，史称<em>“佛历2498年新窖（Kru Mai）”</em>，包浆轻透、品相完好。</li>
+</ol>
+
+<h2>五、半佛历时代传承：佛历2496年瓦帕辛寺与佛历2514年龙婆培名器</h2>
+<p>由于千年原窖帕洛佛存世量极罕且市值高达数百万泰铢，二十世纪中叶泰国佛教界两度启建划时代的传承大典：</p>
+<p>其巅峰之作首推清迈<strong>瓦帕辛皇家寺院于佛历2496年（1953年）</strong>之督造。寺方专门收集瓦玛哈弯寺破损之<strong>千年帕洛古佛碎料研磨成圣粉</strong>，融合印度菩提伽耶佛陀成道圣土，于佛历2496年2月启建盛况空前之全泰水陆大法会，恭请<strong>瓦白榄寺龙婆术（Luang Pho Sodh）</strong>、<strong>瓦苏泰寺召坤习·颂</strong>、<strong>瓦拉康寺龙普纳</strong>、<strong>瓦景缴寺龙普不</strong>及泰北全体古巴大长老同坛加持，成为公认承袭千年哈利奔猜圣料血脉的二十世纪第一名器。</p>
+<p>随后的<strong>佛历2514年（1971年）</strong>，面对边境战事风云，信武里府瓦匹坤通当代圣僧<strong>龙婆培大师（Luang Pho Pae）</strong>选用神圣古土经粉，亲自督造开光了蜚声海内外的<strong>“黑眼镜蛇战地帕洛佛”（Phra Rod Jong Aang Suk）</strong>，专门分发予开赴战场的野战将士，创下无数护佑生还之奇迹传奇。</p>
+
+<h2>六、造像学哲学：金刚降魔相与“脱难解脱”（Vimutti）真义</h2>
+<p>帕洛佛结金刚跏趺坐于菩提树荫宝座之上，右手抚膝作<strong>“触地降魔印”（Bhūmisparśa Mudrā）</strong>，寓意以累劫无量清净波罗蜜感通大地见证，彻底摧破波旬魔军与贪嗔痴烦恼。</p>
+<p>民间流俗将“Rod”字狭隘理解为躲避刀枪子弹之物理避险，而在正统南传上座部教理中，帕洛佛之“Rod”其本质乃是<strong>“解脱”（Vimutti）</strong>——即脱离轮回苦海、超拔一切无明障难。佩戴帕洛佛之究竟要义，在于提醒行者恒常安住正念正知，以佛陀降魔之金刚定力，勘破并超越世间一切顺逆境风。</p>
+
+<div class="amulet-specimen-box" style="margin-top: 40px; padding: 24px; background: #111827; border: 1px solid #374151; border-radius: 8px;">
+  <h3 style="color: #d4af37; margin-top: 0; font-size: 18px; border-bottom: 1px solid #374151; padding-bottom: 8px;">
+    🏛️ Dan Siam 丹暹典藏永久馆藏历史标本：
+  </h3>
+  <p style="font-size: 14px; color: #9ca3af; margin-bottom: 16px;">
+    本篇文献考据所依托之真实传承文物，悉数收录于 Dan Siam Amulets 永久典藏馆：
+  </p>
+  <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0; font-size: 14px; line-height: 2;">
+    <li>
+      • <a href="/product/phra-rod-wat-phra-singh-chiang-mai-2496-phim-klang-na-nu" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        清迈瓦帕辛皇家寺院 佛历2496年 鼠面中模帕洛佛 [REF: #1723]
+      </a> 
+      <span style="color: #cbd5e1;">— 融合一千二百年瓦玛哈弯原窖古佛碎料圣粉；瓦白榄龙婆术、瓦苏泰召坤习·颂、瓦拉康龙普纳等全泰顶尖圣僧同坛大典加持。</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-jong-aang-suk-luang-pho-pae-wat-pikul-thong-2514" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        信武里府瓦匹坤通 龙婆培 佛历2514年 黑眼镜蛇战地帕洛佛 [REF: #91]
+      </a> 
+      <span style="color: #cbd5e1;">— 著名战地救生古陶圣物，由一代名僧龙婆培亲自为赴战将士加持祈福之经典法作。</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-large-wat-phra-that-doi-tung-be2516" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        清莱府瓦帕塔堆东寺 佛历2516年 大模陶土帕洛佛 [REF: #1452]
+      </a> 
+      <span style="color: #cbd5e1;">— 混合南奔古窖老土圣料，泰北当代森林派龙普元与龙婆卡贤高僧同坛注念。</span>
+    </li>
+    <li>
+      • <a href="/product/phra-rod-luang-pu-supha-be2511-return-ceremony" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
+        泰南龙普素法与阿赞仲 佛历2511年“舍德甲”（回返）盛典帕洛佛 [REF: #45]
+      </a> 
+      <span style="color: #cbd5e1;">— 泰南传奇古法盛典结晶，传承古典帕洛造像法门，具足圆满避险纳吉之功德。</span>
+    </li>
+  </ul>
 </div>
 `
   },
