@@ -60,7 +60,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Certified Archival Specimen in Dan Siam Heritage Collection:</strong>
   <p style="margin: 0;">• <a href="/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495" style="color: #d4af37; text-decoration: underline;">Phra Somdej Thaan Kha To Luang Pu Nak Wat Rakang B.E. 2495 [REF: #49]</a> — Contains genuine crushed antique Somdej Toh powder.</p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_th: `
 <p>ในทำเนียบพระเครื่องเบญจภาคีและประวัติศาสตร์ศิลป์รัตนโกสินทร์ <strong>“พระสมเด็จ”</strong> ได้รับการยกย่องให้เป็น <em>“ราชาแห่งพระเครื่อง”</em> จุดกำเนิดที่แท้จริงมิได้เกิดจากไสยศาสตร์พื้นบ้าน หากแต่มีความเชื่อมโยงอย่างลึกซึ้งกับการปฏิรูปพระพุทธศาสนาและภูมิปัญญาของสยามประเทศในรัชสมัย <strong>พระบาทสมเด็จพระจอมเกล้าเจ้าอยู่หัว (รัชกาลที่ ๔)</strong></p>
@@ -85,7 +85,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ พระเครื่องอ้างอิงทางประวัติศาสตร์ในคลัง Dan Siam Heritage Archive:</strong>
   <p style="margin: 0;">• <a href="/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495" style="color: #d4af37; text-decoration: underline;">พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี ๒๔๙๕ (REF: #49)</a> — ชิ้นเอกมวลสารผงเก่าสมเด็จโตแท้ผสมเข้มข้น</p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_zh: `
 <p>在泰国南传佛教艺术中，<strong>“崇迪佛”（Phra Somdej）</strong>被公认为至高无上的<em>“佛牌之王”</em>。其历史源流深植于暹罗<strong>拉玛四世国王（King Mongkut，公元1851–1868年在位）</strong>时代的佛教教义改革与学术思潮之中。</p>
@@ -103,7 +103,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Dan Siam 典藏永久馆藏历史标本：</strong>
   <p style="margin: 0;">• <a href="/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495" style="color: #d4af37; text-decoration: underline;">瓦拉康寺 龙普纳 佛历2495年 桌腿座崇迪佛 [REF: #49]</a> — 蕴含阿赞多正统古老经粉碎料之稀世经典。</p>
 </div>
-` + COPYRIGHT_HTML
+`
   },
 
   // ── 2. ARTICLE 4: Phra Pidta & Maha-Kaccayana ──────────────────────────────
@@ -137,7 +137,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Certified Archival Specimen in Dan Siam Heritage Collection:</strong>
   <p style="margin: 0;">• <a href="/product/phra-ngop-nam-oi-lp-moon-wat-ban-jan-2545" style="color: #d4af37; text-decoration: underline;">Phra Ngop Nam Oi / Sacred Wheel Amulet Luang Pu Moon Wat Ban Jan B.E. 2545 [REF: #1738]</a> — Circular wheel of protective Dhamma.</p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_th: `
 <p>พุทธลักษณะอันเป็นเอกลักษณ์ของ <strong>“พระปิดตา”</strong> หรือ <strong>“พระภควัมบดี”</strong> ถือเป็นหนึ่งในประติมากรรมพุทธศิลป์ที่ลึกซึ้งที่สุดในสยามประเทศ ปรัชญาแท้จริงมิใช่ไสยศาสตร์เพื่อความคงกระพันชาตรี หากแต่เป็นรูปธรรมแห่ง **“การสำรวมอินทรีย์และการเจริญนิโรธสมาบัติ”**</p>
@@ -152,7 +152,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ พระเครื่องอ้างอิงทางประวัติศาสตร์ในคลัง Dan Siam Heritage Archive:</strong>
   <p style="margin: 0;">• <a href="/product/phra-ngop-nam-oi-lp-moon-wat-ban-jan-2545" style="color: #d4af37; text-decoration: underline;">พระงบน้ำอ้อย หลวงปู่หมุน วัดบ้านจาน ปี ๒๕๔๕ (REF: #1738)</a> — ธรรมจักรพุทธคุณ ๑๐ ทิศ คุ้มครองรอบด้าน</p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_zh: `
 <p>在泰国南传佛教造像学中，<strong>“必打佛”（Phra Pidta，即闭眼佛或遮面佛）</strong>是极具哲学深度的艺术典范。其真正旨归绝非民俗巫术，而是佛教修行中**“根律仪戒”（感官息止）**与**“灭尽定”**的具象化再现。</p>
@@ -167,7 +167,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Dan Siam 典藏永久馆藏历史标本：</strong>
   <p style="margin: 0;">• <a href="/product/phra-ngop-nam-oi-lp-moon-wat-ban-jan-2545" style="color: #d4af37; text-decoration: underline;">龙婆满 瓦班赞寺 佛历2545年 轮相佛 [REF: #1738]</a> — 象征十方佛陀光明周流庇护。</p>
 </div>
-` + COPYRIGHT_HTML
+`
   },
 
   // ── 3. ARTICLE 5: Thao Wessuwan & Vaisravana ────────────────────────────────
@@ -196,7 +196,7 @@ const POSTS = [
 
 <h2>3. Ethical Dimensions of Wealth and Protection</h2>
 <p>Canonical texts emphasize that Thao Wessuwan blesses individuals endowed with honesty, filial piety, and ethical trade. As guardian of the subterranean earth treasures, wealth in his domain is granted only as a fruit of moral uprightness.</p>
-` + COPYRIGHT_HTML,
+`,
 
     content_th: `
 <p>ในสถาปัตยกรรมพระอารามหลวงสยาม ภาพลักษณ์ของ <strong>“ท้าวเวสสุวรรณ”</strong> ยืนตระหง่านกุมกระบองเฝ้าซุ้มประตู เป็นที่เคารพยำเกรงของพุทธศาสนิกชน ในมิติแห่งพระไตรปิฎก ท่านมิใช่อสูรผู้โหดร้าย หากแต่เป็น <strong>“มหาราชผู้ทรงธรรมแห่งสวรรค์ชั้นจาตุมหาราชิกา”</strong> ผู้ถวายอภิบาลแก่พระบรมศาสดา</p>
@@ -206,7 +206,7 @@ const POSTS = [
 
 <h2>๒. ประติมานวิทยายักษ์ทวารบาลแห่งสยาม</h2>
 <p>จากท้าวกุเวรในศิลปะอินเดียโบราณ สู่ศิลปะสุโขทัย อยุธยา และรัตนโกสินทร์ ช่างหลวงสยามได้รังสรรค์พุทธศิลป์ท้าวเวสสุวรรณในเครื่องทรงนักรบขัตติยราช สะท้อนถึงมหาอำนาจในการสยบสิ่งอัปมงคล และเป็นสัญลักษณ์แห่งความซื่อสัตย์สุจริต</p>
-` + COPYRIGHT_HTML,
+`,
 
     content_zh: `
 <p>在泰国皇家寺院山门之前，手持宝棒巍然屹立的<strong>陶威素湾（多闻天王 / Vaisravana）</strong>法相庄严。在正统佛教三藏中，天王非民间臆想之恶煞，而是四大天王之首、北方夜叉部族领袖与正法坚毅的护持大圣。</p>
@@ -216,7 +216,7 @@ const POSTS = [
 
 <h2>二、造像学演进与道德财神之真义</h2>
 <p>天王不仅为破除一切业障恶兆之尊，更兼领大地伏藏。正统佛法强调：天王所赐之财，唯归于孝顺父母、持戒清净、正命经商之人。</p>
-` + COPYRIGHT_HTML
+`
   },
 
   // ── 4. ARTICLE 6: Hariphunchai Phra Rod ────────────────────────────────────
@@ -247,7 +247,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Certified Archival Specimen in Dan Siam Heritage Collection:</strong>
   <p style="margin: 0;">• <a href="/product/phra-rod-jong-aang-suk-2514" style="color: #d4af37; text-decoration: underline;">Phra Rod Jong Aang Suk B.E. 2514 (Consecrated by Luang Pu Tuad Masters) [REF: #91]</a></p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_th: `
 <p>ย้อนหลังไปในพุทธศตวรรษที่ ๑๓ อาณาจักร <strong>“หริภุญชัย”</strong> (จังหวัดลำพูนในปัจจุบัน) ได้รุ่งเรืองขึ้นในฐานะศูนย์กลางอารยธรรมมอญ-ทวารวดี ภายใต้การนำของ <strong>พระนางจามเทวี</strong> ปฐมกษัตรีย์ผู้ทรงเปี่ยมด้วยพระปรีชาญาณ ในบรรดามรดกทางโบราณคดี **“พระรอด วัดมหาวัน”** ถือเป็นพระเครื่องที่มีอายุเก่าแก่ที่สุดในชุดเบญจภาคีของสยาม</p>
@@ -262,7 +262,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ พระเครื่องอ้างอิงทางประวัติศาสตร์ในคลัง Dan Siam Heritage Archive:</strong>
   <p style="margin: 0;">• <a href="/product/phra-rod-jong-aang-suk-2514" style="color: #d4af37; text-decoration: underline;">พระรอดจงอางศึก หลวงพ่อทวด ปี ๒๕๑๔ (REF: #91)</a> — พระรอดประวัติศาสตร์ยุคสงครามผสานบารมีหลวงพ่อทวด</p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_zh: `
 <p>追溯至公元8世纪，泰国北部古代**哈利奔猜王国**在**乔玛德维女王**统理下，成为堕罗钵底佛教文明之重镇。其中出土于瓦玛哈弯寺的**帕洛佛（Phra Rod）**，不仅是泰国五大古佛（Benjapakee）中年代最久远之圣物，更是东南亚陶土考古学的无价标本。</p>
@@ -277,7 +277,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Dan Siam 典藏永久馆藏历史标本：</strong>
   <p style="margin: 0;">• <a href="/product/phra-rod-jong-aang-suk-2514" style="color: #d4af37; text-decoration: underline;">佛历2514年 军旅战地帕洛佛 [REF: #91]</a> — 融合千年哈利奔猜古法与龙婆托护佑之经典。</p>
 </div>
-` + COPYRIGHT_HTML
+`
   },
 
   // ── 5. ARTICLE 7: Guman Thong & Luang Pho Pin 2500 ─────────────────────────
@@ -308,7 +308,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Certified Archival Specimen in Dan Siam Heritage Collection:</strong>
   <p style="margin: 0;">• <a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; text-decoration: underline;">Vintage Guman Thong Din 7 Pacha Luang Pho Pin Wat Ubon B.E. 2500 [REF: #1737]</a></p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_th: `
 <p>ในวัฒนธรรมร่วมสมัยระดับสากล เครื่องรางที่เรียกขานว่า <strong>“กุมารทอง”</strong> มักถูกภาพยนตร์บิดเบือนให้กลายเป็นเรื่องราวสยองขวัญไสยดำ หากแต่ในทางมานุษยวิทยาวัฒนธรรม คติการสร้างกุมารทองของพระคณาจารย์ผู้ทรงศีล แท้จริงคือ **“คติเทวพิทักษ์เคหสถาน (Household Tutelary Deva)”** เช่นเดียวกับคติเทพเจ้าเตาไฟในวัฒนธรรมจีนโบราณ</p>
@@ -323,7 +323,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ พระเครื่องอ้างอิงทางประวัติศาสตร์ในคลัง Dan Siam Heritage Archive:</strong>
   <p style="margin: 0;">• <a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; text-decoration: underline;">กุมารทอง หลวงพ่อพิณ วัดอุบลวรรณาราม ปี ๒๕๐๐ (REF: #1737)</a> — มรดกเครื่องรางโบราณยุคกึ่งพุทธกาล</p>
 </div>
-` + COPYRIGHT_HTML,
+`,
 
     content_zh: `
 <p>在当代流行文化中，泰国**“古曼童”（Guman Thong）**常被现代影视作品妖魔化。但在文化人类学与宗教社会学视域中，正统南传僧伽所督造的古曼童，其本质实为**“家宅守护福神”（Household Deva）**，如同罗马神话中的守护神（Lares）或中国民俗中的司命灶君。</p>
@@ -338,7 +338,7 @@ const POSTS = [
   <strong style="color: #d4af37; display: block; margin-bottom: 8px;">🏛️ Dan Siam 典藏永久馆藏历史标本：</strong>
   <p style="margin: 0;">• <a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; text-decoration: underline;">瓦乌汶寺 龙婆品 佛历2500年 圣泥古曼童 [REF: #1737]</a> — 半个世纪以来的家宅商业福德典范。</p>
 </div>
-` + COPYRIGHT_HTML
+`
   }
 ];
 

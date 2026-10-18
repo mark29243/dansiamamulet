@@ -57,6 +57,19 @@ export default function BlogPostClient({ post }: BlogPostProps) {
     : lang === 'zh' ? (post.excerpt_zh || post.excerpt_th)
     : (post.excerpt_th || post.excerpt);
 
+  const cleanContent = (displayContent || '').replace(/<div class="copyright-notice"[\s\S]*?<\/div>/gi, '');
+
+  const copyrightNotice = (lang === 'zh') ? {
+    title: '版权与学术引用声明：',
+    body: '本文所有历史研究文献、三语翻译文本及高精度微距影像均为 Dan Siam Amulets 之知识产权。允许非商业性质的学术学习与学术引用，但必须完整保留出处并附带指向本站的原始网页链接。严禁任何未经授权的商业复制、翻印或挪用影像之行为。'
+  } : (lang === 'en') ? {
+    title: 'Academic Citation & Copyright Policy:',
+    body: 'All original essays, trilingual historical translations, and high-resolution studio photographs are protected intellectual property of Dan Siam Amulets. Non-commercial and scholarly citations are permitted strictly under the condition that full canonical URL attribution is credited to Dan Siam Amulets. Commercial scraping or unauthorized usage of studio imagery is strictly prohibited.'
+  } : {
+    title: 'ข้อกำหนดลิขสิทธิ์และมาตรฐานการอ้างอิงวิชาการ:',
+    body: 'เนื้อหาบทความ งานวิจัยประวัติศาสตร์ งานแปลทั้ง ๓ ภาษา และภาพถ่ายสตูดิโอความละเอียดสูงทุกภาพ เป็นทรัพย์สินทางปัญญาของ Dan Siam Amulets ได้รับการคุ้มครองตามพระราชบัญญัติลิขสิทธิ์ พ.ศ. ๒๕๓๗ อนุญาตให้อ้างอิงเพื่อการศึกษาหรือเผยแพร่เชิงวิชาการโดยต้องระบุแหล่งที่มาและใส่ Canonical Hyperlink กลับมายังบทความต้นฉบับอย่างสมบูรณ์ ห้ามคัดลอก ดัดแปลง หรือนำภาพถ่ายไปใช้ในเชิงพาณิชย์โดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร'
+  };
+
   const displayCategory = getCatName(post.category, lang);
 
   return (
@@ -132,9 +145,31 @@ export default function BlogPostClient({ post }: BlogPostProps) {
       {/* Content */}
       <div
         className="blog-content"
-        dangerouslySetInnerHTML={{ __html: displayContent || '' }}
+        dangerouslySetInnerHTML={{ __html: cleanContent }}
         style={{ fontSize: 15, lineHeight: 1.85, color: 'var(--text)' }}
       />
+
+      {/* Dynamic Single-Language Copyright Notice */}
+      <div
+        className="copyright-notice"
+        style={{
+          marginTop: 48,
+          padding: 24,
+          background: '#0f172a',
+          borderLeft: '4px solid #d4af37',
+          borderRadius: 8,
+          fontSize: 13,
+          color: '#94a3b8',
+          lineHeight: 1.7,
+        }}
+      >
+        <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, marginBottom: 8 }}>
+          © 2026 Dan Siam Amulets Heritage Research Archive. All Rights Reserved.
+        </p>
+        <p style={{ margin: 0 }}>
+          <strong style={{ color: '#cbd5e1' }}>{copyrightNotice.title}</strong> {copyrightNotice.body}
+        </p>
+      </div>
 
       {/* Back */}
       <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid var(--cream-dark)' }}>
