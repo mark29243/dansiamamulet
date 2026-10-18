@@ -923,10 +923,10 @@ const POSTS = [
 <div style="background: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 22px; border-radius: 8px; margin: 30px 0;">
   <strong style="color: #d4af37; display: block; font-size: 1.05rem; margin-bottom: 12px;">🏛️ Certified Archival Specimens in the Dan Siam Heritage Collection:</strong>
   <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
-    <li><a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Vintage Guman Thong Din 7 Pacha Luang Pho Pin Wat Ubon B.E. 2500 [REF: #1737]</a> — 120,000 THB. The premier Mid-Century Mae Klong basin guardian artifact in natural cemetery earth.</li>
-    <li><a href="/product/phra-khun-phaen-phuttha-kwak-luang-pho-pin-wat-ubon-2503" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Phra Khun Phaen Phuttha Kwak Luang Pho Pin Wat Ubon B.E. 2503 [REF: #1736]</a> — 80,000 THB. Consecrated holy powder formulation featuring the rare beckoning Buddha mudra.</li>
-    <li><a href="/product/phra-khun-phaen-guman-thong-somdej-thammarangsi-2540" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Phra Khun Phaen Guman Thong Somdej Thammarangsi B.E. 2540 [REF: #1735]</a> — 60,000 THB. Infused with Luang Pu Tim Wat Lahan Rai consecrated powders and Cambodian mountain herbs.</li>
-    <li><a href="/product/khun-phaen-sitting-kumarn-luang-pu-suang-wat-phai-phattana-2519" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Khun Phaen Sitting Kumarn Luang Pu Suang Wat Phai Phattana B.E. 2519 [REF: #1640]</a> — 70,000 THB. Historic creation by the legendary recluse of the Phanom Dong Rak mountains.</li>
+    <li><a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Vintage Guman Thong Din 7 Pacha Luang Pho Pin Wat Ubon B.E. 2500 [REF: #1737]</a> — 1,200 THB. The premier Mid-Century Mae Klong basin guardian artifact in natural cemetery earth.</li>
+    <li><a href="/product/phra-khun-phaen-phuttha-kwak-luang-pho-pin-wat-ubon-2503" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Phra Khun Phaen Phuttha Kwak Luang Pho Pin Wat Ubon B.E. 2503 [REF: #1736]</a> — 800 THB. Consecrated holy powder formulation featuring the rare beckoning Buddha mudra.</li>
+    <li><a href="/product/phra-khun-phaen-guman-thong-somdej-thammarangsi-2540" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Phra Khun Phaen Guman Thong Somdej Thammarangsi B.E. 2540 [REF: #1735]</a> — 600 THB. Infused with Luang Pu Tim Wat Lahan Rai consecrated powders and Cambodian mountain herbs.</li>
+    <li><a href="/product/khun-phaen-sitting-kumarn-luang-pu-suang-wat-phai-phattana-2519" style="color: #d4af37; font-weight: bold; text-decoration: underline;">Khun Phaen Sitting Kumarn Luang Pu Suang Wat Phai Phattana B.E. 2519 [REF: #1640]</a> — 700 THB. Historic creation by the legendary recluse of the Phanom Dong Rak mountains.</li>
   </ul>
 </div>
 `,
@@ -1028,10 +1028,10 @@ const POSTS = [
 <div style="background: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 22px; border-radius: 8px; margin: 30px 0;">
   <strong style="color: #d4af37; display: block; font-size: 1.05rem; margin-bottom: 12px;">🏛️ พระเครื่องและเครื่องรางอ้างอิงประวัติศาสตร์ในคลัง Dan Siam Heritage Archive:</strong>
   <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
-    <li><a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; font-weight: bold; text-decoration: underline;">กุมารทอง เนื้อดินเจ็ดป่าช้า หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี ๒๕๐๐ (REF: #1737)</a> — ราคา 120,000 บาท ยอดเครื่องรางกึ่งพุทธกาลสายแม่กลอง สภาพสวยสมบูรณ์เดิมจากวัด</li>
-    <li><a href="/product/phra-khun-phaen-phuttha-kwak-luang-pho-pin-wat-ubon-2503" style="color: #d4af37; font-weight: bold; text-decoration: underline;">พระขุนแผนพิมพ์พุทธกวัก หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี ๒๕๐๓ เนื้อผง (REF: #1736)</a> — ราคา 80,000 บาท พุทธศิลป์ปางกวักทรัพย์หายาก อายุกว่า ๖๐ ปี</li>
-    <li><a href="/product/phra-khun-phaen-guman-thong-somdej-thammarangsi-2540" style="color: #d4af37; font-weight: bold; text-decoration: underline;">พระขุนแผนกุมารทอง เนื้อว่าน หลวงปู่ธรรมรังษี วัดพระพุทธบาทเขาพนมดิน ปี ๒๕๔๐ (REF: #1735)</a> — ราคา 60,000 บาท ผสมผงพรายกุมารแท้สายหลวงปู่ทิม ระยอง</li>
-    <li><a href="/product/khun-phaen-sitting-kumarn-luang-pu-suang-wat-phai-phattana-2519" style="color: #d4af37; font-weight: bold; text-decoration: underline;">ขุนแผนนั่งกุมาร หลวงปู่สรวง วัดไพรพัฒนา ศรีสะเกษ ปี ๒๕๑๙ (REF: #1640)</a> — ราคา 70,000 บาท พระยุคต้นมหาลาภของเทวดาเล่นดินแห่งชายแดนเขมร</li>
+    <li><a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; font-weight: bold; text-decoration: underline;">กุมารทอง เนื้อดินเจ็ดป่าช้า หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี ๒๕๐๐ (REF: #1737)</a> — ราคา 1,200 บาท ยอดเครื่องรางกึ่งพุทธกาลสายแม่กลอง สภาพสวยสมบูรณ์เดิมจากวัด</li>
+    <li><a href="/product/phra-khun-phaen-phuttha-kwak-luang-pho-pin-wat-ubon-2503" style="color: #d4af37; font-weight: bold; text-decoration: underline;">พระขุนแผนพิมพ์พุทธกวัก หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี ๒๕๐๓ เนื้อผง (REF: #1736)</a> — ราคา 800 บาท พุทธศิลป์ปางกวักทรัพย์หายาก อายุกว่า ๖๐ ปี</li>
+    <li><a href="/product/phra-khun-phaen-guman-thong-somdej-thammarangsi-2540" style="color: #d4af37; font-weight: bold; text-decoration: underline;">พระขุนแผนกุมารทอง เนื้อว่าน หลวงปู่ธรรมรังษี วัดพระพุทธบาทเขาพนมดิน ปี ๒๕๔๐ (REF: #1735)</a> — ราคา 600 บาท ผสมผงพรายกุมารแท้สายหลวงปู่ทิม ระยอง</li>
+    <li><a href="/product/khun-phaen-sitting-kumarn-luang-pu-suang-wat-phai-phattana-2519" style="color: #d4af37; font-weight: bold; text-decoration: underline;">ขุนแผนนั่งกุมาร หลวงปู่สรวง วัดไพรพัฒนา ศรีสะเกษ ปี ๒๕๑๙ (REF: #1640)</a> — ราคา 700 บาท พระยุคต้นมหาลาภของเทวดาเล่นดินแห่งชายแดนเขมร</li>
   </ul>
 </div>
 `,
@@ -1133,10 +1133,10 @@ const POSTS = [
 <div style="background: rgba(212, 175, 55, 0.08); border-left: 3px solid #d4af37; padding: 22px; border-radius: 8px; margin: 30px 0;">
   <strong style="color: #d4af37; display: block; font-size: 1.05rem; margin-bottom: 12px;">🏛️ Dan Siam 博物馆级典藏永久馆藏历史标本：</strong>
   <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
-    <li><a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; font-weight: bold; text-decoration: underline;">叻丕府瓦乌汶 龙婆品 佛历2500年 七墓地圣土古曼童 [REF: #1737]</a> — 120,000 泰铢。半个世纪以来美功河流域最具代表性之商界守护金童标本。</li>
-    <li><a href="/product/phra-khun-phaen-phuttha-kwak-luang-pho-pin-wat-ubon-2503" style="color: #d4af37; font-weight: bold; text-decoration: underline;">叻丕府瓦乌汶 龙婆品 佛历2503年 佛招财坤平圣粉佛牌 [REF: #1736]</a> — 80,000 泰铢。罕见如来招财印相与清净经灰圣粉督造。</li>
-    <li><a href="/product/phra-khun-phaen-guman-thong-somdej-thammarangsi-2540" style="color: #d4af37; font-weight: bold; text-decoration: underline;">武里南府龙普探玛郎喜 佛历2540年 坤平古曼童圣草佛牌 [REF: #1735]</a> — 60,000 泰铢。融入龙普添纯正碰派古曼圣粉与高棉秘传圣药。</li>
-    <li><a href="/product/khun-phaen-sitting-kumarn-luang-pu-suang-wat-phai-phattana-2519" style="color: #d4af37; font-weight: bold; text-decoration: underline;">四色菊府龙普爽 佛历2519年 坤平坐古曼圣土佛牌 [REF: #1640]</a> — 70,000 泰铢。传奇神僧早期高棉古地圣泥杰作。</li>
+    <li><a href="/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" style="color: #d4af37; font-weight: bold; text-decoration: underline;">叻丕府瓦乌汶 龙婆品 佛历2500年 七墓地圣土古曼童 [REF: #1737]</a> — 1,200 泰铢。半个世纪以来美功河流域最具代表性之商界守护金童标本。</li>
+    <li><a href="/product/phra-khun-phaen-phuttha-kwak-luang-pho-pin-wat-ubon-2503" style="color: #d4af37; font-weight: bold; text-decoration: underline;">叻丕府瓦乌汶 龙婆品 佛历2503年 佛招财坤平圣粉佛牌 [REF: #1736]</a> — 800 泰铢。罕见如来招财印相与清净经灰圣粉督造。</li>
+    <li><a href="/product/phra-khun-phaen-guman-thong-somdej-thammarangsi-2540" style="color: #d4af37; font-weight: bold; text-decoration: underline;">武里南府龙普探玛郎喜 佛历2540年 坤平古曼童圣草佛牌 [REF: #1735]</a> — 600 泰铢。融入龙普添纯正碰派古曼圣粉与高棉秘传圣药。</li>
+    <li><a href="/product/khun-phaen-sitting-kumarn-luang-pu-suang-wat-phai-phattana-2519" style="color: #d4af37; font-weight: bold; text-decoration: underline;">四色菊府龙普爽 佛历2519年 坤平坐古曼圣土佛牌 [REF: #1640]</a> — 700 泰铢。传奇神僧早期高棉古地圣泥杰作。</li>
   </ul>
 </div>
 `

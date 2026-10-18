@@ -158,7 +158,7 @@ Dan Siam Amulets ได้คัดสรรพระกริ่งและพ
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">องค์ที่ ๑: พระชัยวัฒน์ พระครูสอน วัดมักกะสัน กรุงเทพฯ ปี ๒๔๘๕ (พิมพ์หน้าเดียว)</h3>
-  <p><strong>รหัสทะเบียนวัตถุมงคล:</strong> ID #1581 | <strong>มูลค่าการสะสม:</strong> ฿450,000 THB</p>
+  <p><strong>รหัสทะเบียนวัตถุมงคล:</strong> ID #1581 | <strong>ราคาบูชาในระบบ:</strong> ฿4,500 THB</p>
   <p>
   <strong>พระครูสอน</strong> วัดมักกะสัน (วัดดิสหงษาราม) คือศิษย์เอกสายตรงก้นกุฏิของสมเด็จพระสังฆราช (แพ) วัดสุทัศน์ฯ ในปี พ.ศ. ๒๔๘๕ สงครามมหาเอเชียบูรพาปะทุขึ้น กองทัพญี่ปุ่นเข้ายึดย่านโรงงานรถไฟมักกะสัน ส่งผลให้ฝูงบินทิ้งระเบิดฝ่ายสัมพันธมิตรระดมทิ้งระเบิดถล่มมักกะสันอย่างหนักหน่วง พระครูสอนได้รับมอบ <em>แผ่นยันต์ ๑๐๘ และ ๑๔ นะ พร้อมชนวนนวโลหะสายวัดสุทัศน์</em> จากสมเด็จพระสังฆราช (แพ) นำมาหล่อหลอมเป็นพระชัยวัฒน์โลหะผสมเทโบราณ แจกจ่ายแก่ทหาร คนงานรถไฟ และชาวบ้าน มีบันทึกว่าผู้แขวนพระชัยวัฒน์พระครูสอนรอดชีวิตจากสะเก็ดระเบิดและแรงอัดจนได้รับฉายาเป็น "พระยอดนิรันตรายแห่งสงครามโลก"
   </p>
@@ -172,7 +172,7 @@ Dan Siam Amulets ได้คัดสรรพระกริ่งและพ
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">องค์ที่ ๒: พระกริ่งพระพุทธชินราช ญสส ปี ๒๕๔๓ เนื้อทองดอกบวบ หลวงปู่หมุนปลุกเสก</h3>
-  <p><strong>รหัสทะเบียนวัตถุมงคล:</strong> ID #147 | <strong>มูลค่าการสะสม:</strong> ฿400,000 THB</p>
+  <p><strong>รหัสทะเบียนวัตถุมงคล:</strong> ID #147 | <strong>ราคาบูชาในระบบ:</strong> ฿4,000 THB</p>
   <p>
   มหาวัตถุมงคลที่รวมบารมีสูงสุด ๓ สาย: องค์จำลองพระพุทธชินราช พระพุทธรูปที่งดงามที่สุดในสยาม, พระนามย่อ "ญสส" ได้รับพระราชทานจาก <em>สมเด็จพระสังฆราชเจ้า กรมหลวงวชิรญาณสังวร</em> และเนื้อหามวลสาร <strong>"ทองดอกบวบ"</strong> (สูตรสัมฤทธิ์เดชโบราณ Copper-Zinc-Tin อมเขียวประกายเกสรดอกบวบ) ผ่านพิธีมหาพุทธาภิเษกเข้มขลังโดย <strong>หลวงปู่หมุน ฐิตสีโล วัดบ้านจาน</strong> ยอดพระเถราจารย์ ๕ แผ่นดินสายสมเด็จลุน ในขณะอายุ ๑๐๖ ปี นับเป็นพระกริ่งยุคปลายกึ่งพุทธกาลที่มีพลังจิตตานุภาพและค่านิยมสูงส่งที่สุด
   </p>
@@ -186,7 +186,7 @@ Dan Siam Amulets ได้คัดสรรพระกริ่งและพ
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">องค์ที่ ๓: พระชัยวัฒน์ สี่มุมเมือง ปี ๒๕๑๑ พิมพ์หน้าใหญ่ โค้ดเดียว สายเขาอ้อ</h3>
-  <p><strong>รหัสทะเบียนวัตถุมงคล:</strong> ID #84 | <strong>มูลค่าการสะสม:</strong> ฿350,000 THB</p>
+  <p><strong>รหัสทะเบียนวัตถุมงคล:</strong> ID #84 | <strong>ราคาบูชาในระบบ:</strong> ฿3,500 THB</p>
   <p>
   สร้างขึ้นตาม <strong>พระราชดำริของในหลวงรัชกาลที่ ๙</strong> เพื่อประดิษฐานคุ้มเกล้าคุ้มแผ่นดินสยาม ๔ ทิศ (พระพุทธนิรโรคันตรายชัยวัฒน์จตุรทิศ) โดยองค์ขนาดเล็กสร้างขึ้นแจกข้าราชการและทหาร ปลุกเสกโดยยอดพระเกจิแห่งสำนักตักศิลาเขาอ้อ ณ วัดดอนศาลา พัทลุง นำโดย <strong>พระอาจารย์นำ แก้วจันทร์, พ่อท่านหมุน วัดเขาแดงตะวันออก, พ่อท่านคลิ้ง วัดถลุงทอง</strong> และ <strong>พล.ต.ต. ขุนพันธรักษ์ราชเดช</strong> ร่วมพิธีพุทธาภิเษก ถือเป็นสุดยอดพระชัยวัฒน์สายพระมหากษัตริย์และสายใต้ที่ครบเครื่องด้านคุ้มครองและอำนาจบารมี
   </p>
@@ -358,7 +358,7 @@ Dan Siam Amulets is privileged to preserve three historically authenticated bron
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">Specimen 1: Phra Chai Wat Luang Pu Saon Wat Makkasan B.E. 2485 (Single-Face Mold)</h3>
-  <p><strong>Archival Item ID:</strong> #1581 | <strong>Appraised Valuation:</strong> ฿450,000 THB</p>
+  <p><strong>Archival Item ID:</strong> #1581 | <strong>Current Store Offering:</strong> ฿4,500 THB</p>
   <p>
   <strong>Phra Kru Saon</strong> of Wat Makkasan (Wat Disahongsaram) was the premier direct disciple of Supreme Patriarch Pae of Wat Suthat. In 1942, during the Greater East Asia War, Imperial Japanese forces occupied the Makkasan rail workshops, turning the district into Ground Zero for Allied strategic bombing raids. With personal authorization from Sangharaj Pae—who bestowed 108 sacred yantra sheets, 14 Na inscriptions, and royal Navaguna casting sprues—Luang Pu Saon cast this Phra Chai Wat edition right in the temple grounds. Handed out to railway mechanics and volunteer fire brigades, numerous eyewitness accounts documented recipients walking out of collapsed bomb shelters unscathed.
   </p>
@@ -372,7 +372,7 @@ Dan Siam Amulets is privileged to preserve three historically authenticated bron
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">Specimen 2: Phra Kring Phra Buddha Chinnarat ญสส B.E. 2543 (Thong Dok Buab Alloy)</h3>
-  <p><strong>Archival Item ID:</strong> #147 | <strong>Appraised Valuation:</strong> ฿400,000 THB</p>
+  <p><strong>Archival Item ID:</strong> #147 | <strong>Current Store Offering:</strong> ฿4,000 THB</p>
   <p>
   A monumental convergence of three supreme forces: cast in the image of Phra Buddha Chinnarat (Siam's most celebrated sculptural masterpiece), graced with the royal monogram "ญสส" by <em>His Holiness Somdej Phra Nyanasamvara, the 19th Supreme Patriarch</em>, and cast in antique <strong>"Thong Dok Buab"</strong> (a ternary Cu-Zn-Sn alloy radiating a luffa-blossom golden hue). This edition was consecrated by the legendary 106-year-old arahant master <strong>Luang Pu Mun Thitathalo of Wat Ban Chan</strong>, renowned for his miraculous meditative accomplishments.
   </p>
@@ -386,7 +386,7 @@ Dan Siam Amulets is privileged to preserve three historically authenticated bron
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">Specimen 3: Phra Chai Wat Si Mum Muang B.E. 2511 (Large Face Single Stamp)</h3>
-  <p><strong>Archival Item ID:</strong> #84 | <strong>Appraised Valuation:</strong> ฿350,000 THB</p>
+  <p><strong>Archival Item ID:</strong> #84 | <strong>Current Store Offering:</strong> ฿3,500 THB</p>
   <p>
   Initiated under the <strong>Royal Decree of King Rama IX (Bhumibol Adulyadej)</strong> to establish spiritual guardianship across the four cardinal quadrants of Thailand (Phra Buddha Nirokhantarai Chaiwat Chaturathit). Small votive tablets were distributed to military and border patrol officers. Consecrated at Wat Don Sala in Phatthalung by the undisputed grandmasters of the Southern Khao Or mystic academy: <strong>Archan Nam Kaeochan, Luang Pho Mun of Wat Khao Daeng, and Pol. Maj. Gen. Khun Phantharak Rajadej</strong>.
   </p>
@@ -558,7 +558,7 @@ Dan Siam Amulets 倾力呈现三尊横跨战火浩劫、僧王皇脉与南部顶
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">藏品一：瓦马卡森寺 龙婆颂 佛历2485年 帕猜瓦古佛（单面古模）</h3>
-  <p><strong>馆藏入库编号：</strong> ID #1581 | <strong>公允评估市值：</strong> ฿450,000 THB</p>
+  <p><strong>馆藏入库编号：</strong> ID #1581 | <strong>迎请参考结缘价：</strong> ฿4,500 泰铢</p>
   <p>
   <strong>龙婆颂（Phra Kru Saon）</strong>乃曼谷瓦苏泰寺僧王帕·贴沙贴沃之入门大弟子。1942年大东亚战争爆发，曼谷马卡森火车修理厂沦为日军补给线，惨遭盟军B-24重型机群地毯式空袭。在僧王亲自赐予108道符片、14捺印与瓦苏泰原庙九宝铜老料熔注加持下，龙婆颂于寺内立炉倒模，免费分发予铁路工人和避难民众。战史确凿记录，多名佩戴此佛之工人在防空洞被炸塌与弹片扫射中奇迹生还，由此奠定了其<strong>“二战全泰第一避险胜佛”</strong>之传奇盛名。
   </p>
@@ -572,7 +572,7 @@ Dan Siam Amulets 倾力呈现三尊横跨战火浩劫、僧王皇脉与南部顶
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">藏品二：成功佛“僧王印ญสส” 佛历2543年 丝瓜花金铜 龙普满尊者加持</h3>
-  <p><strong>馆藏入库编号：</strong> ID #147 | <strong>公允评估市值：</strong> ฿400,000 THB</p>
+  <p><strong>馆藏入库编号：</strong> ID #147 | <strong>迎请参考结缘价：</strong> ฿4,000 泰铢</p>
   <p>
   三大殊胜圆满汇流之极品：以全泰最美佛陀“双龙成功佛”为本尊法相，获<strong>第十九任僧王颂德帕·耶纳桑文（瓦波旺僧皇）</strong>钦赐“ญสส”皇室法印，并以古传<strong>“丝瓜花金铜”（Thong Dok Buab 三元高锡青铜）</strong>浇铸出嫩金泛绿之华贵色泽。由全泰公认之百岁圣僧——<strong>瓦班沾寺 龙普满（加持时106岁高龄）</strong>亲自入定倾力开光，被誉为近三十年来南传佛教升值潜能最强劲之药师铃符代表作。
   </p>
@@ -586,7 +586,7 @@ Dan Siam Amulets 倾力呈现三尊横跨战火浩劫、僧王皇脉与南部顶
 
 <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin: 24px 0;">
   <h3 style="color: #d4af37; margin-top: 0;">藏品三：四方城胜佛（帕猜瓦四角城）佛历2511年 大模单码 考奥全脉加持</h3>
-  <p><strong>馆藏入库编号：</strong> ID #84 | <strong>公允评估市值：</strong> ฿350,000 THB</p>
+  <p><strong>馆藏入库编号：</strong> ID #84 | <strong>迎请参考结缘价：</strong> ฿3,500 泰铢</p>
   <p>
   由<strong>泰皇拉玛九世（普密蓬大帝）御旨敕造</strong>，旨在将护国之宝“无病弭灾四方胜佛”镇守于泰国四大地极（北邦、沙武里、叻丕、博他仑），并铸造小型佛牌赏赐前线平叛军警。于博他仑府瓦董萨拉寺由<strong>泰南考奥法脉巅峰巨擘：阿赞南、瓦考登龙婆满、阿赞潘</strong>以及传奇铁血神探<strong>坤潘德烈拉差德</strong>联合入定布坛加持，系兼具九五至尊皇统与铁血巫术护法之重宝。
   </p>
@@ -655,10 +655,29 @@ async function insertArticle8() {
     updated_at: new Date().toISOString()
   };
 
-  const { data, error } = await supabase
+  const { data: existing } = await supabase
     .from('blog_posts')
-    .insert([postData])
-    .select('id, slug, title_th, published');
+    .select('id')
+    .eq('slug', postData.slug)
+    .single();
+
+  let data, error;
+  if (existing) {
+    const res = await supabase
+      .from('blog_posts')
+      .update(postData)
+      .eq('id', existing.id)
+      .select('id, slug, title_th, published');
+    data = res.data;
+    error = res.error;
+  } else {
+    const res = await supabase
+      .from('blog_posts')
+      .insert([postData])
+      .select('id, slug, title_th, published');
+    data = res.data;
+    error = res.error;
+  }
 
   if (error) {
     console.error('✗ Error inserting Article 8:', error.message);
