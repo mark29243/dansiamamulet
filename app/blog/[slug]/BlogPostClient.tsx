@@ -94,15 +94,35 @@ export default function BlogPostClient({ post }: BlogPostProps) {
 
       {/* Cover */}
       {post.cover_image && (
-        <div style={{ width: '100%', height: 380, borderRadius: 'var(--radius-lg)', overflow: 'hidden', marginBottom: 36, position: 'relative', background: 'var(--cream-dark)' }}>
-          <SafeImage
+        <div
+          style={{
+            width: '100%',
+            borderRadius: 'var(--radius-lg)',
+            overflow: 'hidden',
+            marginBottom: 36,
+            background: 'var(--cream-dark)',
+            border: '1px solid var(--cream-darker, rgba(0,0,0,0.06))',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={post.cover_image}
             alt={displayTitle || ''}
-            fill
-            sizes="(max-width: 768px) 100vw, 800px"
-            style={{ objectFit: 'cover' }}
-            priority
-            unoptimized
+            style={{
+              maxWidth: '100%',
+              maxHeight: '650px',
+              width: 'auto',
+              height: 'auto',
+              display: 'block',
+              margin: '0 auto',
+              objectFit: 'contain',
+              borderRadius: 'var(--radius-lg)'
+            }}
+            loading="eager"
           />
         </div>
       )}

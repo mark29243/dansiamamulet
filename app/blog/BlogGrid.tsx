@@ -50,9 +50,9 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
         <Link key={post.id} href={`/blog/${post.slug}?lang=${lang}`} style={{ textDecoration: 'none' }}>
           <article className="card blog-card animate-fade-in" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
             {/* Cover */}
-            <div style={{ height: 200, background: 'var(--cream-dark)', overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
+            <div style={{ height: 210, background: 'var(--cream-dark)', overflow: 'hidden', flexShrink: 0, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {post.cover_image
-                ? <SafeImage src={post.cover_image} alt={getTitle(post) || ''} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'cover' }} />
+                ? <SafeImage src={post.cover_image} alt={getTitle(post) || ''} fill sizes="(max-width: 768px) 100vw, 33vw" style={{ objectFit: 'contain', padding: '8px' }} />
                 : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48 }}>🏯</div>
               }
             </div>
