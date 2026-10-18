@@ -575,7 +575,7 @@ const POSTS = [
 
 <h2>5. Mid-20th Century Heritage: Wat Phra Singh B.E. 2496 & Luang Pho Pae B.E. 2514</h2>
 <p>Because authentic 8th-century Phra Rod tablets are museum-tier rarities valued in the millions of baht, the spiritual lineage of Hariphunchai clay was revitalized during pivotal moments of modern Thai history.</p>
-<p>The absolute crowning achievement of this modern revival took place at <strong>Wat Phra Singh Woramahavihan</strong> in Chiang Mai in <strong>B.E. 2496 (1953)</strong>. Monastic leaders gathered ancient fractured shards of genuine 1,200-year-old Wat Mahawan Phra Rod, pulverized them into sacred dust, and blended them with sacred soils from Bodh Gaya, India. The grand consecration was attended by Siam’s greatest masters, including <strong>Luang Pho Sodh of Wat Paknam</strong>, <strong>Chao Khun Sri (Sondh) of Wat Suthat</strong>, and <strong>Luang Pu Nak of Wat Rakang</strong>, creating the most revered mid-century Phra Rod edition in existence.</p>
+<p>The absolute crowning achievement of this modern revival took place at <strong>Wat Phra Singh Woramahavihan</strong> in Chiang Mai in <strong>B.E. 2496 (1953)</strong>. Monastic leaders gathered ancient fractured shards of genuine 1,200-year-old Wat Mahawan Phra Rod, pulverized them into sacred dust, and blended them with sacred soils from Bodh Gaya, India. The grand consecration was attended by Siam’s greatest masters, including <strong>Luang Pho Sodh of Wat Paknam</strong>, <strong>Luang Pho Ngern of Wat Don Yai Hom</strong>, <strong>Luang Pu Toh of Wat Pradu Chimphli</strong>, <strong>Luang Pu Nak of Wat Rakang</strong>, <strong>Luang Pu Phueak of Wat King Kaew</strong>, <strong>Luang Pho Rung of Wat Tha Krabue</strong>, and senior delegates from Wat Suthat, creating the most revered mid-century Phra Rod edition in existence.</p>
 <p>Subsequently, in <strong>B.E. 2514</strong>, amid regional conflicts, <strong>Luang Pho Pae Khemmangkro of Wat Pikul Thong</strong> in Singburi formulated the historic <strong>Phra Rod Jong Aang Suk</strong>, incorporating ancient sacred clays to protect front-line soldiers deployed in defense of the realm.</p>
 
 <h2>6. Buddhist Iconology: The Diamond Victor and True "Vimutti"</h2>
@@ -594,7 +594,7 @@ const POSTS = [
       • <a href="/product/phra-rod-wat-phra-singh-chiang-mai-2496-phim-klang-na-nu" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
         Phra Rod Wat Phra Singh Chiang Mai B.E. 2496, Phim Klang Na Nu [REF: #1723]
       </a> 
-      <span style="color: #cbd5e1;">— The supreme mid-century masterpiece formulated with crushed 1,200-year-old Wat Mahawan Phra Rod powder; blessed by LP Sodh (Wat Paknam), Chao Khun Sri Sondh (Wat Suthat), and LP Nak (Wat Rakang).</span>
+      <span style="color: #cbd5e1;">— The supreme mid-century masterpiece formulated with crushed 1,200-year-old Wat Mahawan Phra Rod powder; blessed by LP Sodh (Wat Paknam), LP Ngern (Wat Don Yai Hom), LP Toh (Wat Pradu Chimphli), LP Nak (Wat Rakang), LP Phueak (Wat King Kaew), and Northern Kruba masters.</span>
     </li>
     <li>
       • <a href="/product/phra-rod-jong-aang-suk-luang-pho-pae-wat-pikul-thong-2514" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
@@ -671,7 +671,7 @@ const POSTS = [
 
 <h2>๕. สายธารพุทธบารมีสู่ยุคกึ่งพุทธกาล: พระรอดวัดพระสิงห์ ๒๔๙๖ และพระรอดจงอางศึก ๒๕๑๔</h2>
 <p>เนื่องจากพระรอดกรุวัดมหาวันแท้มีมูลค่าสูงหลายล้านบาทและหาได้ยากยิ่ง ในยุคกึ่งพุทธกาลจึงได้มีการสืบสานสายวิชามวลสารพระรอดมหาวันขึ้นอย่างยิ่งใหญ่</p>
-<p>ประวัติศาสตร์ที่ทรงคุณค่าสูงสุดคือการสร้าง <strong>“พระรอด วัดพระสิงห์ เชียงใหม่ ปี พ.ศ. ๒๔๙๖”</strong> โดยคณะสงฆ์วัดพระสิงห์วรมหาวิหาร ได้รวบรวม <strong>เศษชิ้นส่วนพระรอดกรุวัดมหาวันโบราณที่แตกหักชำรุด (ผงพระรอดมหาวันแท้ๆ ๑,๒๐๐ ปี)</strong> นำมาบดละเอียดเป็นมวลสารหลัก ผสมดินใจกลางเมืองพุทธคยาและดินมงคลแดนล้านนา ประกอบพิธีมหาพุทธาภิเษกครั้งประวัติศาสตร์เมื่อเดือนกุมภาพันธ์ พ.ศ. ๒๔๙๖ โดยมีสุดยอดพระเถราจารย์ร่วมอธิษฐานจิต เช่น <strong>หลวงพ่อสด วัดปากน้ำ ภาษีเจริญ</strong>, <strong>เจ้าคุณศรี (สนธิ์) วัดสุทัศน์ฯ</strong>, <strong>หลวงปู่นาค วัดระฆังฯ</strong>, <strong>หลวงปู่เผือก วัดกิ่งแก้ว</strong> และครูบาเจ้าแดนล้านนาอีกนับร้อยรูป</p>
+<p>ประวัติศาสตร์ที่ทรงคุณค่าสูงสุดคือการสร้าง <strong>“พระรอด วัดพระสิงห์ เชียงใหม่ ปี พ.ศ. ๒๔๙๖”</strong> โดยคณะสงฆ์วัดพระสิงห์วรมหาวิหาร ได้รวบรวม <strong>เศษชิ้นส่วนพระรอดกรุวัดมหาวันโบราณที่แตกหักชำรุด (ผงพระรอดมหาวันแท้ๆ ๑,๒๐๐ ปี)</strong> นำมาบดละเอียดเป็นมวลสารหลัก ผสมดินใจกลางเมืองพุทธคยาและดินมงคลแดนล้านนา ประกอบพิธีมหาพุทธาภิเษกครั้งประวัติศาสตร์เมื่อเดือนกุมภาพันธ์ พ.ศ. ๒๔๙๖ โดยมีสุดยอดพระเถราจารย์ร่วมอธิษฐานจิต เช่น <strong>หลวงพ่อสด วัดปากน้ำ ภาษีเจริญ</strong>, <strong>หลวงพ่อเงิน วัดดอนยายหอม</strong>, <strong>หลวงปู่โต๊ะ วัดประดู่ฉิมพลี</strong>, <strong>หลวงปู่นาค วัดระฆังฯ</strong>, <strong>หลวงปู่เผือก วัดกิ่งแก้ว</strong>, <strong>หลวงพ่อรุ่ง วัดท่ากระบือ</strong>, <strong>พระครูอาคมสุนทร วัดสุทัศน์ฯ</strong> และครูบาเจ้าแดนล้านนาอีกนับร้อยรูป</p>
 <p>ต่อมาในปี <strong>พ.ศ. ๒๕๑๔</strong> ท่ามกลางสมรภูมิสงคราม <strong>พระธรรมมุนี (หลวงพ่อแพ เขมังกโร) แห่งวัดพิกุลทอง จ.สิงห์บุรี</strong> ได้สถาปนา <strong>“พระรอดจงอางศึก ปี ๒๕๑๔”</strong> จากเนื้อดินเผาผสมผงพุทธคุณ เพื่อแจกจ่ายเป็นขวัญกำลังใจแก่ทหารหาญกองพันจงอางศึกที่ไปปฏิบัติหน้าที่ปกป้องอธิปไตย</p>
 
 <h2>๖. ปรัชญาพุทธศิลป์และอรรถศาสตร์แห่ง "ความรอดพ้น" (วิมุตติธรรม)</h2>
@@ -690,7 +690,7 @@ const POSTS = [
       • <a href="/product/phra-rod-wat-phra-singh-chiang-mai-2496-phim-klang-na-nu" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
         พระรอด วัดพระสิงห์ เชียงใหม่ พิมพ์กลาง หน้าหนู ปี ๒๔๙๖ [REF: #1723]
       </a> 
-      <span style="color: #cbd5e1;">— สุดยอดจักรพรรดิพระรอดกึ่งพุทธกาล ผสมผงชิ้นส่วนพระรอดมหาวันแท้ ๑,๒๐๐ ปี ปลุกเสกโดยหลวงพ่อสด วัดปากน้ำ, เจ้าคุณศรี สนธิ์ วัดสุทัศน์ฯ, หลวงปู่นาค วัดระฆังฯ</span>
+      <span style="color: #cbd5e1;">— สุดยอดจักรพรรดิพระรอดกึ่งพุทธกาล ผสมผงชิ้นส่วนพระรอดมหาวันแท้ ๑,๒๐๐ ปี ปลุกเสกโดยหลวงพ่อสด วัดปากน้ำ, หลวงพ่อเงิน วัดดอนยายหอม, หลวงปู่โต๊ะ วัดประดู่ฉิมพลี, หลวงปู่นาค วัดระฆังฯ, หลวงปู่เผือก วัดกิ่งแก้ว</span>
     </li>
     <li>
       • <a href="/product/phra-rod-jong-aang-suk-luang-pho-pae-wat-pikul-thong-2514" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
@@ -767,7 +767,7 @@ const POSTS = [
 
 <h2>五、半佛历时代传承：佛历2496年瓦帕辛寺与佛历2514年龙婆培名器</h2>
 <p>由于千年原窖帕洛佛存世量极罕且市值高达数百万泰铢，二十世纪中叶泰国佛教界两度启建划时代的传承大典：</p>
-<p>其巅峰之作首推清迈<strong>瓦帕辛皇家寺院于佛历2496年（1953年）</strong>之督造。寺方专门收集瓦玛哈弯寺破损之<strong>千年帕洛古佛碎料研磨成圣粉</strong>，融合印度菩提伽耶佛陀成道圣土，于佛历2496年2月启建盛况空前之全泰水陆大法会，恭请<strong>瓦白榄寺龙婆术（Luang Pho Sodh）</strong>、<strong>瓦苏泰寺召坤习·颂</strong>、<strong>瓦拉康寺龙普纳</strong>、<strong>瓦景缴寺龙普不</strong>及泰北全体古巴大长老同坛加持，成为公认承袭千年哈利奔猜圣料血脉的二十世纪第一名器。</p>
+<p>其巅峰之作首推清迈<strong>瓦帕辛皇家寺院于佛历2496年（1953年）</strong>之督造。寺方专门收集瓦玛哈弯寺破损之<strong>千年帕洛古佛碎料研磨成圣粉</strong>，融合印度菩提伽耶佛陀成道圣土，于佛历2496年2月启建盛况空前之全泰水陆大法会，恭请<strong>瓦白榄寺龙婆术（Luang Pho Sodh）</strong>、<strong>瓦冬亚宏寺龙婆银</strong>、<strong>瓦巴鲁清批寺龙普多</strong>、<strong>瓦拉康寺龙普纳</strong>、<strong>瓦景缴寺龙普不</strong>、<strong>瓦达卡博寺龙婆弄</strong>及泰北全体古巴大长老同坛加持，成为公认承袭千年哈利奔猜圣料血脉的二十世纪第一名器。</p>
 <p>随后的<strong>佛历2514年（1971年）</strong>，面对边境战事风云，信武里府瓦匹坤通当代圣僧<strong>龙婆培大师（Luang Pho Pae）</strong>选用神圣古土经粉，亲自督造开光了蜚声海内外的<strong>“黑眼镜蛇战地帕洛佛”（Phra Rod Jong Aang Suk）</strong>，专门分发予开赴战场的野战将士，创下无数护佑生还之奇迹传奇。</p>
 
 <h2>六、造像学哲学：金刚降魔相与“脱难解脱”（Vimutti）真义</h2>
@@ -786,7 +786,7 @@ const POSTS = [
       • <a href="/product/phra-rod-wat-phra-singh-chiang-mai-2496-phim-klang-na-nu" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
         清迈瓦帕辛皇家寺院 佛历2496年 鼠面中模帕洛佛 [REF: #1723]
       </a> 
-      <span style="color: #cbd5e1;">— 融合一千二百年瓦玛哈弯原窖古佛碎料圣粉；瓦白榄龙婆术、瓦苏泰召坤习·颂、瓦拉康龙普纳等全泰顶尖圣僧同坛大典加持。</span>
+      <span style="color: #cbd5e1;">— 融合一千二百年瓦玛哈弯原窖古佛碎料圣粉；瓦白榄龙婆术、瓦冬亚宏龙婆银、瓦巴鲁清批龙普多、瓦拉康龙普纳等全泰顶尖圣僧同坛大典加持。</span>
     </li>
     <li>
       • <a href="/product/phra-rod-jong-aang-suk-luang-pho-pae-wat-pikul-thong-2514" style="color: #d4af37; text-decoration: underline; font-weight: 600;">
