@@ -29,9 +29,9 @@ const POSTS = [
     cover_image: 'https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/1779247507982-2vigmg00fag.jpg',
     published: false, // In Draft Queue
 
-    title: 'Archaeology and Sacred Metaphysics: From Somdej Toh’s Wat Rakang Votive Tablets to Luang Pu Nak’s B.E. 2495 Preservation',
-    title_th: 'คติโบราณคดีและมวลสารพุทธคุณ: จากพระสมเด็จวัดระฆังยุคสมเด็จพระพุฒาจารย์ (โต พรหมรังสี) สู่บันทึกการสืบสานของหลวงปู่นาค พ.ศ. ๒๔๙๕',
-    title_zh: '崇迪佛的考古源流与经粉配伍：从阿赞多瓦拉康古佛到龙普纳佛历2495年经典重塑学术考',
+    title: 'The Living Relic of Somdej Toh: Sacred Powders and Luang Pu Nak’s B.E. 2495 Wat Rakang Chronicles',
+    title_th: 'ผงสมเด็จโตที่ยังมีลมหายใจ: เจาะลึกพระสมเด็จหลวงปู่นาค วัดระฆัง พ.ศ. ๒๔๙๕',
+    title_zh: '阿赞多未熄灭之圣火：瓦拉康寺龙普纳佛历2495年崇迪真品圣粉与传承通考',
 
     excerpt: 'An academic examination of the mid-19th century monastic reforms of King Rama IV, the five sacred metaphysical powders of Somdej Toh, and Luang Pu Nak’s historic B.E. 2495 Wat Rakang memorial edition.',
     excerpt_th: 'งานวิจัยประวัติศาสตร์เจาะลึกบริบทการปฏิรูปพระพุทธศาสนายุคพระบาทสมเด็จพระจอมเกล้าเจ้าอยู่หัว วิทยาการแห่งผงพุทธคุณทั้ง ๕ และบันทึกการรวบรวมชิ้นส่วนพระสมเด็จเก่าสู่การสถาปนาของหลวงปู่นาค ปี ๒๔๙๕',
@@ -113,9 +113,9 @@ const POSTS = [
     cover_image: 'https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/1792210074374-o3wovt5ldx8.webp',
     published: false,
 
-    title: 'From Maha-Kaccayana to Phra Pidta: The Theology of Sensory Restraint, Nirodha-Samapatti, and Thai Meditative Iconography',
-    title_th: 'พระภควัมบดีสู่พระปิดตา: คติธรรมนิโรธสมาบัติ การสำรวมอินทรีย์ และวิวัฒนาการพุทธศิลป์ปิดทวารในสยามประเทศ',
-    title_zh: '善加财尊者到必打佛的演变：感官息止、灭尽定与暹罗内观禅修法相的艺术学诠释',
+    title: 'Why Does a Closed-Eyes Buddha Bring Wealth? The Secret Sensory Theology of Phra Pidta',
+    title_th: 'ทำไมพระปิดตาถึงกลายเป็น “พระปลดหนี้”? ถอดรหัสปริศนาปิดทวาร สู่มหาลาภพระมหากัจจายนะ',
+    title_zh: '为何闭眼佛能招财解债？揭开必打掩面佛守护根门与迦旃延尊者之大财运密义',
 
     excerpt: 'A theological investigation into the transformation of the canonical Indian Buddhist Arhat Maha-Kaccayana into the Thai closed-eye Phra Pidta posture, examining sensory restraint and meditative absorption.',
     excerpt_th: 'การศึกษาเชิงเทววิทยาและประวัติศาสตร์ศิลปะจากพระมหากัจจายนะและพระควัมปติ สู่วิวัฒนาการพระภควัมบดีและพระปิดตาในสยาม วิเคราะห์ปรัชญาการปิดทวารเพื่อความหลุดพ้นและรากศัพท์มหาอุตม์',
@@ -204,9 +204,9 @@ const POSTS = [
     cover_image: 'https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/1784517401989-ew4h11qoozk.webp',
     published: false,
 
-    title: 'From Kubera to Vaisravana: Guardianship of the Northern Quarter, the Atanatiya Sutta, and Thai Yaksha Iconography',
-    title_th: 'ท้าวกุเวรสู่ท้าวเวสสุวรรณ: คติพุทธบาลแห่งทิศอุดร คัมภีร์อาฏานาฏิยสูตร และประติมานวิทยาในอารามหลวงสยาม',
-    title_zh: '从俱毗罗到多闻天王（陶威素湾）：北方法界护持者、《阿吒曩胝雅经》与暹罗皇家造像学考',
+    title: 'More Than a Fierce Guardian: The Hidden Wealth Theology of Vaisravana in Buddhist Canon',
+    title_th: 'ไม่ใช่แค่ยักษ์เฝ้าประตู: ถอดรหัส “ท้าวเวสสุวรรณ” จอมราชันย์แห่งโภคทรัพย์ในพระไตรปิฎก',
+    title_zh: '不仅是降魔守门巨擘：深入考订大藏经中毗沙门天王多闻天子的藏财正道与造像学',
 
     excerpt: 'An epigraphical and iconographical study of Vaisravana (Thao Wessuwan) from the Digha Nikaya Pali Canon to royal Siamese Yaksha art, Chao Khun Sri Sondh’s B.E. 2493 Wat Suthat casting, Luang Pho Itt’s B.E. 2545 Wat Chula Mani milestone, and canonical deconstruction of modern commercial offerings.',
     excerpt_th: 'บทวิเคราะห์เชิงเทววิทยาและประวัติศาสตร์พุทธศิลป์ ย้อนรอยการเปลี่ยนผ่านจากท้าวกุเวรในคัมภีร์พระเวท สู่ท้าวเวสสุวรรณในพระไตรปิฎก อาฏานาฏิยสูตร ณ เขาคิชฌกูฏ ประวัติศาสตร์รูปหล่อสายวัดสุทัศน์ฯ พ.ศ. ๒๔๙๓ และเหรียญจำปีวัดจุฬามณี พร้อมถอดรหัสพุทธบูชาที่แท้จริง',
@@ -514,9 +514,9 @@ const POSTS = [
     cover_image: 'https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/m-1781275232135-m61r4aadwr.webp',
     published: false,
 
-    title: '1,200 Years of Hariphunchai Terracotta: Queen Jamadevi’s Inscriptions, Ancient Clay Metallurgy, and Phra Rod Antiquities',
-    title_th: 'อารยธรรมดินเผาหริภุญชัย ๑,๒๐๐ ปี: จารึกพระนางจามเทวี ศาสตร์แห่งเนื้อดินกรุโบราณ สู่พุทธศิลป์พระรอดเมืองลำพูน',
-    title_zh: '一千二百年哈利奔猜陶土文明：乔玛德维女王碑铭考、古窖泥质演化与帕洛佛艺术史',
+    title: 'How 1,200-Year-Old Clay Turned to Stone: The Lost Soil Alchemy of Phra Rod Hariphunchai',
+    title_th: 'ไขความลับ “พระรอด” แกร่งดั่งหิน ๑,๒๐๐ ปี: จากจารึกพระนางจามเทวี สู่เตาเผาโบราณหริภุญชัย',
+    title_zh: '千二百载陶土如何坚硬如磐石？占玛德威女王铭文与古塔帕罗佛圣土炼金术破译',
 
     excerpt: 'An archaeological and petrological study of 8th-century Hariphunchai terracotta art, tracing Queen Jamadevi’s chronicles, the Vasudeva Risi mandala, high-temperature vitrification mineralogy, and the modern legacy of Wat Phra Singh B.E. 2496 and Luang Pho Pae’s B.E. 2514 wartime castings.',
     excerpt_th: 'การขุดค้นทางประวัติศาสตร์และโบราณคดีอาณาจักรหริภุญชัย พุทธศตวรรษที่ ๑๒–๑๓ สืบรอยคัมภีร์จามเทวีวงศ์ สู่ศาสตร์ศิลาธิคุณและการเผาเคลือบหินศิลา (Vitrification) ของพระรอดกรุวัดมหาวัน พร้อมบันทึกการสืบสายเลือดมวลสารสู่พระรอดวัดพระสิงห์ ปี ๒๔๙๖ และพระรอดจงอางศึก หลวงพ่อแพ ปี ๒๕๑๔',
@@ -818,9 +818,9 @@ const POSTS = [
     cover_image: 'https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/1792209947883-6ozub0asej9.webp',
     published: false,
 
-    title: 'Beyond Folklore to Cultural Anthropology: White-Magic Deva Guardianship, Theravada Vinaya Boundaries, and the Historic Consecrations of Luang Pho Pin Wat Ubon (B.E. 2500)',
-    title_th: 'จากวรรณคดีสู่มานุษยวิทยาวัฒนธรรม: ศาสตร์แห่งเทวฤทธิ์ขาว คติเทพพิทักษ์เคหสถาน ขอบเขตพระธรรมวินัย และบันทึกประวัติศาสตร์หลวงพ่อพิณ วัดอุบลวรรณาราม พ.ศ. ๒๕๐๐',
-    title_zh: '超越民间传说的文化人类学解读：正统白法护宅神灵、南传僧伽戒律界限与瓦乌汶寺龙婆品佛历2500年古曼童文献通考',
+    title: 'Deconstructing the Necromancy Myth: The Pure White-Magic Truth of Guman Thong (Luang Pho Pin B.E. 2500)',
+    title_th: 'ล้างตราบาปไสยดำ: กุมารทองในพระวินัยสงฆ์ เทวฤทธิ์ขาว และบันทึกหลวงพ่อพิณ พ.ศ. ๒๕๐๐',
+    title_zh: '洗冤黑巫术妖魔化迷思：从南传僧伽戒律通考正统白法古曼童与龙婆品佛历2500年真迹',
 
     excerpt: 'A museum-grade anthropological investigation into Thai domestic guardian spirits (Guman Thong), strictly deconstructing popular necro-sorcery folklore against Vinaya monastic law (Parajika III) and exploring Luang Pho Pin’s B.E. 2500 cemetery-earth consecration lineage from Luang Pho Khong Wat Bang Kaphom.',
     excerpt_th: 'การศึกษาเชิงมานุษยวิทยาวัฒนธรรมและพุทธปรัชญา ชำแหละความแตกต่างระหว่างไสยดำวรรณคดีกับพุทธาคมขาวภายใต้พระธรรมวินัย (ปาราชิกข้อ ๓) พร้อมเจาะลึกมวลสารศาสตร์ดิน ๗ ป่าช้า และสายวิชาหลวงพ่อพิณ วัดอุบลวรรณาราม พ.ศ. ๒๕๐๐',
