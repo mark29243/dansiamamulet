@@ -5,26 +5,29 @@ import Link from 'next/link';
 import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
 import { IcoAmulet } from '@/components/icons';
+import type { Product } from '@/lib/types';
+import { getCatName } from '@/lib/i18n';
+import { useLocalPrice } from '@/components/ProductCard';
 
-type MinProduct = { category: string; images?: string[] | null };
-
-function pickImage(products: MinProduct[], cat: string): string | null {
-  const pool = products.filter((p) => p.category?.includes(cat) && p.images?.[0]);
-  if (!pool.length) return null;
-  return pool[0].images![0];
-}
-
-export default function HomeHero({ productCount, products, customImages = {} }: { productCount: number; products: MinProduct[]; customImages?: Record<string, string> }) {
+export default function HomeHero({
+  productCount,
+  products,
+  customImages = {}
+}: {
+  productCount: number;
+  products: Product[];
+  customImages?: Record<string, string>;
+}) {
   const { lang } = useLang();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const catImages = useMemo(() => ({
-    'พระสมเด็จ': customImages['พระสมเด็จ'] || (mounted ? pickImage(products, 'พระสมเด็จ') : null),
-    'หลวงพ่อทวด': customImages['หลวงพ่อทวด'] || (mounted ? pickImage(products, 'หลวงพ่อทวด') : null),
-    'เหรียญ': customImages['เหรียญ'] || (mounted ? pickImage(products, 'เหรียญ') : null),
-    'พระเกจิอาจารย์': customImages['พระเกจิอาจารย์'] || (mounted ? pickImage(products, 'พระเกจิอาจารย์') : null),
-  }), [products, mounted, customImages]);
+  const newestProducts = useMemo(() => {
+    return [...products]
+      .filter((p) => (p.stock ?? 1) > 0 && p.images && p.images.length > 0)
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 4);
+  }, [products]);
 
   return (
     <>
@@ -111,38 +114,56 @@ export default function HomeHero({ productCount, products, customImages = {} }: 
         </div>
       </div>
 
-      {/* ─── Popular categories ───────────────────────────────── */}
-      <div data-cats-section="" style={{ background: 'var(--deep)', padding: '56px 24px' }}>
+      {/* ─── พระเครื่องมาใหม่ (New Arrivals) ──────────────────── */}
+      <div data-cats-section="" style={{ background: 'var(--deep)', padding: '56px 24px', borderBottom: '1px solid #2A1E08' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div className="serif" style={{ fontSize: 10, letterSpacing: 5, color: 'var(--gold-dark)', textTransform: 'uppercase', marginBottom: 10 }}>
-              ✦ {lang === 'th' ? 'CATEGORIES' : lang === 'zh' ? '分类' : 'CATEGORIES'} ✦
+            <div className="serif" style={{ fontSize: 10, letterSpacing: 5, color: 'var(--gold)', textTransform: 'uppercase', marginBottom: 10 }}>
+              ✦ {lang === 'th' ? 'NEW ARRIVALS · พระเครื่องมาใหม่' : lang === 'zh' ? 'NEW ARRIVALS · 最新上架' : '✦ NEW ARRIVALS ✦'} ✦
             </div>
             <h2 className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'} style={{
-              fontSize: 26, fontWeight: lang === 'en' ? 300 : 600,
+              fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: lang === 'en' ? 400 : 700,
               color: '#fff', fontStyle: lang === 'en' ? 'italic' : 'normal',
+              marginBottom: 10,
             }}>
-              {lang === 'th' ? 'หมวดหมู่ยอดนิยม' : lang === 'zh' ? '热门分类' : 'Popular Categories'}
+              {lang === 'th' ? 'พระเครื่องมาใหม่' : lang === 'zh' ? '最新上架圣物' : 'New Arrival Amulets'}
             </h2>
+            <p style={{ fontSize: 13, color: '#9A8060', maxWidth: 540, margin: '0 auto', lineHeight: 1.6 }}>
+              {lang === 'th'
+                ? 'อัปเดตพระแท้เข้าใหม่ คัดสรรความงดงามและพุทธคุณเข้มขลัง พร้อมรับประกันแท้ 100%'
+                : lang === 'zh'
+                ? '精选最新入库全泰正品佛牌，经高僧加持，附带100%正品真品保证'
+                : 'Explore our latest curated authentic Thai amulets, freshly acquired and certified genuine.'}
+            </p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }} data-grid="cats">
-            <CatCard
-              name={lang === 'th' ? 'พระสมเด็จ' : lang === 'zh' ? '崇迪佛牌' : 'Phra Somdej'}
-              sub={lang === 'th' ? 'ยอดนิยม' : lang === 'zh' ? '最受欢迎' : 'Most Popular'}
-              cat="พระสมเด็จ" image={catImages['พระสมเด็จ']} />
-            <CatCard
-              name={lang === 'th' ? 'หลวงพ่อทวด' : lang === 'zh' ? '龙普托' : 'Luang Pu Tuad'}
-              sub={lang === 'th' ? 'นิยมสะสม' : lang === 'zh' ? '收藏热门' : "Collector's Choice"}
-              cat="หลวงพ่อทวด" image={catImages['หลวงพ่อทวด']} />
-            <CatCard
-              name={lang === 'th' ? 'เหรียญยอดนิยม' : lang === 'zh' ? '热门圣币' : 'Popular Coins'}
-              sub={lang === 'th' ? 'หายาก' : lang === 'zh' ? '稀有' : 'Rare Pieces'}
-              cat="เหรียญ" image={catImages['เหรียญ']} />
-            <CatCard
-              name={lang === 'th' ? 'พระเกจิอาจารย์' : lang === 'zh' ? '高僧佛牌' : 'Monk Amulets'}
-              sub={lang === 'th' ? 'ทั่วประเทศ' : lang === 'zh' ? '全国各地' : 'Nationwide'}
-              cat="พระเกจิอาจารย์" image={catImages['พระเกจิอาจารย์']} />
+            {newestProducts.map((p) => (
+              <NewArrivalCard key={p.id} p={p} lang={lang} />
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <Link
+              href="#shop"
+              className="btn-outline-gold"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '10px 24px',
+                fontSize: 13,
+                borderRadius: 100,
+                color: 'var(--gold-light)',
+                border: '1px solid rgba(201,168,76,0.4)',
+                background: 'rgba(201,168,76,0.06)',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              <span>{lang === 'th' ? `ดูพระเครื่องทั้งหมดในร้าน (${productCount} รายการ)` : lang === 'zh' ? `浏览店内全部圣物 (${productCount} 件)` : `Browse All Amulets (${productCount} pieces)`}</span>
+              <span>→</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -188,6 +209,14 @@ export default function HomeHero({ productCount, products, customImages = {} }: 
       </div>
 
       <style>{`
+        .cat-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(201,168,76,0.45) !important;
+          box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+        }
+        .cat-card:hover img {
+          transform: scale(1.05);
+        }
         @media (max-width: 768px) {
           [data-grid="trust-bar"], [data-grid="cats"] { grid-template-columns: repeat(2,1fr) !important; }
           [data-hero-inner] { padding: 48px 20px !important; }
@@ -221,36 +250,122 @@ function TrustItem({ icon, t1, t2 }: { icon: React.ReactNode; t1: string; t2: st
   );
 }
 
-function CatCard({ name, sub, cat, image }: { name: string; sub: string; cat: string; image?: string | null }) {
+function NewArrivalCard({ p, lang }: { p: Product; lang: string }) {
+  const priceDisplay = useLocalPrice(p.sale_price ?? p.price, lang);
+  const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
+  const catName = getCatName(p.category, lang as any);
+
   return (
-    <Link href={`/shop?category=${encodeURIComponent(cat)}`} style={{ textDecoration: 'none' }}>
+    <Link href={`/product/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
       <div
         className="cat-card"
         style={{
-          background: 'rgba(201,168,76,0.04)',
+          background: 'linear-gradient(180deg, rgba(201,168,76,0.06) 0%, rgba(18,12,6,0.95) 100%)',
           border: '1px solid #2A1E08',
           borderRadius: 'var(--radius-lg)',
           overflow: 'hidden',
           cursor: 'pointer',
-          transition: 'all 0.2s',
+          transition: 'all 0.25s ease',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          position: 'relative',
         }}
       >
+        {/* NEW Badge */}
+        <div style={{
+          position: 'absolute',
+          top: 10,
+          left: 10,
+          zIndex: 3,
+          background: 'linear-gradient(135deg, #ECCB64 0%, #C9A84C 100%)',
+          color: '#0D0804',
+          fontSize: 10,
+          fontWeight: 700,
+          padding: '3px 8px',
+          borderRadius: 4,
+          letterSpacing: 0.5,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 3,
+        }}>
+          <span>✦</span>
+          <span>{lang === 'th' ? 'มาใหม่' : lang === 'zh' ? '最新' : 'NEW'}</span>
+        </div>
+
+        {/* Image Box */}
         <div style={{
           aspectRatio: '1',
-          background: 'rgba(201,168,76,0.03)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'radial-gradient(circle, #24170A 0%, #0D0804 100%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           borderBottom: '1px solid #2A1E08',
-          position: 'relative', overflow: 'hidden',
+          position: 'relative',
+          overflow: 'hidden',
         }}>
-          {image ? (
-            <SafeImage src={image} alt={`${cat} amulet`} fill sizes="(max-width: 768px) 30vw, 15vw" style={{ objectFit: 'cover' }} unoptimized={true} />
+          {p.images?.[0] ? (
+            <SafeImage
+              src={p.images[0]}
+              alt={displayName}
+              fill
+              sizes="(max-width: 768px) 45vw, 25vw"
+              style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+              unoptimized={true}
+            />
           ) : (
-            <span style={{ opacity: 0.25, color: 'var(--gold)', display: 'flex' }}><IcoAmulet size={44} strokeWidth={1.5} /></span>
+            <span style={{ opacity: 0.25, color: 'var(--gold)', display: 'flex' }}>
+              <IcoAmulet size={48} strokeWidth={1.5} />
+            </span>
           )}
         </div>
-        <div style={{ padding: '12px 14px' }}>
-          <div className="serif" style={{ fontSize: 13, fontWeight: 600, color: 'var(--gold-light)', marginBottom: 2 }}>{name}</div>
-          <div style={{ fontSize: 11, color: '#6B5730' }}>{sub}</div>
+
+        {/* Text Details */}
+        <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', flex: 1, background: '#120D06' }}>
+          <div style={{
+            fontSize: 10,
+            color: 'var(--gold)',
+            letterSpacing: 1.5,
+            textTransform: 'uppercase',
+            marginBottom: 4,
+            fontWeight: 600,
+          }}>
+            {catName}
+          </div>
+          <div
+            className="serif"
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#FDFBF7',
+              lineHeight: 1.4,
+              marginBottom: 10,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              minHeight: 36,
+            }}
+          >
+            {displayName}
+          </div>
+          <div style={{
+            marginTop: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderTop: '1px solid rgba(201,168,76,0.12)',
+            paddingTop: 8,
+          }}>
+            <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--gold-light)' }}>
+              {priceDisplay}
+            </span>
+            <span style={{ fontSize: 11, color: '#9A8060', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              <span>{lang === 'th' ? 'ชมพระ' : lang === 'zh' ? '详情' : 'View'}</span>
+              <span>→</span>
+            </span>
+          </div>
         </div>
       </div>
     </Link>

@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import { IcoAmulet, IcoEye, IcoCheck } from '@/components/icons';
 import WishlistButton from './WishlistButton';
 
-function useLocalPrice(satang: number, lang: string): string {
+export function useLocalPrice(satang: number, lang: string): string {
   const [price, setPrice] = useState(() => {
     const baht = satang / 100;
     return `฿${new Intl.NumberFormat('th-TH').format(baht)}`;
