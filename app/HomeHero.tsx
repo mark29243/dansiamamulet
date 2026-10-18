@@ -204,7 +204,8 @@ export default function HomeHero({
             label={lang === 'th' ? 'พระเครื่อง\nรายการทั้งหมด' : lang === 'zh' ? '在售佛牌总数' : 'Total Amulets'} />
           <StatItem icon={<IconStar />} num="100%"
             label={lang === 'th' ? 'ความพึงพอใจ\nจากลูกค้า' : lang === 'zh' ? '客户满意度' : 'Customer Satisfaction'}
-            href="/reviews" />
+            href="/reviews"
+            reviewLabel={lang === 'th' ? '→ รีวิว' : lang === 'zh' ? '→ 评价' : '→ Reviews'} />
         </div>
       </div>
 
@@ -372,13 +373,13 @@ function NewArrivalCard({ p, lang }: { p: Product; lang: string }) {
   );
 }
 
-function StatItem({ icon, num, label, href }: { icon: React.ReactNode; num: string; label: string; href?: string }) {
+function StatItem({ icon, num, label, href, reviewLabel }: { icon: React.ReactNode; num: string; label: string; href?: string; reviewLabel?: string }) {
   const inner = (
     <>
       <div style={{ color: 'var(--gold)', marginBottom: 4 }}>{icon}</div>
       <div className="serif" style={{ fontSize: 30, fontWeight: 600, color: 'var(--gold)', lineHeight: 1 }}>{num}</div>
       <div style={{ fontSize: 11, color: '#6B5730', marginTop: 6, lineHeight: 1.5, whiteSpace: 'pre-line' }}>{label}</div>
-      {href && <div style={{ fontSize: 10, color: 'var(--gold)', marginTop: 4, letterSpacing: 1, opacity: 0.7 }}>→ รีวิว</div>}
+      {href && <div style={{ fontSize: 10, color: 'var(--gold)', marginTop: 4, letterSpacing: 1, opacity: 0.7 }}>{reviewLabel || '→ Reviews'}</div>}
     </>
   );
   const style: React.CSSProperties = {

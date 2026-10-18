@@ -6,6 +6,7 @@ import ProductCard from '@/components/ProductCard';
 import QuickView from '@/components/QuickView';
 import { useLang } from '@/components/LangProvider';
 import { getDict, getCatName, CAT_SLUG } from '@/lib/i18n';
+import { useCurrency } from '@/components/CurrencyProvider';
 import { formatPrice } from '@/lib/utils';
 import { IcoSearch, IcoFilter } from '@/components/icons';
 import type { Product } from '@/lib/types';
@@ -26,6 +27,9 @@ export default function HomeShop({
   virtueInfo?: VirtueInfo;
 }) {
   const { lang } = useLang();
+  const { rates } = useCurrency();
+  const currencySymbol = lang === 'th' ? '฿' : lang === 'zh' ? '¥' : '$';
+  const currencyRate = lang === 'th' ? 1 : lang === 'zh' ? (rates['CNY'] ?? 0.20) : (rates['USD'] ?? 0.028);
   const t = getDict(lang);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'instock'>('all');
@@ -71,6 +75,11 @@ export default function HomeShop({
 
   const [selectedCats, setSelectedCats] = useState<string[]>(defaultCategory ? [defaultCategory] : []);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, Infinity]);
+
+  // Reset price range when language changes to prevent currency mismatch
+  useEffect(() => {
+    setPriceRange([0, Infinity]);
+  }, [lang]);
   const [searchResults, setSearchResults] = useState<Product[] | null>(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
@@ -114,15 +123,16 @@ export default function HomeShop({
       return selectedCats.some((sc) => cats.includes(sc));
     });
     r = r.filter((p) => {
-      const price = (p.sale_price ?? p.price) / 100;
-      return price >= priceRange[0] && price <= priceRange[1];
+      const priceBaht = (p.sale_price ?? p.price) / 100;
+      const localPrice = priceBaht * currencyRate;
+      return localPrice >= priceRange[0] && localPrice <= priceRange[1];
     });
     if (sort === 'price-asc') r.sort((a, b) => (a.sale_price ?? a.price) - (b.sale_price ?? b.price));
     else if (sort === 'price-desc') r.sort((a, b) => (b.sale_price ?? b.price) - (a.sale_price ?? a.price));
     else if (sort === 'name') r.sort((a, b) => a.name.localeCompare(b.name));
     else if (sort === 'newest') r.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     return r;
-  }, [products, searchResults, search, filter, selectedCats, priceRange, sort, virtueInfo]);
+  }, [products, searchResults, search, filter, selectedCats, priceRange, sort, virtueInfo, currencyRate]);
 
   useEffect(() => { setPage(1); }, [search, filter, selectedCats, priceRange, sort, virtueInfo]);
 
@@ -270,6 +280,8 @@ export default function HomeShop({
             filter={filter} setFilter={setFilter}
             priceRange={priceRange} setPriceRange={setPriceRange}
             maxPrice={maxPrice}
+            currencySymbol={currencySymbol}
+            currencyRate={currencyRate}
             hasActiveFilters={!!hasActiveFilters}
             clearAll={clearAllFilters}
             currentSlug={currentSlug}
@@ -427,6 +439,8 @@ export default function HomeShop({
               filter={filter} setFilter={setFilter}
               priceRange={priceRange} setPriceRange={setPriceRange}
               maxPrice={maxPrice}
+              currencySymbol={currencySymbol}
+              currencyRate={currencyRate}
               hasActiveFilters={!!hasActiveFilters}
               clearAll={clearAllFilters}
               currentSlug={currentSlug}
@@ -461,9 +475,10 @@ export default function HomeShop({
 function FilterPanel({
   t, lang, categories, selectedCats, toggleCat, filter, setFilter,
   priceRange, setPriceRange, maxPrice, hasActiveFilters, clearAll,
-  currentSlug, totalProducts,
+  currentSlug, totalProducts, currencySymbol = '฿', currencyRate = 1,
 }: any) {
   const counts = new Map<string, number>(categories.map((c: any) => [c.name, c.count]));
+  const localMax = Math.ceil(maxPrice * currencyRate);
 
   return (
     <>
@@ -552,7 +567,7 @@ function FilterPanel({
 
       <div>
         <h4 className="serif" style={{ fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--gold-dark)', marginBottom: 12 }}>
-          {lang === 'th' ? 'ราคา (฿)' : lang === 'zh' ? '价格 (฿)' : 'Price (฿)'}
+          {lang === 'th' ? `ราคา (${currencySymbol})` : lang === 'zh' ? `价格 (${currencySymbol})` : `Price (${currencySymbol})`}
         </h4>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <input
@@ -575,7 +590,11 @@ function FilterPanel({
           />
         </div>
         <div style={{ fontSize: 10, color: 'var(--text-faint)', marginTop: 6 }}>
-          {lang === 'th' ? `สูงสุด: ฿${Math.round(maxPrice).toLocaleString()}` : lang === 'zh' ? `最高: ฿${Math.round(maxPrice).toLocaleString()}` : `Max: ฿${Math.round(maxPrice).toLocaleString()}`}
+          {lang === 'th'
+            ? `สูงสุด: ${currencySymbol}${localMax.toLocaleString()}`
+            : lang === 'zh'
+            ? `最高: ${currencySymbol}${localMax.toLocaleString()}`
+            : `Max: ${currencySymbol}${localMax.toLocaleString()}`}
         </div>
       </div>
     </>
