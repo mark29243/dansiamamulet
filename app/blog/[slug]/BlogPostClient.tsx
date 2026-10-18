@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import SafeImage from '@/components/SafeImage';
 import { useLang } from '@/components/LangProvider';
@@ -7,6 +8,7 @@ import { getDict, getCatName } from '@/lib/i18n';
 
 type BlogPostProps = {
   post: {
+    id?: number;
     title: string;
     title_th: string | null;
     title_zh: string | null;
@@ -27,6 +29,20 @@ type BlogPostProps = {
 export default function BlogPostClient({ post }: BlogPostProps) {
   const { lang } = useLang();
   const t = getDict(lang);
+  const [viewCount, setViewCount] = useState(post.views ?? 0);
+
+  useEffect(() => {
+    const identifier = post.id || post.slug;
+    if (identifier) {
+      fetch(`/api/blog/${identifier}/view`, { method: 'POST' })
+        .then(res => {
+          if (res.ok) {
+            setViewCount(prev => prev + 1);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [post.id, post.slug]);
 
   // Pick content by lang param
   const displayTitle = lang === 'en' ? (post.title || post.title_th)
@@ -72,7 +88,7 @@ export default function BlogPostClient({ post }: BlogPostProps) {
             lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-GB', 
             { day: 'numeric', month: 'long', year: 'numeric' }
           )}</span>
-          <span>👁 {post.views} {t.blog.views}</span>
+          <span>👁 {viewCount} {t.blog.views}</span>
         </div>
       </div>
 
