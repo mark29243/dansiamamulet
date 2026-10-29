@@ -1,0 +1,359 @@
+{
+  "totalProducts": 452,
+  "statsBefore": {
+    "wealth-and-fortune": 332,
+    "miraculous-protection": 244,
+    "metta-and-charisma": 214,
+    "career-and-power": 145
+  },
+  "statsAfter": {
+    "wealth-and-fortune": 216,
+    "miraculous-protection": 366,
+    "metta-and-charisma": 350,
+    "career-and-power": 215
+  },
+  "distBefore": {
+    "0": 8,
+    "1": 128,
+    "2": 171,
+    "3": 115,
+    "4": 30
+  },
+  "distAfter": {
+    "0": 0,
+    "1": 31,
+    "2": 206,
+    "3": 156,
+    "4": 59
+  },
+  "lpThuadWealthBefore": 21,
+  "lpThuadWealthAfter": 3,
+  "zeroVirtuesBefore": 8,
+  "zeroVirtuesAfter": 0,
+  "zeroVirtuesResolved": [
+    {
+      "id": 1436,
+      "name_th": "พระผานไถ อาจารย์​ชุม ไชยคีรี สำนักเขาอ้อ พัทลุง ออกวัดถ้ำเขาเต่า ปี2497 เนื้อดิน",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "wealth-and-fortune",
+        "metta-and-charisma",
+        "career-and-power"
+      ]
+    },
+    {
+      "id": 1438,
+      "name_th": "รูปเหมือนหลวงพ่อปลอด วัดหัวป่าพระเนื้อว่าน พ่อท่านปลอด วัดหั วป่า อ.ระโนด จ.สงขลา ว่านขาว ปี 2536 พิธี เสาร์ห้า",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1446,
+      "name_th": "พระยอดขุนพล หลวงปู่วรพต วัดจุมพล ขอนแก่น ปี2520 เนื้อโลหะ",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "miraculous-protection",
+        "career-and-power",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1451,
+      "name_th": "พระอุปคุตจกบาตร หลังรูปถ่าย หลวงพ่อเกลื่อน วัดสองเขต สุพรรณบุรี  ปี2520",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "wealth-and-fortune",
+        "metta-and-charisma",
+        "miraculous-protection"
+      ]
+    },
+    {
+      "id": 1453,
+      "name_th": "พระเหนือพรหม พร้อมปะคำเม็ดพลาสติก หลวงตาม้า วัดถ้ำเมืองนะ ลำปาง",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "career-and-power",
+        "metta-and-charisma",
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ]
+    },
+    {
+      "id": 1527,
+      "name_th": "พระพิมพ์หลวงพ่อโต หลวงพ่อแทน วัดธรรมเสน ราชบุรี เนื้อผง",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "miraculous-protection",
+        "career-and-power",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1598,
+      "name_th": "เหรียญ หลวงพ่อโต วัดยาง รุ่น2 ปี2500 หลวงปู่เผือก วัดกิ่งแก้ว เสก",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "miraculous-protection",
+        "career-and-power",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1668,
+      "name_th": "เจ้าสัว เนื้อว่านยาจินดามนี มีกลิ่นหอม หลวงปู่เจือ วัดกลางบางแก้ว ปี2551",
+      "category": "พระเกจิอาจารย์",
+      "after": [
+        "wealth-and-fortune",
+        "metta-and-charisma",
+        "miraculous-protection"
+      ]
+    }
+  ],
+  "lpThuadWealthCorrected": [
+    {
+      "id": 33,
+      "name_th": "หลวงปู่ทวดเนื้อว่าน วัดช้างให้ ปี 2513 ผสมผงว่าน ปี2497 จัดสร้างโดย พระครูใบฎีกาขาว",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 35,
+      "name_th": "เหรียญเสมาเล็ก หลวงปู่ทวด หลังอาจารย์ทิม ปี 2507 เนื้ออัลปาก้าชุบนิเกิ้ล",
+      "category": "เหรียญ,หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 38,
+      "name_th": "เหรียญไข่ปลาใหญ่หลวงปู่ทวดวัดช้างให้ รุ่น2 ปี2502 บล็อก ไ ไม้มลาย เนื้ออลูมิเนียมขาปิ่นโต กะไหล่ทอง",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 39,
+      "name_th": "หลวงปู่ทวด วัดช้างให้ หลังตัวหนังสือ พิมพ์ก้ามปู ปี2508",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection",
+        "career-and-power"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 40,
+      "name_th": "เหรียญหลวงปู่ทวด เตารีดใหญ่ อุ้มลูกแก้ว รุ่นทะเลซุง ปี2508 เนื้อโลหะกะหลั่ยทอง",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 43,
+      "name_th": "หลวงปู่ทวด เนื้อว่าน พิมพ์ใหญ่ หลวงปู่ท่อน วัดศรีอภัยวัน จ.เลย  ติดแผ่นเงิน หายาก",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection",
+        "metta-and-charisma",
+        "career-and-power"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 54,
+      "name_th": "หลวงปู่ทวด กลีบบัวเล็ก หลังรุน1 ปี2507 เนื้อทองแดงรมดำ อาจารย์ทิม วัดช้างให้",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 67,
+      "name_th": "หลวงปู่ทวด เนื้อว่าน วัดควนวิเศษ ตรัง ปี2506 พิมพ์ใหญ่ หลังยันต์เฑาะ",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 93,
+      "name_th": "หลวงปู่ทวด เนื้อว่าน พิมพ์ใหญ่ ออกวัดยะหาประชาราม ปี2506",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 121,
+      "name_th": "หลวงปู่ทวด เนื้อว่าน ออกวัดเศวตรฉัตร ปี2506 อาจารย์ทิม วัดช้างให้เสก",
+      "category": "พระผง",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection",
+        "metta-and-charisma"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 122,
+      "name_th": "หลวงปู่ทวดจิ๋ว หลังฝังเศษพลอย หลวงพ่อจำเนียร วัดถ้ำเสือ กระบี่เสก",
+      "category": "พระผง",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection",
+        "metta-and-charisma"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma",
+        "career-and-power"
+      ]
+    },
+    {
+      "id": 145,
+      "name_th": "หลวงปู่ทวด ทะเลซุง ปี2504 พิมพ์เล็ก",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection",
+        "career-and-power"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma",
+        "career-and-power"
+      ]
+    },
+    {
+      "id": 1440,
+      "name_th": "หลวงปู่ทวด พิมพ์ซุ้มกอ มีหู แจกปีนัง ปี2506 กะหลั่ยทองเดิม มีรางวัลงานประกวดสมาคมพระเครื่องพระบูชา หลายรางวัล",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1447,
+      "name_th": "เหรียญกลม หลวงปู่ทวด วัดช้างให้ รุ่นไหว้ครู ปี2505 เนื้อทองแดง สภาพสวย",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1511,
+      "name_th": "เหรียญคอน้ำเต้า หลวงปู่ทวด วัดช้างให้ ปี2505 บล็อกหน้าแก่ มีฟัน กะหลั่ยเงิน หายาก อาจารย์ทิม วัดช้างให้เสก",
+      "category": "หลวงพ่อทวด",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1516,
+      "name_th": "หลวงปู่ทวดกระโดดบาตร หลวงปู่ดู่ วัดสะแก ปี2530 บล็อคธรรมดา เนื้อทองแดงรมดำ",
+      "category": "เหรียญเกจิ",
+      "before": [
+        "wealth-and-fortune"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1517,
+      "name_th": "หลวงปู่ทวด หลวงปู่ดู่ วัดสะแก ปี2528 เนื้อทองแดงผิวไฟ สร้าง 10000เหรียญ",
+      "category": "หลวงพ่อทวด,เหรียญเกจิ",
+      "before": [
+        "wealth-and-fortune",
+        "miraculous-protection"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    },
+    {
+      "id": 1524,
+      "name_th": "เหรียญเม็ดแตง หลวงปู่ทวด วัดช้างให้ ปี2522 เนื้ออัลปาก้า ชุบนิเกิ้ล เลี่ยมกรอบเลสชุบ",
+      "category": "พระสมเด็จ",
+      "before": [
+        "wealth-and-fortune",
+        "metta-and-charisma",
+        "career-and-power"
+      ],
+      "after": [
+        "miraculous-protection",
+        "metta-and-charisma"
+      ]
+    }
+  ]
+}

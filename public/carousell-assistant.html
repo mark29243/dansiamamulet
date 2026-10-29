@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dan Siam Amulets — Carousell Listing Assistant (Singapore & Malaysia)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --card-bg: #111827;
+      --border: #1f2937;
+      --gold: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #997f1f;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', 'Sarabun', -apple-system, sans-serif;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 32px 24px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(17, 24, 39, 0.8) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 16px;
+    }
+    .logo-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+    .guide-box {
+      background: #1e293b;
+      border-left: 4px solid var(--gold);
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+    .guide-box ol {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+    .guide-box li {
+      margin-bottom: 6px;
+    }
+
+    /* Cards */
+    .amulet-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 36px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    .card-header {
+      background: #162032;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .badge-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .badge-num {
+      background: var(--gold);
+      color: #000;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-ref {
+      background: #374151;
+      color: #d1d5db;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-cat {
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold-light);
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .amulet-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .amulet-th {
+      font-size: 14px;
+      color: var(--gold-light);
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* Gallery preview */
+    .gallery-section {
+      margin-bottom: 24px;
+      background: #0f172a;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px dashed #334155;
+    }
+    .gallery-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .gallery-title code {
+      background: #1e293b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fff;
+    }
+    .thumbs-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .thumb-box {
+      width: 100px;
+      text-align: center;
+    }
+    .thumb-box img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #111;
+    }
+    .thumb-box span {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Fields */
+    .field-row {
+      margin-bottom: 16px;
+    }
+    .field-row label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .input-with-copy {
+      display: flex;
+      gap: 8px;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      background: #0b0f17;
+      border: 1px solid #374151;
+      color: #fff;
+      font-family: inherit;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .hint {
+      display: block;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* Buttons */
+    .btn-copy {
+      background: #1f2937;
+      color: #fff;
+      border: 1px solid #4b5563;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .btn-copy:hover {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+    .btn-copy.copied {
+      background: var(--success) !important;
+      color: #fff !important;
+      border-color: var(--success) !important;
+    }
+    .btn-lg {
+      background: #2563eb;
+      border-color: #3b82f6;
+      padding: 10px 20px;
+    }
+    .btn-lg:hover {
+      background: #1d4ed8;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    .btn-script {
+      background: #7c3aed;
+      color: #fff;
+      border: 1px solid #8b5cf6;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-script:hover {
+      background: #6d28d9;
+    }
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 9px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.15s ease;
+    }
+    .btn-link:hover {
+      background: rgba(212, 175, 55, 0.15);
+    }
+    .desc-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid #1f2937;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-badge">Dan Siam Amulets — Export Suite</div>
+      <h1>Carousell Listing Assistant (SG / MY)</h1>
+      <p class="subtitle">Curated Top 5 High-Demand Consecrated Amulets Ready for Carousell Singapore & Malaysia</p>
+    </header>
+
+    <div class="guide-box">
+      <strong>🚀 Quick Listing Guide (In 3 Simple Steps):</strong>
+      <ol>
+        <li><strong>Photos:</strong> Open folder <code>C:\Users\mark2\Downloads\Carousell_Listings</code> and drag the photos directly into your Carousell listing window.</li>
+        <li><strong>Details:</strong> Click the <strong>📋 Copy</strong> buttons below to effortlessly paste Title, Price (SGD), and Full Description into Carousell.</li>
+        <li><strong>Instant 1-Click Fill (Optional):</strong> Click <strong>⚡ Copy Console Auto-Fill Script</strong>, press <code>F12</code> on your Carousell tab &gt; Console &gt; Paste &gt; Enter!</li>
+      </ol>
+    </div>
+
+    <!-- Listings Cards -->
+    
+    <div class="amulet-card" id="amulet-38">
+      <div class="card-header">
+        <div class="badge-row">
+          <span class="badge-num">#01</span>
+          <span class="badge-ref">REF: #38</span>
+          <span class="badge-cat">Antiques & Vintage > Religious Items</span>
+        </div>
+        <h2 class="amulet-title">Authentic Luang Phu Tuad Wat Chang Hai Coin 2502 Block Mai Malay</h2>
+        <div class="amulet-th">เหรียญไข่ปลาใหญ่หลวงปู่ทวดวัดช้างให้ รุ่น2 ปี2502 บล็อก ไ ไม้มลาย เนื้ออลูมิเนียมขาปิ่นโต กะไหล่ทอง</div>
+      </div>
+
+      <div class="card-body">
+        <!-- Gallery Preview -->
+        <div class="gallery-section">
+          <div class="gallery-title">📁 Drag Photos from folder: <code>01_coin-luang-phu-tuad-wat-chang-hai-edition-2-2</code></div>
+          <div class="thumbs-grid">
+            
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/38/photo_1.webp" alt="Photo 1" onerror="this.src='https://placehold.co/120x120?text=Photo+1'"/>
+          <span>Photo 1</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/38/photo_2.webp" alt="Photo 2" onerror="this.src='https://placehold.co/120x120?text=Photo+2'"/>
+          <span>Photo 2</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/38/photo_3.webp" alt="Photo 3" onerror="this.src='https://placehold.co/120x120?text=Photo+3'"/>
+          <span>Photo 3</span>
+        </div>
+      
+          </div>
+        </div>
+
+        <!-- Form Fields with 1-Click Copy -->
+        <div class="fields-section">
+          <!-- Field 1: Title -->
+          <div class="field-row">
+            <label>1. Listing Title (Max 80 chars)</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Authentic Luang Phu Tuad Wat Chang Hai Coin 2502 Block Mai Malay" id="title-38">
+              <button class="btn-copy" onclick="copyField('title-38', this)">📋 Copy Title</button>
+            </div>
+          </div>
+
+          <!-- Field 2: Price & Condition -->
+          <div class="two-col">
+            <div class="field-row">
+              <label>2. Price (SGD)</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="153" id="price-38">
+                <button class="btn-copy" onclick="copyField('price-38', this)">📋 Copy S$ 153</button>
+              </div>
+              <small class="hint">≈ ฿3,990 THB (Conversion ~26 THB/SGD)</small>
+            </div>
+            <div class="field-row">
+              <label>3. Condition</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="Like New" id="cond-38">
+                <button class="btn-copy" onclick="copyField('cond-38', this)">📋 Copy Condition</button>
+              </div>
+              <small class="hint">Select: "Like New" / "Lightly Used"</small>
+            </div>
+          </div>
+
+          <!-- Field 3: Category -->
+          <div class="field-row">
+            <label>4. Recommended Category</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Antiques &amp; Vintage &gt; Religious Items" id="cat-38">
+              <button class="btn-copy" onclick="copyField('cat-38', this)">📋 Copy Category</button>
+            </div>
+          </div>
+
+          <!-- Field 4: Description -->
+          <div class="field-row">
+            <label>5. Full Description (Rich English + Thai + Guarantee)</label>
+            <textarea readonly rows="9" id="desc-38">Authentic Luang Phu Tuad Wat Chang Hai Coin 2502 Block Mai Malay
+Thai Name: เหรียญไข่ปลาใหญ่หลวงปู่ทวดวัดช้างให้ รุ่น2 ปี2502 บล็อก ไ ไม้มลาย เนื้ออลูมิเนียมขาปิ่นโต กะไหล่ทอง
+DAN SIAM REF: #38
+
+✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦
+Historic 2nd edition Luang Phu Tuad amulet consecrated in B.E. 2502 (1959) by Phra Ajahn Tim at Wat Chang Hai, Pattani. Cast in special Pinto Aluminium with vintage Gold Plating. Highly revered across Singapore, Malaysia, and Thailand as the paramount amulet for ultimate life protection (Klaew Klad) and safe travels.
+
+✦ 100% AUTHENTICITY GUARANTEE ✦
+• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).
+• Direct temple consecration & genuine collector preservation.
+• Full lifetime money-back guarantee of authenticity.
+
+✦ SPECIFICATIONS ✦
+• Temple / Origin: Thailand
+• Era: Vintage Consecrated
+• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)
+• Category: หลวงพ่อทวด
+
+✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦
+• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.
+• Full international tracking number provided within 24 hours of dispatch.
+• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.
+• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.
+
+✦ VERIFIED OFFICIAL STORE ✦
+View full studio photos, 360° closeups, and certificate details on our official website:
+https://dansiamamulets.com/product/coin-luang-phu-tuad-wat-chang-hai-edition-2-2502-mai-malay-aluminium
+
+Direct inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏</textarea>
+            <div class="desc-actions">
+              <button class="btn-copy btn-lg" onclick="copyField('desc-38', this)">📋 Copy Full Description</button>
+              <button class="btn-script" onclick="copyText(&quot;(function() {\n  function setVal(selector, val) {\n    const el = document.querySelector(selector);\n    if (el) {\n      el.value = val;\n      el.dispatchEvent(new Event('input', { bubbles: true }));\n      el.dispatchEvent(new Event('change', { bubbles: true }));\n      console.log('Filled:', selector);\n    }\n  }\n  // Common Carousell input selectors\n  const titleInput = document.querySelector('input[name=\&quot;title\&quot;], input[placeholder*=\&quot;title\&quot; i], textarea[placeholder*=\&quot;title\&quot; i]');\n  if (titleInput) { titleInput.value = \&quot;Authentic Luang Phu Tuad Wat Chang Hai Coin 2502 Block Mai Malay\&quot;; titleInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const priceInput = document.querySelector('input[name=\&quot;price\&quot;], input[placeholder*=\&quot;price\&quot; i], input[type=\&quot;number\&quot;]');\n  if (priceInput) { priceInput.value = \&quot;153\&quot;; priceInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const descInput = document.querySelector('textarea[name=\&quot;description\&quot;], textarea[placeholder*=\&quot;describe\&quot; i], textarea[placeholder*=\&quot;description\&quot; i]');\n  if (descInput) { descInput.value = \&quot;Authentic Luang Phu Tuad Wat Chang Hai Coin 2502 Block Mai Malay\\nThai Name: เหรียญไข่ปลาใหญ่หลวงปู่ทวดวัดช้างให้ รุ่น2 ปี2502 บล็อก ไ ไม้มลาย เนื้ออลูมิเนียมขาปิ่นโต กะไหล่ทอง\\nDAN SIAM REF: #38\\n\\n✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦\\nHistoric 2nd edition Luang Phu Tuad amulet consecrated in B.E. 2502 (1959) by Phra Ajahn Tim at Wat Chang Hai, Pattani. Cast in special Pinto Aluminium with vintage Gold Plating. Highly revered across Singapore, Malaysia, and Thailand as the paramount amulet for ultimate life protection (Klaew Klad) and safe travels.\\n\\n✦ 100% AUTHENTICITY GUARANTEE ✦\\n• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).\\n• Direct temple consecration & genuine collector preservation.\\n• Full lifetime money-back guarantee of authenticity.\\n\\n✦ SPECIFICATIONS ✦\\n• Temple / Origin: Thailand\\n• Era: Vintage Consecrated\\n• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)\\n• Category: หลวงพ่อทวด\\n\\n✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦\\n• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.\\n• Full international tracking number provided within 24 hours of dispatch.\\n• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.\\n• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.\\n\\n✦ VERIFIED OFFICIAL STORE ✦\\nView full studio photos, 360° closeups, and certificate details on our official website:\\nhttps://dansiamamulets.com/product/coin-luang-phu-tuad-wat-chang-hai-edition-2-2502-mai-malay-aluminium\\n\\nDirect inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏\&quot;; descInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  alert('✨ Auto-filled Title, Price (S$ 153), and Description for Item #38!');\n})();&quot;, this)">⚡ Copy Console Auto-Fill Script</button>
+              <a href="https://dansiamamulets.com/product/coin-luang-phu-tuad-wat-chang-hai-edition-2-2502-mai-malay-aluminium" target="_blank" class="btn-link">🌐 View on DanSiam Official ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="amulet-card" id="amulet-42">
+      <div class="card-header">
+        <div class="badge-row">
+          <span class="badge-num">#02</span>
+          <span class="badge-ref">REF: #42</span>
+          <span class="badge-cat">Antiques & Vintage > Religious Items</span>
+        </div>
+        <h2 class="amulet-title">Rare Phra Khun Phaen Sedet Klab 2511 Wat Tham Khao Ngen Sacred Powder</h2>
+        <div class="amulet-th">พระขุนแผน พิธีเสด็จกลับ เนื้อผงว่านสบู่เลือด พิมพ์ใหญ่ หลังเรียบ ปี 2511 พิธีปลุกเสก ณ.วัดถ้ำเขาเงิน จ.ชุมพร</div>
+      </div>
+
+      <div class="card-body">
+        <!-- Gallery Preview -->
+        <div class="gallery-section">
+          <div class="gallery-title">📁 Drag Photos from folder: <code>02_phra-khun-phan-phithi-setyad-klap-2511-wat-th</code></div>
+          <div class="thumbs-grid">
+            
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/42/photo_1.jpg" alt="Photo 1" onerror="this.src='https://placehold.co/120x120?text=Photo+1'"/>
+          <span>Photo 1</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/42/photo_2.jpg" alt="Photo 2" onerror="this.src='https://placehold.co/120x120?text=Photo+2'"/>
+          <span>Photo 2</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/42/photo_3.jpg" alt="Photo 3" onerror="this.src='https://placehold.co/120x120?text=Photo+3'"/>
+          <span>Photo 3</span>
+        </div>
+      
+          </div>
+        </div>
+
+        <!-- Form Fields with 1-Click Copy -->
+        <div class="fields-section">
+          <!-- Field 1: Title -->
+          <div class="field-row">
+            <label>1. Listing Title (Max 80 chars)</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Rare Phra Khun Phaen Sedet Klab 2511 Wat Tham Khao Ngen Sacred Powder" id="title-42">
+              <button class="btn-copy" onclick="copyField('title-42', this)">📋 Copy Title</button>
+            </div>
+          </div>
+
+          <!-- Field 2: Price & Condition -->
+          <div class="two-col">
+            <div class="field-row">
+              <label>2. Price (SGD)</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="58" id="price-42">
+                <button class="btn-copy" onclick="copyField('price-42', this)">📋 Copy S$ 58</button>
+              </div>
+              <small class="hint">≈ ฿1,500 THB (Conversion ~26 THB/SGD)</small>
+            </div>
+            <div class="field-row">
+              <label>3. Condition</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="Like New" id="cond-42">
+                <button class="btn-copy" onclick="copyField('cond-42', this)">📋 Copy Condition</button>
+              </div>
+              <small class="hint">Select: "Like New" / "Lightly Used"</small>
+            </div>
+          </div>
+
+          <!-- Field 3: Category -->
+          <div class="field-row">
+            <label>4. Recommended Category</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Antiques &amp; Vintage &gt; Religious Items" id="cat-42">
+              <button class="btn-copy" onclick="copyField('cat-42', this)">📋 Copy Category</button>
+            </div>
+          </div>
+
+          <!-- Field 4: Description -->
+          <div class="field-row">
+            <label>5. Full Description (Rich English + Thai + Guarantee)</label>
+            <textarea readonly rows="9" id="desc-42">Rare Phra Khun Phaen Sedet Klab 2511 Wat Tham Khao Ngen Sacred Powder
+Thai Name: พระขุนแผน พิธีเสด็จกลับ เนื้อผงว่านสบู่เลือด พิมพ์ใหญ่ หลังเรียบ ปี 2511 พิธีปลุกเสก ณ.วัดถ้ำเขาเงิน จ.ชุมพร
+DAN SIAM REF: #42
+
+✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦
+Famous Khun Phaen Sedet Klab blessed in B.E. 2511 at Wat Tham Khao Ngen by the greatest southern Thai masters, including Arjan Chum Chaikiri and Arjan Nam (Wat Don Sala). Crafted from sacred herbs and mystical Saboo Luead (blood soapberry) powder for extraordinary Metta Mahaniyom (charm, charisma, business negotiation) and invulnerability.
+
+✦ 100% AUTHENTICITY GUARANTEE ✦
+• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).
+• Direct temple consecration & genuine collector preservation.
+• Full lifetime money-back guarantee of authenticity.
+
+✦ SPECIFICATIONS ✦
+• Temple / Origin: Thailand
+• Era: Vintage Consecrated
+• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)
+• Category: พระผง
+
+✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦
+• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.
+• Full international tracking number provided within 24 hours of dispatch.
+• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.
+• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.
+
+✦ VERIFIED OFFICIAL STORE ✦
+View full studio photos, 360° closeups, and certificate details on our official website:
+https://dansiamamulets.com/product/phra-khun-phan-phithi-setyad-klap-2511-wat-tham-khao-ngen
+
+Direct inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏</textarea>
+            <div class="desc-actions">
+              <button class="btn-copy btn-lg" onclick="copyField('desc-42', this)">📋 Copy Full Description</button>
+              <button class="btn-script" onclick="copyText(&quot;(function() {\n  function setVal(selector, val) {\n    const el = document.querySelector(selector);\n    if (el) {\n      el.value = val;\n      el.dispatchEvent(new Event('input', { bubbles: true }));\n      el.dispatchEvent(new Event('change', { bubbles: true }));\n      console.log('Filled:', selector);\n    }\n  }\n  // Common Carousell input selectors\n  const titleInput = document.querySelector('input[name=\&quot;title\&quot;], input[placeholder*=\&quot;title\&quot; i], textarea[placeholder*=\&quot;title\&quot; i]');\n  if (titleInput) { titleInput.value = \&quot;Rare Phra Khun Phaen Sedet Klab 2511 Wat Tham Khao Ngen Sacred Powder\&quot;; titleInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const priceInput = document.querySelector('input[name=\&quot;price\&quot;], input[placeholder*=\&quot;price\&quot; i], input[type=\&quot;number\&quot;]');\n  if (priceInput) { priceInput.value = \&quot;58\&quot;; priceInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const descInput = document.querySelector('textarea[name=\&quot;description\&quot;], textarea[placeholder*=\&quot;describe\&quot; i], textarea[placeholder*=\&quot;description\&quot; i]');\n  if (descInput) { descInput.value = \&quot;Rare Phra Khun Phaen Sedet Klab 2511 Wat Tham Khao Ngen Sacred Powder\\nThai Name: พระขุนแผน พิธีเสด็จกลับ เนื้อผงว่านสบู่เลือด พิมพ์ใหญ่ หลังเรียบ ปี 2511 พิธีปลุกเสก ณ.วัดถ้ำเขาเงิน จ.ชุมพร\\nDAN SIAM REF: #42\\n\\n✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦\\nFamous Khun Phaen Sedet Klab blessed in B.E. 2511 at Wat Tham Khao Ngen by the greatest southern Thai masters, including Arjan Chum Chaikiri and Arjan Nam (Wat Don Sala). Crafted from sacred herbs and mystical Saboo Luead (blood soapberry) powder for extraordinary Metta Mahaniyom (charm, charisma, business negotiation) and invulnerability.\\n\\n✦ 100% AUTHENTICITY GUARANTEE ✦\\n• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).\\n• Direct temple consecration & genuine collector preservation.\\n• Full lifetime money-back guarantee of authenticity.\\n\\n✦ SPECIFICATIONS ✦\\n• Temple / Origin: Thailand\\n• Era: Vintage Consecrated\\n• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)\\n• Category: พระผง\\n\\n✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦\\n• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.\\n• Full international tracking number provided within 24 hours of dispatch.\\n• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.\\n• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.\\n\\n✦ VERIFIED OFFICIAL STORE ✦\\nView full studio photos, 360° closeups, and certificate details on our official website:\\nhttps://dansiamamulets.com/product/phra-khun-phan-phithi-setyad-klap-2511-wat-tham-khao-ngen\\n\\nDirect inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏\&quot;; descInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  alert('✨ Auto-filled Title, Price (S$ 58), and Description for Item #42!');\n})();&quot;, this)">⚡ Copy Console Auto-Fill Script</button>
+              <a href="https://dansiamamulets.com/product/phra-khun-phan-phithi-setyad-klap-2511-wat-tham-khao-ngen" target="_blank" class="btn-link">🌐 View on DanSiam Official ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="amulet-card" id="amulet-49">
+      <div class="card-header">
+        <div class="badge-row">
+          <span class="badge-num">#03</span>
+          <span class="badge-ref">REF: #49</span>
+          <span class="badge-cat">Antiques & Vintage > Religious Items</span>
+        </div>
+        <h2 class="amulet-title">Phra Somdej Thaan Kha To LP Nak Wat Rakang B.E. 2495 (Vintage Holy Powder)</h2>
+        <div class="amulet-th">พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี2495</div>
+      </div>
+
+      <div class="card-body">
+        <!-- Gallery Preview -->
+        <div class="gallery-section">
+          <div class="gallery-title">📁 Drag Photos from folder: <code>03_phra-somdej-thaan-kha-to-luang-pu-nak-wat-rak</code></div>
+          <div class="thumbs-grid">
+            
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/49/photo_1.jpg" alt="Photo 1" onerror="this.src='https://placehold.co/120x120?text=Photo+1'"/>
+          <span>Photo 1</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/49/photo_2.jpg" alt="Photo 2" onerror="this.src='https://placehold.co/120x120?text=Photo+2'"/>
+          <span>Photo 2</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/49/photo_3.jpg" alt="Photo 3" onerror="this.src='https://placehold.co/120x120?text=Photo+3'"/>
+          <span>Photo 3</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/49/photo_4.jpg" alt="Photo 4" onerror="this.src='https://placehold.co/120x120?text=Photo+4'"/>
+          <span>Photo 4</span>
+        </div>
+      
+          </div>
+        </div>
+
+        <!-- Form Fields with 1-Click Copy -->
+        <div class="fields-section">
+          <!-- Field 1: Title -->
+          <div class="field-row">
+            <label>1. Listing Title (Max 80 chars)</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Phra Somdej Thaan Kha To LP Nak Wat Rakang B.E. 2495 (Vintage Holy Powder)" id="title-49">
+              <button class="btn-copy" onclick="copyField('title-49', this)">📋 Copy Title</button>
+            </div>
+          </div>
+
+          <!-- Field 2: Price & Condition -->
+          <div class="two-col">
+            <div class="field-row">
+              <label>2. Price (SGD)</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="58" id="price-49">
+                <button class="btn-copy" onclick="copyField('price-49', this)">📋 Copy S$ 58</button>
+              </div>
+              <small class="hint">≈ ฿1,500 THB (Conversion ~26 THB/SGD)</small>
+            </div>
+            <div class="field-row">
+              <label>3. Condition</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="Like New" id="cond-49">
+                <button class="btn-copy" onclick="copyField('cond-49', this)">📋 Copy Condition</button>
+              </div>
+              <small class="hint">Select: "Like New" / "Lightly Used"</small>
+            </div>
+          </div>
+
+          <!-- Field 3: Category -->
+          <div class="field-row">
+            <label>4. Recommended Category</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Antiques &amp; Vintage &gt; Religious Items" id="cat-49">
+              <button class="btn-copy" onclick="copyField('cat-49', this)">📋 Copy Category</button>
+            </div>
+          </div>
+
+          <!-- Field 4: Description -->
+          <div class="field-row">
+            <label>5. Full Description (Rich English + Thai + Guarantee)</label>
+            <textarea readonly rows="9" id="desc-49">Phra Somdej Thaan Kha To LP Nak Wat Rakang B.E. 2495 (Vintage Holy Powder)
+Thai Name: พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี2495
+DAN SIAM REF: #49
+
+✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦
+Consecrated in B.E. 2495 (1952) by Luang Pu Nak, Abbot of the legendary Wat Rakang Kositaram. Made with an abundant concentration of genuine broken Somdej powders from Somdej Phra Buddhacharn (Toh Promrangsi). Renowned as "The King of Amulets" for auspicious blessing, career advancement, high status, and prosperity.
+
+✦ 100% AUTHENTICITY GUARANTEE ✦
+• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).
+• Direct temple consecration & genuine collector preservation.
+• Full lifetime money-back guarantee of authenticity.
+
+✦ SPECIFICATIONS ✦
+• Temple / Origin: Thailand
+• Era: Vintage Consecrated
+• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)
+• Category: พระสมเด็จ
+
+✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦
+• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.
+• Full international tracking number provided within 24 hours of dispatch.
+• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.
+• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.
+
+✦ VERIFIED OFFICIAL STORE ✦
+View full studio photos, 360° closeups, and certificate details on our official website:
+https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495
+
+Direct inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏</textarea>
+            <div class="desc-actions">
+              <button class="btn-copy btn-lg" onclick="copyField('desc-49', this)">📋 Copy Full Description</button>
+              <button class="btn-script" onclick="copyText(&quot;(function() {\n  function setVal(selector, val) {\n    const el = document.querySelector(selector);\n    if (el) {\n      el.value = val;\n      el.dispatchEvent(new Event('input', { bubbles: true }));\n      el.dispatchEvent(new Event('change', { bubbles: true }));\n      console.log('Filled:', selector);\n    }\n  }\n  // Common Carousell input selectors\n  const titleInput = document.querySelector('input[name=\&quot;title\&quot;], input[placeholder*=\&quot;title\&quot; i], textarea[placeholder*=\&quot;title\&quot; i]');\n  if (titleInput) { titleInput.value = \&quot;Phra Somdej Thaan Kha To LP Nak Wat Rakang B.E. 2495 (Vintage Holy Powder)\&quot;; titleInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const priceInput = document.querySelector('input[name=\&quot;price\&quot;], input[placeholder*=\&quot;price\&quot; i], input[type=\&quot;number\&quot;]');\n  if (priceInput) { priceInput.value = \&quot;58\&quot;; priceInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const descInput = document.querySelector('textarea[name=\&quot;description\&quot;], textarea[placeholder*=\&quot;describe\&quot; i], textarea[placeholder*=\&quot;description\&quot; i]');\n  if (descInput) { descInput.value = \&quot;Phra Somdej Thaan Kha To LP Nak Wat Rakang B.E. 2495 (Vintage Holy Powder)\\nThai Name: พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี2495\\nDAN SIAM REF: #49\\n\\n✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦\\nConsecrated in B.E. 2495 (1952) by Luang Pu Nak, Abbot of the legendary Wat Rakang Kositaram. Made with an abundant concentration of genuine broken Somdej powders from Somdej Phra Buddhacharn (Toh Promrangsi). Renowned as \\\&quot;The King of Amulets\\\&quot; for auspicious blessing, career advancement, high status, and prosperity.\\n\\n✦ 100% AUTHENTICITY GUARANTEE ✦\\n• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).\\n• Direct temple consecration & genuine collector preservation.\\n• Full lifetime money-back guarantee of authenticity.\\n\\n✦ SPECIFICATIONS ✦\\n• Temple / Origin: Thailand\\n• Era: Vintage Consecrated\\n• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)\\n• Category: พระสมเด็จ\\n\\n✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦\\n• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.\\n• Full international tracking number provided within 24 hours of dispatch.\\n• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.\\n• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.\\n\\n✦ VERIFIED OFFICIAL STORE ✦\\nView full studio photos, 360° closeups, and certificate details on our official website:\\nhttps://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495\\n\\nDirect inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏\&quot;; descInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  alert('✨ Auto-filled Title, Price (S$ 58), and Description for Item #49!');\n})();&quot;, this)">⚡ Copy Console Auto-Fill Script</button>
+              <a href="https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495" target="_blank" class="btn-link">🌐 View on DanSiam Official ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="amulet-card" id="amulet-1737">
+      <div class="card-header">
+        <div class="badge-row">
+          <span class="badge-num">#04</span>
+          <span class="badge-ref">REF: #1737</span>
+          <span class="badge-cat">Antiques & Vintage > Religious Items</span>
+        </div>
+        <h2 class="amulet-title">Sacred Guman Thong 7 Cemeteries Earth LP Pin Wat Ubon 2500 Rare Powerful</h2>
+        <div class="amulet-th">กุมารทอง เนื้อดินเจ็ดป่าช้า หลวงพ่อพิณ วัดอุบล ราชบุรี ปี2500</div>
+      </div>
+
+      <div class="card-body">
+        <!-- Gallery Preview -->
+        <div class="gallery-section">
+          <div class="gallery-title">📁 Drag Photos from folder: <code>04_guman-thong-din-chet-pacha-luang-pho-pin-wat-</code></div>
+          <div class="thumbs-grid">
+            
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/1737/photo_1.webp" alt="Photo 1" onerror="this.src='https://placehold.co/120x120?text=Photo+1'"/>
+          <span>Photo 1</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/1737/photo_2.webp" alt="Photo 2" onerror="this.src='https://placehold.co/120x120?text=Photo+2'"/>
+          <span>Photo 2</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/1737/photo_3.webp" alt="Photo 3" onerror="this.src='https://placehold.co/120x120?text=Photo+3'"/>
+          <span>Photo 3</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/1737/photo_4.webp" alt="Photo 4" onerror="this.src='https://placehold.co/120x120?text=Photo+4'"/>
+          <span>Photo 4</span>
+        </div>
+      
+          </div>
+        </div>
+
+        <!-- Form Fields with 1-Click Copy -->
+        <div class="fields-section">
+          <!-- Field 1: Title -->
+          <div class="field-row">
+            <label>1. Listing Title (Max 80 chars)</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Sacred Guman Thong 7 Cemeteries Earth LP Pin Wat Ubon 2500 Rare Powerful" id="title-1737">
+              <button class="btn-copy" onclick="copyField('title-1737', this)">📋 Copy Title</button>
+            </div>
+          </div>
+
+          <!-- Field 2: Price & Condition -->
+          <div class="two-col">
+            <div class="field-row">
+              <label>2. Price (SGD)</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="46" id="price-1737">
+                <button class="btn-copy" onclick="copyField('price-1737', this)">📋 Copy S$ 46</button>
+              </div>
+              <small class="hint">≈ ฿1,200 THB (Conversion ~26 THB/SGD)</small>
+            </div>
+            <div class="field-row">
+              <label>3. Condition</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="Like New" id="cond-1737">
+                <button class="btn-copy" onclick="copyField('cond-1737', this)">📋 Copy Condition</button>
+              </div>
+              <small class="hint">Select: "Like New" / "Lightly Used"</small>
+            </div>
+          </div>
+
+          <!-- Field 3: Category -->
+          <div class="field-row">
+            <label>4. Recommended Category</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Antiques &amp; Vintage &gt; Religious Items" id="cat-1737">
+              <button class="btn-copy" onclick="copyField('cat-1737', this)">📋 Copy Category</button>
+            </div>
+          </div>
+
+          <!-- Field 4: Description -->
+          <div class="field-row">
+            <label>5. Full Description (Rich English + Thai + Guarantee)</label>
+            <textarea readonly rows="9" id="desc-1737">Sacred Guman Thong 7 Cemeteries Earth LP Pin Wat Ubon 2500 Rare Powerful
+Thai Name: กุมารทอง เนื้อดินเจ็ดป่าช้า หลวงพ่อพิณ วัดอุบล ราชบุรี ปี2500
+DAN SIAM REF: #1737
+
+✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦
+Sacred vintage Guman Thong hand-pressed from 7 Sacred Cemeteries Earth (Din Chet Pacha) consecrated in B.E. 2500 by Luang Pho Pin of Wat Ubonwannaram (Ratchaburi), chief disciple of Luang Pho Khong (Wat Bang Kaphom). Famously revered for bringing wealth, booming retail sales, calling customers, and spiritual home protection.
+
+✦ 100% AUTHENTICITY GUARANTEE ✦
+• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).
+• Direct temple consecration & genuine collector preservation.
+• Full lifetime money-back guarantee of authenticity.
+
+✦ SPECIFICATIONS ✦
+• Temple / Origin: Thailand
+• Era: Vintage Consecrated
+• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)
+• Category: เครื่องราง
+
+✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦
+• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.
+• Full international tracking number provided within 24 hours of dispatch.
+• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.
+• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.
+
+✦ VERIFIED OFFICIAL STORE ✦
+View full studio photos, 360° closeups, and certificate details on our official website:
+https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500
+
+Direct inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏</textarea>
+            <div class="desc-actions">
+              <button class="btn-copy btn-lg" onclick="copyField('desc-1737', this)">📋 Copy Full Description</button>
+              <button class="btn-script" onclick="copyText(&quot;(function() {\n  function setVal(selector, val) {\n    const el = document.querySelector(selector);\n    if (el) {\n      el.value = val;\n      el.dispatchEvent(new Event('input', { bubbles: true }));\n      el.dispatchEvent(new Event('change', { bubbles: true }));\n      console.log('Filled:', selector);\n    }\n  }\n  // Common Carousell input selectors\n  const titleInput = document.querySelector('input[name=\&quot;title\&quot;], input[placeholder*=\&quot;title\&quot; i], textarea[placeholder*=\&quot;title\&quot; i]');\n  if (titleInput) { titleInput.value = \&quot;Sacred Guman Thong 7 Cemeteries Earth LP Pin Wat Ubon 2500 Rare Powerful\&quot;; titleInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const priceInput = document.querySelector('input[name=\&quot;price\&quot;], input[placeholder*=\&quot;price\&quot; i], input[type=\&quot;number\&quot;]');\n  if (priceInput) { priceInput.value = \&quot;46\&quot;; priceInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const descInput = document.querySelector('textarea[name=\&quot;description\&quot;], textarea[placeholder*=\&quot;describe\&quot; i], textarea[placeholder*=\&quot;description\&quot; i]');\n  if (descInput) { descInput.value = \&quot;Sacred Guman Thong 7 Cemeteries Earth LP Pin Wat Ubon 2500 Rare Powerful\\nThai Name: กุมารทอง เนื้อดินเจ็ดป่าช้า หลวงพ่อพิณ วัดอุบล ราชบุรี ปี2500\\nDAN SIAM REF: #1737\\n\\n✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦\\nSacred vintage Guman Thong hand-pressed from 7 Sacred Cemeteries Earth (Din Chet Pacha) consecrated in B.E. 2500 by Luang Pho Pin of Wat Ubonwannaram (Ratchaburi), chief disciple of Luang Pho Khong (Wat Bang Kaphom). Famously revered for bringing wealth, booming retail sales, calling customers, and spiritual home protection.\\n\\n✦ 100% AUTHENTICITY GUARANTEE ✦\\n• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).\\n• Direct temple consecration & genuine collector preservation.\\n• Full lifetime money-back guarantee of authenticity.\\n\\n✦ SPECIFICATIONS ✦\\n• Temple / Origin: Thailand\\n• Era: Vintage Consecrated\\n• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)\\n• Category: เครื่องราง\\n\\n✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦\\n• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.\\n• Full international tracking number provided within 24 hours of dispatch.\\n• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.\\n• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.\\n\\n✦ VERIFIED OFFICIAL STORE ✦\\nView full studio photos, 360° closeups, and certificate details on our official website:\\nhttps://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500\\n\\nDirect inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏\&quot;; descInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  alert('✨ Auto-filled Title, Price (S$ 46), and Description for Item #1737!');\n})();&quot;, this)">⚡ Copy Console Auto-Fill Script</button>
+              <a href="https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500" target="_blank" class="btn-link">🌐 View on DanSiam Official ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="amulet-card" id="amulet-37">
+      <div class="card-header">
+        <div class="badge-row">
+          <span class="badge-num">#05</span>
+          <span class="badge-ref">REF: #37</span>
+          <span class="badge-cat">Antiques & Vintage > Religious Items</span>
+        </div>
+        <h2 class="amulet-title">LP Tuad Pim Phra Rod 5 Kings 2542 Consecrated by LP Moon Wat Ban Jan</h2>
+        <div class="amulet-th">หลวงปู่ทวดพิมพ์พระรอด รุ่นพระเจ้า 5 พระองค์ เนื้อขาว หลวงปู่หมุน วัดบ้านจาน ปลุกเสก ปี2542</div>
+      </div>
+
+      <div class="card-body">
+        <!-- Gallery Preview -->
+        <div class="gallery-section">
+          <div class="gallery-title">📁 Drag Photos from folder: <code>05_luang-pu-tuat-pim-phra-rod-five-kings-b-e-254</code></div>
+          <div class="thumbs-grid">
+            
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/37/photo_1.webp" alt="Photo 1" onerror="this.src='https://placehold.co/120x120?text=Photo+1'"/>
+          <span>Photo 1</span>
+        </div>
+      
+        <div class="thumb-box">
+          <img src="https://dansiamamulets.com/images/products/37/photo_2.webp" alt="Photo 2" onerror="this.src='https://placehold.co/120x120?text=Photo+2'"/>
+          <span>Photo 2</span>
+        </div>
+      
+          </div>
+        </div>
+
+        <!-- Form Fields with 1-Click Copy -->
+        <div class="fields-section">
+          <!-- Field 1: Title -->
+          <div class="field-row">
+            <label>1. Listing Title (Max 80 chars)</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="LP Tuad Pim Phra Rod 5 Kings 2542 Consecrated by LP Moon Wat Ban Jan" id="title-37">
+              <button class="btn-copy" onclick="copyField('title-37', this)">📋 Copy Title</button>
+            </div>
+          </div>
+
+          <!-- Field 2: Price & Condition -->
+          <div class="two-col">
+            <div class="field-row">
+              <label>2. Price (SGD)</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="44" id="price-37">
+                <button class="btn-copy" onclick="copyField('price-37', this)">📋 Copy S$ 44</button>
+              </div>
+              <small class="hint">≈ ฿1,150 THB (Conversion ~26 THB/SGD)</small>
+            </div>
+            <div class="field-row">
+              <label>3. Condition</label>
+              <div class="input-with-copy">
+                <input type="text" readonly value="Like New" id="cond-37">
+                <button class="btn-copy" onclick="copyField('cond-37', this)">📋 Copy Condition</button>
+              </div>
+              <small class="hint">Select: "Like New" / "Lightly Used"</small>
+            </div>
+          </div>
+
+          <!-- Field 3: Category -->
+          <div class="field-row">
+            <label>4. Recommended Category</label>
+            <div class="input-with-copy">
+              <input type="text" readonly value="Antiques &amp; Vintage &gt; Religious Items" id="cat-37">
+              <button class="btn-copy" onclick="copyField('cat-37', this)">📋 Copy Category</button>
+            </div>
+          </div>
+
+          <!-- Field 4: Description -->
+          <div class="field-row">
+            <label>5. Full Description (Rich English + Thai + Guarantee)</label>
+            <textarea readonly rows="9" id="desc-37">LP Tuad Pim Phra Rod 5 Kings 2542 Consecrated by LP Moon Wat Ban Jan
+Thai Name: หลวงปู่ทวดพิมพ์พระรอด รุ่นพระเจ้า 5 พระองค์ เนื้อขาว หลวงปู่หมุน วัดบ้านจาน ปลุกเสก ปี2542
+DAN SIAM REF: #37
+
+✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦
+Sacred Luang Phu Tuad Pim Phra Rod (5 Kings Edition) blessed in B.E. 2542 by the miraculous centenarian monk Luang Pu Moon Thitasilo of Wat Ban Jan. Famous for turning around life fortunes, bringing unexpected windfalls, and supreme bodily protection.
+
+✦ 100% AUTHENTICITY GUARANTEE ✦
+• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).
+• Direct temple consecration & genuine collector preservation.
+• Full lifetime money-back guarantee of authenticity.
+
+✦ SPECIFICATIONS ✦
+• Temple / Origin: Thailand
+• Era: Vintage Consecrated
+• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)
+• Category: หลวงพ่อทวด
+
+✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦
+• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.
+• Full international tracking number provided within 24 hours of dispatch.
+• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.
+• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.
+
+✦ VERIFIED OFFICIAL STORE ✦
+View full studio photos, 360° closeups, and certificate details on our official website:
+https://dansiamamulets.com/product/luang-pu-tuat-pim-phra-rod-five-kings-b-e-2542
+
+Direct inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏</textarea>
+            <div class="desc-actions">
+              <button class="btn-copy btn-lg" onclick="copyField('desc-37', this)">📋 Copy Full Description</button>
+              <button class="btn-script" onclick="copyText(&quot;(function() {\n  function setVal(selector, val) {\n    const el = document.querySelector(selector);\n    if (el) {\n      el.value = val;\n      el.dispatchEvent(new Event('input', { bubbles: true }));\n      el.dispatchEvent(new Event('change', { bubbles: true }));\n      console.log('Filled:', selector);\n    }\n  }\n  // Common Carousell input selectors\n  const titleInput = document.querySelector('input[name=\&quot;title\&quot;], input[placeholder*=\&quot;title\&quot; i], textarea[placeholder*=\&quot;title\&quot; i]');\n  if (titleInput) { titleInput.value = \&quot;LP Tuad Pim Phra Rod 5 Kings 2542 Consecrated by LP Moon Wat Ban Jan\&quot;; titleInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const priceInput = document.querySelector('input[name=\&quot;price\&quot;], input[placeholder*=\&quot;price\&quot; i], input[type=\&quot;number\&quot;]');\n  if (priceInput) { priceInput.value = \&quot;44\&quot;; priceInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  const descInput = document.querySelector('textarea[name=\&quot;description\&quot;], textarea[placeholder*=\&quot;describe\&quot; i], textarea[placeholder*=\&quot;description\&quot; i]');\n  if (descInput) { descInput.value = \&quot;LP Tuad Pim Phra Rod 5 Kings 2542 Consecrated by LP Moon Wat Ban Jan\\nThai Name: หลวงปู่ทวดพิมพ์พระรอด รุ่นพระเจ้า 5 พระองค์ เนื้อขาว หลวงปู่หมุน วัดบ้านจาน ปลุกเสก ปี2542\\nDAN SIAM REF: #37\\n\\n✦ SACRED PROVENANCE & HISTORICAL SIGNIFICANCE ✦\\nSacred Luang Phu Tuad Pim Phra Rod (5 Kings Edition) blessed in B.E. 2542 by the miraculous centenarian monk Luang Pu Moon Thitasilo of Wat Ban Jan. Famous for turning around life fortunes, bringing unexpected windfalls, and supreme bodily protection.\\n\\n✦ 100% AUTHENTICITY GUARANTEE ✦\\n• Guaranteed 100% authentic consecrated sacred amulet from Dan Siam Amulets (Thailand).\\n• Direct temple consecration & genuine collector preservation.\\n• Full lifetime money-back guarantee of authenticity.\\n\\n✦ SPECIFICATIONS ✦\\n• Temple / Origin: Thailand\\n• Era: Vintage Consecrated\\n• Condition: Excellent Sacred Vintage / Collector Preserved (As shown in actual studio photos)\\n• Category: หลวงพ่อทวด\\n\\n✦ SECURE INTERNATIONAL SHIPPING TO SINGAPORE & MALAYSIA ✦\\n• Shipped directly from Bangkok, Thailand via Thailand Post ePacket / Tracked Priority Airmail.\\n• Full international tracking number provided within 24 hours of dispatch.\\n• Standard delivery timeframe: 3 to 5 business days to your doorstep in SG / MY.\\n• Carefully packaged with multi-layer protective bubble wrap inside a rigid export parcel box.\\n\\n✦ VERIFIED OFFICIAL STORE ✦\\nView full studio photos, 360° closeups, and certificate details on our official website:\\nhttps://dansiamamulets.com/product/luang-pu-tuat-pim-phra-rod-five-kings-b-e-2542\\n\\nDirect inquiry, bundling discounts, and offers via Carousell chat welcome! 🙏\&quot;; descInput.dispatchEvent(new Event('input', { bubbles: true })); }\n  alert('✨ Auto-filled Title, Price (S$ 44), and Description for Item #37!');\n})();&quot;, this)">⚡ Copy Console Auto-Fill Script</button>
+              <a href="https://dansiamamulets.com/product/luang-pu-tuat-pim-phra-rod-five-kings-b-e-2542" target="_blank" class="btn-link">🌐 View on DanSiam Official ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <footer>
+      Dan Siam Amulets (Thailand) • Official International Catalog • https://dansiamamulets.com
+    </footer>
+  </div>
+
+  <script>
+    function copyField(elementId, btn) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      const text = el.value || el.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerText = orig;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function copyText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = '✓ Script Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerText = orig;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -20,12 +20,30 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const month = url.searchParams.get('month');
   const year = url.searchParams.get('year');
+  const fromMonth = url.searchParams.get('fromMonth');
+  const fromYear = url.searchParams.get('fromYear');
+  const toMonth = url.searchParams.get('toMonth');
+  const toYear = url.searchParams.get('toYear');
+  const startDateParam = url.searchParams.get('startDate') || url.searchParams.get('fromDate');
+  const endDateParam = url.searchParams.get('endDate') || url.searchParams.get('toDate');
 
   let query = ctx.admin.from('accounting_records').select('*').order('date', { ascending: false }).order('created_at', { ascending: false });
 
-  if (month && year) {
+  if (startDateParam && endDateParam) {
+    query = query.gte('date', startDateParam).lte('date', endDateParam);
+  } else if (startDateParam) {
+    query = query.gte('date', startDateParam);
+  } else if (endDateParam) {
+    query = query.lte('date', endDateParam);
+  } else if (fromMonth && fromYear && toMonth && toYear) {
+    const startPadded = fromMonth.padStart(2, '0');
+    const endPadded = toMonth.padStart(2, '0');
+    const endLastDay = new Date(parseInt(toYear), parseInt(toMonth), 0).getDate().toString().padStart(2, '0');
+    query = query
+      .gte('date', `${fromYear}-${startPadded}-01`)
+      .lte('date', `${toYear}-${endPadded}-${endLastDay}`);
+  } else if (month && year) {
     const paddedMonth = month.padStart(2, '0');
-    const startDate = new Date(`${year}-${paddedMonth}-01T00:00:00Z`);
     const endDate = new Date(parseInt(year), parseInt(month), 0); // last day of month
     
     query = query

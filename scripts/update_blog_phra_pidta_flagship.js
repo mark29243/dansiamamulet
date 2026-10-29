@@ -194,7 +194,7 @@ const content_th = `
       </a>
     </h4>
     <p style="margin: 4px 0 8px 0; color: #94a3b8; font-size: 0.95rem;">
-      <strong>มูลค่าประเมินทางประวัติศาสตร์:</strong> ฿2,200 THB | <strong>สถานะ:</strong> พระแท้สากลนิยม พร้อมข้อมูลมวลสารดั้งเดิม
+      <strong>สถานะ:</strong> พระแท้สากลนิยม พร้อมข้อมูลมวลสารดั้งเดิม
     </p>
     <p style="margin: 0; color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;">
       <strong>การสืบสายวิชาไตรภาคีแห่งวัดสะพานสูง:</strong> จัดสร้างโดย <em>หลวงพ่อทองสุข อินทสาโร</em> ผู้สืบทอดสายวิชาตรงจากหลวงปู่กลิ่น และหลวงปู่เอี่ยม ปฐมนาม พระพิมพ์แจกแม่ครัวองค์นี้ ล้างมายาคติเรื่องพระชั้นรองอย่างสิ้นเชิง เพราะสร้างขึ้นจาก <strong>“ผงโสฬสมหามงคลตกทอดของหลวงปู่เอี่ยมชุดเดียวกับพระปิดตาพิมพ์ชะลูดหลักล้าน”</strong> องค์พระผ่านการจุ่มด้วยรักน้ำเกลี้ยงโบราณ ฟิล์มรักมีความแห้ง ย่น หดตัวตามธรรมชาติแห่งกาลเวลากว่าครึ่งศตวรรษ ปราศจากการอบเคมีสังเคราะห์ใดๆ
@@ -208,7 +208,7 @@ const content_th = `
       </a>
     </h4>
     <p style="margin: 4px 0 8px 0; color: #94a3b8; font-size: 0.95rem;">
-      <strong>มูลค่าประเมินทางประวัติศาสตร์:</strong> ฿1,000 THB | <strong>สถานะ:</strong> พระแท้สายชลบุรีเนื้อผงคลุกรักเข้มข้น
+      <strong>สถานะ:</strong> พระแท้สายชลบุรีเนื้อผงคลุกรักเข้มข้น
     </p>
     <p style="margin: 0; color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;">
       <strong>สะพานเชื่อมสู่ตำนานหลวงปู่แก้ว วัดเครือวัลย์:</strong> จัดสร้างโดย <em>พระปลัดผัน (พระครูพนมศีลาจารย์) แห่งวัดโบสถ์ อ.พนัสนิคม จ.ชลบุรี</em> เมื่อปี พ.ศ. ๒๕๐๓ พระเกจิสายรามัญ-ชลบุรีผู้ได้รับมอบผงอิทธิเจเก่าแท้ของ <strong>หลวงปู่แก้ว วัดเครือวัลย์</strong> ที่ตกทอดในคัมภีร์ใบลานโบราณ นำมาคลุกเคล้ากับยางรักดำบริสุทธิ์ตามแบบแผนโบราณ ถือเป็น “ทางเลือกแห่งปัญญา” สำหรับนักสะสมที่ต้องการสัมผัสอณูโมเลกุลแห่งผงพุทธคุณหลวงปู่แก้ว วัดเครือวัลย์ อันดับหนึ่งของสยาม ในมูลค่าที่เอื้อมถึงได้อย่างแท้จริง
@@ -419,7 +419,7 @@ The Dan Siam Heritage Archive curates two certified authentic, museum-grade spec
       </a>
     </h4>
     <p style="margin: 4px 0 8px 0; color: #94a3b8; font-size: 0.95rem;">
-      <strong>Historical Valuation:</strong> ฿2,200 THB | <strong>Status:</strong> Certified Authentic National Standard
+      <strong>Status:</strong> Certified Authentic National Standard
     </p>
     <p style="margin: 0; color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;">
       <strong>The Direct Saphan Sung Triumvirate Lineage:</strong> Blessed by <em>Luang Pho Thong Suk Inthasaro</em>, direct dharma successor to Luang Pu Klin and Luang Pu Eiam. Far from being a lesser commemorative mold, this "Kitchen Giveaway" edition was pressed using <strong>the exact same ancestral Phong Solot Maha Mongkhon powder reserve found in million-baht Chalood molds</strong>. Dipped in antique raw amber lacquer (Rak Nam Kliang), its surface exhibits half a century of organic micro-wrinkling and natural polymer contraction without synthetic manipulation.
@@ -433,7 +433,7 @@ The Dan Siam Heritage Archive curates two certified authentic, museum-grade spec
       </a>
     </h4>
     <p style="margin: 4px 0 8px 0; color: #94a3b8; font-size: 0.95rem;">
-      <strong>Historical Valuation:</strong> ฿1,000 THB | <strong>Status:</strong> Certified Chonburi Lacquered Heritage Piece
+      <strong>Status:</strong> Certified Chonburi Lacquered Heritage Piece
     </p>
     <p style="margin: 0; color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;">
       <strong>The Connoisseur's Bridge to Wat Khruea Wan:</strong> Created in B.E. 2503 by <em>Phra Plad Phan (Phra Kru Phanom Silachan) of Wat Bo So, Phanat Nikhom, Chonburi</em>—a Mon-lineage temple holding close historical ties to Wat Khruea Wan. Plad Phan retrieved <strong>authentic antique Itthije powder inscribed by Luang Pu Kaew of Wat Khruea Wan</strong> preserved inside ancient palm-leaf chests, kneading it directly with dark tree lacquer. It offers discerning scholars an accessible vessel containing genuine molecular remnants of the supreme Pidta master of Siam.
@@ -644,7 +644,7 @@ Dan Siam 传统珍藏库严选入藏了两尊兼具无可争议之法脉传承�
       </a>
     </h4>
     <p style="margin: 4px 0 8px 0; color: #94a3b8; font-size: 0.95rem;">
-      <strong>学术评估流通基准：</strong> ฿2,200 THB | <strong>馆藏状态：</strong> 全泰公认真品·原始老生漆皮壳完好
+      <strong>馆藏状态：</strong> 全泰公认真品·原始老生漆皮壳完好
     </p>
     <p style="margin: 0; color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;">
       <strong>瓦萨攀颂正统三代法脉：</strong> 此尊由<em>龙婆通素大师（Luang Pho Thong Suk）</em>亲督。大师系龙普严与龙普吉之亲传法嗣。所谓“后厨版”绝非低等附庸，其内核<strong>完全采掘龙普严大师遗存之十六吉祥古老神圣母粉混合督造，与市价数百万泰铢之长身大模同出一源</strong>。外表浸染天然老生漆，漆皮自然皱缩收网，历经半世纪无人工热烘或树脂伪饰，堪称教科书级标本。
@@ -658,7 +658,7 @@ Dan Siam 传统珍藏库严选入藏了两尊兼具无可争议之法脉传承�
       </a>
     </h4>
     <p style="margin: 4px 0 8px 0; color: #94a3b8; font-size: 0.95rem;">
-      <strong>学术评估流通基准：</strong> ฿1,000 THB | <strong>馆藏状态：</strong> 春武里生漆经典名品·极高研藏性价比
+      <strong>馆藏状态：</strong> 春武里生漆经典名品·极高研藏性价比
     </p>
     <p style="margin: 0; color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;">
       <strong>通往全泰生漆必打第一泰斗瓦阔湾之桥梁：</strong> 佛历2503年由春武里府潘纳尼空县古孟刹瓦波寺住持<em>帕巴拉潘大师</em>督造。瓦波寺与全泰生漆经粉必打之神——<strong>瓦阔湾寺龙普娇（Luang Pu Kaew）</strong>法脉渊源深厚。巴拉潘大师开启古贝叶宝匣，将珍藏之<strong>龙普娇亲手擦拭传承之正统伊提皆神圣古粉</strong>，直接拌入纯黑生漆按古法压模。为追求龙普娇天价至尊法脉的理性藏家，提供了一尊具备真正古圣粉分子载体之稀有珍物。
