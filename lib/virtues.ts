@@ -173,7 +173,7 @@ export function getProductVirtues(p: Product): string[] {
     virtues.add('career-and-power');
     virtues.add('miraculous-protection');
     virtues.add('metta-and-charisma');
-    if (nameHas('โชคลาภ') || nameHas('มหาลาภ') || nameHas('เงินล้าน') || nameHas('เศรษฐี') || nameHas('ปลดหนี้') || nameHas('ค้าขาย') || nameHas('รวย')) {
+    if (nameHas('โชคลาภ') || nameHas('มหาลาภ') || nameHas('เงินล้าน') || nameHas('เศรษฐี') || nameHas('ปลดหนี้') || nameHas('ค้าขาย') || nameHas('รวย') || nameHas('รวงข้าว')) {
       virtues.add('wealth-and-fortune');
     }
   }
@@ -251,11 +251,12 @@ export function getProductVirtues(p: Product): string[] {
   const isWealthMaster = nameHas('สังกัจจายน์') || nameHas('สิวลี') || nameHas('สีวลี') || nameHas('อุปคุต') || 
                          nameHas('เจ้าสัว') || nameHas('หลวงพ่อเงิน') || nameHas('หลวงพ่อรวย') || 
                          nameHas('เศรษฐีนวโกฏิ') || nameHas('พญาหมู มหาลาภ') || nameHas('ชนะจน') ||
-                         nameHas('ปลดหนี้') || nameHas('ทวีทรัพย์') || nameHas('เงินล้าน') || nameHas('ดูดทรัพย์');
+                         nameHas('ปลดหนี้') || nameHas('ทวีทรัพย์') || nameHas('เงินล้าน') || nameHas('ดูดทรัพย์') ||
+                         nameHas('หลักฮะ') || nameHas('รวงข้าว');
   if (isWealthMaster) {
     virtues.add('wealth-and-fortune');
     virtues.add('metta-and-charisma');
-    if (nameHas('อุปคุต')) {
+    if (nameHas('อุปคุต') || nameHas('หลักฮะ')) {
       virtues.add('miraculous-protection');
     }
   }
@@ -342,14 +343,14 @@ export function getProductVirtues(p: Product): string[] {
                         nameHas('พระแก้วมรกต') || nameHas('ลีลา') || nameHas('สุโขทัย') || 
                         nameHas('ปากน้ำ') || nameHas('วัดระฆัง') || nameHas('บางขุนพรหม') ||
                         nameHas('พระพุทธ') || nameHas('ชนะสงคราม') || isRealSoomKor ||
-                        nameHas('ผงสุพรรณ');
+                        nameHas('ผงสุพรรณ') || nameHas('ธรรมจักร') || nameHas('สรงน้ำ');
   if (isGreatBuddha) {
     virtues.add('miraculous-protection');
     virtues.add('career-and-power');
-    if (nameHas('โสธร') || nameHas('ปากน้ำ') || isRealSoomKor || nameHas('โชคลาภ') || nameHas('ค้าขาย') || nameHas('ปลดหนี้')) {
+    if (nameHas('ลีลา') || nameHas('โสธร') || nameHas('ปากน้ำ') || isRealSoomKor || nameHas('โชคลาภ') || nameHas('ค้าขาย') || nameHas('ปลดหนี้')) {
       virtues.add('wealth-and-fortune');
     }
-    if (nameHas('ลีลา') || nameHas('ชินราช') || nameHas('เมตตา')) {
+    if (nameHas('ลีลา') || nameHas('ชินราช') || nameHas('เมตตา') || nameHas('สรงน้ำ')) {
       virtues.add('metta-and-charisma');
     }
   }
@@ -374,11 +375,12 @@ export function getProductVirtues(p: Product): string[] {
                  nameHas('หลวงพ่อพูล') || nameHas('หลวงพ่อตัด') || nameHas('หลวงปู่คำพันธ์') ||
                  nameHas('หลวงพ่อแย้ม') || nameHas('หลวงพ่อชาญ') || nameHas('หลวงพ่อยิด') ||
                  nameHas('หลวงปู่วรพต') || nameHas('หลวงพ่อแทน') || nameHas('หลวงปู่เผือก') ||
-                 nameHas('หลวงปู่ปลอด') || nameHas('หลวงตาม้า') || nameHas('คุณแม่บุญเรือน');
+                 nameHas('หลวงปู่ปลอด') || nameHas('หลวงตาม้า') || nameHas('คุณแม่บุญเรือน') ||
+                 nameHas('เจ้าคุณนร') || nameHas('เจ้าคุณโพธิ์แจ้ง') || nameHas('หลวงพ่อคง');
   if (isGuru) {
     virtues.add('miraculous-protection');
     virtues.add('metta-and-charisma');
-    if (nameHas('คูณ') || nameHas('กวย') || nameHas('หลิว') || nameHas('รวย') || nameHas('พูล') || nameHas('บุญเรือน')) {
+    if (nameHas('คูณ') || nameHas('กวย') || nameHas('หลิว') || nameHas('รวย') || nameHas('พูล') || nameHas('บุญเรือน') || nameHas('บุญชุ่ม')) {
       virtues.add('wealth-and-fortune');
     }
     if (nameHas('เลื่อน') || nameHas('เจริญ') || nameHas('บารมี') || nameHas('เปิ่น') || nameHas('เดิม') || nameHas('วรพต')) {
