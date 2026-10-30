@@ -205,7 +205,7 @@ export default function HomeShop({
       )}
 
       {/* Quick Virtue Navigation Bar */}
-      <div className="container" style={{ marginBottom: 28, padding: '0 24px' }}>
+      <div className="container" style={{ marginBottom: 28, padding: '0 24px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
         <div style={{
           display: 'flex',
           gap: 8,
@@ -215,6 +215,9 @@ export default function HomeShop({
           WebkitOverflowScrolling: 'touch',
           justifyContent: isMobile ? 'flex-start' : 'center',
           flexWrap: isMobile ? 'nowrap' : 'wrap',
+          width: '100%',
+          maxWidth: '100%',
+          minWidth: 0,
         }}>
           <Link
             href="/shop"
@@ -462,10 +465,10 @@ export default function HomeShop({
 
       <style>{`
         @media (max-width: 900px) {
-          [data-grid="shop"] { grid-template-columns: 1fr !important; }
+          [data-grid="shop"] { grid-template-columns: minmax(0, 1fr) !important; }
         }
         @media (max-width: 640px) {
-          [data-grid="products"] { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+          [data-grid="products"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
         }
       `}</style>
     </section>

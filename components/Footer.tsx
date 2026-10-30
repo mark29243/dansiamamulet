@@ -25,9 +25,9 @@ export default function Footer() {
   }
 
   return (
-    <footer style={{ background: 'var(--deep)', color: '#4A3820', paddingTop: 48 }}>
+    <footer style={{ background: 'var(--deep)', color: '#4A3820', paddingTop: 48, width: '100%', maxWidth: '100%', overflowX: 'hidden', boxSizing: 'border-box' }}>
       {/* Newsletter */}
-      <div style={{ background: 'var(--deep-light)', padding: '28px 24px', borderBottom: '1px solid #2A1E08' }}>
+      <div style={{ background: 'var(--deep-light)', padding: '28px 24px', borderBottom: '1px solid #2A1E08', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
           <div>
             <h3 style={{ fontSize: 16, fontFamily: "'Sarabun', sans-serif", fontWeight: 600, color: 'var(--gold-light)', marginBottom: 4 }}>
@@ -37,7 +37,7 @@ export default function Footer() {
               {lang === 'th' ? 'เป็นคนแรกที่ได้รับข่าวสารและส่วนลดพิเศษ' : lang === 'zh' ? '率先获取新品资讯及独家优惠' : 'Be first to know about new amulets and special offers'}
             </p>
           </div>
-          <form onSubmit={handleNewsletter} style={{ display: 'flex', gap: 8, flex: '1 1 260px', maxWidth: 380 }}>
+          <form onSubmit={handleNewsletter} className="footer-newsletter-form" style={{ display: 'flex', gap: 8, flex: '1 1 260px', maxWidth: 380, width: '100%', boxSizing: 'border-box' }}>
             <input
               type="email" value={email} onChange={(e) => setEmail(e.target.value)}
               placeholder={lang === 'th' ? 'อีเมลของคุณ' : lang === 'zh' ? '您的邮箱' : 'your@email.com'}
@@ -120,16 +120,16 @@ export default function Footer() {
           </FooterCol>
         </div>
 
-        <div style={{ borderTop: '1px solid #1E1508', paddingTop: 16, display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#6A5535', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+        <div className="footer-copy-right" style={{ borderTop: '1px solid #1E1508', paddingTop: 16, display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#6A5535', flexWrap: 'wrap', gap: 12, alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
           <span>© 2026 Dan Siam Amulets · All rights reserved</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#6A5535' }}>
+          <div className="footer-badges" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#6A5535', whiteSpace: 'nowrap' }}>
               <IcoGlobe /> Made in Thailand
             </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#6A5535' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#6A5535', whiteSpace: 'nowrap' }}>
               <IcoShipping /> Worldwide Shipping
             </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#6A5535' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#6A5535', whiteSpace: 'nowrap' }}>
               <IcoLock /> Secure Payments
             </span>
           </div>
@@ -139,12 +139,14 @@ export default function Footer() {
       <style>{`
         @media (max-width: 768px) {
           .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 20px !important; }
+          .footer-copy-right { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 12px !important; }
+          .footer-badges { justify-content: center !important; }
+          .footer-newsletter-form { max-width: 100% !important; }
         }
         @media (max-width: 480px) {
           .footer-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 600px) {
-          .footer-copy-right { flex-direction: column !important; align-items: flex-start !important; }
+          .footer-badges { gap: 8px !important; }
+          .footer-badges span { font-size: 10px !important; }
         }
       `}</style>
     </footer>

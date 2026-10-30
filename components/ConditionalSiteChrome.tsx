@@ -20,7 +20,7 @@ export default function ConditionalSiteChrome({ children }: { children: React.Re
   return (
     <>
       <Header />
-      <main id="main" style={{ minHeight: 'calc(100vh - 280px)' }}>
+      <main id="main" style={{ minHeight: 'calc(100vh - 280px)', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
         {children}
       </main>
       <Footer />

@@ -59,6 +59,7 @@ export default function QuickContact() {
 
       {/* Contact options */}
       <div
+        className="quick-contact-options"
         style={{
           position: 'fixed', bottom: 90, right: 24,
           display: 'flex', flexDirection: 'column', gap: 8, zIndex: 90,
@@ -125,6 +126,7 @@ export default function QuickContact() {
 
       {/* Trigger button */}
       <button
+        className="quick-contact-trigger"
         onClick={() => setOpen(!open)}
         aria-label="Contact us"
         aria-expanded={open}
@@ -149,6 +151,22 @@ export default function QuickContact() {
           </svg>
         )}
       </button>
+
+      <style>{`
+        @media (max-width: 480px) {
+          .quick-contact-trigger {
+            right: 16px !important;
+            bottom: 16px !important;
+            width: 50px !important;
+            height: 50px !important;
+          }
+          .quick-contact-options {
+            right: 16px !important;
+            bottom: 74px !important;
+            max-width: calc(100vw - 32px) !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

@@ -67,13 +67,13 @@ export default function Header() {
   return (
     <>
       {/* Top language bar */}
-      <div style={{ background: 'var(--deep)', padding: '6px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #2A1E08' }}>
+      <div className="top-lang-bar" style={{ background: 'var(--deep)', padding: '6px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #2A1E08', width: '100%', maxWidth: '100%' }}>
         <div style={{ display: 'flex', gap: 14, alignItems: 'center', fontSize: 11, color: '#6B5730', letterSpacing: 1 }} className="hide-mobile">
           <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><IcoPhone size={13} /> +66 89 815 7535</span>
           <span style={{ color: '#3A2A10' }}>·</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><IcoMail size={13} /> dansiamamulets2@gmail.com</span>
         </div>
-        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+        <div className="top-lang-buttons" style={{ display: 'flex', gap: 4, alignItems: 'center', marginLeft: 'auto' }}>
           <span style={{ color: '#6B5730', fontSize: 10, marginRight: 8, letterSpacing: 2 }} className="hide-mobile">LANG</span>
           {langs.map((l) => (
             <button
@@ -101,6 +101,7 @@ export default function Header() {
 
       {/* Main header */}
       <header
+        className={`site-header ${scrolled ? 'scrolled' : ''}`}
         style={{
           background: 'var(--deep)',
           padding: scrolled ? '12px 24px' : '18px 24px',
@@ -112,6 +113,9 @@ export default function Header() {
           top: 0,
           zIndex: 100,
           transition: 'padding 0.2s',
+          width: '100%',
+          maxWidth: '100%',
+          boxSizing: 'border-box',
         }}
       >
         {/* Mobile menu button */}
@@ -128,6 +132,7 @@ export default function Header() {
             cursor: 'pointer',
             alignItems: 'center',
             justifyContent: 'center',
+            flexShrink: 0,
           }}
         >
           ☰
@@ -145,32 +150,34 @@ export default function Header() {
         {/* Logo center */}
         <Link
           href="/"
-          style={{ textAlign: 'center', flex: '0 0 auto', transition: 'transform 0.2s' }}
+          className="header-logo-link"
+          style={{ textAlign: 'center', flex: '0 1 auto', minWidth: 0, transition: 'transform 0.2s' }}
           aria-label="Dan Siam Amulets — Home"
         >
           <div
-            className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'}
+            className={`header-logo-text ${lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'}`}
             style={{
               fontSize: scrolled ? 18 : 22,
               fontWeight: 600,
               color: 'var(--gold)',
               letterSpacing: 2,
-              lineHeight: 1,
+              lineHeight: 1.2,
               fontStyle: lang === 'en' ? 'italic' : 'normal',
               transition: 'font-size 0.2s',
+              whiteSpace: 'nowrap',
             }}
           >
             {lang === 'th' ? 'พระเครื่อง แดนสยาม' : lang === 'zh' ? '丹暹罗佛牌' : 'Dan Siam Amulets'}
           </div>
           {!scrolled && (
-            <div style={{ fontSize: 10, color: '#6B5730', letterSpacing: 1, marginTop: 4, fontFamily: "'Sarabun', sans-serif" }}>
+            <div className="header-logo-sub" style={{ fontSize: 10, color: '#6B5730', letterSpacing: 1, marginTop: 4, fontFamily: "'Sarabun', sans-serif", whiteSpace: 'nowrap' }}>
               {lang === 'th' ? 'พระเครื่องแท้ รับรองคุณภาพ' : lang === 'zh' ? '正品泰国佛牌' : 'AUTHENTIC SACRED THAI AMULETS'}
             </div>
           )}
         </Link>
 
         {/* Right actions */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
+        <div className="header-right-actions" style={{ display: 'flex', gap: 6, alignItems: 'center', flex: 1, justifyContent: 'flex-end', flexShrink: 0 }}>
           <Link
             href="/search"
             aria-label="Search"
@@ -335,6 +342,22 @@ export default function Header() {
           </div>
         </div>
       </aside>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .site-header { padding: 10px 14px !important; }
+          .top-lang-bar { padding: 4px 14px !important; }
+          .header-logo-text { font-size: 16px !important; letter-spacing: 0.5px !important; }
+          .header-logo-sub { font-size: 8.5px !important; letter-spacing: 0.5px !important; }
+          .header-right-actions { gap: 2px !important; }
+        }
+        @media (max-width: 380px) {
+          .site-header { padding: 8px 8px !important; }
+          .header-logo-text { font-size: 14px !important; letter-spacing: 0px !important; }
+          .header-logo-sub { display: none !important; }
+          .top-lang-buttons button { padding: 2px 8px !important; font-size: 10px !important; }
+        }
+      `}</style>
     </>
   );
 }

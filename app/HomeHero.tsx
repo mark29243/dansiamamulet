@@ -36,6 +36,7 @@ export default function HomeHero({
         background: 'linear-gradient(135deg, #0D0804 0%, #1A1208 55%, #201608 100%)',
         minHeight: 480, display: 'flex', alignItems: 'center',
         position: 'relative', overflow: 'hidden',
+        width: '100%', maxWidth: '100%', boxSizing: 'border-box',
       }}>
         {/* center glow */}
         <div style={{
@@ -50,6 +51,7 @@ export default function HomeHero({
           position: 'relative', zIndex: 2, padding: '72px 24px',
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           textAlign: 'center',
+          width: '100%', maxWidth: '100%', boxSizing: 'border-box',
         }}>
           {/* tag pill */}
           <div data-tag-pill="" style={{
@@ -64,7 +66,7 @@ export default function HomeHero({
           </div>
 
           <h1 className={lang === 'th' ? 'thai' : lang === 'zh' ? 'zh' : 'serif'} style={{
-            fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700,
+            fontSize: 'clamp(28px, 6vw, 64px)', fontWeight: 700,
             color: '#fff', lineHeight: 1.2, marginBottom: 20,
           }}>
             {lang === 'th' ? (
@@ -219,12 +221,13 @@ export default function HomeHero({
           transform: scale(1.05);
         }
         @media (max-width: 768px) {
-          [data-grid="trust-bar"], [data-grid="cats"] { grid-template-columns: repeat(2,1fr) !important; }
-          [data-hero-inner] { padding: 48px 20px !important; }
-          [data-cats-section] { padding: 40px 16px !important; }
-          [data-tag-pill] { font-size: 10px !important; padding: 6px 12px !important; text-align: center !important; }
+          [data-grid="trust-bar"], [data-grid="cats"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+          [data-hero-inner] { padding: 48px 16px !important; }
+          [data-cats-section] { padding: 36px 16px !important; }
+          [data-tag-pill] { font-size: 10px !important; padding: 6px 12px !important; text-align: center !important; max-width: 100% !important; box-sizing: border-box !important; }
           [data-guarantee] { flex-direction: column !important; align-items: flex-start !important; }
-          [data-guarantee-btn] { width: 100% !important; text-align: center !important; }
+          [data-guarantee-btn] { width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+          [data-trust-item] { padding: 16px 8px !important; }
           [data-trust-item]:nth-child(2n) { border-right: none !important; }
           [data-trust-item]:nth-child(1),
           [data-trust-item]:nth-child(2) { border-bottom: 1px solid #1E1508 !important; }
