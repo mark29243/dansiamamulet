@@ -380,7 +380,7 @@ export default function CheckoutPage() {
 
           <div style={{ marginBottom: 16, maxHeight: 240, overflowY: 'auto' }}>
             {items.map((i) => {
-              const itemName = lang === 'th' ? (i.name_th || i.name) : lang === 'zh' ? (i.name_zh || i.name) : i.name;
+              const itemName = lang === 'th' ? (i.name_th || i.name) : i.name;
               return (
                 <div key={i.product_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '6px 0', fontSize: 12, gap: 12 }}>
                   <span style={{ flex: 1, color: 'var(--text)' }}>

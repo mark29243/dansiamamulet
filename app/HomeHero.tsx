@@ -256,7 +256,7 @@ function TrustItem({ icon, t1, t2 }: { icon: React.ReactNode; t1: string; t2: st
 
 function NewArrivalCard({ p, lang }: { p: Product; lang: string }) {
   const priceDisplay = useLocalPrice(p.sale_price ?? p.price, lang);
-  const displayName = lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
+  const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
   const catName = getCatName(p.category, lang as any);
 
   return (

@@ -186,7 +186,7 @@ function SearchContent() {
             {results.map((p) => {
               const price = p.sale_price ?? p.price;
               const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
-              const displayName = lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
+              const displayName = lang === 'th' ? (p.name_th || p.name) : p.name;
               return (
                 <Link key={p.id} href={`/product/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <article

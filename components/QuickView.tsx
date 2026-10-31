@@ -42,8 +42,7 @@ export default function QuickView({ product, onClose }: { product: Product | nul
 
   const displayName =
     lang === 'th' ? (product.name_th || product.name) :
-    lang === 'zh' ? (product.name_zh || product.name) :
-    product.name;
+    /* en & zh */   product.name;
 
   const displayPrice = product.sale_price ?? product.price;
   const hasDiscount = product.sale_price !== null && product.sale_price < product.price;

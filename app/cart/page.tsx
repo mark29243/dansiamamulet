@@ -88,7 +88,7 @@ export default function CartPage() {
         <div>
           <div className="card" style={{ padding: '4px 20px' }}>
             {items.map((item, idx) => {
-              const itemName = lang === 'th' ? (item.name_th || item.name) : lang === 'zh' ? (item.name_zh || item.name) : item.name;
+              const itemName = lang === 'th' ? (item.name_th || item.name) : item.name;
               return (
                 <div
                   key={item.product_id}

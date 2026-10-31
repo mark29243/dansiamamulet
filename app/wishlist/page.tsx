@@ -57,7 +57,7 @@ export default function WishlistPage() {
   }, [items]);
 
   function getDisplayName(p: Product) {
-    return lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
+    return lang === 'th' ? (p.name_th || p.name) : p.name;
   }
 
   function handleAdd(p: Product) {

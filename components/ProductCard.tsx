@@ -18,8 +18,7 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
   const { lang } = useLang();
   const displayName =
     lang === 'th' ? (p.name_th || p.name) :
-    lang === 'zh' ? (p.name_zh || p.name) :
-    p.name;
+    /* en & zh: English name for readability */ p.name;
   const { add } = useCart();
   const { toast } = useToast();
   const t = getDict(lang);

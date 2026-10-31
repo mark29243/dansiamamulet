@@ -120,7 +120,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: `Product ${productId} is unavailable` }, { status: 400 });
       }
       if (dbp.stock < qty) {
-        const errorName = lang === 'th' ? (dbp.name_th || dbp.name) : lang === 'zh' ? (dbp.name_zh || dbp.name) : dbp.name;
+        const errorName = lang === 'th' ? (dbp.name_th || dbp.name) : dbp.name;
         return NextResponse.json({ error: `${errorName} — only ${dbp.stock} in stock` }, { status: 400 });
       }
       canonicalItems.push({
@@ -181,7 +181,7 @@ export async function POST(req: Request) {
     const { data: { user } } = await supabase.auth.getUser();
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = canonicalItems.map((i) => {
-      const displayName = lang === 'th' ? (i.name_th || i.name) : lang === 'zh' ? (i.name_zh || i.name) : i.name;
+      const displayName = lang === 'th' ? (i.name_th || i.name) : i.name;
       return {
         price_data: {
           currency,
