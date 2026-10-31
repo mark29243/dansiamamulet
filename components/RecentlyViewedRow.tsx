@@ -122,11 +122,11 @@ export default function RecentlyViewedRow({ excludeId }: { excludeId?: number })
                           </div>
                           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
                             <span className="serif" style={{ fontSize: 14, fontWeight: 600, color: hasDiscount ? 'var(--burgundy)' : 'var(--gold-dark)' }}>
-                              {formatPrice(displayPrice)}
+                              {formatPrice(displayPrice, lang)}
                             </span>
                             {hasDiscount && (
                               <span style={{ fontSize: 10, color: 'var(--text-faint)', textDecoration: 'line-through' }}>
-                                {formatPrice(p.price)}
+                                {formatPrice(p.price, lang)}
                               </span>
                             )}
                           </div>

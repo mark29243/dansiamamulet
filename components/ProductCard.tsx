@@ -7,51 +7,12 @@ import { useCart } from './CartProvider';
 import { useToast } from './ToastProvider';
 import { getDict, getCatName } from '@/lib/i18n';
 import type { Product } from '@/lib/types';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { IcoAmulet, IcoEye, IcoCheck } from '@/components/icons';
 import WishlistButton from './WishlistButton';
+import { useLocalPrice } from './CurrencyProvider';
 
-export function useLocalPrice(satang: number, lang: string): string {
-  const [price, setPrice] = useState(() => {
-    const baht = satang / 100;
-    return `฿${new Intl.NumberFormat('th-TH').format(baht)}`;
-  });
-
-  useEffect(() => {
-    const baht = satang / 100;
-    if (lang === 'th') {
-      setPrice(`฿${new Intl.NumberFormat('th-TH').format(baht)}`);
-      return;
-    }
-    const cached = sessionStorage.getItem('fx_rates');
-    const applyRates = (rates: Record<string, number>) => {
-      if (lang === 'zh') {
-        const cny = baht * (rates['CNY'] ?? 0.20);
-        setPrice(`¥${new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 0 }).format(cny)}`);
-      } else {
-        const usd = baht * (rates['USD'] ?? 0.028);
-        setPrice(`$${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(usd)}`);
-      }
-    };
-    if (cached) {
-      applyRates(JSON.parse(cached));
-    } else {
-      fetch('https://open.er-api.com/v6/latest/THB')
-        .then(r => r.json())
-        .then(d => {
-          if (d?.rates) {
-            sessionStorage.setItem('fx_rates', JSON.stringify(d.rates));
-            applyRates(d.rates);
-          }
-        })
-        .catch(() => {
-          applyRates({ USD: 0.028, CNY: 0.20 });
-        });
-    }
-  }, [satang, lang]);
-
-  return price;
-}
+export { useLocalPrice };
 
 export default function ProductCard({ p, onQuickView }: { p: Product; onQuickView?: (p: Product) => void }) {
   const { lang } = useLang();

@@ -7,7 +7,7 @@ import { useLang } from '@/components/LangProvider';
 import { IcoAmulet } from '@/components/icons';
 import type { Product } from '@/lib/types';
 import { getCatName } from '@/lib/i18n';
-import { useLocalPrice } from '@/components/ProductCard';
+import { useLocalPrice } from '@/components/CurrencyProvider';
 
 export default function HomeHero({
   productCount,

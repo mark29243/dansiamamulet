@@ -194,7 +194,7 @@ export function getProductVirtues(p: Product): string[] {
   if (isPidta) {
     virtues.add('wealth-and-fortune');
     virtues.add('miraculous-protection');
-    if (nameHas('มหาเสน่ห์') || nameHas('เสน่ห์') || nameHas('จินดามณี') || fullHas('เมตตา')) {
+    if (nameHas('มหาเสน่ห์') || nameHas('เสน่ห์') || nameHas('จินดามณี') || nameHas('จินดามนี') || fullHas('เมตตา')) {
       virtues.add('metta-and-charisma');
     }
     if (nameHas('ยันต์ยุ่ง') || nameHas('มหาอำนาจ') || nameHas('หัวจรวด') || nameHas('แร่บางไผ่') || fullHas('คงกระพัน')) {
@@ -324,7 +324,7 @@ export function getProductVirtues(p: Product): string[] {
                            nameHas('สาลิกา') || nameHas('สีผึ้ง') || nameHas('ผานไถ') || 
                            nameHas('จิ้งจก') || nameHas('อิ้น') || nameHas('ชูชก') || 
                            nameHas('เต่าเรือน') || nameHas('ถุงเหนี่ยวทรัพย์') || 
-                           isNamTao || nameHas('จินดามณี') || nameHas('บัวบังใบ') ||
+                           isNamTao || nameHas('จินดามณี') || nameHas('จินดามนี') || nameHas('บัวบังใบ') ||
                            nameHas('เงาะ');
   if (isMettaWealthTal) {
     virtues.add('wealth-and-fortune');
@@ -412,7 +412,7 @@ export function getProductVirtues(p: Product): string[] {
 
   const authenticMettaKeywords = [
     'เมตตา', 'มหานิยม', 'มหาเสน่ห์', 'เสน่ห์', 'เจรจา', 'เอ็นดู', 'ผู้ใหญ่รัก',
-    'อุปถัมภ์', 'คนรักใคร่', 'ความรัก', 'สาริกาลิ้นทอง', 'จินดามณี', 'นะหน้าทอง',
+    'อุปถัมภ์', 'คนรักใคร่', 'ความรัก', 'สาริกาลิ้นทอง', 'จินดามณี', 'จินดามนี', 'นะหน้าทอง',
     'สาลิกา', 'ผูกจิต', 'ผูกใจ', 'นิยมชมชอบ'
   ];
   if (authenticMettaKeywords.some(k => fullTh.includes(k))) {

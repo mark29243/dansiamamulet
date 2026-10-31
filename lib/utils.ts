@@ -1,10 +1,22 @@
-// Convert satang (price * 100) to displayable THB string
-export function formatPrice(satang: number, lang: 'th' | 'en' | 'zh' = 'en') {
+// Convert satang (price * 100) to displayable currency string based on language
+// Thai: ฿ (THB), English: $ (USD), Chinese: ¥ (CNY)
+export function formatPrice(
+  satang: number,
+  lang: 'th' | 'en' | 'zh' = 'th',
+  rates?: { USD?: number; CNY?: number }
+) {
   const baht = satang / 100;
-  const formatted = new Intl.NumberFormat(
-    lang === 'th' ? 'th-TH' : lang === 'zh' ? 'zh-CN' : 'en-US'
-  ).format(baht);
-  return `฿${formatted}`;
+  if (lang === 'th') {
+    return `฿${new Intl.NumberFormat('th-TH').format(baht)}`;
+  }
+  if (lang === 'zh') {
+    const rate = rates?.CNY ?? 0.20;
+    const cny = Math.round(baht * rate);
+    return `¥${new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 0 }).format(cny)}`;
+  }
+  const rate = rates?.USD ?? 0.028;
+  const usd = Math.round(baht * rate);
+  return `$${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(usd)}`;
 }
 
 export function slugify(text: string): string {
