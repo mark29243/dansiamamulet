@@ -12,7 +12,9 @@ import { formatPrice } from '@/lib/utils';
 import { IcoSearch, IcoAmulet, IcoShop } from '@/components/icons';
 
 type Result = {
-  id: number; slug: string; name: string; category: string;
+  id: number; slug: string; name: string;
+  name_th?: string | null; name_zh?: string | null;
+  category: string;
   price: number; sale_price: number | null; stock: number;
   images: string[]; short: string | null;
 };
@@ -66,7 +68,15 @@ function SearchContent() {
   function handleAddCart(p: Result, e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    add({ product_id: p.id, name: p.name, price: p.sale_price ?? p.price, image: p.images[0] ?? '', qty: 1 });
+    add({
+      product_id: p.id,
+      name: p.name,
+      name_th: p.name_th,
+      name_zh: p.name_zh,
+      price: p.sale_price ?? p.price,
+      image: p.images[0] ?? '',
+      qty: 1,
+    });
     toast(t.product.addedToCart, 'success');
   }
 
@@ -176,6 +186,7 @@ function SearchContent() {
             {results.map((p) => {
               const price = p.sale_price ?? p.price;
               const hasDiscount = p.sale_price !== null && p.sale_price < p.price;
+              const displayName = lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
               return (
                 <Link key={p.id} href={`/product/${p.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <article
@@ -191,7 +202,7 @@ function SearchContent() {
                     )}
                     <div style={{ aspectRatio: '1', background: 'linear-gradient(135deg,var(--cream-dark),var(--cream-darker))', overflow: 'hidden', position: 'relative' }}>
                       {p.images[0] ? (
-                        <SafeImage src={p.images[0]} alt={p.name} fill sizes="220px" style={{ objectFit: 'cover', transition: 'transform 0.4s' }} />
+                        <SafeImage src={p.images[0]} alt={displayName} fill sizes="220px" style={{ objectFit: 'cover', transition: 'transform 0.4s' }} />
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                           <IcoAmulet size={48} />
@@ -203,7 +214,7 @@ function SearchContent() {
                         {p.category}
                       </div>
                       <h3 className="serif" style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.4, marginBottom: 10, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 37 }}>
-                        {p.name}
+                        {displayName}
                       </h3>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', borderTop: '1px solid var(--cream-dark)', paddingTop: 10 }}>
                         <div>

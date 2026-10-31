@@ -379,17 +379,20 @@ export default function CheckoutPage() {
           </h2>
 
           <div style={{ marginBottom: 16, maxHeight: 240, overflowY: 'auto' }}>
-            {items.map((i) => (
-              <div key={i.product_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '6px 0', fontSize: 12, gap: 12 }}>
-                <span style={{ flex: 1, color: 'var(--text)' }}>
-                  {i.name.slice(0, 50)}{i.name.length > 50 ? '…' : ''}
-                  <span style={{ color: 'var(--text-faint)', display: 'block', fontSize: 11, marginTop: 2 }}>{t.cart.qty}: {i.qty}</span>
-                </span>
-                <span style={{ fontFamily: "'Cormorant Garamond', serif", color: 'var(--gold-dark)', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap' }}>
-                  {formatPrice(i.price * i.qty, lang)}
-                </span>
-              </div>
-            ))}
+            {items.map((i) => {
+              const itemName = lang === 'th' ? (i.name_th || i.name) : lang === 'zh' ? (i.name_zh || i.name) : i.name;
+              return (
+                <div key={i.product_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '6px 0', fontSize: 12, gap: 12 }}>
+                  <span style={{ flex: 1, color: 'var(--text)' }}>
+                    {itemName.slice(0, 50)}{itemName.length > 50 ? '…' : ''}
+                    <span style={{ color: 'var(--text-faint)', display: 'block', fontSize: 11, marginTop: 2 }}>{t.cart.qty}: {i.qty}</span>
+                  </span>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", color: 'var(--gold-dark)', fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap' }}>
+                    {formatPrice(i.price * i.qty, lang)}
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: 12 }}>

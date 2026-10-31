@@ -87,26 +87,28 @@ export default function CartPage() {
         {/* Items */}
         <div>
           <div className="card" style={{ padding: '4px 20px' }}>
-            {items.map((item, idx) => (
-              <div
-                key={item.product_id}
-                style={{
-                  display: 'grid', gridTemplateColumns: '80px 1fr auto', gap: 16,
-                  padding: '20px 0', borderBottom: idx === items.length - 1 ? 'none' : '1px solid var(--cream-dark)',
-                  alignItems: 'center',
-                }}
-                className="cart-item"
-              >
-                <Link href={`/product/${item.product_id}`} style={{ width: 80, height: 80, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
-                  {item.image && (
-                    <SafeImage src={item.image} alt={item.name} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  )}
-                </Link>
-
-                <div>
-                  <Link href={`/product/${item.product_id}`} className="serif" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.5, color: 'var(--text)', display: 'block', marginBottom: 4 }}>
-                    {item.name}
+            {items.map((item, idx) => {
+              const itemName = lang === 'th' ? (item.name_th || item.name) : lang === 'zh' ? (item.name_zh || item.name) : item.name;
+              return (
+                <div
+                  key={item.product_id}
+                  style={{
+                    display: 'grid', gridTemplateColumns: '80px 1fr auto', gap: 16,
+                    padding: '20px 0', borderBottom: idx === items.length - 1 ? 'none' : '1px solid var(--cream-dark)',
+                    alignItems: 'center',
+                  }}
+                  className="cart-item"
+                >
+                  <Link href={`/product/${item.product_id}`} style={{ width: 80, height: 80, background: 'var(--cream-dark)', overflow: 'hidden', borderRadius: 'var(--radius)', flexShrink: 0 }}>
+                    {item.image && (
+                      <SafeImage src={item.image} alt={itemName} width={80} height={80} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    )}
                   </Link>
+
+                  <div>
+                    <Link href={`/product/${item.product_id}`} className="serif" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.5, color: 'var(--text)', display: 'block', marginBottom: 4 }}>
+                      {itemName}
+                    </Link>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                     <span className="serif" style={{ fontSize: 16, color: 'var(--gold-dark)', fontWeight: 600 }}>
                       {formatPrice(item.price, lang)}
@@ -133,7 +135,8 @@ export default function CartPage() {
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 16, alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>

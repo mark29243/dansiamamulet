@@ -105,7 +105,7 @@ export async function POST(req: Request) {
     const ids = Array.from(aggregatedItemsMap.keys());
     const { data: dbProducts, error } = await admin
       .from('products')
-      .select('id, name, price, sale_price, stock, images, published')
+      .select('id, name, name_th, name_zh, price, sale_price, stock, images, published')
       .in('id', ids);
 
     if (error || !dbProducts) {
@@ -120,11 +120,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: `Product ${productId} is unavailable` }, { status: 400 });
       }
       if (dbp.stock < qty) {
-        return NextResponse.json({ error: `${dbp.name} — only ${dbp.stock} in stock` }, { status: 400 });
+        const errorName = lang === 'th' ? (dbp.name_th || dbp.name) : lang === 'zh' ? (dbp.name_zh || dbp.name) : dbp.name;
+        return NextResponse.json({ error: `${errorName} — only ${dbp.stock} in stock` }, { status: 400 });
       }
       canonicalItems.push({
         product_id: dbp.id,
         name: dbp.name,
+        name_th: dbp.name_th,
+        name_zh: dbp.name_zh,
         price: dbp.sale_price ?? dbp.price,                // server-trusted price
         image: (dbp.images as string[])?.[0] ?? '',
         qty: qty,
@@ -177,17 +180,20 @@ export async function POST(req: Request) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = canonicalItems.map((i) => ({
-      price_data: {
-        currency,
-        product_data: {
-          name: i.name.slice(0, 250),
-          ...(i.image ? { images: [i.image] } : {}),
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = canonicalItems.map((i) => {
+      const displayName = lang === 'th' ? (i.name_th || i.name) : lang === 'zh' ? (i.name_zh || i.name) : i.name;
+      return {
+        price_data: {
+          currency,
+          product_data: {
+            name: displayName.slice(0, 250),
+            ...(i.image ? { images: [i.image] } : {}),
+          },
+          unit_amount: toUnit(i.price),
         },
-        unit_amount: toUnit(i.price),
-      },
-      quantity: i.qty,
-    }));
+        quantity: i.qty,
+      };
+    });
 
     if (shipping_cost > 0) {
       line_items.push({

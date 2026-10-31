@@ -37,7 +37,8 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
   const displayName =
     lang === 'th' ? (p.name_th || p.name) :
-    /* en & zh use English name */ p.name;
+    lang === 'zh' ? (p.name_zh || p.name) :
+    p.name;
 
   // Guard: if a field still contains Thai chars (not yet translated), fall back gracefully
   const hasThai = (s?: string | null) => !!s && /[฀-๿]/.test(s);
@@ -74,13 +75,29 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
 
   function handleAdd() {
     if (p.stock < 1) return;
-    add({ product_id: p.id, name: p.name, price: displayPrice, image: p.images[0] ?? '', qty });
+    add({
+      product_id: p.id,
+      name: p.name,
+      name_th: p.name_th,
+      name_zh: p.name_zh,
+      price: displayPrice,
+      image: p.images[0] ?? '',
+      qty,
+    });
     toast(t.product.addedToCart, 'success');
   }
 
   function handleBuyNow() {
     if (p.stock < 1) return;
-    add({ product_id: p.id, name: p.name, price: displayPrice, image: p.images[0] ?? '', qty });
+    add({
+      product_id: p.id,
+      name: p.name,
+      name_th: p.name_th,
+      name_zh: p.name_zh,
+      price: displayPrice,
+      image: p.images[0] ?? '',
+      qty,
+    });
     window.location.href = '/checkout';
   }
 
@@ -267,7 +284,8 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
                 {related.slice(0, 4).map((r) => {
                   const rName =
                     lang === 'th' ? (r.name_th || r.name) :
-                    /* en & zh */   r.name;
+                    lang === 'zh' ? (r.name_zh || r.name) :
+                    r.name;
                   return (
                     <Link key={r.id} href={`/product/${r.slug}`} className="card" style={{ overflow: 'hidden', padding: 0, textDecoration: 'none', color: 'inherit', transition: 'all 0.2s' }}>
                       <div style={{ aspectRatio: '4/3', overflow: 'hidden', background: 'var(--cream-dark)' }}>

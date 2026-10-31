@@ -23,6 +23,8 @@ export type Product = {
 export type CartItem = {
   product_id: number;
   name: string;
+  name_th?: string | null;
+  name_zh?: string | null;
   price: number;
   image: string;
   qty: number;

@@ -8,6 +8,7 @@ import { useCart } from '@/components/CartProvider';
 import { useToast } from '@/components/ToastProvider';
 import { useLang } from '@/components/LangProvider';
 import { getDict, getCatName } from '@/lib/i18n';
+import { formatPrice } from '@/lib/utils';
 import WishlistButton from '@/components/WishlistButton';
 import { IcoAmulet } from '@/components/icons';
 
@@ -56,13 +57,22 @@ export default function WishlistPage() {
   }, [items]);
 
   function getDisplayName(p: Product) {
-    return lang === 'th' ? (p.name_th || p.name) : p.name;
+    return lang === 'th' ? (p.name_th || p.name) : lang === 'zh' ? (p.name_zh || p.name) : p.name;
   }
 
   function handleAdd(p: Product) {
     if (p.stock < 1) return;
-    add({ product_id: p.id, name: p.name, price: p.sale_price ?? p.price, image: p.images[0] ?? '', qty: 1 });
-    toast(`${t.product.addedToCart}: ${p.name.slice(0, 40)}`, 'success');
+    add({
+      product_id: p.id,
+      name: p.name,
+      name_th: p.name_th,
+      name_zh: p.name_zh,
+      price: p.sale_price ?? p.price,
+      image: p.images[0] ?? '',
+      qty: 1,
+    });
+    const displayName = getDisplayName(p);
+    toast(`${t.product.addedToCart}: ${displayName.slice(0, 40)}`, 'success');
   }
 
   return (
@@ -141,11 +151,11 @@ export default function WishlistPage() {
                     </h3>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                       <span className="serif" style={{ fontSize: 18, fontWeight: 600, color: 'var(--gold-dark)' }}>
-                        ฿{new Intl.NumberFormat('th-TH').format(displayPrice / 100)}
+                        {formatPrice(displayPrice, lang)}
                       </span>
                       {hasDiscount && (
                         <span style={{ fontSize: 11, color: 'var(--text-faint)', textDecoration: 'line-through' }}>
-                          ฿{new Intl.NumberFormat('th-TH').format(p.price / 100)}
+                          {formatPrice(p.price, lang)}
                         </span>
                       )}
                     </div>

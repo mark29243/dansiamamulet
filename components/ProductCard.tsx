@@ -18,7 +18,8 @@ export default function ProductCard({ p, onQuickView }: { p: Product; onQuickVie
   const { lang } = useLang();
   const displayName =
     lang === 'th' ? (p.name_th || p.name) :
-    /* en & zh */   p.name;
+    lang === 'zh' ? (p.name_zh || p.name) :
+    p.name;
   const { add } = useCart();
   const { toast } = useToast();
   const t = getDict(lang);
@@ -35,8 +36,16 @@ const priceDisplay = useLocalPrice(displayPrice, lang);
     e.stopPropagation();
     if (p.stock < 1 || loading) return;
     setLoading(true);
-    add({ product_id: p.id, name: p.name, price: displayPrice, image: p.images[0] ?? '', qty: 1 });
-    toast(`${t.product.addedToCart}: ${p.name.slice(0, 40)}${p.name.length > 40 ? '…' : ''}`, 'success');
+    add({
+      product_id: p.id,
+      name: p.name,
+      name_th: p.name_th,
+      name_zh: p.name_zh,
+      price: displayPrice,
+      image: p.images[0] ?? '',
+      qty: 1,
+    });
+    toast(`${t.product.addedToCart}: ${displayName.slice(0, 40)}${displayName.length > 40 ? '…' : ''}`, 'success');
     setTimeout(() => setLoading(false), 600);
   };
 
