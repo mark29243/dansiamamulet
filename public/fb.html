@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dan Siam Amulets — Facebook Post Helper</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #0f1117; color: #f3f4f6; padding: 16px; padding-bottom: 80px; }
+    .header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
+    .header h1 { font-size: 20px; color: #f59e0b; font-weight: 700; margin-bottom: 6px; }
+    .header p { font-size: 13px; color: #9ca3af; }
+    .tip-box { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: #fbbf24; }
+    .card { background: #1a1d26; border-radius: 16px; border: 1px solid #2a2e3d; padding: 16px; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .card-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .card-sub { font-size: 13px; color: #f59e0b; margin-bottom: 14px; }
+    .images-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+    .img-wrap { position: relative; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #374151; }
+    .img-wrap img { width: 100%; height: auto; display: block; }
+    .img-label { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+    .copy-btn { width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 700; font-size: 15px; border: none; padding: 14px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+    .copy-btn:active { transform: scale(0.98); opacity: 0.9; }
+    .open-fb-btn { width: 100%; background: #1877f2; color: #fff; font-weight: 600; font-size: 14px; border: none; padding: 12px; border-radius: 10px; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #10b981; color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    .toast.show { opacity: 1; }
+    .caption-preview { background: #11141c; border: 1px solid #282d3d; border-radius: 10px; padding: 12px; font-size: 12px; line-height: 1.6; color: #d1d5db; white-space: pre-wrap; word-break: break-all; margin-top: 10px; max-height: 140px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>📦 ตัวช่วยโพสต์ Facebook Groups</h1>
+    <p>Dan Siam Amulets — ตลาดพระและเครื่องรางสากล</p>
+  </div>
+
+  <div class="tip-box">
+    📲 <b>วิธีบันทึกรูปลง iPhone:</b> แตะค้างที่รูปภาพแต่ละรูป แล้วเลือก <b>"เพิ่มไปยัง 'รูปภาพ'" (Add to Photos)</b> ได้ทันทีครับ
+  </div>
+
+  <!-- Item 1: Sarika -->
+  <div class="card">
+    <div class="card-title">1. สาริกาโมบายคู่ หลวงพ่อเคน วัดถ้ำเขาอีโต้</div>
+    <div class="card-sub">人缘金舌鸟双鸟挂饰 · เมตตามหานิยม ค้าขาย แขวนหน้าร้าน</div>
+
+    <div class="images-grid">
+      <div class="img-wrap">
+        <span class="img-label">รูปที่ 1 (ด้านหน้า / ภาพเต็ม)</span>
+        <img src="/amulets/talisman_sarika_1.jpg" alt="Sarika 1">
+      </div>
+      <div class="img-wrap">
+        <span class="img-label">รูปที่ 2 (รอยจารอักขระขอม)</span>
+        <img src="/amulets/talisman_sarika_2.jpg" alt="Sarika 2">
+      </div>
+      <div class="img-wrap">
+        <span class="img-label">รูปที่ 3 (สายโมบายแขวน)</span>
+        <img src="/amulets/talisman_sarika_3.jpg" alt="Sarika 3">
+      </div>
+    </div>
+
+    <button class="copy-btn" onclick="copyText('sarika')">
+      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
+    </button>
+    <a href="fb://group/1000000000" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
+      🚀 เปิดแอป Facebook เพื่อโพสต์
+    </a>
+
+    <div class="caption-preview" id="caption-sarika">圣物：Sarika Lin Thong (纯手工圣木雕刻·双人缘金舌鸟商铺挂件)
+师傅：Luang Pho Ken (百岁神僧 龙婆垦 / 享寿111岁高龄)
+寺庙：Wat Tham Khao Ito (瓦探考伊督寺 · 巴真武里府)
+年份：佛历 2500–2510年代经典老冠兰圣物
+材质：吉祥圣木手工精雕，通体手刻古高棉秘传符文（满满手写经文）
+功效：顶级人缘魅力、商谈巧舌如簧、招揽天下客商、客源滚滚、店铺兴隆旺财
+
+💡【华人商贾必奉之镇店圣宝】：
+此尊双人缘鸟由全泰公认「金舌鸟督造第一人」龙婆垦大师亲手加持。最适宜悬挂于实体店铺大门、收银台上方、公司展厅或办公室内，磁场祥和，强力吸聚买气与人流，令言语更具说服力，化解商谈阻碍。
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。
+
+👉 查阅多角度显微档案与官方购买页面：
+https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri
+
+📦 支援全球主流信用卡、Apple Pay 安全结算
+✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号
+💬 诚意结缘恭请欢迎私信（PM）</div>
+  </div>
+
+  <!-- Item 2: Namtao Dood Sup -->
+  <div class="card">
+    <div class="card-title">2. น้ำเต้าดูดทรัพย์ หลวงปู่ทิม วัดพระขาว ปี 2552</div>
+    <div class="card-sub">大吉祥吸财聚财福禄宝葫芦 · เงินทองเข้าไม่รั่วไหล</div>
+
+    <div class="images-grid">
+      <div class="img-wrap">
+        <span class="img-label">รูปที่ 1 (ด้านหน้าองค์น้ำเต้า)</span>
+        <img src="/amulets/talisman_namtao_1.jpg" alt="Namtao 1">
+      </div>
+      <div class="img-wrap">
+        <span class="img-label">รูปที่ 2 (ยันต์มหาลาภ)</span>
+        <img src="/amulets/talisman_namtao_2.jpg" alt="Namtao 2">
+      </div>
+      <div class="img-wrap">
+        <span class="img-label">รูปที่ 3 (ก้นบรรจุมวลสาร)</span>
+        <img src="/amulets/talisman_namtao_3.jpg" alt="Namtao 3">
+      </div>
+    </div>
+
+    <button class="copy-btn" onclick="copyText('namtao')">
+      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
+    </button>
+    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
+      🚀 เปิดแอป Facebook เพื่อโพสต์
+    </a>
+
+    <div class="caption-preview" id="caption-namtao">圣物：Namtao Dood Sup (大吉祥吸财聚财福禄宝葫芦)
+师傅：Luang Pu Tim (大城府慈悲圣僧 龙普添 / 肥添大师)
+寺庙：Wat Phra Khao (瓦帕考寺 · 阿育陀耶府)
+年份：佛历 2552年 (公历 2009年 - 「玛哈腊大财源」法会经典)
+材质：天然吉祥葫芦木质，内嵌圣粉经料，外刻招财经文
+功效：只进不出绝不漏财、聚财吸金、化煞纳福、全家平安喜乐
+
+💡【华人风水聚财至宝】：
+华人自古深谙「葫芦即福禄」之道。龙普添大师乃全泰闻名之「人缘慈悲圣僧」，此尊吸财葫芦形如乾坤宝袋，能将四面八方之财富、客源强力吸纳于腹中，牢牢锁住财气，最适合随身佩戴、挂于车内或放置于收银箱、钱包旁！
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。
+
+👉 查阅多角度显微照片与官方购买页面：
+https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552
+
+📦 支援全球主流信用卡、Apple Pay 安全结算
+✈️ 国际航空直邮挂号新加坡、马来西亚、港台，附追踪单号
+💬 有意迎请福禄请私信（PM）</div>
+  </div>
+
+  <div id="toast" class="toast">✅ คัดลอกข้อความสำเร็จแล้ว!</div>
+
+  <script>
+    function copyText(id) {
+      const text = document.getElementById('caption-' + id).innerText;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showToast);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast();
+      }
+    }
+
+    function showToast() {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+  </script>
+
+</body>
+</html>
