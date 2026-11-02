@@ -3,67 +3,319 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dan Siam Amulets — Facebook Post Helper</title>
+  <title>Dan Siam Amulets — Facebook Post Manager</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: #0f1117; color: #f3f4f6; padding: 16px; padding-bottom: 80px; }
-    .header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
-    .header h1 { font-size: 20px; color: #f59e0b; font-weight: 700; margin-bottom: 6px; }
-    .header p { font-size: 13px; color: #9ca3af; }
-    .tip-box { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 12px 14px; margin-bottom: 20px; font-size: 13px; line-height: 1.5; color: #fbbf24; }
-    .card { background: #1a1d26; border-radius: 16px; border: 1px solid #2a2e3d; padding: 16px; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-    .card-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .card-sub { font-size: 13px; color: #f59e0b; margin-bottom: 14px; }
-    .images-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-    .img-wrap { position: relative; border-radius: 12px; overflow: hidden; background: #000; border: 1px solid #374151; }
-    .img-wrap img { width: 100%; height: auto; display: block; }
-    .img-label { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
-    .copy-btn { width: 100%; background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 700; font-size: 15px; border: none; padding: 14px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
-    .copy-btn:active { transform: scale(0.98); opacity: 0.9; }
-    .open-fb-btn { width: 100%; background: #1877f2; color: #fff; font-weight: 600; font-size: 14px; border: none; padding: 12px; border-radius: 10px; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; }
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #10b981; color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: #0d0f15; color: #f3f4f6; padding: 14px; padding-bottom: 90px; }
+    
+    .header { text-align: center; margin-bottom: 16px; padding-top: 6px; }
+    .header h1 { font-size: 21px; color: #f59e0b; font-weight: 800; letter-spacing: -0.5px; }
+    .header p { font-size: 13px; color: #9ca3af; margin-top: 4px; }
+
+    /* Sticky Control Bar */
+    .sticky-bar {
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      background: rgba(22, 27, 38, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .badge-unposted { color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-posted { color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); }
+    
+    .filter-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+    .tab-btn {
+      background: #11141c;
+      border: 1px solid #2d3345;
+      color: #9ca3af;
+      padding: 8px 4px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #f59e0b;
+      color: #000;
+      border-color: #f59e0b;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 2px 6px;
+    }
+
+    .tip-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #93c5fd;
+    }
+
+    /* Cards */
+    .card {
+      background: #161922;
+      border-radius: 16px;
+      border: 1px solid #262b3a;
+      padding: 16px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card.hidden-card {
+      display: none !important;
+    }
+    .card.fade-out {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    .card-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .card-sub {
+      font-size: 12.5px;
+      color: #f59e0b;
+      margin-bottom: 14px;
+    }
+
+    .images-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .img-wrap {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid #2a3040;
+    }
+    .img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .img-label {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .copy-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000;
+      font-weight: 700;
+      font-size: 14.5px;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+    }
+    .copy-btn:active { transform: scale(0.98); }
+
+    .open-fb-btn {
+      width: 100%;
+      background: #1877f2;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+    .open-fb-btn:active { opacity: 0.85; }
+
+    .done-btn {
+      width: 100%;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .done-btn:active {
+      background: #10b981;
+      color: #000;
+    }
+
+    .undone-btn {
+      width: 100%;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      font-weight: 600;
+      font-size: 13.5px;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .caption-preview {
+      background: #0f121a;
+      border: 1px solid #242a3a;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #d1d5db;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-top: 12px;
+      max-height: 130px;
+      overflow-y: auto;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 16px;
+      color: #9ca3af;
+      display: none;
+    }
+    .empty-state h3 { font-size: 18px; color: #10b981; margin-bottom: 8px; }
+    .empty-state p { font-size: 13px; line-height: 1.6; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-size: 13.5px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      text-align: center;
+      white-space: nowrap;
+    }
     .toast.show { opacity: 1; }
-    .caption-preview { background: #11141c; border: 1px solid #282d3d; border-radius: 10px; padding: 12px; font-size: 12px; line-height: 1.6; color: #d1d5db; white-space: pre-wrap; word-break: break-all; margin-top: 10px; max-height: 140px; overflow-y: auto; }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h1>📦 ตัวช่วยโพสต์ Facebook Groups</h1>
-    <p>Dan Siam Amulets — ตลาดพระและเครื่องรางสากล</p>
+    <h1>📦 Facebook Post Manager</h1>
+    <p>Dan Siam Amulets · ระบบจัดการและคัดลอกโพสต์สากล</p>
+  </div>
+
+  <!-- Sticky Controller -->
+  <div class="sticky-bar">
+    <div class="stats-row">
+      <div>
+        <span class="badge-unposted" id="badge-unposted">📌 ยังไม่ได้ลง: 0</span>
+        <span class="badge-posted" id="badge-posted" style="margin-left: 6px;">✅ ลงแล้ว: 0</span>
+      </div>
+      <button class="reset-btn" onclick="resetAllPosted()">↺ คืนค่าทั้งหมด</button>
+    </div>
+    <div class="filter-tabs">
+      <button class="tab-btn active" id="tab-unposted" onclick="setFilter('unposted')">🟢 ยังไม่ได้ลง</button>
+      <button class="tab-btn" id="tab-posted" onclick="setFilter('posted')">✅ ลงแล้ว</button>
+      <button class="tab-btn" id="tab-all" onclick="setFilter('all')">📑 ทั้งหมด</button>
+    </div>
   </div>
 
   <div class="tip-box">
-    📲 <b>วิธีบันทึกรูปลง iPhone:</b> แตะค้างที่รูปภาพแต่ละรูป แล้วเลือก <b>"เพิ่มไปยัง 'รูปภาพ'" (Add to Photos)</b> ได้ทันทีครับ
+    💡 <b>วิธีใช้งาน:</b> แตะค้างที่รูปภาพเพื่อบันทึกรูปเข้า iPhone -> กดคัดลอกแคปชั่น -> กดเปิด Facebook โพสต์ในกลุ่ม -> <b>กดปุ่ม "✅ โพสต์ Facebook แล้ว" รายการนี้จะซ่อนทันที</b> จะเหลือเฉพาะองค์ที่คุณยังไม่ได้ลงครับ!
   </div>
 
-  <!-- Item 1: Sarika -->
-  <div class="card">
+  <div id="empty-state" class="empty-state">
+    <h3>🎉 โพสต์ครบทุกรายการแล้ว!</h3>
+    <p>สุดยอดมากครับ! คุณได้โพสต์วัตถุมงคลทั้งหมดครบถ้วนแล้ว<br>หากต้องการดูรายการที่ลงไปแล้ว ให้แตะแท็บ <b>"✅ ลงแล้ว"</b> ด้านบนได้ตลอดเวลาครับ</p>
+  </div>
+
+  <!-- 1. Sarika Pair -->
+  <div class="card" data-id="sarika">
     <div class="card-title">1. สาริกาโมบายคู่ หลวงพ่อเคน วัดถ้ำเขาอีโต้</div>
     <div class="card-sub">人缘金舌鸟双鸟挂饰 · เมตตามหานิยม ค้าขาย แขวนหน้าร้าน</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ด้านหน้า / ภาพเต็ม)</span>
-        <img src="/amulets/talisman_sarika_1.jpg" alt="Sarika 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (รอยจารอักขระขอม)</span>
-        <img src="/amulets/talisman_sarika_2.jpg" alt="Sarika 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (สายโมบายแขวน)</span>
-        <img src="/amulets/talisman_sarika_3.jpg" alt="Sarika 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/talisman_sarika_1.jpg" alt="Sarika 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (รอยจารยันต์)</span><img src="/amulets/talisman_sarika_2.jpg" alt="Sarika 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (สายโมบายแขวน)</span><img src="/amulets/talisman_sarika_3.jpg" alt="Sarika 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('sarika')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="fb://group/1000000000" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('sarika')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('sarika')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-sarika">圣物：Sarika Lin Thong (纯手工圣木雕刻·双人缘金舌鸟商铺挂件)
 师傅：Luang Pho Ken (百岁神僧 龙婆垦 / 享寿111岁高龄)
 寺庙：Wat Tham Khao Ito (瓦探考伊督寺 · 巴真武里府)
@@ -84,33 +336,20 @@ https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-
 💬 诚意结缘恭请欢迎私信（PM）</div>
   </div>
 
-  <!-- Item 2: Namtao Dood Sup -->
-  <div class="card">
+  <!-- 2. Namtao Dood Sup -->
+  <div class="card" data-id="namtao">
     <div class="card-title">2. น้ำเต้าดูดทรัพย์ หลวงปู่ทิม วัดพระขาว ปี 2552</div>
     <div class="card-sub">大吉祥吸财聚财福禄宝葫芦 · เงินทองเข้าไม่รั่วไหล</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ด้านหน้าองค์น้ำเต้า)</span>
-        <img src="/amulets/talisman_namtao_1.jpg" alt="Namtao 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (ยันต์มหาลาภ)</span>
-        <img src="/amulets/talisman_namtao_2.jpg" alt="Namtao 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (ก้นบรรจุมวลสาร)</span>
-        <img src="/amulets/talisman_namtao_3.jpg" alt="Namtao 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ด้านหน้าองค์น้ำเต้า)</span><img src="/amulets/talisman_namtao_1.jpg" alt="Namtao 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ยันต์มหาลาภ)</span><img src="/amulets/talisman_namtao_2.jpg" alt="Namtao 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (ก้นบรรจุมวลสาร)</span><img src="/amulets/talisman_namtao_3.jpg" alt="Namtao 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('namtao')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('namtao')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('namtao')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-namtao">圣物：Namtao Dood Sup (大吉祥吸财聚财福禄宝葫芦)
 师傅：Luang Pu Tim (大城府慈悲圣僧 龙普添 / 肥添大师)
 寺庙：Wat Phra Khao (瓦帕考寺 · 阿育陀耶府)
@@ -131,33 +370,20 @@ https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phr
 💬 有意迎请福禄请私信（PM）</div>
   </div>
 
-  <!-- Item 3: Khun Phaen Kuman Sombat -->
-  <div class="card">
+  <!-- 3. Khun Phaen Kuman Sombat -->
+  <div class="card" data-id="khunphaen">
     <div class="card-title">3. พระขุนแผน หลังกุมารสมบัติ หลวงพ่อพูล วัดไผ่ล้อม ปี 2548</div>
     <div class="card-sub">坤平佛背金童古曼宝藏 · เมตตามหาเสน่ห์ ค้าขาย กุมารทองเรียกลูกค้า</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ด้านหน้าองค์พระ)</span>
-        <img src="/amulets/batch2_khunphaen_1.jpg" alt="Khun Phaen 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (ด้านหลังกุมารสมบัติ นะชาลีติ)</span>
-        <img src="/amulets/batch2_khunphaen_2.jpg" alt="Khun Phaen 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span>
-        <img src="/amulets/batch2_khunphaen_3.jpg" alt="Khun Phaen 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ด้านหน้าองค์พระ)</span><img src="/amulets/batch2_khunphaen_1.jpg" alt="Khun Phaen 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ด้านหลังกุมารสมบัติ)</span><img src="/amulets/batch2_khunphaen_2.jpg" alt="Khun Phaen 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/batch2_khunphaen_3.jpg" alt="Khun Phaen 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('khunphaen')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('khunphaen')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('khunphaen')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-khunphaen">圣物：Phra Khun Phaen Lang Kuman Sombat (坤平佛背金童古曼公宝藏·纳查利迪招财符)
 师傅：Luang Pho Pool (全泰大德圣僧 龙婆判亲督加持)
 寺庙：Wat Phai Lom (瓦排隆寺 · 佛统府名刹)
@@ -178,33 +404,20 @@ https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-p
 💬 诚意结缘恭请欢迎私信（PM）</div>
   </div>
 
-  <!-- Item 4: Takrut Sarika Oil -->
-  <div class="card">
+  <!-- 4. Takrut Sarika Oil -->
+  <div class="card" data-id="takrut">
     <div class="card-title">4. ตะกรุดสาริกาคู่บารมี เนื้อเงิน แช่น้ำมันสาริกา หลวงปู่คำบุ ปี 2553</div>
     <div class="card-sub">纯银双效金舌鸟符管配人缘金鸟油 · พูดจาเจรจาค้าขาย ปิดดีลธุรกิจ</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ภาพเต็มองค์ตะกรุด)</span>
-        <img src="/amulets/batch2_takrut_1.jpg" alt="Takrut 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (หลอดตะกรุดแช่น้ำมันสาริกา)</span>
-        <img src="/amulets/batch2_takrut_2.jpg" alt="Takrut 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (รายละเอียดเนื้อเงิน)</span>
-        <img src="/amulets/batch2_takrut_3.jpg" alt="Takrut 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/batch2_takrut_1.jpg" alt="Takrut 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (หลอดตะกรุดแช่น้ำมัน)</span><img src="/amulets/batch2_takrut_2.jpg" alt="Takrut 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (รายละเอียดเนื้อเงิน)</span><img src="/amulets/batch2_takrut_3.jpg" alt="Takrut 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('takrut')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('takrut')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('takrut')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-takrut">圣物：Takrut Sarika Khu Baramee (纯银双效金舌鸟符管配人缘金鸟油)
 师傅：Luang Pu Kambu (伊森泰东圣僧 龙普堪布高僧)
 寺庙：Wat Kut Chomphu (瓦库琼普寺 · 乌汶府)
@@ -225,33 +438,20 @@ https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kam
 💬 诚意结缘恭请欢迎私信（PM）</div>
   </div>
 
-  <!-- Item 5: Luang Pu Thuat Bang Khun Phrom -->
-  <div class="card">
+  <!-- 5. Luang Pu Thuat Bang Khun Phrom -->
+  <div class="card" data-id="lpthuat">
     <div class="card-title">5. หลวงปู่ทวด หลวงตาพัน วัดใหม่อมตรส ปี 2502 (ผสมผงเก่าบางขุนพรหม)</div>
     <div class="card-sub">老瓦曼坤碰阿赞多老料龙婆托 · แคล้วคลาดปลอดภัยอันดับ 1 + ผงสมเด็จโต</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ภาพด้านหน้าองค์พระ)</span>
-        <img src="/amulets/batch2_lpthuat_1.jpg" alt="LP Thuat 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (ภาพด้านหลังองค์พระ)</span>
-        <img src="/amulets/batch2_lpthuat_2.jpg" alt="LP Thuat 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (มุมขอบข้างและมวลสาร)</span>
-        <img src="/amulets/batch2_lpthuat_3.jpg" alt="LP Thuat 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพด้านหน้าองค์พระ)</span><img src="/amulets/batch2_lpthuat_1.jpg" alt="LP Thuat 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพด้านหลังองค์พระ)</span><img src="/amulets/batch2_lpthuat_2.jpg" alt="LP Thuat 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มวลสารผงเก่า)</span><img src="/amulets/batch2_lpthuat_3.jpg" alt="LP Thuat 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('lpthuat')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('lpthuat')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('lpthuat')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-lpthuat">圣物：Luang Pu Thuat (老瓦曼坤碰出塔古料·龙婆托尊者圣相)
 师傅：Luang Ta Phan (曼谷名僧 龙达潘亲督)
 出处：Wat Mai Amataros (瓦曼坤碰寺 / 瓦麦阿玛塔罗斯寺)
@@ -272,33 +472,20 @@ https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-
 💬 诚意恭请保平安请私信（PM）</div>
   </div>
 
-  <!-- Item 6: Somdej Leaping Tiger -->
-  <div class="card">
+  <!-- 6. Somdej Leaping Tiger -->
+  <div class="card" data-id="tiger">
     <div class="card-title">6. พระสมเด็จ หลังเสือเผ่น หลวงพ่อทองอยู่ วัดใหม่หนองพะองค์ ปี 2519</div>
     <div class="card-sub">崇迪佛背猛虎跃腾印 · ราชาพระเครื่อง ผสาน มหาอำนาจข่มศัตรูคู่แข่ง</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ภาพด้านหน้าสมเด็จ)</span>
-        <img src="/amulets/batch2_tiger_1.jpg" alt="Tiger 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (ภาพด้านหลังพญาเสือเผ่น)</span>
-        <img src="/amulets/batch2_tiger_2.jpg" alt="Tiger 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span>
-        <img src="/amulets/batch2_tiger_3.jpg" alt="Tiger 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพด้านหน้าสมเด็จ)</span><img src="/amulets/batch2_tiger_1.jpg" alt="Tiger 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพด้านหลังพญาเสือเผ่น)</span><img src="/amulets/batch2_tiger_2.jpg" alt="Tiger 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/batch2_tiger_3.jpg" alt="Tiger 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('tiger')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('tiger')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('tiger')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-tiger">圣物：Phra Somdej Lang Suea Phoen (崇迪佛坐殿·背铸威猛跃腾飞虎)
 师傅：Luang Pho Thong-yu (龙婆通佑大德 / 必打王龙普多挚友)
 寺庙：Wat Mai Nong Pha-ong (瓦迈农帕翁寺 · 龙仔厝府)
@@ -319,33 +506,20 @@ https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-y
 💬 诚意结缘恭请欢迎私信（PM）</div>
   </div>
 
-  <!-- Item 7: Palad Khik Luang Pu Mek -->
-  <div class="card">
-    <div class="card-title">7. ปลัดขิก ไม้เขยตาย หลวงปู่เมฆ วัดลำกระดาน</div>
+  <!-- 7. Palad Khik Luang Pu Mek -->
+  <div class="card" data-id="paladkhik">
+    <div class="card-title">7. ปลัดขิก ไม้เขยตาย ติดตะกรุดไม้ หลวงปู่เมฆ วัดลำกระดาน</div>
     <div class="card-sub">神木辟邪招财巴拉吉 · ยอดเครื่องรางค้าขาย ดูดเงินดูดทอง กันคุณไสย</div>
-
     <div class="images-grid">
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 1 (ภาพเต็มองค์ปลัดขิก)</span>
-        <img src="/amulets/batch2_paladkhik_1.jpg" alt="Palad Khik 1">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 2 (ตะกรุดไม้เขยตายที่ติดองค์)</span>
-        <img src="/amulets/batch2_paladkhik_2.jpg" alt="Palad Khik 2">
-      </div>
-      <div class="img-wrap">
-        <span class="img-label">รูปที่ 3 (รอยจารและมิติเนื้อไม้)</span>
-        <img src="/amulets/batch2_paladkhik_3.jpg" alt="Palad Khik 3">
-      </div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/batch2_paladkhik_1.jpg" alt="Palad Khik 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ตะกรุดไม้เขยตายที่ติดองค์)</span><img src="/amulets/batch2_paladkhik_2.jpg" alt="Palad Khik 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (รอยจารและมิติเนื้อไม้)</span><img src="/amulets/batch2_paladkhik_3.jpg" alt="Palad Khik 3"></div>
     </div>
-
-    <button class="copy-btn" onclick="copyText('paladkhik')">
-      📋 กดปุ่มนี้เพื่อคัดลอกแคปชั่นภาษาจีน
-    </button>
-    <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">
-      🚀 เปิดแอป Facebook เพื่อโพสต์
-    </a>
-
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('paladkhik')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('paladkhik')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
     <div class="caption-preview" id="caption-paladkhik">圣物：Plad Khik Mai Kheuy Tai (神木辟邪招财巴拉吉·附灵木符管)
 师傅：Luang Pu Mek (全泰神木名僧 龙普美大师)
 寺庙：Wat Lam Kradan (瓦兰卡丹寺 · 曼谷)
@@ -366,13 +540,331 @@ https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-l
 💬 诚意结缘恭请欢迎私信（PM）</div>
   </div>
 
+  <!-- 8. Wua Thanu Luang Pho Phut -->
+  <div class="card" data-id="wuathanu">
+    <div class="card-title">8. วัวธนู เนื้อครั่งพุทรา หลวงพ่อพุฒ วัดกลางบางพระ นครปฐม ปี 2538</div>
+    <div class="card-sub">护宅辟邪神牛 · เฝ้าบ้าน เฝ้าโรงงาน ป้องกันโจรขโมย ปัดเป่าคุณไสย</div>
+    <div class="images-grid">
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/talisman_wuathanu_1.jpg" alt="Wua Thanu 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (มุมข้าง)</span><img src="/amulets/talisman_wuathanu_2.jpg" alt="Wua Thanu 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมหลัง)</span><img src="/amulets/talisman_wuathanu_3.jpg" alt="Wua Thanu 3"></div>
+    </div>
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('wuathanu')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('wuathanu')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
+    <div class="caption-preview" id="caption-wuathanu">圣物：Wua Thanu (护宅辟邪神牛 · 武牛神兽)
+师傅：Luang Pho Phut (全泰神兽名僧 龙婆普大德)
+寺庙：Wat Klang Bang Phra (瓦刚芒轿寺法脉传承 · 佛统府名刹)
+年份：佛历 2538年 (公历 1995年)
+用料：朝东生长的千年野枣树天然红胶（Krang Phutsa）、水银秘料、手刻符管金线
+功效：全天候忠诚镇宅、抵御黑巫邪术、化解风水煞气、防盗贼侵入、护主化险
+
+💡【全泰顶级守护神兽】：
+佛统府乃泰国顶级法术名邦。龙婆普承袭瓦刚芒轿寺百年神牛秘法，严格采集极具灵气的东方野枣树生漆胶纯手工捏铸。神牛通人性，置于住宅、商铺或公司，能自成结界，驱散一切不洁阴邪之气，化解一切小人暗箭与同行恶意中伤！
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品保证。
+
+👉 查阅多角度显微照片与官方购买页面：
+https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538
+
+📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
+✈️ 国际航空直邮挂号附追踪单号
+💬 诚意恭请镇宅神牛请私信（PM）</div>
+  </div>
+
+  <!-- 9. Guman Thong 2500 -->
+  <div class="card" data-id="guman">
+    <div class="card-title">9. กุมารทอง เนื้อดิน 7 ป่าช้า หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี 2500</div>
+    <div class="card-sub">白法正统天童古曼 · กึ่งพุทธกาล สายขาวแท้ เตือนภัย เรียกลูกค้า</div>
+    <div class="images-grid">
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/talisman_guman_1.jpg" alt="Guman 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (แผ่นหลัง)</span><img src="/amulets/talisman_guman_2.jpg" alt="Guman 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มวลสารโบราณ 2500)</span><img src="/amulets/talisman_guman_3.jpg" alt="Guman 3"></div>
+    </div>
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('guman')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('guman')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
+    <div class="caption-preview" id="caption-guman">圣物：Guman Thong (白法正统招财护主天童古曼)
+师傅：Luang Pho Pin (龙婆品高僧 / 全泰五大金属名僧「龙婆空 瓦榜卡彭」嫡传弟子)
+寺庙：Wat Ubon Wannaram (瓦乌汶寺 · 叻丕府)
+年份：佛历 2500年 (公历 1957年 - 佛历25个世纪大庆黄金时代)
+用料：古法七吉祥圣土（Din Chet Pacha）、古庙灵土、香灰及秘制草药经粉
+功效：预警护主、旺生意招财运、横财正财俱收、看守家产、带来意外福运
+
+💡【纯正白法高僧督造 · 毫无阴料困扰】：
+此尊为泰国佛历2500年极珍稀早期正统古曼童。龙婆品严守僧律，以大慈悲佛法念力开光唤灵，属福德善灵天童，无需供奉血食等不良仪式，只需心存善念、多行善事回向。能为供养者默默招财招客、化解险阻，乃近七十年难得一见之古老圣物！
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。
+
+👉 查阅多角度显微档案与官方购买页面：
+https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500
+
+📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
+✈️ 国际航空直邮挂号，附追踪单号
+💬 诚心供养结缘欢迎私信（PM）</div>
+  </div>
+
+  <!-- 10. Somdej Luang Pu Nak 2495 -->
+  <div class="card" data-id="somdej_nak">
+    <div class="card-title">10. พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี 2495</div>
+    <div class="card-sub">桌腿座崇迪佛 · ผสมผงเก่าสมเด็จโต วัดระฆังแท้ๆ ยอดนิยมสูงสุด</div>
+    <div class="images-grid">
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/somdej_nak_front.jpg" alt="Somdej Nak 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/somdej_nak_back.jpg" alt="Somdej Nak 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/somdej_nak_side.jpg" alt="Somdej Nak 3"></div>
+    </div>
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('somdej_nak')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('somdej_nak')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
+    <div class="caption-preview" id="caption-somdej_nak">圣物：Phra Somdej Thaan Kha To (桌腿座崇迪佛)
+师傅：Luang Pu Nak (龙婆纳大德)
+寺庙：Wat Rakang (瓦拉康寺 - 阿赞多弘法祖庙)
+年份：佛历 2495年 (公历 1952年)
+用料：融入阿赞多亲制老崇迪破碎古料、瓦拉康五大圣粉
+品相：原庙皮壳完整，70余年自然风化氧化包浆，包浆温润
+功效：保平安吉祥、事业亨通、贵人扶持、聚财纳福、逢凶化吉
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
+
+👉 查阅高清显微多角度细节与官方历史档案：
+https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495
+
+📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
+✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
+💬 有意结缘恭请欢迎私信（PM）</div>
+  </div>
+
+  <!-- 11. Somdej Luang Pho Pae 2514 -->
+  <div class="card" data-id="somdej_pae">
+    <div class="card-title">11. พระสมเด็จพระประทาน หลวงพ่อแพ วัดพิกุลทอง ปี 2514</div>
+    <div class="card-sub">大东座大佛主尊崇迪 · หลวงพ่อแพโด่งดังที่สุดในเอเชีย</div>
+    <div class="images-grid">
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/somdej_pae_front.jpg" alt="Somdej Pae 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/somdej_pae_back.jpg" alt="Somdej Pae 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/somdej_pae_side.jpg" alt="Somdej Pae 3"></div>
+    </div>
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('somdej_pae')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('somdej_pae')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
+    <div class="caption-preview" id="caption-somdej_pae">圣物：Phra Somdej Phra Prathan (大东座大佛主尊崇迪)
+师傅：Luang Pho Pae (全泰著名圣僧 龙婆培亲督加持)
+出庙：Wat Muang (瓦曼寺开光法会 / 龙婆培应邀主坛)
+年份：佛历 2514年 (公历 1971年)
+用料：龙婆培独特秘制经粉、花粉、香灰及古寺圣料
+品相：品相优美，法相庄严端正，无修补原庙状态
+功效：事业高升、人缘极佳、财运亨通、平安护身
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久真品保证。
+
+👉 查阅多角度显微照片与官方档案：
+https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514
+
+📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
+✈️ 泰国邮政国际快捷挂号直邮，全程可追踪
+💬 有意恭请欢迎私信（PM）</div>
+  </div>
+
+  <!-- 12. Pidta Wan Jindamanee 2520 -->
+  <div class="card" data-id="pidta">
+    <div class="card-title">12. พระปิดตา ผงว่านจินดามณี ฝังตะกรุด หลวงพ่อทองอยู่ ปี 2520</div>
+    <div class="card-sub">金达玛尼草药符管必打佛 · เมตตา โชคลาภ แคล้วคลาด กันคุณไสย</div>
+    <div class="images-grid">
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/pidta_jindamanee_front.jpg" alt="Pidta 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/pidta_jindamanee_back.jpg" alt="Pidta 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/pidta_jindamanee_side.jpg" alt="Pidta 3"></div>
+    </div>
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('pidta')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('pidta')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
+    <div class="caption-preview" id="caption-pidta">圣物：Phra Pidta Wan Jindamanee (金达玛尼草药符管必打佛)
+师傅：Luang Pho Thong-yu (龙婆通佑大德)
+寺庙：Wat Tha Sao (瓦塔绍寺 - 龙婆金达玛尼法脉)
+年份：佛历 2520年 (公历 1977年)
+用料：全泰极珍贵之金达玛尼法药草药经粉，底部嵌入纯铜招财符管
+品相：草药原料质感极佳，包浆沉淀古朴，法相圆满
+功效：强力招正偏财、避险挡灾、防小人是非、助生意兴隆
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久保真。
+
+👉 查阅多角度显微档案与官方购买页面：
+https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520
+
+📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
+✈️ 国际航空直邮挂号，附追踪单号
+💬 诚意结缘欢迎私信（PM）</div>
+  </div>
+
+  <!-- 13. Phra Nang Phaya Koon Lap 2517 -->
+  <div class="card" data-id="koon">
+    <div class="card-title">13. พระนางพญา คูณลาภ หลวงพ่อคูณ วัดบ้านไร่ ปี 2517</div>
+    <div class="card-sub">女王佛 · 乘倍发财/倍增福禄 · ยุคทองปี 2517 โชคลาภทวีคูณ</div>
+    <div class="images-grid">
+      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/koon_front.jpg" alt="Koon 1"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/koon_back.jpg" alt="Koon 2"></div>
+      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบล่าง)</span><img src="/amulets/koon_side.jpg" alt="Koon 3"></div>
+    </div>
+    <div class="btn-group">
+      <button class="copy-btn" onclick="copyText('koon')">📋 คัดลอกแคปชั่นภาษาจีน</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="done-btn" onclick="markAsPosted('koon')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
+    </div>
+    <div class="caption-preview" id="caption-koon">圣物：Phra Nang Phaya Koon Lap (女王佛 · 乘倍发财/倍增福禄)
+师傅：Luang Pho Koon (活财神 · 龙婆坤高僧)
+寺庙：Wat Ban Rai (瓦班莱寺)
+年份：佛历 2517年 (公历 1974年 - 龙婆坤早期经典黄金年份)
+用料：圣粉、多种吉祥药草粉、经灰香灰
+品相：早期原庙老粉质，五官端正清晰，自然红润老皮壳
+功效：极强领导威严、尊贵魅力、人缘贵人相助、财源滚滚
+
+🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久保真。
+
+👉 查阅多角度显微档案与官方购买页面：
+https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517
+
+📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
+✈️ 国际航空直邮挂号，附追踪单号
+💬 诚意结缘恭请欢迎私信（PM）</div>
+  </div>
+
   <div id="toast" class="toast">✅ คัดลอกข้อความสำเร็จแล้ว!</div>
 
   <script>
+    const STORAGE_KEY = 'dansiam_fb_posted_items';
+    let currentFilter = 'unposted';
+
+    function getPostedList() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function savePostedList(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function markAsPosted(id) {
+      const list = getPostedList();
+      if (!list.includes(id)) {
+        list.push(id);
+        savePostedList(list);
+      }
+      
+      const card = document.querySelector(`.card[data-id="${id}"]`);
+      if (card) {
+        card.classList.add('fade-out');
+        setTimeout(() => {
+          applyFilter();
+          showToast('✅ บันทึกว่าโพสต์แล้ว และซ่อนเรียบร้อย!');
+        }, 250);
+      } else {
+        applyFilter();
+      }
+    }
+
+    function unmarkPosted(id) {
+      let list = getPostedList();
+      list = list.filter(item => item !== id);
+      savePostedList(list);
+      applyFilter();
+      showToast('↩️ นำรายการกลับมาในหมวด "ยังไม่ได้ลง" แล้ว');
+    }
+
+    function resetAllPosted() {
+      if (confirm('ต้องการคืนค่าทั้งหมด ให้แสดงพระและเครื่องรางทุกองค์ใช่ไหมครับ?')) {
+        savePostedList([]);
+        applyFilter();
+        showToast('↺ คืนค่าทุกรายการเรียบร้อยแล้ว');
+      }
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-' + filter);
+      if (activeBtn) activeBtn.classList.add('active');
+      applyFilter();
+    }
+
+    function applyFilter() {
+      const postedList = getPostedList();
+      const allCards = document.querySelectorAll('.card');
+      let visibleCount = 0;
+      let unpostedCount = 0;
+      let postedCount = 0;
+
+      allCards.forEach(card => {
+        const id = card.getAttribute('data-id');
+        const isPosted = postedList.includes(id);
+
+        if (isPosted) postedCount++;
+        else unpostedCount++;
+
+        // Update button appearance based on state
+        const doneBtn = card.querySelector('.done-btn, .undone-btn');
+        if (doneBtn) {
+          if (isPosted) {
+            doneBtn.className = 'undone-btn';
+            doneBtn.innerHTML = '↩️ ยกเลิกสถานะโพสต์ (นำกลับมาแสดง)';
+            doneBtn.setAttribute('onclick', `unmarkPosted('${id}')`);
+          } else {
+            doneBtn.className = 'done-btn';
+            doneBtn.innerHTML = '✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)';
+            doneBtn.setAttribute('onclick', `markAsPosted('${id}')`);
+          }
+        }
+
+        // Filtering logic
+        let shouldShow = false;
+        if (currentFilter === 'all') {
+          shouldShow = true;
+        } else if (currentFilter === 'unposted') {
+          shouldShow = !isPosted;
+        } else if (currentFilter === 'posted') {
+          shouldShow = isPosted;
+        }
+
+        if (shouldShow) {
+          card.classList.remove('hidden-card', 'fade-out');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden-card');
+        }
+      });
+
+      // Update counters
+      document.getElementById('badge-unposted').innerText = `📌 ยังไม่ได้ลง: ${unpostedCount}`;
+      document.getElementById('badge-posted').innerText = `✅ ลงแล้ว: ${postedCount}`;
+
+      // Empty state
+      const emptyState = document.getElementById('empty-state');
+      if (visibleCount === 0 && currentFilter === 'unposted') {
+        emptyState.style.display = 'block';
+      } else {
+        emptyState.style.display = 'none';
+      }
+    }
+
     function copyText(id) {
-      const text = document.getElementById('caption-' + id).innerText;
+      const el = document.getElementById('caption-' + id);
+      if (!el) return;
+      const text = el.innerText;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(showToast);
+        navigator.clipboard.writeText(text).then(() => showToast('📋 คัดลอกแคปชั่นสำเร็จแล้ว!'));
       } else {
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -380,15 +872,19 @@ https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-l
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast();
+        showToast('📋 คัดลอกแคปชั่นสำเร็จแล้ว!');
       }
     }
 
-    function showToast() {
+    function showToast(msg) {
       const t = document.getElementById('toast');
+      t.innerText = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
+      setTimeout(() => t.classList.remove('show'), 2200);
     }
+
+    // Init on load
+    document.addEventListener('DOMContentLoaded', applyFilter);
   </script>
 
 </body>
