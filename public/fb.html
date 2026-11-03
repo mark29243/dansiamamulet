@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dan Siam Amulets — Facebook Post Manager</title>
+  <title>Dan Siam Amulets — Facebook Post Manager (Dual Language: 中文 & English)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: #0d0f15; color: #f3f4f6; padding: 14px; padding-bottom: 90px; }
@@ -17,10 +17,10 @@
       position: sticky;
       top: 10px;
       z-index: 100;
-      background: rgba(22, 27, 38, 0.92);
+      background: rgba(22, 27, 38, 0.95);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      border: 1px solid rgba(245, 158, 11, 0.35);
       border-radius: 14px;
       padding: 12px;
       margin-bottom: 18px;
@@ -41,6 +41,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 6px;
+      margin-bottom: 10px;
     }
     .tab-btn {
       background: #11141c;
@@ -61,6 +62,48 @@
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
     }
 
+    /* Language Switcher */
+    .lang-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d1017;
+      border: 1px solid #2d3345;
+      border-radius: 10px;
+      padding: 6px 10px;
+      gap: 8px;
+    }
+    .lang-label {
+      font-size: 11.5px;
+      color: #9ca3af;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .lang-toggle-group {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+    }
+    .lang-btn {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      background: transparent;
+      color: #9ca3af;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #3b82f6;
+      box-shadow: 0 2px 6px rgba(37,99,235,0.4);
+    }
+
     .reset-btn {
       background: transparent;
       border: none;
@@ -73,15 +116,16 @@
     }
 
     .tip-box {
-      background: rgba(59, 130, 246, 0.08);
-      border: 1px solid rgba(59, 130, 246, 0.25);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 12px 14px;
       margin-bottom: 20px;
       font-size: 12.5px;
-      line-height: 1.5;
-      color: #93c5fd;
+      line-height: 1.55;
+      color: #a7f3d0;
     }
+    .tip-box b { color: #34d399; }
 
     /* Cards */
     .card {
@@ -100,17 +144,49 @@
       opacity: 0;
       transform: scale(0.95);
     }
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 4px;
+      gap: 8px;
+    }
     .card-title {
-      font-size: 16.5px;
+      font-size: 16px;
       font-weight: 700;
       color: #fff;
-      margin-bottom: 4px;
-      line-height: 1.4;
+      line-height: 1.35;
+      flex: 1;
     }
     .card-sub {
-      font-size: 12.5px;
+      font-size: 12px;
       color: #f59e0b;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    /* Per-Card Language Switcher Pill */
+    .card-lang-pill {
+      display: flex;
+      background: #0f121a;
+      border: 1px solid #2d3345;
+      border-radius: 20px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .card-lang-pill button {
+      background: transparent;
+      border: none;
+      color: #9ca3af;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 16px;
+      cursor: pointer;
+    }
+    .card-lang-pill button.active {
+      background: #3b82f6;
+      color: #fff;
     }
 
     .images-grid {
@@ -155,7 +231,7 @@
       background: linear-gradient(135deg, #f59e0b, #d97706);
       color: #000;
       font-weight: 700;
-      font-size: 14.5px;
+      font-size: 14px;
       border: none;
       padding: 13px;
       border-radius: 12px;
@@ -173,7 +249,7 @@
       background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #fff;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
       border: 1px solid rgba(56, 189, 248, 0.4);
       padding: 12px;
       border-radius: 12px;
@@ -269,7 +345,7 @@
       white-space: pre-wrap;
       word-break: break-all;
       margin-top: 12px;
-      max-height: 130px;
+      max-height: 140px;
       overflow-y: auto;
     }
 
@@ -301,60 +377,76 @@
       text-align: center;
       white-space: nowrap;
     }
-    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h1>📦 Facebook Post Manager</h1>
-    <p>Dan Siam Amulets · ระบบจัดการและคัดลอกโพสต์สากล</p>
+    <h1>Dan Siam Amulets</h1>
+    <p>ผู้ช่วยสร้างโพสต์และคัดลอกแคปชั่นสำหรับ Facebook (จีน & อังกฤษ 2 ภาษา)</p>
   </div>
 
-  <!-- Sticky Controller -->
   <div class="sticky-bar">
     <div class="stats-row">
       <div>
-        <span class="badge-unposted" id="badge-unposted">📌 ยังไม่ได้ลง: 0</span>
-        <span class="badge-posted" id="badge-posted" style="margin-left: 6px;">✅ ลงแล้ว: 0</span>
+        <span class="badge-unposted">รอโพสต์: <span id="count-unposted">0</span></span>
+        <span class="badge-posted" style="margin-left: 6px;">โพสต์แล้ว: <span id="count-posted">0</span></span>
       </div>
-      <button class="reset-btn" onclick="resetAllPosted()">↺ คืนค่าทั้งหมด</button>
+      <button class="reset-btn" onclick="resetAllPosted()">รีเซ็ตทั้งหมด</button>
     </div>
+
     <div class="filter-tabs">
-      <button class="tab-btn active" id="tab-unposted" onclick="setFilter('unposted')">🟢 ยังไม่ได้ลง</button>
-      <button class="tab-btn" id="tab-posted" onclick="setFilter('posted')">✅ ลงแล้ว</button>
-      <button class="tab-btn" id="tab-all" onclick="setFilter('all')">📑 ทั้งหมด</button>
+      <button class="tab-btn active" id="tab-unposted" onclick="setFilter('unposted')">ยังไม่โพสต์ (<span id="tab-count-unposted">0</span>)</button>
+      <button class="tab-btn" id="tab-posted" onclick="setFilter('posted')">โพสต์แล้ว (<span id="tab-count-posted">0</span>)</button>
+      <button class="tab-btn" id="tab-all" onclick="setFilter('all')">ทั้งหมด (18)</button>
+    </div>
+
+    <!-- Global Language Toggle -->
+    <div class="lang-row">
+      <span class="lang-label">🌐 ภาษาแคปชั่น:</span>
+      <div class="lang-toggle-group">
+        <button class="lang-btn active" id="btn-lang-zh" onclick="setGlobalLang('zh')">🇨🇳 ภาษาจีน (中文)</button>
+        <button class="lang-btn" id="btn-lang-en" onclick="setGlobalLang('en')">🇬🇧 ภาษาอังกฤษ (English)</button>
+      </div>
     </div>
   </div>
 
-  <div class="tip-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); color: #a7f3d0;">
-    🛡️ <b>สูตรโพสต์แบบปลอดภัย 100% (ไม่โดนแอดมินหรือบอท Facebook ลบโพสต์):</b><br>
-    <b>ขั้นตอนที่ 1:</b> บันทึกรูป 3 รูป ➡️ กดปุ่มสีทอง <b>"📋 1. คัดลอกแคปชั่นหลัก"</b> แล้วโพสต์ลงกลุ่มได้เลย <i>(แคปชั่นนี้ไม่มีลิงก์เว็บ บอท Facebook และแอดมินจะไม่ลบโพสต์แน่นอน)</i><br>
+  <div class="tip-box">
+    🛡️ <b>สูตรโพสต์แบบปลอดภัย 100% (รองรับทั้งกลุ่มจีนและกลุ่มฝรั่งสากล):</b><br>
+    <b>ขั้นตอนที่ 1:</b> แตะค้างบันทึกรูปภาพ 3 รูป ➡️ เลือกภาษา (🇨🇳 จีน หรือ 🇬🇧 อังกฤษ) ➡️ กดปุ่มสีทอง <b>"📋 1. คัดลอกแคปชั่นหลัก"</b> แล้วโพสต์ลงกลุ่มได้เลย <i>(แคปชั่นนี้ไม่มีลิงก์เว็บ บอท Facebook และแอดมินจะไม่ลบโพสต์แน่นอน)</i><br>
     <b>ขั้นตอนที่ 2:</b> เมื่อโพสต์เสร็จ กดปุ่มสีฟ้า <b>"💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก"</b> ➡️ นำไปวางในช่องแสดงความคิดเห็นใต้โพสต์ตัวเอง <i>(ลูกค้ากดดูเว็บได้ปกติ แถมช่วยดันโพสต์ให้เด้งขึ้นหน้าแรกของกลุ่ม)</i><br>
-    <b>ขั้นตอนที่ 3:</b> กดปุ่มเขียว <b>"✅ โพสต์ Facebook แล้ว"</b> เพื่อซ่อนรายการครับ!
+    <b>ขั้นตอนที่ 3:</b> กดปุ่ม <b>"🚀 3. เปิดแอป Facebook"</b> ระบบจะค้นหากลุ่มภาษาที่เลือกให้อัตโนมัติ ➡️ กดปุ่มเขียว <b>"✅ โพสต์ Facebook แล้ว"</b> เพื่อซ่อนรายการครับ!
   </div>
 
-  <div id="empty-state" class="empty-state">
-    <h3>🎉 โพสต์ครบทุกรายการแล้ว!</h3>
-    <p>สุดยอดมากครับ! คุณได้โพสต์วัตถุมงคลทั้งหมดครบถ้วนแล้ว<br>หากต้องการดูรายการที่ลงไปแล้ว ให้แตะแท็บ <b>"✅ ลงแล้ว"</b> ด้านบนได้ตลอดเวลาครับ</p>
-  </div>
+  <div id="cards-container">
 
-  <!-- 1. Sarika Pair -->
-  <div class="card" data-id="sarika">
-    <div class="card-title">1. สาริกาโมบายคู่ หลวงพ่อเคน วัดถ้ำเขาอีโต้</div>
-    <div class="card-sub">人缘金舌鸟双鸟挂饰 · เมตตามหานิยม ค้าขาย แขวนหน้าร้าน</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/talisman_sarika_1.jpg" alt="Sarika 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (รอยจารยันต์)</span><img src="/amulets/talisman_sarika_2.jpg" alt="Sarika 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (สายโมบายแขวน)</span><img src="/amulets/talisman_sarika_3.jpg" alt="Sarika 3"></div>
-    </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('sarika')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('sarika')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('sarika')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-sarika">圣物：Sarika Lin Thong (纯手工圣木雕刻·双人缘金舌鸟商铺挂件)
+    <div class="card" data-id="sarika">
+      <div class="card-header-row">
+        <div class="card-title">1. สาริกาโมบายคู่ หลวงพ่อเคน วัดถ้ำเขาอีโต้ ปราจีนบุรี</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-sarika" class="active" onclick="setCardLang('sarika', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-sarika" onclick="setCardLang('sarika', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">人缘金舌鸟双鸟挂饰 · เมตตามหานิยม ค้าขาย แขวนหน้าร้าน / Sacred Hand-Carved Sarika Birds</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/sarika_front.webp" alt="sarika front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/sarika_back.webp" alt="sarika back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ซูมลายแกะ (Carving Detail)</span>
+          <img src="/amulets/sarika_detail.webp" alt="sarika detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-sarika">圣物：Sarika Lin Thong (纯手工圣木雕刻·双人缘金舌鸟商铺挂件)
 师傅：Luang Pho Ken (百岁神僧 龙婆垦 / 享寿111岁高龄)
 寺庙：Wat Tham Khao Ito (瓦探考伊督寺 · 巴真武里府)
 年份：佛历 2500–2510年代经典老冠兰圣物
@@ -370,25 +462,59 @@
 ✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-sarika">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri</div>
-  </div>
 
-  <!-- 2. Namtao Dood Sup -->
-  <div class="card" data-id="namtao">
-    <div class="card-title">2. น้ำเต้าดูดทรัพย์ หลวงปู่ทิม วัดพระขาว ปี 2552</div>
-    <div class="card-sub">大吉祥吸财聚财福禄宝葫芦 · เงินทองเข้าไม่รั่วไหล</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ด้านหน้าองค์น้ำเต้า)</span><img src="/amulets/talisman_namtao_1.jpg" alt="Namtao 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ยันต์มหาลาภ)</span><img src="/amulets/talisman_namtao_2.jpg" alt="Namtao 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (ก้นบรรจุมวลสาร)</span><img src="/amulets/talisman_namtao_3.jpg" alt="Namtao 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-sarika">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-sarika">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-sarika" onclick="copyCaption('sarika')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-sarika" onclick="copyComment('sarika')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-sarika" onclick="openFacebookGroup('sarika'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-sarika" onclick="togglePosted('sarika')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('namtao')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('namtao')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('namtao')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-namtao">圣物：Namtao Dood Sup (大吉祥吸财聚财福禄宝葫芦)
+
+    <div class="card" data-id="namtao">
+      <div class="card-header-row">
+        <div class="card-title">2. น้ำเต้าดูดทรัพย์ หลวงปู่ทิม วัดพระขาว ปี 2552</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-namtao" class="active" onclick="setCardLang('namtao', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-namtao" onclick="setCardLang('namtao', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">大吉祥吸财聚财福禄宝葫芦 · เงินทองเข้าไม่รั่วไหล / Sacred Wealth-Attracting Gourd B.E. 2552</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/namtao_front.webp" alt="namtao front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/namtao_back.webp" alt="namtao back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">โค้ดยันต์ (Sacred Code)</span>
+          <img src="/amulets/namtao_detail.webp" alt="namtao detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-namtao">圣物：Namtao Dood Sup (大吉祥吸财聚财福禄宝葫芦)
 师傅：Luang Pu Tim (大城府慈悲圣僧 龙普添 / 肥添大师)
 寺庙：Wat Phra Khao (瓦帕考寺 · 阿育陀耶府)
 年份：佛历 2552年 (公历 2009年 - 「玛哈腊大财源」法会经典)
@@ -404,25 +530,59 @@
 ✈️ 国际航空直邮挂号新加坡、马来西亚、港台，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-namtao">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552</div>
-  </div>
 
-  <!-- 3. Khun Phaen Kuman Sombat -->
-  <div class="card" data-id="khunphaen">
-    <div class="card-title">3. พระขุนแผน หลังกุมารสมบัติ หลวงพ่อพูล วัดไผ่ล้อม ปี 2548</div>
-    <div class="card-sub">坤平佛背金童古曼宝藏 · เมตตามหาเสน่ห์ ค้าขาย กุมารทองเรียกลูกค้า</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ด้านหน้าองค์พระ)</span><img src="/amulets/batch2_khunphaen_1.jpg" alt="Khun Phaen 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ด้านหลังกุมารสมบัติ)</span><img src="/amulets/batch2_khunphaen_2.jpg" alt="Khun Phaen 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/batch2_khunphaen_3.jpg" alt="Khun Phaen 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-namtao">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-namtao">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-namtao" onclick="copyCaption('namtao')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-namtao" onclick="copyComment('namtao')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-namtao" onclick="openFacebookGroup('namtao'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-namtao" onclick="togglePosted('namtao')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('khunphaen')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('khunphaen')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('khunphaen')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-khunphaen">圣物：Phra Khun Phaen Lang Kuman Sombat (坤平佛背金童古曼公宝藏·纳查利迪招财符)
+
+    <div class="card" data-id="khunphaen">
+      <div class="card-header-row">
+        <div class="card-title">3. พระขุนแผน หลังกุมารสมบัติ หลวงพ่อพูล วัดไผ่ล้อม ปี 2548</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-khunphaen" class="active" onclick="setCardLang('khunphaen', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-khunphaen" onclick="setCardLang('khunphaen', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">坤平佛背金童古曼宝藏 · เมตตามหาเสน่ห์ ค้าขาย กุมารทองเรียกลูกค้า / Phra Khun Phaen Lang Kuman Sombat B.E. 2548</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/khunphaen_front.webp" alt="khunphaen front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/khunphaen_back.webp" alt="khunphaen back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ยันต์นะชาลีติ (Yant Detail)</span>
+          <img src="/amulets/khunphaen_detail.webp" alt="khunphaen detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-khunphaen">圣物：Phra Khun Phaen Lang Kuman Sombat (坤平佛背金童古曼公宝藏·纳查利迪招财符)
 师傅：Luang Pho Pool (全泰大德圣僧 龙婆判亲督加持)
 寺庙：Wat Phai Lom (瓦排隆寺 · 佛统府名刹)
 年份：佛历 2548年 (公历 2005年 - 龙婆判圆寂前黄金经典代表作)
@@ -438,25 +598,59 @@
 ✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-khunphaen">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548</div>
-  </div>
 
-  <!-- 4. Takrut Sarika Oil -->
-  <div class="card" data-id="takrut">
-    <div class="card-title">4. ตะกรุดสาริกาคู่บารมี เนื้อเงิน แช่น้ำมันสาริกา หลวงปู่คำบุ ปี 2553</div>
-    <div class="card-sub">纯银双效金舌鸟符管配人缘金鸟油 · พูดจาเจรจาค้าขาย ปิดดีลธุรกิจ</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/batch2_takrut_1.jpg" alt="Takrut 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (หลอดตะกรุดแช่น้ำมัน)</span><img src="/amulets/batch2_takrut_2.jpg" alt="Takrut 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (รายละเอียดเนื้อเงิน)</span><img src="/amulets/batch2_takrut_3.jpg" alt="Takrut 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-khunphaen">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-khunphaen">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-khunphaen" onclick="copyCaption('khunphaen')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-khunphaen" onclick="copyComment('khunphaen')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-khunphaen" onclick="openFacebookGroup('khunphaen'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-khunphaen" onclick="togglePosted('khunphaen')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('takrut')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('takrut')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('takrut')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-takrut">圣物：Takrut Sarika Khu Baramee (纯银双效金舌鸟符管配人缘金鸟油)
+
+    <div class="card" data-id="takrut">
+      <div class="card-header-row">
+        <div class="card-title">4. ตะกรุดสาริกาคู่บารมี เนื้อเงิน แช่น้ำมันสาริกา หลวงปู่คำบุ ปี 2553</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-takrut" class="active" onclick="setCardLang('takrut', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-takrut" onclick="setCardLang('takrut', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">纯银双效金舌鸟符管配人缘金鸟油 · พูดจาเจรจาค้าขาย ปิดดีลธุรกิจ / Solid Silver Takrut Sarika Khu B.E. 2553</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/takrut_front.webp" alt="takrut front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/takrut_back.webp" alt="takrut back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ตัวตะกรุดในน้ำมัน (Detail)</span>
+          <img src="/amulets/takrut_detail.webp" alt="takrut detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-takrut">圣物：Takrut Sarika Khu Baramee (纯银双效金舌鸟符管配人缘金鸟油)
 师傅：Luang Pu Kambu (伊森泰东圣僧 龙普堪布高僧)
 寺庙：Wat Kut Chomphu (瓦库琼普寺 · 乌汶府)
 年份：佛历 2553年 (公历 2010年)
@@ -472,25 +666,59 @@
 ✈️ 国际航空直邮挂号，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-takrut">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553</div>
-  </div>
 
-  <!-- 5. Luang Pu Thuat Bang Khun Phrom -->
-  <div class="card" data-id="lpthuat">
-    <div class="card-title">5. หลวงปู่ทวด หลวงตาพัน วัดใหม่อมตรส ปี 2502 (ผสมผงเก่าบางขุนพรหม)</div>
-    <div class="card-sub">老瓦曼坤碰阿赞多老料龙婆托 · แคล้วคลาดปลอดภัยอันดับ 1 + ผงสมเด็จโต</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพด้านหน้าองค์พระ)</span><img src="/amulets/batch2_lpthuat_1.jpg" alt="LP Thuat 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพด้านหลังองค์พระ)</span><img src="/amulets/batch2_lpthuat_2.jpg" alt="LP Thuat 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มวลสารผงเก่า)</span><img src="/amulets/batch2_lpthuat_3.jpg" alt="LP Thuat 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-takrut">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-takrut">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-takrut" onclick="copyCaption('takrut')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-takrut" onclick="copyComment('takrut')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-takrut" onclick="openFacebookGroup('takrut'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-takrut" onclick="togglePosted('takrut')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('lpthuat')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('lpthuat')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('lpthuat')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-lpthuat">圣物：Luang Pu Thuat (老瓦曼坤碰出塔古料·龙婆托尊者圣相)
+
+    <div class="card" data-id="lpthuat">
+      <div class="card-header-row">
+        <div class="card-title">5. หลวงปู่ทวด หลวงตาพัน วัดใหม่อมตรส ปี 2502 (ผสมผงเก่าบางขุนพรหม)</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-lpthuat" class="active" onclick="setCardLang('lpthuat', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-lpthuat" onclick="setCardLang('lpthuat', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">老瓦曼坤碰阿赞多老料龙婆托 · แคล้วคลาดปลอดภัยอันดับ 1 + ผงสมเด็จโต / Sacred Luang Pu Thuad Luang Ta Phan B.E. 2502</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/lpthuat_front.webp" alt="lpthuat front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/lpthuat_back.webp" alt="lpthuat back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">มวลสารผงเก่า (Old Powder)</span>
+          <img src="/amulets/lpthuat_detail.webp" alt="lpthuat detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-lpthuat">圣物：Luang Pu Thuat (老瓦曼坤碰出塔古料·龙婆托尊者圣相)
 师傅：Luang Ta Phan (曼谷名僧 龙达潘亲督)
 出处：Wat Mai Amataros (瓦曼坤碰寺 / 瓦麦阿玛塔罗斯寺)
 年份：佛历 2502年 (公历 1959年)
@@ -505,25 +733,59 @@
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号附追踪单号
 💬 诚意恭请保平安请私信（PM）</div>
-    <div class="comment-preview-box" id="comment-lpthuat">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom</div>
-  </div>
 
-  <!-- 6. Somdej Leaping Tiger -->
-  <div class="card" data-id="tiger">
-    <div class="card-title">6. พระสมเด็จ หลังเสือเผ่น หลวงพ่อทองอยู่ วัดใหม่หนองพะองค์ ปี 2519</div>
-    <div class="card-sub">崇迪佛背猛虎跃腾印 · ราชาพระเครื่อง ผสาน มหาอำนาจข่มศัตรูคู่แข่ง</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพด้านหน้าสมเด็จ)</span><img src="/amulets/batch2_tiger_1.jpg" alt="Tiger 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพด้านหลังพญาเสือเผ่น)</span><img src="/amulets/batch2_tiger_2.jpg" alt="Tiger 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/batch2_tiger_3.jpg" alt="Tiger 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-lpthuat">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-lpthuat">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-lpthuat" onclick="copyCaption('lpthuat')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-lpthuat" onclick="copyComment('lpthuat')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-lpthuat" onclick="openFacebookGroup('lpthuat'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-lpthuat" onclick="togglePosted('lpthuat')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('tiger')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('tiger')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('tiger')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-tiger">圣物：Phra Somdej Lang Suea Phoen (崇迪佛坐殿·背铸威猛跃腾飞虎)
+
+    <div class="card" data-id="tiger">
+      <div class="card-header-row">
+        <div class="card-title">6. พระสมเด็จ หลังเสือเผ่น หลวงพ่อทองอยู่ วัดใหม่หนองพะองค์ ปี 2519</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-tiger" class="active" onclick="setCardLang('tiger', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-tiger" onclick="setCardLang('tiger', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">崇迪佛背猛虎跃腾印 · ราชาพระเครื่อง ผสาน มหาอำนาจข่มศัตรูคู่แข่ง / Phra Somdej Lang Suea Phern B.E. 2519</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/tiger_front.webp" alt="tiger front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/tiger_back.webp" alt="tiger back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ยันต์เสือเผ่น (Leaping Tiger)</span>
+          <img src="/amulets/tiger_detail.webp" alt="tiger detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-tiger">圣物：Phra Somdej Lang Suea Phoen (崇迪佛坐殿·背铸威猛跃腾飞虎)
 师傅：Luang Pho Thong-yu (龙婆通佑大德 / 必打王龙普多挚友)
 寺庙：Wat Mai Nong Pha-ong (瓦迈农帕翁寺 · 龙仔厝府)
 年份：佛历 2519年 (公历 1976年)
@@ -539,25 +801,59 @@
 ✈️ 国际航空直邮挂号附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-tiger">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519</div>
-  </div>
 
-  <!-- 7. Palad Khik Luang Pu Mek -->
-  <div class="card" data-id="paladkhik">
-    <div class="card-title">7. ปลัดขิก ไม้เขยตาย ติดตะกรุดไม้ หลวงปู่เมฆ วัดลำกระดาน</div>
-    <div class="card-sub">神木辟邪招财巴拉吉 · ยอดเครื่องรางค้าขาย ดูดเงินดูดทอง กันคุณไสย</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/batch2_paladkhik_1.jpg" alt="Palad Khik 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ตะกรุดไม้เขยตายที่ติดองค์)</span><img src="/amulets/batch2_paladkhik_2.jpg" alt="Palad Khik 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (รอยจารและมิติเนื้อไม้)</span><img src="/amulets/batch2_paladkhik_3.jpg" alt="Palad Khik 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-tiger">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-tiger">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-tiger" onclick="copyCaption('tiger')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-tiger" onclick="copyComment('tiger')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-tiger" onclick="openFacebookGroup('tiger'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-tiger" onclick="togglePosted('tiger')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('paladkhik')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('paladkhik')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('paladkhik')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-paladkhik">圣物：Plad Khik Mai Kheuy Tai (神木辟邪招财巴拉吉·附灵木符管)
+
+    <div class="card" data-id="paladkhik">
+      <div class="card-header-row">
+        <div class="card-title">7. ปลัดขิก ไม้เขยตาย ติดตะกรุดไม้ หลวงปู่เมฆ วัดลำกระดาน</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-paladkhik" class="active" onclick="setCardLang('paladkhik', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-paladkhik" onclick="setCardLang('paladkhik', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">神木辟邪招财巴拉吉 · ยอดเครื่องรางค้าขาย ดูดเงินดูดทอง กันคุณไสย / Sacred Palad Khik Luang Pu Mek</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">มุมบน (Top)</span>
+          <img src="/amulets/paladkhik_front.webp" alt="paladkhik front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">มุมข้าง (Side)</span>
+          <img src="/amulets/paladkhik_back.webp" alt="paladkhik back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ตะกรุดไม้ฝัง (Takrut Detail)</span>
+          <img src="/amulets/paladkhik_detail.webp" alt="paladkhik detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-paladkhik">圣物：Plad Khik Mai Kheuy Tai (神木辟邪招财巴拉吉·附灵木符管)
 师傅：Luang Pu Mek (全泰神木名僧 龙普美大师)
 寺庙：Wat Lam Kradan (瓦兰卡丹寺 · 曼谷)
 年份：佛历 2520–2530年代经典老法宝
@@ -573,25 +869,59 @@
 ✈️ 国际航空直邮挂号附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-paladkhik">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan</div>
-  </div>
 
-  <!-- 8. Wua Thanu Luang Pho Phut -->
-  <div class="card" data-id="wuathanu">
-    <div class="card-title">8. วัวธนู เนื้อครั่งพุทรา หลวงพ่อพุฒ วัดกลางบางพระ นครปฐม ปี 2538</div>
-    <div class="card-sub">护宅辟邪神牛 · เฝ้าบ้าน เฝ้าโรงงาน ป้องกันโจรขโมย ปัดเป่าคุณไสย</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/talisman_wuathanu_1.jpg" alt="Wua Thanu 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (มุมข้าง)</span><img src="/amulets/talisman_wuathanu_2.jpg" alt="Wua Thanu 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมหลัง)</span><img src="/amulets/talisman_wuathanu_3.jpg" alt="Wua Thanu 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-paladkhik">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-paladkhik">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-paladkhik" onclick="copyCaption('paladkhik')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-paladkhik" onclick="copyComment('paladkhik')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-paladkhik" onclick="openFacebookGroup('paladkhik'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-paladkhik" onclick="togglePosted('paladkhik')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('wuathanu')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('wuathanu')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('wuathanu')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-wuathanu">圣物：Wua Thanu (护宅辟邪神牛 · 武牛神兽)
+
+    <div class="card" data-id="wuathanu">
+      <div class="card-header-row">
+        <div class="card-title">8. วัวธนู เนื้อครั่งพุทรา หลวงพ่อพุฒ วัดกลางบางพระ นครปฐม ปี 2538</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-wuathanu" class="active" onclick="setCardLang('wuathanu', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-wuathanu" onclick="setCardLang('wuathanu', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">护宅辟邪神牛 · เฝ้าบ้าน เฝ้าโรงงาน ป้องกันโจรขโมย ปัดเป่าคุณไสย / Sacred Guardian Bull Wua Thanu B.E. 2538</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/wuathanu_front.webp" alt="wuathanu front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/wuathanu_back.webp" alt="wuathanu back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">เนื้อครั่งพุทรา (Krang Texture)</span>
+          <img src="/amulets/wuathanu_detail.webp" alt="wuathanu detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-wuathanu">圣物：Wua Thanu (护宅辟邪神牛 · 武牛神兽)
 师傅：Luang Pho Phut (全泰神兽名僧 龙婆普大德)
 寺庙：Wat Klang Bang Phra (瓦刚芒轿寺法脉传承 · 佛统府名刹)
 年份：佛历 2538年 (公历 1995年)
@@ -606,25 +936,59 @@
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号附追踪单号
 💬 诚意恭请镇宅神牛请私信（PM）</div>
-    <div class="comment-preview-box" id="comment-wuathanu">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538</div>
-  </div>
 
-  <!-- 9. Guman Thong 2500 -->
-  <div class="card" data-id="guman">
-    <div class="card-title">9. กุมารทอง เนื้อดิน 7 ป่าช้า หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี 2500</div>
-    <div class="card-sub">白法正统天童古曼 · กึ่งพุทธกาล สายขาวแท้ เตือนภัย เรียกลูกค้า</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มองค์)</span><img src="/amulets/talisman_guman_1.jpg" alt="Guman 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (แผ่นหลัง)</span><img src="/amulets/talisman_guman_2.jpg" alt="Guman 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มวลสารโบราณ 2500)</span><img src="/amulets/talisman_guman_3.jpg" alt="Guman 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-wuathanu">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-wuathanu">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-wuathanu" onclick="copyCaption('wuathanu')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-wuathanu" onclick="copyComment('wuathanu')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-wuathanu" onclick="openFacebookGroup('wuathanu'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-wuathanu" onclick="togglePosted('wuathanu')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('guman')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('guman')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('guman')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-guman">圣物：Guman Thong (白法正统招财护主天童古曼)
+
+    <div class="card" data-id="guman">
+      <div class="card-header-row">
+        <div class="card-title">9. กุมารทอง เนื้อดิน 7 ป่าช้า หลวงพ่อพิณ วัดอุบลฯ ราชบุรี ปี 2500</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-guman" class="active" onclick="setCardLang('guman', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-guman" onclick="setCardLang('guman', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">白法正统天童古曼 · กึ่งพุทธกาล สายขาวแท้ เตือนภัย เรียกลูกค้า / White Wicha Guman Thong B.E. 2500</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/guman_front.webp" alt="guman front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/guman_back.webp" alt="guman back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">เนื้อดินโบราณ (Ancient Clay)</span>
+          <img src="/amulets/guman_detail.webp" alt="guman detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-guman">圣物：Guman Thong (白法正统招财护主天童古曼)
 师傅：Luang Pho Pin (龙婆品高僧 / 全泰五大金属名僧「龙婆空 瓦榜卡彭」嫡传弟子)
 寺庙：Wat Ubon Wannaram (瓦乌汶寺 · 叻丕府)
 年份：佛历 2500年 (公历 1957年 - 佛历25个世纪大庆黄金时代)
@@ -639,25 +1003,59 @@
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号，附追踪单号
 💬 诚心供养结缘欢迎私信（PM）</div>
-    <div class="comment-preview-box" id="comment-guman">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500</div>
-  </div>
 
-  <!-- 10. Somdej Luang Pu Nak 2495 -->
-  <div class="card" data-id="somdej_nak">
-    <div class="card-title">10. พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี 2495</div>
-    <div class="card-sub">桌腿座崇迪佛 · ผสมผงเก่าสมเด็จโต วัดระฆังแท้ๆ ยอดนิยมสูงสุด</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/somdej_nak_front.jpg" alt="Somdej Nak 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/somdej_nak_back.jpg" alt="Somdej Nak 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/somdej_nak_side.jpg" alt="Somdej Nak 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-guman">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-guman">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-guman" onclick="copyCaption('guman')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-guman" onclick="copyComment('guman')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-guman" onclick="openFacebookGroup('guman'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-guman" onclick="togglePosted('guman')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('somdej_nak')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('somdej_nak')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('somdej_nak')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-somdej_nak">圣物：Phra Somdej Thaan Kha To (桌腿座崇迪佛)
+
+    <div class="card" data-id="somdej_nak">
+      <div class="card-header-row">
+        <div class="card-title">10. พระสมเด็จฐานขาโต๊ะ หลวงปู่นาค วัดระฆัง ปี 2495</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-somdej_nak" class="active" onclick="setCardLang('somdej_nak', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-somdej_nak" onclick="setCardLang('somdej_nak', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">桌腿座崇迪佛 · ผสมผงเก่าสมเด็จโต วัดระฆังแท้ๆ ยอดนิยมสูงสุด / Phra Somdej Thaan Kha To B.E. 2495</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/somdej_nak_front.webp" alt="somdej_nak front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/somdej_nak_back.webp" alt="somdej_nak back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">เนื้อผงเก่า (Sacred Powder)</span>
+          <img src="/amulets/somdej_nak_detail.webp" alt="somdej_nak detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-somdej_nak">圣物：Phra Somdej Thaan Kha To (桌腿座崇迪佛)
 师傅：Luang Pu Nak (龙婆纳大德)
 寺庙：Wat Rakang (瓦拉康寺 - 阿赞多弘法祖庙)
 年份：佛历 2495年 (公历 1952年)
@@ -671,25 +1069,59 @@
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-somdej_nak">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495</div>
-  </div>
 
-  <!-- 11. Somdej Luang Pho Pae 2514 -->
-  <div class="card" data-id="somdej_pae">
-    <div class="card-title">11. พระสมเด็จพระประทาน หลวงพ่อแพ วัดพิกุลทอง ปี 2514</div>
-    <div class="card-sub">大东座大佛主尊崇迪 · หลวงพ่อแพโด่งดังที่สุดในเอเชีย</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/somdej_pae_front.jpg" alt="Somdej Pae 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/somdej_pae_back.jpg" alt="Somdej Pae 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/somdej_pae_side.jpg" alt="Somdej Pae 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-somdej_nak">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-somdej_nak">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-somdej_nak" onclick="copyCaption('somdej_nak')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-somdej_nak" onclick="copyComment('somdej_nak')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-somdej_nak" onclick="openFacebookGroup('somdej_nak'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-somdej_nak" onclick="togglePosted('somdej_nak')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('somdej_pae')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('somdej_pae')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('somdej_pae')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-somdej_pae">圣物：Phra Somdej Phra Prathan (大东座大佛主尊崇迪)
+
+    <div class="card" data-id="somdej_pae">
+      <div class="card-header-row">
+        <div class="card-title">11. พระสมเด็จพระประทาน หลวงพ่อแพ วัดพิกุลทอง ปี 2514</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-somdej_pae" class="active" onclick="setCardLang('somdej_pae', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-somdej_pae" onclick="setCardLang('somdej_pae', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">大东座大佛主尊崇迪 · หลวงพ่อแพโด่งดังที่สุดในเอเชีย / Phra Somdej Phra Prathan Luang Pho Pae B.E. 2514</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/somdej_pae_front.webp" alt="somdej_pae front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/somdej_pae_back.webp" alt="somdej_pae back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">เนื้อผงพุทธคุณ (Sacred Texture)</span>
+          <img src="/amulets/somdej_pae_detail.webp" alt="somdej_pae detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-somdej_pae">圣物：Phra Somdej Phra Prathan (大东座大佛主尊崇迪)
 师傅：Luang Pho Pae (全泰著名圣僧 龙婆培亲督加持)
 出庙：Wat Muang (瓦曼寺开光法会 / 龙婆培应邀主坛)
 年份：佛历 2514年 (公历 1971年)
@@ -702,25 +1134,59 @@
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国邮政国际快捷挂号直邮，全程可追踪
 💬 有意恭请欢迎私信（PM）</div>
-    <div class="comment-preview-box" id="comment-somdej_pae">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514</div>
-  </div>
 
-  <!-- 12. Pidta Wan Jindamanee 2520 -->
-  <div class="card" data-id="pidta">
-    <div class="card-title">12. พระปิดตา ผงว่านจินดามณี ฝังตะกรุด หลวงพ่อทองอยู่ ปี 2520</div>
-    <div class="card-sub">金达玛尼草药符管必打佛 · เมตตา โชคลาภ แคล้วคลาด กันคุณไสย</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/pidta_jindamanee_front.jpg" alt="Pidta 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/pidta_jindamanee_back.jpg" alt="Pidta 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/pidta_jindamanee_side.jpg" alt="Pidta 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-somdej_pae">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-somdej_pae">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-somdej_pae" onclick="copyCaption('somdej_pae')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-somdej_pae" onclick="copyComment('somdej_pae')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-somdej_pae" onclick="openFacebookGroup('somdej_pae'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-somdej_pae" onclick="togglePosted('somdej_pae')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('pidta')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('pidta')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('pidta')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-pidta">圣物：Phra Pidta Wan Jindamanee (金达玛尼草药符管必打佛)
+
+    <div class="card" data-id="pidta">
+      <div class="card-header-row">
+        <div class="card-title">12. พระปิดตา ผงว่านจินดามณี ฝังตะกรุด หลวงพ่อทองอยู่ ปี 2520</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-pidta" class="active" onclick="setCardLang('pidta', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-pidta" onclick="setCardLang('pidta', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">金达玛尼草药符管必打佛 · เมตตา โชคลาภ แคล้วคลาด กันคุณไสย / Phra Pidta Wan Jindamanee B.E. 2520</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/pidta_front.webp" alt="pidta front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/pidta_back.webp" alt="pidta back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ตะกรุดฝังด้านหลัง (Takrut Detail)</span>
+          <img src="/amulets/pidta_detail.webp" alt="pidta detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-pidta">圣物：Phra Pidta Wan Jindamanee (金达玛尼草药符管必打佛)
 师傅：Luang Pho Thong-yu (龙婆通佑大德)
 寺庙：Wat Tha Sao (瓦塔绍寺 - 龙婆金达玛尼法脉)
 年份：佛历 2520年 (公历 1977年)
@@ -734,25 +1200,59 @@
 ✈️ 国际航空直邮挂号，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-pidta">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520</div>
-  </div>
 
-  <!-- 13. Phra Nang Phaya Koon Lap 2517 -->
-  <div class="card" data-id="koon">
-    <div class="card-title">13. พระนางพญา คูณลาภ หลวงพ่อคูณ วัดบ้านไร่ ปี 2517</div>
-    <div class="card-sub">女王佛 · 乘倍发财/倍增福禄 · ยุคทองปี 2517 โชคลาภทวีคูณ</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์พระ)</span><img src="/amulets/koon_front.jpg" alt="Koon 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังองค์พระ)</span><img src="/amulets/koon_back.jpg" alt="Koon 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบล่าง)</span><img src="/amulets/koon_side.jpg" alt="Koon 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-pidta">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-pidta">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-pidta" onclick="copyCaption('pidta')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-pidta" onclick="copyComment('pidta')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-pidta" onclick="openFacebookGroup('pidta'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-pidta" onclick="togglePosted('pidta')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('koon')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('koon')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('koon')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-koon">圣物：Phra Nang Phaya Koon Lap (女王佛 · 乘倍发财/倍增福禄)
+
+    <div class="card" data-id="koon">
+      <div class="card-header-row">
+        <div class="card-title">13. พระนางพญา คูณลาภ หลวงพ่อคูณ วัดบ้านไร่ ปี 2517</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-koon" class="active" onclick="setCardLang('koon', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-koon" onclick="setCardLang('koon', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">女王佛 · 乘倍发财/倍增福禄 · ยุคทองปี 2517 โชคลาภทวีคูณ / Phra Nang Phaya Koon Lap B.E. 2517</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/koon_front.webp" alt="koon front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/koon_back.webp" alt="koon back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">เนื้อผงว่านเกสร (Sacred Texture)</span>
+          <img src="/amulets/koon_detail.webp" alt="koon detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-koon">圣物：Phra Nang Phaya Koon Lap (女王佛 · 乘倍发财/倍增福禄)
 师傅：Luang Pho Koon (活财神 · 龙婆坤高僧)
 寺庙：Wat Ban Rai (瓦班莱寺)
 年份：佛历 2517年 (公历 1974年 - 龙婆坤早期经典黄金年份)
@@ -766,25 +1266,59 @@
 ✈️ 国际航空直邮挂号，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-koon">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517</div>
-  </div>
 
-  <!-- 14. Phaya Tao Ruean Luang Pu Liu 2535 -->
-  <div class="card" data-id="turtle">
-    <div class="card-title">14. เหรียญเต่าหับ หลวงปู่หลิว วัดไร่แตงทอง ปี 2535 แช่น้ำมนต์</div>
-    <div class="card-sub">全泰第一招财神龟 · 84岁寿诞圣水浸泡尊荣版 · 招财解债延寿</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าเหรียญ)</span><img src="/amulets/turtle_front.jpg" alt="Turtle 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังเหรียญ)</span><img src="/amulets/turtle_back.jpg" alt="Turtle 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/turtle_detail.jpg" alt="Turtle 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-koon">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-koon">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-koon" onclick="copyCaption('koon')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-koon" onclick="copyComment('koon')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-koon" onclick="openFacebookGroup('koon'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-koon" onclick="togglePosted('koon')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('turtle')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('turtle')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('turtle')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-turtle">圣物：Phra Phaya Tao Ruean (龙婆柳84岁大寿·圣水浸泡尊荣版·招财神龟)
+
+    <div class="card" data-id="turtle">
+      <div class="card-header-row">
+        <div class="card-title">14. เหรียญเต่าหับ หลวงปู่หลิว วัดไร่แตงทอง ปี 2535 แช่น้ำมนต์</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-turtle" class="active" onclick="setCardLang('turtle', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-turtle" onclick="setCardLang('turtle', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">全泰第一招财神龟·84岁圣水浸泡版 / Sacred Wealth Turtle Luang Pu Liu B.E. 2535</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/turtle_front.jpg" alt="turtle front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/turtle_back.jpg" alt="turtle back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">คราบน้ำมนต์ (Holy Water Patina)</span>
+          <img src="/amulets/turtle_detail.jpg" alt="turtle detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-turtle">圣物：Phra Phaya Tao Ruean (龙婆柳84岁大寿·圣水浸泡尊荣版·招财神龟)
 师傅：Luang Pu Liu (龙婆柳大德 - 全泰第一招财神龟宗师)
 寺庙：Wat Rai Taeng Thong (佛统府瓦莱定汤寺)
 年份：佛历 2535年 (公历 1992年)
@@ -798,25 +1332,59 @@
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-turtle">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535</div>
-  </div>
 
-  <!-- 15. Rahu Kala Gaew Luang Pho Pin Wat Srisathong -->
-  <div class="card" data-id="rahu">
-    <div class="card-title">15. ราหูกะลาแกะ หลวงพ่อปิ่น วัดศรีษะทอง นครปฐม</div>
-    <div class="card-sub">全泰第一拉胡祖庙 · 手雕单眼椰壳拉胡天神 · 食小人/化太岁/绝地大反弹</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพหน้าองค์ราหู)</span><img src="/amulets/rahu_front.jpg" alt="Rahu 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพหลังรอยจาร)</span><img src="/amulets/rahu_back.jpg" alt="Rahu 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (เนื้องานกะลา)</span><img src="/amulets/rahu_detail.jpg" alt="Rahu 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-turtle">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-turtle">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-turtle" onclick="copyCaption('turtle')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-turtle" onclick="copyComment('turtle')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-turtle" onclick="openFacebookGroup('turtle'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-turtle" onclick="togglePosted('turtle')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('rahu')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('rahu')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('rahu')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-rahu">圣物：Phra Rahu Kala Ta Diao (龙婆聘·瓦四色通祖庙·手雕单眼椰壳拉胡天神)
+
+    <div class="card" data-id="rahu">
+      <div class="card-header-row">
+        <div class="card-title">15. ราหูกะลาแกะ หลวงพ่อปิ่น วัดศรีษะทอง นครปฐม</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-rahu" class="active" onclick="setCardLang('rahu', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-rahu" onclick="setCardLang('rahu', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">全泰第一拉胡祖庙·单眼椰壳手雕拉胡 / Hand-Carved One-Eyed Coconut Rahu</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/rahu_front.jpg" alt="rahu front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/rahu_back.jpg" alt="rahu back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">รอยจารึกยันต์ (Hand Inscription)</span>
+          <img src="/amulets/rahu_detail.jpg" alt="rahu detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-rahu">圣物：Phra Rahu Kala Ta Diao (龙婆聘·瓦四色通祖庙·手雕单眼椰壳拉胡天神)
 师傅：Luang Pho Pin (龙婆聘大德 - 全泰第一拉胡宗师龙婆Noi法脉唯一衣钵传人兼继任住持)
 寺庙：Wat Srisathong (佛统府瓦四色通寺 - 全泰拉胡天神第一根本祖庙)
 年份：佛历 2510–2520年代 (公历 1960–1970年代)
@@ -830,25 +1398,59 @@
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-rahu">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn</div>
-  </div>
 
-  <!-- 16. Tiger Skin Takrut Luang Pho Thiang 2539 -->
-  <div class="card" data-id="tigertakrut">
-    <div class="card-title">16. ตะกรุดหนังเสือ หลวงพ่อเที่ยง วัดเขากระโดง บุรีรัมย์ ปี 2539</div>
-    <div class="card-sub">古法手编生漆真品虎皮符管 · 顶级大威德权势/震慑小人/招偏财</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพเต็มดอก)</span><img src="/amulets/tigertakrut_front.jpg" alt="Tiger Takrut 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ลายถักเชือกลงรัก)</span><img src="/amulets/tigertakrut_back.jpg" alt="Tiger Takrut 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (ส่องหัวตะกรุด)</span><img src="/amulets/tigertakrut_detail.jpg" alt="Tiger Takrut 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-rahu">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-rahu">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-rahu" onclick="copyCaption('rahu')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-rahu" onclick="copyComment('rahu')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-rahu" onclick="openFacebookGroup('rahu'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-rahu" onclick="togglePosted('rahu')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('tigertakrut')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('tigertakrut')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('tigertakrut')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-tigertakrut">圣物：Takrut Nang Suea (龙婆天·2539年·古法手编生漆真品虎皮符管)
+
+    <div class="card" data-id="tigertakrut">
+      <div class="card-header-row">
+        <div class="card-title">16. ตะกรุดหนังเสือ หลวงพ่อเที่ยง วัดเขากระโดง บุรีรัมย์ ปี 2539</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-tigertakrut" class="active" onclick="setCardLang('tigertakrut', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-tigertakrut" onclick="setCardLang('tigertakrut', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">古法真品虎皮生漆符管 / Authentic Tiger Skin Takrut Luang Pho Thiang B.E. 2539</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/tigertakrut_front.jpg" alt="tigertakrut front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/tigertakrut_back.jpg" alt="tigertakrut back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ลายถักและหนังเสือ (Pelt & Cord)</span>
+          <img src="/amulets/tigertakrut_detail.jpg" alt="tigertakrut detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-tigertakrut">圣物：Takrut Nang Suea (龙婆天·2539年·古法手编生漆真品虎皮符管)
 师傅：Luang Pho Thiang (龙婆天大德 - 泰国伊森高僧、考卡东火山圣脉宗师)
 寺庙：Wat Khao Kradong (武里南府瓦考卡东寺)
 年份：佛历 2539年 (公历 1996年)
@@ -862,25 +1464,59 @@
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-tigertakrut">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539</div>
-  </div>
 
-  <!-- 17. Garuda Luang Pho Warah 2564 -->
-  <div class="card" data-id="garuda">
-    <div class="card-title">17. พญาครุฑ กฐินพระราชทาน หลวงพ่อวราห์ วัดโพธิทอง ปี 2564</div>
-    <div class="card-sub">当代第一金翅鸟宗师 · 皇家袈裟大典展翼大鹏金翅鸟 · 皇室地位/破风水煞</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพด้านหน้า)</span><img src="/amulets/garuda_front.jpg" alt="Garuda 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพด้านหลัง)</span><img src="/amulets/garuda_back.jpg" alt="Garuda 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (พร้อมกล่องเดิม)</span><img src="/amulets/garuda_detail.jpg" alt="Garuda 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-tigertakrut">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-tigertakrut">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-tigertakrut" onclick="copyCaption('tigertakrut')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-tigertakrut" onclick="copyComment('tigertakrut')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-tigertakrut" onclick="openFacebookGroup('tigertakrut'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-tigertakrut" onclick="togglePosted('tigertakrut')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('garuda')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('garuda')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('garuda')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-garuda">圣物：Phaya Krut (龙婆哇拉·2564年·皇家袈裟大典·双翼展云大鹏金翅鸟)
+
+    <div class="card" data-id="garuda">
+      <div class="card-header-row">
+        <div class="card-title">17. พญาครุฑ กฐินพระราชทาน หลวงพ่อวราห์ วัดโพธิทอง ปี 2564</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-garuda" class="active" onclick="setCardLang('garuda', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-garuda" onclick="setCardLang('garuda', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">当代第一金翅鸟宗师·皇家袈裟展翼大鹏 / Phaya Garuda Royal Kathina 64</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/garuda_front.jpg" alt="garuda front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/garuda_back.jpg" alt="garuda back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">โค้ดและกล่องเดิม (Box & Code)</span>
+          <img src="/amulets/garuda_detail.jpg" alt="garuda detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-garuda">圣物：Phaya Krut (龙婆哇拉·2564年·皇家袈裟大典·双翼展云大鹏金翅鸟)
 师傅：Luang Pho Warah (龙婆哇拉 - 泰皇室认可御用高僧、全泰公认当代第一金翅鸟至尊)
 寺庙：Wat Phothithong (曼谷瓦菩提通寺)
 年份：佛历 2564年 (公历 2021年)
@@ -894,25 +1530,59 @@
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-garuda">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah</div>
-  </div>
 
-  <!-- 18. Bia Gae Luang Pu Kong Wat Klang Bang Kaew 2568 -->
-  <div class="card" data-id="biagae">
-    <div class="card-title">18. เบี้ยแก้ เปลือย หลวงปู่คง วัดกลางบางแก้ว ปี 2568</div>
-    <div class="card-sub">全泰第一挡降贝祖庙 · 原壳活水银挡降贝(中模) · 避邪挡降/反弹黑法/守财</div>
-    <div class="images-grid">
-      <div class="img-wrap"><span class="img-label">รูปที่ 1 (ภาพด้านบนหอยเบี้ย)</span><img src="/amulets/biagae_front.jpg" alt="Biagae 1"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 2 (ภาพด้านล่างอุดชันโรง)</span><img src="/amulets/biagae_back.jpg" alt="Biagae 2"></div>
-      <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมด้านข้าง)</span><img src="/amulets/biagae_detail.jpg" alt="Biagae 3"></div>
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-garuda">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-garuda">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-garuda" onclick="copyCaption('garuda')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-garuda" onclick="copyComment('garuda')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-garuda" onclick="openFacebookGroup('garuda'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-garuda" onclick="togglePosted('garuda')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
     </div>
-    <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('biagae')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
-      <button class="copy-comment-btn" onclick="copyComment('biagae')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
-      <button class="done-btn" onclick="markAsPosted('biagae')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
-    </div>
-    <div class="caption-preview" id="caption-biagae">圣物：Bia Gae Plueay (龙普孔·瓦岗挽轿根本祖庙·原壳活水银挡降贝·中模)
+
+    <div class="card" data-id="biagae">
+      <div class="card-header-row">
+        <div class="card-title">18. เบี้ยแก้ เปลือย หลวงปู่คง วัดกลางบางแก้ว ปี 2568 ตัวขนาดกลาง</div>
+        <div class="card-lang-pill">
+          <button id="pill-zh-biagae" class="active" onclick="setCardLang('biagae', 'zh')">🇨🇳 中文</button>
+          <button id="pill-en-biagae" onclick="setCardLang('biagae', 'en')">🇬🇧 EN</button>
+        </div>
+      </div>
+      <div class="card-sub">全泰第一挡降贝祖庙·原壳活水银 / Bia Gae Luang Pu Kong B.E. 2568</div>
+      
+      <div class="images-grid">
+        <div class="img-wrap">
+          <span class="img-label">ด้านหน้า (Front)</span>
+          <img src="/amulets/biagae_front.jpg" alt="biagae front" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ด้านหลัง (Back)</span>
+          <img src="/amulets/biagae_back.jpg" alt="biagae back" loading="lazy">
+        </div>
+        <div class="img-wrap">
+          <span class="img-label">ตะกั่วผนึก (Lead Seal Detail)</span>
+          <img src="/amulets/biagae_detail.jpg" alt="biagae detail" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Caption Preview Box -->
+      <div class="caption-preview" id="caption-preview-biagae">圣物：Bia Gae Plueay (龙普孔·瓦岗挽轿根本祖庙·原壳活水银挡降贝·中模)
 师傅：Luang Pu Kong (龙普孔大德 - 瓦岗挽轿现任住持，承袭龙婆Boon、龙婆Perm、龙婆遮全泰第一挡降贝嫡传法门)
 寺庙：Wat Klang Bang Kaew (佛统府瓦岗挽轿根本祖庙)
 年份：佛历 2568年 (公历 2025年)
@@ -926,158 +1596,259 @@
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
 💬 诚意结缘恭请欢迎私信（PM / Inbox）
 👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
-    <div class="comment-preview-box" id="comment-biagae">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium</div>
+
+      <!-- Comment Preview Box -->
+      <div class="comment-preview-box" id="comment-preview-biagae">
+        💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>
+        <span id="comment-text-biagae">👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium</span>
+      </div>
+
+      <div class="btn-group">
+        <button class="copy-btn" id="copy-btn-biagae" onclick="copyCaption('biagae')">
+          📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)
+        </button>
+        
+        <button class="copy-comment-btn" id="copy-comment-btn-biagae" onclick="copyComment('biagae')">
+          💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)
+        </button>
+
+        <a href="https://www.facebook.com" class="open-fb-btn" id="open-fb-btn-biagae" onclick="openFacebookGroup('biagae'); return false;">
+          🚀 3. เปิดแอป Facebook เพื่อโพสต์
+        </a>
+
+        <button class="done-btn" id="status-btn-biagae" onclick="togglePosted('biagae')">
+          ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
+        </button>
+      </div>
+    </div>
+
   </div>
 
-  <div id="toast" class="toast">✅ คัดลอกข้อความสำเร็จแล้ว!</div>
+  <div class="empty-state" id="empty-state">
+    <h3>🎉 สุดยอดมาก! คุณโพสต์ครบทุกรายการแล้ว</h3>
+    <p>ไม่มีรายการที่ค้างอยู่ หากต้องการกลับมาดูใหม่ ให้กดแท็บ <b>"โพสต์แล้ว"</b> หรือกดปุ่ม <b>"รีเซ็ตทั้งหมด"</b> ที่แถบด้านบนครับ</p>
+  </div>
+
+  <div class="toast" id="toast">คัดลอกเรียบร้อยแล้ว!</div>
 
   <script>
-    const STORAGE_KEY = 'dansiam_fb_posted_items';
-    let currentFilter = 'unposted';
+    const STORAGE_KEY = 'dansiam_fb_posted_ids';
+    const LANG_STORAGE_KEY = 'dansiam_fb_lang';
 
-    function getPostedList() {
+    // Captions & URLs Database
+    const amuletsDb = {
+  "sarika": {
+    "url": "https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri",
+    "captionZh": "圣物：Sarika Lin Thong (纯手工圣木雕刻·双人缘金舌鸟商铺挂件)\n师傅：Luang Pho Ken (百岁神僧 龙婆垦 / 享寿111岁高龄)\n寺庙：Wat Tham Khao Ito (瓦探考伊督寺 · 巴真武里府)\n年份：佛历 2500–2510年代经典老冠兰圣物\n材质：吉祥圣木手工精雕，通体手刻古高棉秘传符文（满满手写经文）\n功效：顶级人缘魅力、商谈巧舌如簧、招揽天下客商、客源滚滚、店铺兴隆旺财\n\n💡【华人商贾必奉之镇店圣宝】：\n此尊双人缘鸟由全泰公认「金舌鸟督造第一人」龙婆垦大师亲手加持。最适宜悬挂于实体店铺大门、收银台上方、公司展厅或办公室内，磁场祥和，强力吸聚买气与人流，令言语更具说服力，化解商谈阻碍。\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Masterpiece of Siamese Metta Wicha\nLuang Pho Ken - Sacred Hand-Carved Holy Wood Sarika Birds (Mobile Pair)\nWat Tham Khao Ito, Prachin Buri | Heritage Golden Tongue Birds\n\n💎 Consecration Heritage & Sacred Provenance:\nLuang Pho Ken was revered throughout Southeast Asia as the undisputed centenarian master of the ancient Sarika (Golden-Tongue Bird) wicha. Residing in sacred mountain caves, he hand-carved these sacred birds from consecrated auspicious wood and continuously empowered them through deep meditative absorptions until imbued with supreme charismatic vibrations.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Supreme Charisma & Metta Maha Niyom: Instantly softens hearts, inspires affection, and attracts influential benefactors.\n• Commercial Magnetism & Customer Attraction: Specially hung at shopfronts, offices, or cash counters to draw continuous foot traffic and high-value orders.\n• Unmatched Persuasion & Deal-Closing Power: Empowers negotiations, business presentations, sales pitches, and corporate consensus.\n• Harmonious Relationships: The paired birds represent unbreakable mutual affection and protection against domestic discord.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Chanting prayer & offering guide)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri"
+  },
+  "namtao": {
+    "url": "https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552",
+    "captionZh": "圣物：Namtao Dood Sup (大吉祥吸财聚财福禄宝葫芦)\n师傅：Luang Pu Tim (大城府慈悲圣僧 龙普添 / 肥添大师)\n寺庙：Wat Phra Khao (瓦帕考寺 · 阿育陀耶府)\n年份：佛历 2552年 (公历 2009年 - 「玛哈腊大财源」法会经典)\n材质：天然吉祥葫芦木质，内嵌圣粉经料，外刻招财经文\n功效：只进不出绝不漏财、聚财吸金、化煞纳福、全家平安喜乐\n\n💡【华人风水聚财至宝】：\n华人自古深谙「葫芦即福禄」之道。龙普添大师乃全泰闻名之「人缘慈悲圣僧」，此尊吸财葫芦形如乾坤宝袋，能将四面八方之财富、客源强力吸纳于腹中，牢牢锁住财气，最适合随身佩戴、挂于车内或放置于收银箱、钱包旁！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号新加坡、马来西亚、港台，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Consecrated Wealth-Attracting Talisman\nLuang Pu Tim - Sacred Wealth Gourd (Namtao Dood Sup Maha Lap)\nWat Phra Khao, Ayutthaya | B.E. 2552 (2009)\n\n💎 Sacred Consecration & Monastery Provenance:\nLuang Pu Tim Attasanto was revered as the beloved \"Saint of Loving-Kindness of Ayutthaya\". This famous wealth-sucking gourd was cast and consecrated during the auspicious Maha Lap blessing ceremony in B.E. 2552. Designed to act as an energetic wealth vessel, it magnetically gathers monetary fortune while sealing leaks in personal finances.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Multi-Directional Wealth Inflow: Magnetizes unexpected windfalls, business profits, and steady cashflow from all cardinal directions.\n• Financial Leak Prevention: Shields personal and business finances from sudden unexpected losses or wasteful outflows.\n• Health, Vitality & Auspicious Qi: In Buddhist and esoteric traditions, the gourd represents robust vitality, longevity, and warding off misfortune.\n• Business & Vehicle Guardian: Perfect for carrying on keychains, placing in retail shops, or hanging in vehicles for safe journeys and prosperous ventures.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Chanting prayer & activation instructions)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552"
+  },
+  "khunphaen": {
+    "url": "https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548",
+    "captionZh": "圣物：Phra Khun Phaen Lang Kuman Sombat (坤平佛背金童古曼公宝藏·纳查利迪招财符)\n师傅：Luang Pho Pool (全泰大德圣僧 龙婆判亲督加持)\n寺庙：Wat Phai Lom (瓦排隆寺 · 佛统府名刹)\n年份：佛历 2548年 (公历 2005年 - 龙婆判圆寂前黄金经典代表作)\n材质：古法庙土香灰、经粉花粉、背面立体嵌入著名「古曼童宝藏」法相与招财经文\n功效：极强异性人缘、客源滚滚、贵人扶助、八方聚财、护主化煞\n\n💡【新马港台极受追捧之传奇圣物】：\n龙婆判大师一生慈悲宏愿，其门下督造之「古曼宝藏」享誉华人收藏圈数十年。此尊坤平正面为法相端庄之辟邪坤平，背面为招财招客天童古曼，配以西瓦利尊者核心发财密咒「纳查利迪（Na Cha Li Ti）」，无论是商贾谈单、创业开店或提升人际关系，皆有不可思议之助力！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Final Consecrated Masterpiece of Wat Phai Lom\nLuang Pho Pool - Phra Khun Phaen Lang Kuman Sombat (Na Cha Li Ti)\nWat Phai Lom, Nakhon Pathom | B.E. 2548 (2005)\n\n💎 Historic Monastery Heritage:\nConsecrated in B.E. 2548 by Luang Pho Pool, the legendary Abbot of Wat Phai Lom, in his final historic blessing ceremony before entering eternal meditation. The front portrays the majestic Phra Khun Phaen, while the reverse features \"Kuman Sombat\", the celebrated miraculous treasure-bringing golden spirit boy of Wat Phai Lom, ringed by the primordial wealth mantra \"Na Cha Li Ti\".\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Supreme Charisma & Metta Maha Saneh: Amplifies personal allure, charm, and social standing in high-stakes environments.\n• Kuman Sombat Spiritual Assistance: Alert intuition, business lead generation, customer attraction, and household protection.\n• Speculative Wealth & Windfalls: Enhances sharp instincts for investments, risk mitigation, and unexpected opportunities.\n• Protection & Negative Ward: Shields against jealous competitors, bad energies, and spiritual interference.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Offering Guide\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548"
+  },
+  "takrut": {
+    "url": "https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553",
+    "captionZh": "圣物：Takrut Sarika Khu Baramee (纯银双效金舌鸟符管配人缘金鸟油)\n师傅：Luang Pu Kambu (伊森泰东圣僧 龙普堪布高僧)\n寺庙：Wat Kut Chomphu (瓦库琼普寺 · 乌汶府)\n年份：佛历 2553年 (公历 2010年)\n材质：纯银薄片手工刻写双金舌鸟符文，卷制成双符管，浸润于古法特调香草人缘圣油中\n功效：超强人缘口才魅力、言语动人、谈判破冰、促成交易、招正偏财运\n\n💡【随身佩戴之招财经商利器】：\n龙普堪布乃泰东乌汶府极富盛名之大德圣僧。此尊符管以高纯度白银打造，内刻独门金舌神鸟心咒，并整支浸泡于秘制清香人缘金油之中，气场极温和强劲。随身挂于胸前、钥匙扣或皮包，能令闻者心生欢喜，化解人际隔阂，助谈单成交！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Authentic Isan Silver Talisman\nLuang Pu Kambu - Solid Silver Takrut Sarika Khu Baramee with Holy Sarika Oil\nWat Kut Chomphu, Ubon Ratchathani | B.E. 2553 (2010)\n\n💎 Ancient Isan Wicha Consecration:\nConsecrated in B.E. 2553 by the venerated master Luang Pu Kambu, celebrated keeper of the sacred Mekong river wicha. This rare talisman comprises paired solid silver scrolls inscribed with ancient male/female Sarika yant formulas, permanently encased in fragrant herbal Sarika oil charged through months of continuous chanting.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Golden-Tongued Speech (Salika Lin Thong): Words carry irresistible persuasion, authority, and warmth, turning tough negotiations into closed contracts.\n• Magnetic Commerce & Wealth Draw: Attracts high-value business clients, beneficial joint ventures, and unexpected profitable deals.\n• Patronage & Superior Support: Garnering natural favor from superiors, mentors, and corporate leadership.\n• Spiritual Protection: Solid silver purity deflects negative speech, envy, and harmful intentions.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Chanting prayer & activation)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553"
+  },
+  "lpthuat": {
+    "url": "https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom",
+    "captionZh": "圣物：Luang Pu Thuat (老瓦曼坤碰出塔古料·龙婆托尊者圣相)\n师傅：Luang Ta Phan (曼谷名僧 龙达潘亲督)\n出处：Wat Mai Amataros (瓦曼坤碰寺 / 瓦麦阿玛塔罗斯寺)\n年份：佛历 2502年 (公历 1959年)\n用料：极为珍贵地大量融入佛历2500年瓦曼坤碰大开塔时破碎之「阿赞多亲制老崇迪古料圣粉」\n功效：全泰第一挡灾避险、出入平安车马吉利、贵人庇佑、逢凶化吉、转危为安\n\n💡【双重顶级传承 · 瓦曼坤碰阿赞多老粉加持】：\n在新马泰华人圈中，「车有龙婆托，一生无险祸」广为流传。龙达潘当年亲自收集保管2500年阿赞多老崇迪出塔碎料，并督造了这批早期龙婆托。既拥有阿赞多崇迪至高无上的聚财灵力，又兼具龙婆托全泰第一的护身避险威德，历经六十余载岁月洗礼，极具收藏传家价值！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号附追踪单号\n💬 诚意恭请保平安请私信（PM）",
+    "captionEn": "⭐ Historic Consecration Infused with Authentic Somdej Toh Powders\nLuang Ta Phan - Sacred Luang Pu Thuad (Bang Khun Phrom Crypt Powder)\nWat Mai Amataros (Wat Bang Khun Phrom), Bangkok | B.E. 2502 (1959)\n\n💎 Provenance of the Century:\nFollowing the historic 1957 (B.E. 2500) opening of the great Bang Khun Phrom pagoda, Luang Ta Phan gathered authentic broken fragments of original Phra Somdej blessed by Somdej Toh Promrangsi. In B.E. 2502, he hand-pressed this historic Luang Pu Thuad image using an exceptionally high density of these sacred 19th-century powders, energized in a grand multi-monk consecration.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Unsurpassed Life Protection: Luang Pu Thuad is universally venerated as Thailand's supreme savior from fatal vehicular accidents, violence, and life-threatening crises.\n• Somdej Toh Sacred Powder Energy: Imbued with the 5 primordial holy powders, blessing the wearer with prestige, harmony, and unshakeable luck.\n• Absolute Expulsion of Dark Energies: Purifies spiritual environments and deflects ill wishes, curses, and demonic forces.\n• Transformation from Crisis to Triumph: Renowned for turning hopeless personal or financial situations into miraculous breakthroughs.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Luang Pu Thuad invocation)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom"
+  },
+  "tiger": {
+    "url": "https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519",
+    "captionZh": "圣物：Phra Somdej Lang Suea Phoen (崇迪佛坐殿·背铸威猛跃腾飞虎)\n师傅：Luang Pho Thong-yu (龙婆通佑大德 / 必打王龙普多挚友)\n寺庙：Wat Mai Nong Pha-ong (瓦迈农帕翁寺 · 龙仔厝府)\n年份：佛历 2519年 (公历 1976年)\n材质：白象牙色老庙粉、香灰经粉、五大吉祥圣料\n功效：至高威权霸气、克制同行竞争、防小人陷害、步步高升、聚财护宅\n\n💡【文武双全法相 · 崇迪佛配猛虎印】：\n正面为端庄慈悲之佛中之王「崇迪佛」，主掌人缘、正财与事业亨通；背面则铭刻威风凛凛的「跃腾猛虎印」，主掌辟邪退煞、威摄四方与战胜挑战。龙婆通佑乃当代威名远播的法术高僧，与龙普多（必打王）私交笃厚并经常同坛加持，此尊品相保存极美，原皮温润！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ The King of Amulets Meets the Fierce Leaping Tiger\nLuang Pho Thong Yu - Phra Somdej Lang Suea Phern (Leaping Tiger Reverse)\nWat Mai Nong Pha Ong, Samut Sakhon | B.E. 2519 (1976)\n\n💎 Master Consecration & Noble Lineage:\nConsecrated in B.E. 2519 by Luang Pho Thong Yu, close Dhamma friend of Somdej Phra Sangkharat (Phaen) of Wat Suthat. The obverse depicts the classical serene Phra Somdej, while the reverse is stamped with the commanding \"Leaping Tiger\" yant. Pressed from sacred mineral clays and ancient sutra powders.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Supreme King of Amulets Auspices: Bestows continuous elevation in social ranking, business prestige, and noble harmony.\n• Maha Amnaj & Competitive Dominance: The leaping tiger projects formidable authority, subduing adversaries, jealous rivals, and corporate detractors.\n• Financial Stability & Expansion: Anchors personal wealth while opening channels for commercial expansion.\n• Shield Against Calamity: Repels weapon violence, road hazards, and aggressive psychic disturbances.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Offering Guide\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519"
+  },
+  "paladkhik": {
+    "url": "https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan",
+    "captionZh": "圣物：Plad Khik Mai Kheuy Tai (神木辟邪招财巴拉吉·附灵木符管)\n师傅：Luang Pu Mek (全泰神木名僧 龙普美大师)\n寺庙：Wat Lam Kradan (瓦兰卡丹寺 · 曼谷)\n年份：佛历 2520–2530年代经典老法宝\n材质：极罕见之天然「死而不枯灵木（Mai Kheuy Tai）」纯手工削雕，配手刻灵木符管\n功效：强力招正偏财、吸金揽客、避剧毒毒蛇侵袭、破除降头邪术、随身避险\n\n💡【全泰商铺收银抽屉必备之招财奇木】：\n龙普美大师督造的巴拉吉在全泰享有盛誉，其采用天然生长的特殊灵木手工雕琢。在泰国与东南亚华人商界，商家极为推崇将此圣物放置于收银抽屉、钱柜或钥匙扣上，寓意「如生机勃发之灵木，财源生生不息，源源不断」！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Legendary Trade & Metta Talisman of Bangkok\nLuang Pu Mek - Sacred Hand-Carved Holy Wood Palad Khik with Embedded Takrut\nWat Lam Kradan, Bangkok | Authentic Animist Heritage\n\n💎 Master Provenance & Sacred Wood:\nLuang Pu Mek of Wat Lam Kradan was celebrated throughout Thailand for his miraculous Palad Khik talismans. Carved exclusively from naturally deceased standing sacred wood (Mai Khaye Tai) and embedded with a consecrated secret wooden takrut peg, each piece was blessed until exhibiting extraordinary spiritual buoyancy.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Unrivaled Commerce & Cash Drawer Magnet: Traditionally placed in cash registers or worn at the waist to siphon steady monetary flow and customers.\n• Supreme Antidote to Black Magic & Curses: Neutralizes malevolent sorcery, ill wishes, and toxic environmental energies.\n• Wards off Venomous Creatures: Renowned among rural Thais for repelling venomous snakes, scorpions, and dangerous insects.\n• Personal Charm & Likability: Facilitates effortless social ease and warm reception in negotiations.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Palad Khik Activation Chant)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan"
+  },
+  "wuathanu": {
+    "url": "https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538",
+    "captionZh": "圣物：Wua Thanu (护宅辟邪神牛 · 武牛神兽)\n师傅：Luang Pho Phut (全泰神兽名僧 龙婆普大德)\n寺庙：Wat Klang Bang Phra (瓦刚芒轿寺法脉传承 · 佛统府名刹)\n年份：佛历 2538年 (公历 1995年)\n用料：朝东生长的千年野枣树天然红胶（Krang Phutsa）、水银秘料、手刻符管金线\n功效：全天候忠诚镇宅、抵御黑巫邪术、化解风水煞气、防盗贼侵入、护主化险\n\n💡【全泰顶级守护神兽】：\n佛统府乃泰国顶级法术名邦。龙婆普承袭瓦刚芒轿寺百年神牛秘法，严格采集极具灵气的东方野枣树生漆胶纯手工捏铸。神牛通人性，置于住宅、商铺或公司，能自成结界，驱散一切不洁阴邪之气，化解一切小人暗箭与同行恶意中伤！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品保证。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号附追踪单号\n💬 诚意恭请镇宅神牛请私信（PM）",
+    "captionEn": "⭐ Ancient Siamese Territorial Guardian Bull\nLuang Pho Phut - Sacred Wua Thanu (Jujube Lacquer Resin Bull)\nWat Klang Bang Phra, Nakhon Pathom | B.E. 2538 (1995)\n\n💎 Consecration of the Nakhon Pathom Lineage:\nConsecrated in B.E. 2538 by Luang Pho Phut, direct lineage heir to Luang Phor Noi (Wat Srisathorn). Molded from sacred copper wire skeletal armature coated with wild consecrated Jujube lacquer resin (Krang Phutsa) harvested from auspicious cardinal directions.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Elite Property & Warehouse Guardian: Spiritually patrolled perimeter protection against burglars, home invaders, and thieves.\n• Absolute Annihilation of Black Magic: The mythical archery bull charges and crushes hostile demonic entities, hexes, and graveyard spirits.\n• Deflects Harmful Feng Shui Energies: Neutralizes road clashes, graveyard proximities, and negative spiritual portals.\n• Business Protection: Safeguards business inventories, production plants, and retail shops from deliberate sabotage.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Offering Instructions\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538"
+  },
+  "guman": {
+    "url": "https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500",
+    "captionZh": "圣物：Guman Thong (白法正统招财护主天童古曼)\n师傅：Luang Pho Pin (龙婆品高僧 / 全泰五大金属名僧「龙婆空 瓦榜卡彭」嫡传弟子)\n寺庙：Wat Ubon Wannaram (瓦乌汶寺 · 叻丕府)\n年份：佛历 2500年 (公历 1957年 - 佛历25个世纪大庆黄金时代)\n用料：古法七吉祥圣土（Din Chet Pacha）、古庙灵土、香灰及秘制草药经粉\n功效：预警护主、旺生意招财运、横财正财俱收、看守家产、带来意外福运\n\n💡【纯正白法高僧督造 · 毫无阴料困扰】：\n此尊为泰国佛历2500年极珍稀早期正统古曼童。龙婆品严守僧律，以大慈悲佛法念力开光唤灵，属福德善灵天童，无需供奉血食等不良仪式，只需心存善念、多行善事回向。能为供养者默默招财招客、化解险阻，乃近七十年难得一见之古老圣物！\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号，附追踪单号\n💬 诚心供养结缘欢迎私信（PM）",
+    "captionEn": "⭐ 25th Buddhist Century Pure White Wicha Guman Thong\nLuang Pho Pin - Sacred Guman Thong (7 Cemetery Earths)\nWat Ubon Wannaram, Ratchaburi | B.E. 2500 (1957)\n\n💎 Pure Monastic Theravada Consecration:\nConsecrated in B.E. 2500 (1957) during the sacred 25th Buddhist Century grand Jubilee era by Luang Pho Pin, the primary disciple of Luang Pho Khong (Wat Bang Kaphom). Molded from 7 sacred soils (Cemeteries representing impermanence & meditation, pier soils for bustling trade, ant mound soils for wealth accumulation) under strict Buddhist Vinaya white magic. 100% wholesome celestial spirit boy (Thep Guman), zero dark occultism.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Customer Magnetism & Retail Boost: Invisibly guides customers and buyers towards the owner's store or online business.\n• Intuitive Sixth Sense & Danger Warning: Alerts the caretaker in dreams or intuitive flashes to imminent hazards or fraudulent deals.\n• Household Guardian: Protects families and premises against negative unseen spirits and mischief.\n• Financial Luck & Opportunities: Brings unexpected opportunities, windfalls, and commercial goodwill.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Ethical Wholesome Care Guide\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500"
+  },
+  "somdej_nak": {
+    "url": "https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495",
+    "captionZh": "圣物：Phra Somdej Thaan Kha To (桌腿座崇迪佛)\n师傅：Luang Pu Nak (龙婆纳大德)\n寺庙：Wat Rakang (瓦拉康寺 - 阿赞多弘法祖庙)\n年份：佛历 2495年 (公历 1952年)\n用料：融入阿赞多亲制老崇迪破碎古料、瓦拉康五大圣粉\n品相：原庙皮壳完整，70余年自然风化氧化包浆，包浆温润\n功效：保平安吉祥、事业亨通、贵人扶持、聚财纳福、逢凶化吉\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Authentic Wat Rakang Masterpiece with Somdej Toh Powders\nLuang Pu Nak - Phra Somdej Thaan Kha To (Table-Leg Base Mould)\nWat Rakang Kositaram, Bangkok | B.E. 2495 (1952)\n\n💎 Sacred Mother-Temple Provenance:\nConsecrated in B.E. 2495 by Luang Pu Nak, celebrated Abbot of Wat Rakang Kositaram. Renowned worldwide for containing a very high concentration of crushed original Somdej Toh Promrangsi antique powders preserved within the temple archives, pressed into the iconic and prestigious \"Table-Leg Base\" altar mould.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Supreme Universal King of Amulets Blessings: Bestows unshakeable luck, life elevation, and harmony in all pursuits.\n• Maha Metta & Benevolent Attraction: Inspires profound goodwill from VIP clients, superiors, colleagues, and associates.\n• Career Advancement & Royal Prestige: Facilitates executive promotions, leadership authority, and social honor.\n• Obstacle Dissolution & Safety: Smooths life's hardest trials and protects from bodily harm and misfortune.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Chinabanchorn & Wat Rakang Katha\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495"
+  },
+  "somdej_pae": {
+    "url": "https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514",
+    "captionZh": "圣物：Phra Somdej Phra Prathan (大东座大佛主尊崇迪)\n师傅：Luang Pho Pae (全泰著名圣僧 龙婆培亲督加持)\n出庙：Wat Muang (瓦曼寺开光法会 / 龙婆培应邀主坛)\n年份：佛历 2514年 (公历 1971年)\n用料：龙婆培独特秘制经粉、花粉、香灰及古寺圣料\n品相：品相优美，法相庄严端正，无修补原庙状态\n功效：事业高升、人缘极佳、财运亨通、平安护身\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久真品保证。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国邮政国际快捷挂号直邮，全程可追踪\n💬 有意恭请欢迎私信（PM）",
+    "captionEn": "⭐ Master Consecration by Asia's Legend Luang Pho Pae\nLuang Pho Pae - Phra Somdej Phra Prathan (Great Presiding Buddha)\nWat Pikul Thong (Issued at Wat Muang, Yala) | B.E. 2514 (1971)\n\n💎 International Golden Era Provenance:\nEmpowered in B.E. 2514 by Phra Thammaratthanon (Luang Pho Pae) of Wat Pikul Thong, Singburi, whose amulets gained legendary international acclaim across Hong Kong, Singapore, and Taiwan. Pressed from his signature triple-purified holy powders, gold leaf flecks, and sacred botanical minerals.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Multiplied Prosperity & Wealth Attraction: Attracts thriving commercial success, solid profit margins, and investment growth.\n• Peaceful Household & Emotional Balance: Bestows deep tranquility, clarity of mind, and harmonious family life.\n• Charismatic Influence (Metta): Natural appeal and trustworthiness in all professional engagements.\n• Comprehensive Divine Protection: Shields from physical violence, travel accidents, and spiritual attacks.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Offering Instructions\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514"
+  },
+  "pidta": {
+    "url": "https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520",
+    "captionZh": "圣物：Phra Pidta Wan Jindamanee (金达玛尼草药符管必打佛)\n师傅：Luang Pho Thong-yu (龙婆通佑大德)\n寺庙：Wat Tha Sao (瓦塔绍寺 - 龙婆金达玛尼法脉)\n年份：佛历 2520年 (公历 1977年)\n用料：全泰极珍贵之金达玛尼法药草药经粉，底部嵌入纯铜招财符管\n品相：草药原料质感极佳，包浆沉淀古朴，法相圆满\n功效：强力招正偏财、避险挡灾、防小人是非、助生意兴隆\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Sacred Jindamanee Medicine Formula Phra Pidta\nLuang Pho Thong Yu - Phra Pidta Wan Jindamanee with Embedded Sacred Takrut\nWat Tha Sao, Samut Sakhon | B.E. 2520 (1977)\n\n💎 Esoteric \"Wish-Fulfilling Jewel\" Lineage:\nConsecrated in B.E. 2520 by Luang Pho Thong Yu, inheritor of the legendary Wat Klang Bang Kaew Jindamanee medical-sorcery lineage. Hand-molded from genuine Ya Jindamanee holy herbal medicine, 108 botanical wans, and embedded with a consecrated metallic Takrut in the reverse.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Sensory Restraint & Inner Peace (Maha Uttama): Closed eyes symbolize sensory discipline, silencing external chaos, and promoting sharp strategic focus.\n• Windfall Wealth & Debt Clearing (Maha Lap): Draws unexpected business revenue, investment profits, and steady financial stability.\n• Inversion of Illness & Physical Vitality: Ya Jindamanee herbal aura is renowned for supporting bodily health, vitality, and clearing negative energetic sluggishness.\n• Complete Immunity to Black Magic: The closed posture deflects curses, hexes, and envious attacks from all 9 sensory portals.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Chanting Manual\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520"
+  },
+  "koon": {
+    "url": "https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517",
+    "captionZh": "圣物：Phra Nang Phaya Koon Lap (女王佛 · 乘倍发财/倍增福禄)\n师傅：Luang Pho Koon (活财神 · 龙婆坤高僧)\n寺庙：Wat Ban Rai (瓦班莱寺)\n年份：佛历 2517年 (公历 1974年 - 龙婆坤早期经典黄金年份)\n用料：圣粉、多种吉祥药草粉、经灰香灰\n品相：早期原庙老粉质，五官端正清晰，自然红润老皮壳\n功效：极强领导威严、尊贵魅力、人缘贵人相助、财源滚滚\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 国际航空直邮挂号，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Golden Era B.E. 2517 Consecration by the Living Arhat\nLuang Pho Koon - Phra Nang Phaya Koon Lap (Double Wealth Edition)\nWat Ban Rai, Nakhon Ratchasima | B.E. 2517 (1974)\n\n💎 The Golden Era of Dan Khun Thot:\nBlessed in B.E. 2517, the most celebrated and highly sought-after vintage era of Luang Pho Koon Parisuttho. Pressed from sacred temple pollens, ancient herbals, and powdered scripture ashes, shaped in the timeless triangular form of the \"Queen of Amulets\" (Phra Nang Phaya) and blessed for exponential wealth (\"Koon Lap\").\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Multiplied Fortunes (Koon Lap): Magnetically multiplies earnings, investment capital, and corporate profits.\n• Supreme Queen of Amulets Grace & Leadership: Bestows dignified elegance, executive authority, and natural command over staff and partners.\n• Overcomes Harsh Obstacles: Blessed with Luang Pho Koon's miraculous power to shatter bad luck, legal conflicts, and debt traps.\n• Life Preservation & Accident Shield: Famous for unyielding Klaew Klaad protection across all travel and work activities.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Luang Pho Koon Blessing Katha\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517"
+  },
+  "turtle": {
+    "url": "https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535",
+    "captionZh": "圣物：Phra Phaya Tao Ruean (龙婆柳84岁大寿·圣水浸泡尊荣版·招财神龟)\n师傅：Luang Pu Liu (龙婆柳大德 - 全泰第一招财神龟宗师)\n寺庙：Wat Rai Taeng Thong (佛统府瓦莱定汤寺)\n年份：佛历 2535年 (公历 1992年)\n用料：原庙古法圣铜合铸，长时间沉浸于原庙圣水钵中日夜诵经加持，皮壳附着圣水氧化结晶与古铜润泽包浆\n品相：原庙真品品相，龟背符文清晰深邃，五官与经文字体立体完好\n功效：强力招正偏财、聚财纳福、生意兴隆、清偿债务、化解官非、延年益寿、安康吉祥\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ The Undisputed #1 Wealth Turtle Master of Thailand\nLuang Pu Liu - Sacred Consecrated Wealth Turtle Coin (Rian Phaya Tao Ruean)\nWat Rai Taeng Thong, Nakhon Pathom | B.E. 2535 (1992) - 84th Birthday Edition\n\n💎 Holy Water Immersion Provenance:\nConsecrated in B.E. 2535 on the auspicious occasion of Luang Pu Liu's 84th birthday. The sacred copper medals were fully immersed in large temple bronze cauldrons of holy water, where Luang Pu Liu performed intensive daily samadhi meditation for months. The surface retains natural temple holy water oxidation and sacred patina.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Miraculous Debt Clearing (Plod Nee): Celebrated across Asia as the premier talisman for entrepreneurs to eliminate massive debts and restart financial abundance.\n• Maha Lap & Steady Wealth Inflow: Brings unceasing revenue, steady business expansion, and windfall fortune.\n• Longevity & Vibrant Health: The sacred turtle embodies ancient resilience, bestowing vigor and shielding the physical body from illness.\n• Impenetrable Shell Protection: Strong defense against malicious lawsuits, backstabbing colleagues, and unforeseen accidents.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Luang Pu Liu Turtle Chant & Usage Manual)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535"
+  },
+  "rahu": {
+    "url": "https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn",
+    "captionZh": "圣物：Phra Rahu Kala Ta Diao (龙婆聘·瓦四色通祖庙·手雕单眼椰壳拉胡天神)\n师傅：Luang Pho Pin (龙婆聘大德 - 全泰第一拉胡宗师龙婆Noi法脉唯一衣钵传人兼继任住持)\n寺庙：Wat Srisathong (佛统府瓦四色通寺 - 全泰拉胡天神第一根本祖庙)\n年份：佛历 2510–2520年代 (公历 1960–1970年代)\n用料：罕见天然单眼椰壳（天然纯阳辟邪圣物），承袭祖传秘法手工立体雕刻，背面手刻日月符文密咒\n品相：几十年自然风化温润老包浆，刀工苍劲古朴，符文字痕历历在目，传世级老圣物\n功效：食尽小人暗箭、破除流年犯太岁与霉运煞气、绝处逢生、逆境翻盘大转运、招财纳福、护佑家宅安宁\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ The Pinnacle Heritage of Wat Srisathorn\nLuang Pho Pin - Sacred Hand-Carved One-Eyed Coconut Shell Phra Rahu\nWat Srisathorn, Nakhon Pathom | Direct Lineage of Luang Phor Noi\n\n💎 Consecration at the #1 Rahu Temple of Siam:\nWat Srisathorn is universally recognized as the primordial birthplace of Phra Rahu wicha in Thailand. Luang Pho Pin was the prime direct successor to the immortal Luang Phor Noi. This museum specimen is hand-carved from an exceptionally rare, naturally occurring single-eyed coconut shell (Kala Ta Diao), meticulously etched with Rahu devouring the moon and energized with hand-inscribed sacred yant formulas.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Devours Traitors & Backstabbers (Kin Khon Phran): Neutralizes malicious gossip, corporate politics, and backstabbing, deflecting ill-will back to its source.\n• Overcomes Astrological Clashes (Tai Sui & Bad Stars): Invaluable during difficult astrological years, neutralizing malefic cosmic influences.\n• Sudden Turnaround in Misfortune: Legendary for taking individuals at their lowest points and propelling them into victory and acclaim.\n• Wealth from Unconventional Angles: Rahu is renowned for unlocking bold speculative profits and overcoming regulatory hurdles.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha & Offering Ritual Guide\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn"
+  },
+  "tigertakrut": {
+    "url": "https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539",
+    "captionZh": "圣物：Takrut Nang Suea (龙婆天·2539年·古法手编生漆真品虎皮符管)\n师傅：Luang Pho Thiang (龙婆天大德 - 泰国伊森高僧、考卡东火山圣脉宗师)\n寺庙：Wat Khao Kradong (武里南府瓦考卡东寺)\n年份：佛历 2539年 (公历 1996年)\n用料：纯正原生态真品猛虎皮内卷，师傅亲书大威德降煞符印，外层以古法经线手工编织缠绕，并浸刷天然生漆（Rak）固化防潮\n品相：原庙皮壳完整，生漆与经线咬合紧密，虎皮质感饱满，随身佩戴气场威猛\n功效：顶级大威德权势、震慑对手小人、增强个人魄力与气场、助管理决断、辟邪防降头恶灵、聚揽四方偏财横财\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Ferocious Authority of Ancient Khmer Wicha\nLuang Pho Thiang - Authentic Hand-Lacquered Tiger Skin Takrut\nWat Khao Kradong Volcano Monastery, Buriram | B.E. 2539 (1996)\n\n💎 Extinct Volcano Consecration Heritage:\nConsecrated in B.E. 2539 by Luang Pho Thiang, legendary master of the extinct volcanic heights of Khao Kradong on the Cambodian border. Utilizing genuine tiger pelt from a naturally deceased apex tiger, the master personally hand-inscribed esoteric Khmer yantras on the skin, wrapped it with sacred cord bindings, and preserved it in natural black botanical lacquer (Rak Dam).\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Supreme Commanding Authority (Maha Amnaj): Radiates the undisputed aura of the jungle's monarch, commanding immediate obedience and respect in executive settings.\n• Absolute Spiritual Shield (Kong Grapan & Anti-Occult): Evaporates evil spirits, hexes, dark witchcraft, and hostile psychic energies.\n• Predatory Business Acumen: Sharpening predatory commercial instincts to seize lucrative market opportunities and outmaneuver fierce corporate competitors.\n• Physical Protection: Ancient warrior wicha designed to shield the bearer from severe physical impacts and hazards.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Khmer Tiger Chanting Prayer)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539"
+  },
+  "garuda": {
+    "url": "https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah",
+    "captionZh": "圣物：Phaya Krut (龙婆哇拉·2564年·皇家袈裟大典·双翼展云大鹏金翅鸟)\n师傅：Luang Pho Warah (龙婆哇拉 - 泰皇室认可御用高僧、全泰公认当代第一金翅鸟至尊)\n寺庙：Wat Phothithong (曼谷瓦菩提通寺)\n年份：佛历 2564年 (公历 2021年)\n用料：皇家御赐古法合金镀金精铸，金翅鸟展翼抱日之威武圣容，附原庙官方出寺防伪钢印与原装防伪收藏盒\n品相：全美原庙状态，羽翼与肌肉线条纤毫毕现，金光璀璨，附带原装防伪盒\n功效：皇室至高无上之威权地位、破除一切风水凶煞与降头煞气、化解阻碍小人、平步青云晋升、开辟财路招纳四方财富\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ Thailand's Undisputed #1 Living Master of Garuda\nLuang Pho Vrah - Phaya Garuda Royal Kathina Consecration\nWat Bodhi Thong, Bangkok | B.E. 2564 (2021)\n\n💎 Royal Offering Auspicious Provenance:\nChao Khun Luang Pho Vrah of Wat Bodhi Thong is universally recognized by the Thai Royal Family, military leadership, and international collectors as the supreme living master of Phaya Garuda wicha. Consecrated during the historic Royal Kathina Robe Ceremony bestowed by the Thai Crown in B.E. 2564, this majestic winged emblem carries the highest state and spiritual auspices.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Sovereign Career Promotion: The Garuda represents supreme state authority, royal prestige, and dramatic elevation into leadership and boardrooms.\n• Feng Shui & Geopathic Neutralization: Unsurpassed in dispelling aggressive environmental Feng Shui clashes, T-junction arrows, and unfavorable building energies.\n• Spiritual Subjugation of Evil: The natural sovereign predator of malevolent spirits, instantly purifying environments of dark witchcraft.\n• Boundless Expansion & Commercial Ambition: Wings spread wide, symbolizing unstoppable international business breakthroughs and conquest of new frontiers.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Original Temple Box & Authentication Stamp\n✓ Full Romanized Katha (Royal Garuda Prayer)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah"
+  },
+  "biagae": {
+    "url": "https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium",
+    "captionZh": "圣物：Bia Gae Plueay (龙普孔·瓦岗挽轿根本祖庙·原壳活水银挡降贝·中模)\n师傅：Luang Pu Kong (龙普孔大德 - 瓦岗挽轿现任住持，承袭龙婆Boon、龙婆Perm、龙婆遮全泰第一挡降贝嫡传法门)\n寺庙：Wat Klang Bang Kaew (佛统府瓦岗挽轿根本祖庙)\n年份：佛历 2568年 (公历 2025年)\n用料：天然完整野生宝螺，内部由师傅施法灌入纯净神秘之“活水银”，封口采用深山纯天然“地下地蜂胶（Chan Rong Tai Din）”严密密封，原貌原壳展现海螺天然虎斑纹理\n品相：原庙出寺极品品相，轻轻晃动可清晰感应到内部活水银沉重流动的灵动触感与细微水银声，能量充沛\n功效：全泰第一避邪挡降秘法、反弹一切诅咒黑魔法、化解住宅与流年凶煞、遇险避难保平安、招财守财不漏财\n\n🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。\n\n📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算\n✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号\n💬 诚意结缘恭请欢迎私信（PM / Inbox）\n👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）",
+    "captionEn": "⭐ The Historic #1 Bia Gae Sanctuary of Siam\nLuang Pu Kong - Sacred Living Mercury Bia Gae Cowrie Shell (Medium Size)\nWat Klang Bang Kaew, Nakhon Pathom | B.E. 2568 (2025)\n\n💎 Consecration at the Mother Temple of Bia Gae:\nWat Klang Bang Kaew is universally celebrated as the historic birthplace of Thailand's greatest Bia Gae lineage (from the legendary Luang Phor Boon). Blessed in strict adherence to ancient temple canons, active consecrated liquid mercury (Parot) is channeled into a natural 32-toothed cowrie shell, sealed with sacred Chanrong underground stingless bee resin and inscribed lead plating. When shaken, the living mercury dynamically slides within.\n\n✨ Core Virtues & Blessings (พุทธคุณ):\n• Supreme Protection & Inversion of Harm (Kae Rai Glai Pen Dee): Converts bad fortune into good luck; neutralizes black magic, hexes, curses, and psychic interference.\n• Mirror Deflection of Malice: Automatically reflects jealousy, corporate sabotage, and negative intentions directly back to their initiators.\n• Wealth Preservation (Bia as Ancient Currency): Prevents monetary loss, protects business treasuries, and guards against unforeseen economic distress.\n• Energetic Purification: Stabilizes personal aura, clears persistent nightmares, and banishes spiritual illness.\n\n📜 Collector's Complete Package:\n✓ 100% Lifetime Authenticity Guarantee\n✓ Full Romanized Katha (Wat Klang Bang Kaew Chanting Prayer)\n✓ Worldwide Tracked Express Airmail Shipping\n✓ Secure Checkout via Visa, Mastercard, Apple Pay & Alipay on our official website\n\n💬 DM / PM directly for inquiries, adoption, and worldwide shipping.\n👇 Direct official museum archive & microscopic HD multi-angle photography in the 1st comment below!",
+    "commentZh": "👉 查阅高清显微多角度细节与官方历史档案：\\nhttps://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium",
+    "commentEn": "👉 View official museum archive & microscopic HD multi-angle photography:\\nhttps://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium"
+  }
+};
+
+    let currentFilter = 'unposted';
+    let globalLang = localStorage.getItem(LANG_STORAGE_KEY) || 'zh';
+    const cardLangState = {};
+
+    function getPostedIds() {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
       } catch (e) {
         return [];
       }
     }
 
-    function savePostedList(list) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      } catch (e) {}
+    function savePostedIds(ids) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
     }
 
-    function markAsPosted(id) {
-      const list = getPostedList();
-      if (!list.includes(id)) {
-        list.push(id);
-        savePostedList(list);
-      }
-      
-      const card = document.querySelector(`.card[data-id="${id}"]`);
-      if (card) {
-        card.classList.add('fade-out');
-        setTimeout(() => {
-          applyFilter();
-          showToast('✅ บันทึกว่าโพสต์แล้ว และซ่อนเรียบร้อย!');
-        }, 250);
-      } else {
-        applyFilter();
-      }
-    }
+    function setGlobalLang(lang) {
+      globalLang = lang;
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
 
-    function unmarkPosted(id) {
-      let list = getPostedList();
-      list = list.filter(item => item !== id);
-      savePostedList(list);
-      applyFilter();
-      showToast('↩️ นำรายการกลับมาในหมวด "ยังไม่ได้ลง" แล้ว');
-    }
+      document.getElementById('btn-lang-zh').classList.toggle('active', lang === 'zh');
+      document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
 
-    function resetAllPosted() {
-      if (confirm('ต้องการคืนค่าทั้งหมด ให้แสดงพระและเครื่องรางทุกองค์ใช่ไหมครับ?')) {
-        savePostedList([]);
-        applyFilter();
-        showToast('↺ คืนค่าทุกรายการเรียบร้อยแล้ว');
-      }
-    }
-
-    function setFilter(filter) {
-      currentFilter = filter;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById('tab-' + filter);
-      if (activeBtn) activeBtn.classList.add('active');
-      applyFilter();
-    }
-
-    function applyFilter() {
-      const postedList = getPostedList();
-      const allCards = document.querySelectorAll('.card');
-      let visibleCount = 0;
-      let unpostedCount = 0;
-      let postedCount = 0;
-
-      allCards.forEach(card => {
-        const id = card.getAttribute('data-id');
-        const isPosted = postedList.includes(id);
-
-        if (isPosted) postedCount++;
-        else unpostedCount++;
-
-        // Update button appearance based on state
-        const doneBtn = card.querySelector('.done-btn, .undone-btn');
-        if (doneBtn) {
-          if (isPosted) {
-            doneBtn.className = 'undone-btn';
-            doneBtn.innerHTML = '↩️ ยกเลิกสถานะโพสต์ (นำกลับมาแสดง)';
-            doneBtn.setAttribute('onclick', `unmarkPosted('${id}')`);
-          } else {
-            doneBtn.className = 'done-btn';
-            doneBtn.innerHTML = '✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)';
-            doneBtn.setAttribute('onclick', `markAsPosted('${id}')`);
-          }
-        }
-
-        // Filtering logic
-        let shouldShow = false;
-        if (currentFilter === 'all') {
-          shouldShow = true;
-        } else if (currentFilter === 'unposted') {
-          shouldShow = !isPosted;
-        } else if (currentFilter === 'posted') {
-          shouldShow = isPosted;
-        }
-
-        if (shouldShow) {
-          card.classList.remove('hidden-card', 'fade-out');
-          visibleCount++;
-        } else {
-          card.classList.add('hidden-card');
-        }
+      // Update all cards to global language
+      Object.keys(amuletsDb).forEach(id => {
+        setCardLang(id, lang, false);
       });
 
-      // Update counters
-      document.getElementById('badge-unposted').innerText = `📌 ยังไม่ได้ลง: ${unpostedCount}`;
-      document.getElementById('badge-posted').innerText = `✅ ลงแล้ว: ${postedCount}`;
-
-      // Empty state
-      const emptyState = document.getElementById('empty-state');
-      if (visibleCount === 0 && currentFilter === 'unposted') {
-        emptyState.style.display = 'block';
-      } else {
-        emptyState.style.display = 'none';
-      }
+      showToast(lang === 'zh' ? '🇨🇳 สลับเป็นภาษาจีน (中文) ทั้งหมดแล้ว' : '🇬🇧 Switched to English for all amulets!');
     }
 
-        const productLinks = {
-  "sarika": "https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri",
-  "namtao": "https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552",
-  "khunphaen": "https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548",
-  "takrut": "https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553",
-  "lpthuat": "https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom",
-  "tiger": "https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519",
-  "paladkhik": "https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan",
-  "wuathanu": "https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538",
-  "guman": "https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500",
-  "somdej_nak": "https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495",
-  "somdej_pae": "https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514",
-  "pidta": "https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520",
-  "koon": "https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517",
-  "turtle": "https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535",
-  "rahu": "https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn",
-  "tigertakrut": "https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539",
-  "garuda": "https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah",
-  "biagae": "https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium"
-};
+    function setCardLang(id, lang, showNotice = true) {
+      cardLangState[id] = lang;
+      const data = amuletsDb[id];
+      if (!data) return;
 
-    function copyComment(id) {
-      const url = productLinks[id];
-      if (!url) return;
-      const commentText = `👉 查阅高清显微多角度细节与官方历史档案：\n${url}`;
-      copyToClipboard(commentText, '💬 คัดลอกข้อความสำหรับแปะคอมเมนต์แรกแล้ว!');
+      // Update Card Pill Buttons
+      const pillZh = document.getElementById('pill-zh-' + id);
+      const pillEn = document.getElementById('pill-en-' + id);
+      if (pillZh && pillEn) {
+        pillZh.classList.toggle('active', lang === 'zh');
+        pillEn.classList.toggle('active', lang === 'en');
+      }
+
+      // Update Caption Preview
+      const capPreview = document.getElementById('caption-preview-' + id);
+      if (capPreview) {
+        capPreview.innerText = lang === 'zh' ? data.captionZh : data.captionEn;
+      }
+
+      // Update Comment Preview
+      const comText = document.getElementById('comment-text-' + id);
+      if (comText) {
+        comText.innerHTML = lang === 'zh'
+          ? '👉 查阅高清显微多角度细节与官方历史档案：<br>' + data.url
+          : '👉 View official museum archive & microscopic HD multi-angle photography:<br>' + data.url;
+      }
+
+      // Update Buttons text
+      const copyBtn = document.getElementById('copy-btn-' + id);
+      if (copyBtn) {
+        copyBtn.innerText = lang === 'zh'
+          ? '📋 1. คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์ ไม่โดนลบ)'
+          : '📋 1. Copy English Caption (No Link - 100% Safe)';
+      }
+
+      const copyComBtn = document.getElementById('copy-comment-btn-' + id);
+      if (copyComBtn) {
+        copyComBtn.innerText = lang === 'zh'
+          ? '💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก (中文)'
+          : '💬 2. Copy Link for 1st Comment (English)';
+      }
+
+      const openFbBtn = document.getElementById('open-fb-btn-' + id);
+      if (openFbBtn) {
+        openFbBtn.innerText = lang === 'zh'
+          ? '🚀 3. เปิดแอป Facebook (กลุ่มภาษาจีน)'
+          : '🚀 3. Open Facebook App (English Groups)';
+      }
+
+      if (showNotice) {
+        showToast(lang === 'zh' ? '🇨🇳 สลับองค์นี้เป็นภาษาจีน' : '🇬🇧 Switched this amulet to English');
+      }
     }
 
     function copyToClipboard(text, successMsg) {
@@ -1094,22 +1865,146 @@
       }
     }
 
-    function copyText(id) {
-      const el = document.getElementById('caption-' + id);
-      if (!el) return;
-      copyToClipboard(el.innerText, '📋 คัดลอกแคปชั่นหลัก (แบบไม่มีลิงก์) สำเร็จแล้ว!');
+    function copyCaption(id) {
+      const lang = cardLangState[id] || globalLang;
+      const data = amuletsDb[id];
+      if (!data) return;
+
+      const text = lang === 'zh' ? data.captionZh : data.captionEn;
+      const msg = lang === 'zh' 
+        ? '📋 คัดลอกแคปชั่นภาษาจีน (ไม่มีลิงก์) สำเร็จแล้ว!' 
+        : '📋 Copied English Caption (Safe No-Link) successfully!';
+      copyToClipboard(text, msg);
+    }
+
+    function copyComment(id) {
+      const lang = cardLangState[id] || globalLang;
+      const data = amuletsDb[id];
+      if (!data) return;
+
+      const text = lang === 'zh' ? data.commentZh : data.commentEn;
+      const msg = lang === 'zh'
+        ? '💬 คัดลอกข้อความแปะคอมเมนต์แรก (中文) แล้ว!'
+        : '💬 Copied 1st comment link text (English)!';
+      copyToClipboard(text, msg);
+    }
+
+    function openFacebookGroup(id) {
+      const lang = cardLangState[id] || globalLang;
+      const searchUrl = lang === 'zh'
+        ? 'https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'
+        : 'https://www.facebook.com/groups/search/groups/?q=Thai+Amulet+Collectors';
+      window.location.href = searchUrl;
+    }
+
+    function togglePosted(id) {
+      let postedIds = getPostedIds();
+      const card = document.querySelector('.card[data-id="' + id + '"]');
+
+      if (postedIds.includes(id)) {
+        postedIds = postedIds.filter(item => item !== id);
+        savePostedIds(postedIds);
+        showToast('↩️ ยกเลิกสถานะโพสต์แล้ว');
+      } else {
+        postedIds.push(id);
+        savePostedIds(postedIds);
+        if (currentFilter === 'unposted') {
+          card.classList.add('fade-out');
+          setTimeout(() => {
+            card.classList.remove('fade-out');
+            updateUI();
+          }, 300);
+          showToast('✅ บันทึกว่าโพสต์แล้ว (ซ่อนเรียบร้อย)');
+          return;
+        } else {
+          showToast('✅ บันทึกว่าโพสต์แล้ว');
+        }
+      }
+      updateUI();
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeTab = document.getElementById('tab-' + filter);
+      if (activeTab) activeTab.classList.add('active');
+      updateUI();
+    }
+
+    function resetAllPosted() {
+      if (confirm('ต้องการรีเซ็ตสถานะโพสต์ทั้งหมด ให้กลับมาแสดงใหม่ใช่หรือไม่?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        showToast('🔄 รีเซ็ตสถานะทั้งหมดเรียบร้อยแล้ว');
+        updateUI();
+      }
+    }
+
+    function updateUI() {
+      const postedIds = getPostedIds();
+      const allCards = document.querySelectorAll('.card');
+      let visibleCount = 0;
+      let unpostedCount = 0;
+      let postedCount = 0;
+
+      allCards.forEach(card => {
+        const id = card.getAttribute('data-id');
+        const isPosted = postedIds.includes(id);
+        const statusBtn = document.getElementById('status-btn-' + id);
+
+        if (isPosted) {
+          postedCount++;
+          if (statusBtn) {
+            statusBtn.className = 'undone-btn';
+            statusBtn.innerText = '↩️ ยกเลิก (ย้ายกลับไปรอโพสต์)';
+          }
+        } else {
+          unpostedCount++;
+          if (statusBtn) {
+            statusBtn.className = 'done-btn';
+            statusBtn.innerText = '✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)';
+          }
+        }
+
+        let show = false;
+        if (currentFilter === 'all') {
+          show = true;
+        } else if (currentFilter === 'unposted') {
+          show = !isPosted;
+        } else if (currentFilter === 'posted') {
+          show = isPosted;
+        }
+
+        if (show) {
+          card.classList.remove('hidden-card');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden-card');
+        }
+      });
+
+      document.getElementById('count-unposted').innerText = unpostedCount;
+      document.getElementById('tab-count-unposted').innerText = unpostedCount;
+      document.getElementById('count-posted').innerText = postedCount;
+      document.getElementById('tab-count-posted').innerText = postedCount;
+
+      const emptyState = document.getElementById('empty-state');
+      if (visibleCount === 0 && currentFilter === 'unposted' && postedCount > 0) {
+        emptyState.style.display = 'block';
+      } else {
+        emptyState.style.display = 'none';
+      }
     }
 
     function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerText = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2200);
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.style.opacity = '1';
+      setTimeout(() => { toast.style.opacity = '0'; }, 2200);
     }
 
-    // Init on load
-    document.addEventListener('DOMContentLoaded', applyFilter);
+    // Initialize on page load
+    setGlobalLang(globalLang);
+    updateUI();
   </script>
-
 </body>
 </html>
