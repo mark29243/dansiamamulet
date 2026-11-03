@@ -168,6 +168,40 @@
     }
     .copy-btn:active { transform: scale(0.98); }
 
+    .copy-comment-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+      transition: all 0.2s;
+    }
+    .copy-comment-btn:active { transform: scale(0.98); }
+
+    .comment-preview-box {
+      background: rgba(2, 132, 199, 0.08);
+      border: 1px dashed rgba(56, 189, 248, 0.4);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: #7dd3fc;
+      margin-top: 8px;
+      word-break: break-all;
+    }
+    .comment-preview-box b {
+      color: #38bdf8;
+    }
+
     .open-fb-btn {
       width: 100%;
       background: #1877f2;
@@ -293,8 +327,11 @@
     </div>
   </div>
 
-  <div class="tip-box">
-    💡 <b>วิธีใช้งาน:</b> แตะค้างที่รูปภาพเพื่อบันทึกรูปเข้า iPhone -> กดคัดลอกแคปชั่น -> กดเปิด Facebook โพสต์ในกลุ่ม -> <b>กดปุ่ม "✅ โพสต์ Facebook แล้ว" รายการนี้จะซ่อนทันที</b> จะเหลือเฉพาะองค์ที่คุณยังไม่ได้ลงครับ!
+  <div class="tip-box" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); color: #a7f3d0;">
+    🛡️ <b>สูตรโพสต์แบบปลอดภัย 100% (ไม่โดนแอดมินหรือบอท Facebook ลบโพสต์):</b><br>
+    <b>ขั้นตอนที่ 1:</b> บันทึกรูป 3 รูป ➡️ กดปุ่มสีทอง <b>"📋 1. คัดลอกแคปชั่นหลัก"</b> แล้วโพสต์ลงกลุ่มได้เลย <i>(แคปชั่นนี้ไม่มีลิงก์เว็บ บอท Facebook และแอดมินจะไม่ลบโพสต์แน่นอน)</i><br>
+    <b>ขั้นตอนที่ 2:</b> เมื่อโพสต์เสร็จ กดปุ่มสีฟ้า <b>"💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก"</b> ➡️ นำไปวางในช่องแสดงความคิดเห็นใต้โพสต์ตัวเอง <i>(ลูกค้ากดดูเว็บได้ปกติ แถมช่วยดันโพสต์ให้เด้งขึ้นหน้าแรกของกลุ่ม)</i><br>
+    <b>ขั้นตอนที่ 3:</b> กดปุ่มเขียว <b>"✅ โพสต์ Facebook แล้ว"</b> เพื่อซ่อนรายการครับ!
   </div>
 
   <div id="empty-state" class="empty-state">
@@ -312,8 +349,9 @@
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (สายโมบายแขวน)</span><img src="/amulets/talisman_sarika_3.jpg" alt="Sarika 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('sarika')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('sarika')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('sarika')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('sarika')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-sarika">圣物：Sarika Lin Thong (纯手工圣木雕刻·双人缘金舌鸟商铺挂件)
@@ -328,12 +366,11 @@
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号
-💬 诚意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-sarika">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri</div>
   </div>
 
   <!-- 2. Namtao Dood Sup -->
@@ -346,8 +383,9 @@ https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (ก้นบรรจุมวลสาร)</span><img src="/amulets/talisman_namtao_3.jpg" alt="Namtao 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('namtao')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('namtao')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('namtao')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('namtao')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-namtao">圣物：Namtao Dood Sup (大吉祥吸财聚财福禄宝葫芦)
@@ -362,12 +400,11 @@ https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。
 
-👉 查阅多角度显微照片与官方购买页面：
-https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号新加坡、马来西亚、港台，附追踪单号
-💬 有意迎请福禄请私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-namtao">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552</div>
   </div>
 
   <!-- 3. Khun Phaen Kuman Sombat -->
@@ -380,8 +417,9 @@ https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phr
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/batch2_khunphaen_3.jpg" alt="Khun Phaen 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('khunphaen')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('khunphaen')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('khunphaen')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('khunphaen')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-khunphaen">圣物：Phra Khun Phaen Lang Kuman Sombat (坤平佛背金童古曼公宝藏·纳查利迪招财符)
@@ -396,12 +434,11 @@ https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phr
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空快捷直邮新加坡、马来西亚、香港、台湾，附追踪单号
-💬 诚意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-khunphaen">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548</div>
   </div>
 
   <!-- 4. Takrut Sarika Oil -->
@@ -414,8 +451,9 @@ https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-p
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (รายละเอียดเนื้อเงิน)</span><img src="/amulets/batch2_takrut_3.jpg" alt="Takrut 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('takrut')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('takrut')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('takrut')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('takrut')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-takrut">圣物：Takrut Sarika Khu Baramee (纯银双效金舌鸟符管配人缘金鸟油)
@@ -430,12 +468,11 @@ https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-p
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号，附追踪单号
-💬 诚意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-takrut">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553</div>
   </div>
 
   <!-- 5. Luang Pu Thuat Bang Khun Phrom -->
@@ -448,8 +485,9 @@ https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kam
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มวลสารผงเก่า)</span><img src="/amulets/batch2_lpthuat_3.jpg" alt="LP Thuat 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('lpthuat')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('lpthuat')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('lpthuat')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('lpthuat')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-lpthuat">圣物：Luang Pu Thuat (老瓦曼坤碰出塔古料·龙婆托尊者圣相)
@@ -464,12 +502,10 @@ https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kam
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号附追踪单号
 💬 诚意恭请保平安请私信（PM）</div>
+    <div class="comment-preview-box" id="comment-lpthuat">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom</div>
   </div>
 
   <!-- 6. Somdej Leaping Tiger -->
@@ -482,8 +518,9 @@ https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/batch2_tiger_3.jpg" alt="Tiger 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('tiger')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('tiger')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('tiger')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('tiger')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-tiger">圣物：Phra Somdej Lang Suea Phoen (崇迪佛坐殿·背铸威猛跃腾飞虎)
@@ -498,12 +535,11 @@ https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号附追踪单号
-💬 诚意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-tiger">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519</div>
   </div>
 
   <!-- 7. Palad Khik Luang Pu Mek -->
@@ -516,8 +552,9 @@ https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-y
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (รอยจารและมิติเนื้อไม้)</span><img src="/amulets/batch2_paladkhik_3.jpg" alt="Palad Khik 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('paladkhik')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('paladkhik')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('paladkhik')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('paladkhik')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-paladkhik">圣物：Plad Khik Mai Kheuy Tai (神木辟邪招财巴拉吉·附灵木符管)
@@ -532,12 +569,11 @@ https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-y
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号附追踪单号
-💬 诚意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-paladkhik">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan</div>
   </div>
 
   <!-- 8. Wua Thanu Luang Pho Phut -->
@@ -550,8 +586,9 @@ https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-l
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมหลัง)</span><img src="/amulets/talisman_wuathanu_3.jpg" alt="Wua Thanu 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('wuathanu')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('wuathanu')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('wuathanu')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('wuathanu')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-wuathanu">圣物：Wua Thanu (护宅辟邪神牛 · 武牛神兽)
@@ -566,12 +603,10 @@ https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-l
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品保证。
 
-👉 查阅多角度显微照片与官方购买页面：
-https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号附追踪单号
 💬 诚意恭请镇宅神牛请私信（PM）</div>
+    <div class="comment-preview-box" id="comment-wuathanu">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538</div>
   </div>
 
   <!-- 9. Guman Thong 2500 -->
@@ -584,8 +619,9 @@ https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-kla
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มวลสารโบราณ 2500)</span><img src="/amulets/talisman_guman_3.jpg" alt="Guman 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('guman')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('guman')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('guman')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('guman')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-guman">圣物：Guman Thong (白法正统招财护主天童古曼)
@@ -600,12 +636,10 @@ https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-kla
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙真品，永久保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号，附追踪单号
 💬 诚心供养结缘欢迎私信（PM）</div>
+    <div class="comment-preview-box" id="comment-guman">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500</div>
   </div>
 
   <!-- 10. Somdej Luang Pu Nak 2495 -->
@@ -618,8 +652,9 @@ https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/somdej_nak_side.jpg" alt="Somdej Nak 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('somdej_nak')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('somdej_nak')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('somdej_nak')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('somdej_nak')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-somdej_nak">圣物：Phra Somdej Thaan Kha To (桌腿座崇迪佛)
@@ -632,12 +667,11 @@ https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
 
-👉 查阅高清显微多角度细节与官方历史档案：
-https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
-💬 有意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-somdej_nak">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495</div>
   </div>
 
   <!-- 11. Somdej Luang Pho Pae 2514 -->
@@ -650,8 +684,9 @@ https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rak
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/somdej_pae_side.jpg" alt="Somdej Pae 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('somdej_pae')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('somdej_pae')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('somdej_pae')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('somdej_pae')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-somdej_pae">圣物：Phra Somdej Phra Prathan (大东座大佛主尊崇迪)
@@ -664,12 +699,10 @@ https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rak
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久真品保证。
 
-👉 查阅多角度显微照片与官方档案：
-https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国邮政国际快捷挂号直邮，全程可追踪
 💬 有意恭请欢迎私信（PM）</div>
+    <div class="comment-preview-box" id="comment-somdej_pae">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514</div>
   </div>
 
   <!-- 12. Pidta Wan Jindamanee 2520 -->
@@ -682,8 +715,9 @@ https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/pidta_jindamanee_side.jpg" alt="Pidta 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('pidta')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('pidta')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('pidta')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('pidta')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-pidta">圣物：Phra Pidta Wan Jindamanee (金达玛尼草药符管必打佛)
@@ -696,12 +730,11 @@ https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号，附追踪单号
-💬 诚意结缘欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-pidta">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520</div>
   </div>
 
   <!-- 13. Phra Nang Phaya Koon Lap 2517 -->
@@ -714,8 +747,9 @@ https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-th
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบล่าง)</span><img src="/amulets/koon_side.jpg" alt="Koon 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('koon')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('koon')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('koon')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('koon')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-koon">圣物：Phra Nang Phaya Koon Lap (女王佛 · 乘倍发财/倍增福禄)
@@ -728,12 +762,11 @@ https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-th
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，永久保真。
 
-👉 查阅多角度显微档案与官方购买页面：
-https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 国际航空直邮挂号，附追踪单号
-💬 诚意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-koon">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517</div>
   </div>
 
   <!-- 14. Phaya Tao Ruean Luang Pu Liu 2535 -->
@@ -746,8 +779,9 @@ https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-b
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมขอบข้าง)</span><img src="/amulets/turtle_detail.jpg" alt="Turtle 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('turtle')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('turtle')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('turtle')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('turtle')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-turtle">圣物：Phra Phaya Tao Ruean (龙婆柳84岁大寿·圣水浸泡尊荣版·招财神龟)
@@ -760,12 +794,11 @@ https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-b
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
 
-👉 查阅高清显微多角度细节与官方历史档案：
-https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
-💬 有意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-turtle">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535</div>
   </div>
 
   <!-- 15. Rahu Kala Gaew Luang Pho Pin Wat Srisathong -->
@@ -778,8 +811,9 @@ https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be25
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (เนื้องานกะลา)</span><img src="/amulets/rahu_detail.jpg" alt="Rahu 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('rahu')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('rahu')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('rahu')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('rahu')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-rahu">圣物：Phra Rahu Kala Ta Diao (龙婆聘·瓦四色通祖庙·手雕单眼椰壳拉胡天神)
@@ -792,12 +826,11 @@ https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be25
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
 
-👉 查阅高清显微多角度细节与官方历史档案：
-https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
-💬 有意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-rahu">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn</div>
   </div>
 
   <!-- 16. Tiger Skin Takrut Luang Pho Thiang 2539 -->
@@ -810,8 +843,9 @@ https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (ส่องหัวตะกรุด)</span><img src="/amulets/tigertakrut_detail.jpg" alt="Tiger Takrut 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('tigertakrut')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('tigertakrut')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('tigertakrut')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('tigertakrut')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-tigertakrut">圣物：Takrut Nang Suea (龙婆天·2539年·古法手编生漆真品虎皮符管)
@@ -824,12 +858,11 @@ https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
 
-👉 查阅高清显微多角度细节与官方历史档案：
-https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
-💬 有意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-tigertakrut">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539</div>
   </div>
 
   <!-- 17. Garuda Luang Pho Warah 2564 -->
@@ -842,8 +875,9 @@ https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-krado
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (พร้อมกล่องเดิม)</span><img src="/amulets/garuda_detail.jpg" alt="Garuda 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('garuda')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('garuda')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('garuda')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('garuda')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-garuda">圣物：Phaya Krut (龙婆哇拉·2564年·皇家袈裟大典·双翼展云大鹏金翅鸟)
@@ -856,12 +890,11 @@ https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-krado
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
 
-👉 查阅高清显微多角度细节与官方历史档案：
-https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
-💬 有意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-garuda">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah</div>
   </div>
 
   <!-- 18. Bia Gae Luang Pu Kong Wat Klang Bang Kaew 2568 -->
@@ -874,8 +907,9 @@ https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah
       <div class="img-wrap"><span class="img-label">รูปที่ 3 (มุมด้านข้าง)</span><img src="/amulets/biagae_detail.jpg" alt="Biagae 3"></div>
     </div>
     <div class="btn-group">
-      <button class="copy-btn" onclick="copyText('biagae')">📋 คัดลอกแคปชั่นภาษาจีน</button>
-      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 เปิดแอป Facebook เพื่อโพสต์</a>
+      <button class="copy-btn" onclick="copyText('biagae')">📋 1. คัดลอกแคปชั่นหลัก (ไม่มีลิงก์ ไม่โดนลบ)</button>
+      <button class="copy-comment-btn" onclick="copyComment('biagae')">💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก</button>
+      <a href="https://www.facebook.com" class="open-fb-btn" onclick="window.location.href='https://www.facebook.com/groups/search/groups/?q=佛牌买卖谢绝假牌'; return false;">🚀 3. เปิดแอป Facebook เพื่อโพสต์</a>
       <button class="done-btn" onclick="markAsPosted('biagae')">✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)</button>
     </div>
     <div class="caption-preview" id="caption-biagae">圣物：Bia Gae Plueay (龙普孔·瓦岗挽轿根本祖庙·原壳活水银挡降贝·中模)
@@ -888,12 +922,11 @@ https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah
 
 🏛 丹暹艺术馆（Dan Siam Amulets）官方馆藏，原庙考证，永久保真。
 
-👉 查阅高清显微多角度细节与官方历史档案：
-https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium
-
 📦 支援全球主流信用卡、Apple Pay、支付宝（Alipay）安全结算
 ✈️ 泰国直邮（ePacket / EMS）直达新加坡、马来西亚、香港、台湾，附追踪单号
-💬 有意结缘恭请欢迎私信（PM）</div>
+💬 诚意结缘恭请欢迎私信（PM / Inbox）
+👇 高清显微多角度细节与官方历史档案链接见第一条评论（Comment）</div>
+    <div class="comment-preview-box" id="comment-biagae">💬 <b>ข้อความสำหรับแปะคอมเมนต์แรก (Comment 1):</b><br>👉 查阅高清显微多角度细节与官方历史档案：<br>https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium</div>
   </div>
 
   <div id="toast" class="toast">✅ คัดลอกข้อความสำเร็จแล้ว!</div>
@@ -1019,12 +1052,37 @@ https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-k
       }
     }
 
-    function copyText(id) {
-      const el = document.getElementById('caption-' + id);
-      if (!el) return;
-      const text = el.innerText;
+        const productLinks = {
+  "sarika": "https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri",
+  "namtao": "https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552",
+  "khunphaen": "https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548",
+  "takrut": "https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553",
+  "lpthuat": "https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom",
+  "tiger": "https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519",
+  "paladkhik": "https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan",
+  "wuathanu": "https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538",
+  "guman": "https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500",
+  "somdej_nak": "https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495",
+  "somdej_pae": "https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514",
+  "pidta": "https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520",
+  "koon": "https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517",
+  "turtle": "https://dansiamamulets.com/product/turtle-amulet-luang-pu-liu-84th-birthday-be2535",
+  "rahu": "https://dansiamamulets.com/product/rahu-kala-gaew-luang-pho-pin-wat-srisathorn",
+  "tigertakrut": "https://dansiamamulets.com/product/tiger-skin-takrut-luang-pho-thiang-khao-kradong-2539",
+  "garuda": "https://dansiamamulets.com/product/garuda-amulet-kathina-2564-luang-pho-vrah",
+  "biagae": "https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-kaew-2568-medium"
+};
+
+    function copyComment(id) {
+      const url = productLinks[id];
+      if (!url) return;
+      const commentText = `👉 查阅高清显微多角度细节与官方历史档案：\n${url}`;
+      copyToClipboard(commentText, '💬 คัดลอกข้อความสำหรับแปะคอมเมนต์แรกแล้ว!');
+    }
+
+    function copyToClipboard(text, successMsg) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => showToast('📋 คัดลอกแคปชั่นสำเร็จแล้ว!'));
+        navigator.clipboard.writeText(text).then(() => showToast(successMsg));
       } else {
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -1032,8 +1090,14 @@ https://dansiamamulets.com/product/bia-kaae-pluay-luang-pu-kong-wat-klang-bang-k
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        showToast('📋 คัดลอกแคปชั่นสำเร็จแล้ว!');
+        showToast(successMsg);
       }
+    }
+
+    function copyText(id) {
+      const el = document.getElementById('caption-' + id);
+      if (!el) return;
+      copyToClipboard(el.innerText, '📋 คัดลอกแคปชั่นหลัก (แบบไม่มีลิงก์) สำเร็จแล้ว!');
     }
 
     function showToast(msg) {
