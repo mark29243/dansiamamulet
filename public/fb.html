@@ -31,8 +31,78 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
-      font-size: 13px;
+      gap: 8px;
+    }
+    .stats-lang-badges {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+    }
+    .stat-lang-pill {
+      flex: 1;
+      background: #0f121a;
+      border: 1px solid #262b3a;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 11px;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.25s;
+    }
+    .stat-lang-pill.active {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+    }
+    .stat-num-unposted { color: #f59e0b; font-weight: 700; }
+    .stat-num-posted { color: #10b981; font-weight: 700; }
+
+    /* Card status badges */
+    .card-status-badges {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .lang-status-tag {
+      flex: 1;
+      padding: 7px 8px;
+      border-radius: 8px;
+      font-size: 11.5px;
       font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #2d3345;
+      background: #0f121a;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .lang-status-tag:active { transform: scale(0.98); }
+    .lang-status-tag.posted {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-weight: 700;
+    }
+    .lang-status-tag.unposted {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.25);
+      color: #fbbf24;
+    }
+    .card-lang-pill button.is-posted {
+      border: 1px solid rgba(16, 185, 129, 0.6) !important;
+      color: #34d399 !important;
+    }
+    .card-lang-pill button.is-posted::after {
+      content: ' ✓';
+      color: #34d399;
+      font-weight: 900;
     }
     .badge-unposted { color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.3); }
     .badge-posted { color: #10b981; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); }
@@ -388,11 +458,19 @@
 
   <div class="sticky-bar">
     <div class="stats-row">
-      <div>
-        <span class="badge-unposted">รอโพสต์: <span id="count-unposted">0</span></span>
-        <span class="badge-posted" style="margin-left: 6px;">โพสต์แล้ว: <span id="count-posted">0</span></span>
+      <div class="stats-lang-badges">
+        <div class="stat-lang-pill active" id="stat-pill-zh">
+          <span>🇨🇳</span> <b>จีน:</b> 
+          <span class="stat-num-unposted" id="stat-zh-unposted">0</span> รอ / 
+          <span class="stat-num-posted" id="stat-zh-posted">0</span> ลงแล้ว
+        </div>
+        <div class="stat-lang-pill" id="stat-pill-en">
+          <span>🇬🇧</span> <b>EN:</b> 
+          <span class="stat-num-unposted" id="stat-en-unposted">0</span> รอ / 
+          <span class="stat-num-posted" id="stat-en-posted">0</span> ลงแล้ว
+        </div>
       </div>
-      <button class="reset-btn" onclick="resetAllPosted()">รีเซ็ตทั้งหมด</button>
+      <button class="reset-btn" onclick="resetPostedPrompt()">รีเซ็ต</button>
     </div>
 
     <div class="filter-tabs">
@@ -412,10 +490,10 @@
   </div>
 
   <div class="tip-box">
-    🛡️ <b>สูตรโพสต์แบบปลอดภัย 100% (รองรับทั้งกลุ่มจีนและกลุ่มฝรั่งสากล):</b><br>
-    <b>ขั้นตอนที่ 1:</b> แตะค้างบันทึกรูปภาพ 3 รูป ➡️ เลือกภาษา (🇨🇳 จีน หรือ 🇬🇧 อังกฤษ) ➡️ กดปุ่มสีทอง <b>"📋 1. คัดลอกแคปชั่นหลัก"</b> แล้วโพสต์ลงกลุ่มได้เลย <i>(แคปชั่นนี้ไม่มีลิงก์เว็บ บอท Facebook และแอดมินจะไม่ลบโพสต์แน่นอน)</i><br>
-    <b>ขั้นตอนที่ 2:</b> เมื่อโพสต์เสร็จ กดปุ่มสีฟ้า <b>"💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก"</b> ➡️ นำไปวางในช่องแสดงความคิดเห็นใต้โพสต์ตัวเอง <i>(ลูกค้ากดดูเว็บได้ปกติ แถมช่วยดันโพสต์ให้เด้งขึ้นหน้าแรกของกลุ่ม)</i><br>
-    <b>ขั้นตอนที่ 3:</b> กดปุ่ม <b>"🚀 3. เปิดแอป Facebook"</b> ระบบจะค้นหากลุ่มภาษาที่เลือกให้อัตโนมัติ ➡️ กดปุ่มเขียว <b>"✅ โพสต์ Facebook แล้ว"</b> เพื่อซ่อนรายการครับ!
+    🛡️ <b>สูตรโพสต์แบบปลอดภัย 100% (นับสถานะแยกภาษาจีน & อังกฤษ):</b><br>
+    <b>ขั้นตอนที่ 1:</b> สลับภาษาที่ต้องการลง (🇨🇳 จีน หรือ 🇬🇧 อังกฤษ) ➡️ แตะค้างบันทึกรูป ➡️ กดปุ่มสีทอง <b>"📋 1. คัดลอกแคปชั่นหลัก"</b> แล้วโพสต์ลงกลุ่ม <i>(ไม่มีลิงก์ ปลอดภัย 100%)</i><br>
+    <b>ขั้นตอนที่ 2:</b> โพสต์เสร็จ กดปุ่มสีฟ้า <b>"💬 2. คัดลอกลิงก์ไปแปะคอมเมนต์แรก"</b> ➡️ นำไปวางใต้โพสต์เพื่อดันโพสต์<br>
+    <b>ขั้นตอนที่ 3:</b> กดปุ่ม <b>"🚀 3. เปิดแอป Facebook"</b> เข้ากลุ่มภาษานั้นๆ ➡️ กด <b>"✅ 4. โพสต์แล้ว"</b> ระบบจะนับสถิติแยกเฉพาะภาษานั้นทันทีครับ!
   </div>
 
   <div id="cards-container">
@@ -485,6 +563,15 @@
         <button class="done-btn" id="status-btn-sarika" onclick="togglePosted('sarika')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-sarika">
+          <button class="lang-status-tag unposted" id="tag-zh-sarika" onclick="togglePostedLang('sarika', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-sarika" onclick="togglePostedLang('sarika', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -553,6 +640,15 @@
         <button class="done-btn" id="status-btn-namtao" onclick="togglePosted('namtao')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-namtao">
+          <button class="lang-status-tag unposted" id="tag-zh-namtao" onclick="togglePostedLang('namtao', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-namtao" onclick="togglePostedLang('namtao', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -621,6 +717,15 @@
         <button class="done-btn" id="status-btn-khunphaen" onclick="togglePosted('khunphaen')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-khunphaen">
+          <button class="lang-status-tag unposted" id="tag-zh-khunphaen" onclick="togglePostedLang('khunphaen', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-khunphaen" onclick="togglePostedLang('khunphaen', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -689,6 +794,15 @@
         <button class="done-btn" id="status-btn-takrut" onclick="togglePosted('takrut')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-takrut">
+          <button class="lang-status-tag unposted" id="tag-zh-takrut" onclick="togglePostedLang('takrut', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-takrut" onclick="togglePostedLang('takrut', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -756,6 +870,15 @@
         <button class="done-btn" id="status-btn-lpthuat" onclick="togglePosted('lpthuat')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-lpthuat">
+          <button class="lang-status-tag unposted" id="tag-zh-lpthuat" onclick="togglePostedLang('lpthuat', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-lpthuat" onclick="togglePostedLang('lpthuat', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -824,6 +947,15 @@
         <button class="done-btn" id="status-btn-tiger" onclick="togglePosted('tiger')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-tiger">
+          <button class="lang-status-tag unposted" id="tag-zh-tiger" onclick="togglePostedLang('tiger', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-tiger" onclick="togglePostedLang('tiger', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -892,6 +1024,15 @@
         <button class="done-btn" id="status-btn-paladkhik" onclick="togglePosted('paladkhik')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-paladkhik">
+          <button class="lang-status-tag unposted" id="tag-zh-paladkhik" onclick="togglePostedLang('paladkhik', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-paladkhik" onclick="togglePostedLang('paladkhik', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -959,6 +1100,15 @@
         <button class="done-btn" id="status-btn-wuathanu" onclick="togglePosted('wuathanu')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-wuathanu">
+          <button class="lang-status-tag unposted" id="tag-zh-wuathanu" onclick="togglePostedLang('wuathanu', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-wuathanu" onclick="togglePostedLang('wuathanu', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1026,6 +1176,15 @@
         <button class="done-btn" id="status-btn-guman" onclick="togglePosted('guman')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-guman">
+          <button class="lang-status-tag unposted" id="tag-zh-guman" onclick="togglePostedLang('guman', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-guman" onclick="togglePostedLang('guman', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1092,6 +1251,15 @@
         <button class="done-btn" id="status-btn-somdej_nak" onclick="togglePosted('somdej_nak')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-somdej_nak">
+          <button class="lang-status-tag unposted" id="tag-zh-somdej_nak" onclick="togglePostedLang('somdej_nak', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-somdej_nak" onclick="togglePostedLang('somdej_nak', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1157,6 +1325,15 @@
         <button class="done-btn" id="status-btn-somdej_pae" onclick="togglePosted('somdej_pae')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-somdej_pae">
+          <button class="lang-status-tag unposted" id="tag-zh-somdej_pae" onclick="togglePostedLang('somdej_pae', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-somdej_pae" onclick="togglePostedLang('somdej_pae', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1223,6 +1400,15 @@
         <button class="done-btn" id="status-btn-pidta" onclick="togglePosted('pidta')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-pidta">
+          <button class="lang-status-tag unposted" id="tag-zh-pidta" onclick="togglePostedLang('pidta', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-pidta" onclick="togglePostedLang('pidta', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1289,6 +1475,15 @@
         <button class="done-btn" id="status-btn-koon" onclick="togglePosted('koon')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-koon">
+          <button class="lang-status-tag unposted" id="tag-zh-koon" onclick="togglePostedLang('koon', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-koon" onclick="togglePostedLang('koon', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1355,6 +1550,15 @@
         <button class="done-btn" id="status-btn-turtle" onclick="togglePosted('turtle')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-turtle">
+          <button class="lang-status-tag unposted" id="tag-zh-turtle" onclick="togglePostedLang('turtle', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-turtle" onclick="togglePostedLang('turtle', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1421,6 +1625,15 @@
         <button class="done-btn" id="status-btn-rahu" onclick="togglePosted('rahu')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-rahu">
+          <button class="lang-status-tag unposted" id="tag-zh-rahu" onclick="togglePostedLang('rahu', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-rahu" onclick="togglePostedLang('rahu', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1487,6 +1700,15 @@
         <button class="done-btn" id="status-btn-tigertakrut" onclick="togglePosted('tigertakrut')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-tigertakrut">
+          <button class="lang-status-tag unposted" id="tag-zh-tigertakrut" onclick="togglePostedLang('tigertakrut', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-tigertakrut" onclick="togglePostedLang('tigertakrut', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1553,6 +1775,15 @@
         <button class="done-btn" id="status-btn-garuda" onclick="togglePosted('garuda')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-garuda">
+          <button class="lang-status-tag unposted" id="tag-zh-garuda" onclick="togglePostedLang('garuda', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-garuda" onclick="togglePostedLang('garuda', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1619,6 +1850,15 @@
         <button class="done-btn" id="status-btn-biagae" onclick="togglePosted('biagae')">
           ✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)
         </button>
+        
+        <div class="card-status-badges" id="status-badges-biagae">
+          <button class="lang-status-tag unposted" id="tag-zh-biagae" onclick="togglePostedLang('biagae', 'zh')">
+            🇨🇳 จีน: รอลง
+          </button>
+          <button class="lang-status-tag unposted" id="tag-en-biagae" onclick="togglePostedLang('biagae', 'en')">
+            🇬🇧 อังกฤษ: รอลง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1632,7 +1872,9 @@
   <div class="toast" id="toast">คัดลอกเรียบร้อยแล้ว!</div>
 
   <script>
-    const STORAGE_KEY = 'dansiam_fb_posted_ids';
+    const STORAGE_KEY_ZH = 'dansiam_fb_posted_zh_v1';
+    const STORAGE_KEY_EN = 'dansiam_fb_posted_en_v1';
+    const OLD_STORAGE_KEY = 'dansiam_fb_posted_ids';
     const LANG_STORAGE_KEY = 'dansiam_fb_lang';
 
     // Captions & URLs Database
@@ -1769,31 +2011,48 @@
     let globalLang = localStorage.getItem(LANG_STORAGE_KEY) || 'zh';
     const cardLangState = {};
 
-    function getPostedIds() {
+    function getPostedIds(lang) {
+      const targetLang = lang || globalLang;
+      const key = targetLang === 'zh' ? STORAGE_KEY_ZH : STORAGE_KEY_EN;
       try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
+        const data = localStorage.getItem(key);
+        if (data !== null) return JSON.parse(data);
+        // Migration: If zh has no data yet, check old storage key
+        if (targetLang === 'zh') {
+          const oldData = localStorage.getItem(OLD_STORAGE_KEY);
+          if (oldData) {
+            const parsed = JSON.parse(oldData);
+            localStorage.setItem(STORAGE_KEY_ZH, JSON.stringify(parsed));
+            return parsed;
+          }
+        }
+        return [];
       } catch (e) {
         return [];
       }
     }
 
-    function savePostedIds(ids) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    function savePostedIds(ids, lang) {
+      const targetLang = lang || globalLang;
+      const key = targetLang === 'zh' ? STORAGE_KEY_ZH : STORAGE_KEY_EN;
+      localStorage.setItem(key, JSON.stringify(ids));
     }
 
     function setGlobalLang(lang) {
       globalLang = lang;
       localStorage.setItem(LANG_STORAGE_KEY, lang);
 
-      document.getElementById('btn-lang-zh').classList.toggle('active', lang === 'zh');
-      document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
+      const btnZh = document.getElementById('btn-lang-zh');
+      const btnEn = document.getElementById('btn-lang-en');
+      if (btnZh) btnZh.classList.toggle('active', lang === 'zh');
+      if (btnEn) btnEn.classList.toggle('active', lang === 'en');
 
       // Update all cards to global language
       Object.keys(amuletsDb).forEach(id => {
         setCardLang(id, lang, false);
       });
 
+      updateUI();
       showToast(lang === 'zh' ? '🇨🇳 สลับเป็นภาษาจีน (中文) ทั้งหมดแล้ว' : '🇬🇧 Switched to English for all amulets!');
     }
 
@@ -1845,6 +2104,8 @@
           ? '🚀 3. เปิดแอป Facebook (กลุ่มภาษาจีน)'
           : '🚀 3. Open Facebook App (English Groups)';
       }
+
+      updateUI();
 
       if (showNotice) {
         showToast(lang === 'zh' ? '🇨🇳 สลับองค์นี้เป็นภาษาจีน' : '🇬🇧 Switched this amulet to English');
@@ -1898,26 +2159,35 @@
     }
 
     function togglePosted(id) {
-      let postedIds = getPostedIds();
+      const lang = cardLangState[id] || globalLang;
+      togglePostedLang(id, lang);
+    }
+
+    function togglePostedLang(id, lang) {
+      let postedIds = getPostedIds(lang);
+      const isCurrentlyPosted = postedIds.includes(id);
+      const langName = lang === 'zh' ? 'ภาษาจีน (🇨🇳)' : 'ภาษาอังกฤษ (🇬🇧)';
       const card = document.querySelector('.card[data-id="' + id + '"]');
 
-      if (postedIds.includes(id)) {
+      if (isCurrentlyPosted) {
         postedIds = postedIds.filter(item => item !== id);
-        savePostedIds(postedIds);
-        showToast('↩️ ยกเลิกสถานะโพสต์แล้ว');
+        savePostedIds(postedIds, lang);
+        showToast('↩️ ยกเลิกสถานะ ' + langName + ' แล้ว');
       } else {
         postedIds.push(id);
-        savePostedIds(postedIds);
-        if (currentFilter === 'unposted') {
+        savePostedIds(postedIds, lang);
+
+        const activeCardLang = cardLangState[id] || globalLang;
+        if (currentFilter === 'unposted' && lang === activeCardLang && card) {
           card.classList.add('fade-out');
           setTimeout(() => {
             card.classList.remove('fade-out');
             updateUI();
-          }, 300);
-          showToast('✅ บันทึกว่าโพสต์แล้ว (ซ่อนเรียบร้อย)');
+          }, 250);
+          showToast('✅ บันทึกว่าโพสต์ ' + langName + ' แล้ว (ซ่อนเรียบร้อย)');
           return;
         } else {
-          showToast('✅ บันทึกว่าโพสต์แล้ว');
+          showToast('✅ บันทึกว่าโพสต์ ' + langName + ' แล้ว');
         }
       }
       updateUI();
@@ -1931,47 +2201,113 @@
       updateUI();
     }
 
-    function resetAllPosted() {
-      if (confirm('ต้องการรีเซ็ตสถานะโพสต์ทั้งหมด ให้กลับมาแสดงใหม่ใช่หรือไม่?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        showToast('🔄 รีเซ็ตสถานะทั้งหมดเรียบร้อยแล้ว');
+    function resetPostedPrompt() {
+      const langName = globalLang === 'zh' ? 'ภาษาจีน (🇨🇳)' : 'ภาษาอังกฤษ (🇬🇧)';
+      const choice = confirm(
+        'ต้องการรีเซ็ตสถานะโพสต์ของ ' + langName + ' ทั้งหมดใช่หรือไม่?\n\n' +
+        '• กด "ตกลง (OK)" เพื่อรีเซ็ต ' + langName + ' ให้กลับมารอโพสต์ใหม่\n' +
+        '• ข้อมูลสถานะของอีกภาษาจะไม่ได้รับผลกระทบ'
+      );
+      if (choice) {
+        savePostedIds([], globalLang);
+        showToast('🔄 รีเซ็ตสถานะ ' + langName + ' เรียบร้อยแล้ว');
         updateUI();
       }
     }
 
     function updateUI() {
-      const postedIds = getPostedIds();
+      const postedZh = getPostedIds('zh');
+      const postedEn = getPostedIds('en');
       const allCards = document.querySelectorAll('.card');
+      const totalCount = allCards.length;
+
+      // Update Top Overview Stats
+      const zhUnposted = totalCount - postedZh.length;
+      const enUnposted = totalCount - postedEn.length;
+
+      const statZhUnpostedEl = document.getElementById('stat-zh-unposted');
+      const statZhPostedEl = document.getElementById('stat-zh-posted');
+      const statEnUnpostedEl = document.getElementById('stat-en-unposted');
+      const statEnPostedEl = document.getElementById('stat-en-posted');
+
+      if (statZhUnpostedEl) statZhUnpostedEl.innerText = zhUnposted;
+      if (statZhPostedEl) statZhPostedEl.innerText = postedZh.length;
+      if (statEnUnpostedEl) statEnUnpostedEl.innerText = enUnposted;
+      if (statEnPostedEl) statEnPostedEl.innerText = postedEn.length;
+
+      // Highlight active language pill in stats bar
+      const pillZhEl = document.getElementById('stat-pill-zh');
+      const pillEnEl = document.getElementById('stat-pill-en');
+      if (pillZhEl) pillZhEl.classList.toggle('active', globalLang === 'zh');
+      if (pillEnEl) pillEnEl.classList.toggle('active', globalLang === 'en');
+
+      // Update Filter Tabs numbers based on CURRENT active globalLang
+      const activeUnpostedCount = (globalLang === 'zh') ? zhUnposted : enUnposted;
+      const activePostedCount = (globalLang === 'zh') ? postedZh.length : postedEn.length;
+
+      const tabUnpostedEl = document.getElementById('tab-count-unposted');
+      const tabPostedEl = document.getElementById('tab-count-posted');
+      if (tabUnpostedEl) tabUnpostedEl.innerText = activeUnpostedCount;
+      if (tabPostedEl) tabPostedEl.innerText = activePostedCount;
+
       let visibleCount = 0;
-      let unpostedCount = 0;
-      let postedCount = 0;
 
       allCards.forEach(card => {
         const id = card.getAttribute('data-id');
-        const isPosted = postedIds.includes(id);
-        const statusBtn = document.getElementById('status-btn-' + id);
+        const cardLang = cardLangState[id] || globalLang;
+        const isZhPosted = postedZh.includes(id);
+        const isEnPosted = postedEn.includes(id);
 
-        if (isPosted) {
-          postedCount++;
-          if (statusBtn) {
+        // 1. Update Card Language Pills (Pill in header)
+        const headerPillZh = document.getElementById('pill-zh-' + id);
+        const headerPillEn = document.getElementById('pill-en-' + id);
+        if (headerPillZh) {
+          headerPillZh.classList.toggle('active', cardLang === 'zh');
+          headerPillZh.classList.toggle('is-posted', isZhPosted);
+        }
+        if (headerPillEn) {
+          headerPillEn.classList.toggle('active', cardLang === 'en');
+          headerPillEn.classList.toggle('is-posted', isEnPosted);
+        }
+
+        // 2. Update Dual Status Mini-Tags
+        const tagZh = document.getElementById('tag-zh-' + id);
+        const tagEn = document.getElementById('tag-en-' + id);
+        if (tagZh) {
+          tagZh.className = 'lang-status-tag ' + (isZhPosted ? 'posted' : 'unposted');
+          tagZh.innerHTML = isZhPosted ? '🇨🇳 จีน: ลงแล้ว ✓' : '🇨🇳 จีน: รอลง';
+        }
+        if (tagEn) {
+          tagEn.className = 'lang-status-tag ' + (isEnPosted ? 'posted' : 'unposted');
+          tagEn.innerHTML = isEnPosted ? '🇬🇧 อังกฤษ: ลงแล้ว ✓' : '🇬🇧 อังกฤษ: รอลง';
+        }
+
+        // 3. Update Main Step 4 Status Button
+        const statusBtn = document.getElementById('status-btn-' + id);
+        const isCurrentLangPosted = (cardLang === 'zh') ? isZhPosted : isEnPosted;
+
+        if (statusBtn) {
+          if (isCurrentLangPosted) {
             statusBtn.className = 'undone-btn';
-            statusBtn.innerText = '↩️ ยกเลิก (ย้ายกลับไปรอโพสต์)';
-          }
-        } else {
-          unpostedCount++;
-          if (statusBtn) {
+            statusBtn.innerText = cardLang === 'zh'
+              ? '↩️ ยกเลิก (🇨🇳 จีน - ย้ายกลับไปรอโพสต์)'
+              : '↩️ Undo (🇬🇧 English - Move back to queue)';
+          } else {
             statusBtn.className = 'done-btn';
-            statusBtn.innerText = '✅ โพสต์ Facebook แล้ว (ซ่อนรายการนี้)';
+            statusBtn.innerText = cardLang === 'zh'
+              ? '✅ 4. โพสต์กลุ่มจีนแล้ว (🇨🇳 中文)'
+              : '✅ 4. โพสต์กลุ่มอังกฤษแล้ว (🇬🇧 English)';
           }
         }
 
+        // 4. Card Visibility based on currentFilter and active language
         let show = false;
         if (currentFilter === 'all') {
           show = true;
         } else if (currentFilter === 'unposted') {
-          show = !isPosted;
+          show = !isCurrentLangPosted;
         } else if (currentFilter === 'posted') {
-          show = isPosted;
+          show = isCurrentLangPosted;
         }
 
         if (show) {
@@ -1982,16 +2318,22 @@
         }
       });
 
-      document.getElementById('count-unposted').innerText = unpostedCount;
-      document.getElementById('tab-count-unposted').innerText = unpostedCount;
-      document.getElementById('count-posted').innerText = postedCount;
-      document.getElementById('tab-count-posted').innerText = postedCount;
-
+      // 5. Empty State Message
       const emptyState = document.getElementById('empty-state');
-      if (visibleCount === 0 && currentFilter === 'unposted' && postedCount > 0) {
-        emptyState.style.display = 'block';
-      } else {
-        emptyState.style.display = 'none';
+      if (emptyState) {
+        if (visibleCount === 0 && currentFilter === 'unposted' && activePostedCount > 0) {
+          const langLabel = globalLang === 'zh' ? 'ภาษาจีน (🇨🇳)' : 'ภาษาอังกฤษ (🇬🇧)';
+          const altLangLabel = globalLang === 'zh' ? '🇬🇧 ภาษาอังกฤษ' : '🇨🇳 ภาษาจีน';
+          const altLangCode = globalLang === 'zh' ? 'en' : 'zh';
+          emptyState.innerHTML = `
+            <h3>🎉 โพสต์กลุ่ม${langLabel} ครบทั้งหมดแล้ว!</h3>
+            <p>ยอดเยี่ยมมากครับ คุณได้โพสต์กลุ่ม${langLabel} ครบถ้วนแล้ว<br>
+            กดสลับไปที่ <b><a href="#" onclick="setGlobalLang('${altLangCode}'); return false;" style="color:#f59e0b; text-decoration:underline;">${altLangLabel}</a></b> ด้านบน เพื่อดำเนินการโพสต์ต่อได้ทันทีครับ</p>
+          `;
+          emptyState.style.display = 'block';
+        } else {
+          emptyState.style.display = 'none';
+        }
       }
     }
 
