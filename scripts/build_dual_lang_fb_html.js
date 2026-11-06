@@ -12,9 +12,9 @@ const items = [
     subTh: '人缘金舌鸟双鸟挂饰 · เมตตามหานิยม ค้าขาย แขวนหน้าร้าน / Sacred Hand-Carved Sarika Birds',
     url: 'https://dansiamamulets.com/product/sarika-mobile-pair-carved-wood-luang-pho-ken-wat-tham-khao-ito-prachin-buri',
     imgs: [
-      { src: '/amulets/sarika_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/sarika_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/sarika_detail.webp', label: 'ซูมลายแกะ (Carving Detail)' }
+      { src: '/amulets/talisman_sarika_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/talisman_sarika_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/talisman_sarika_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['sarika'],
     captionEn: `⭐ Masterpiece of Siamese Metta Wicha
@@ -46,9 +46,9 @@ Luang Pho Ken was revered throughout Southeast Asia as the undisputed centenaria
     subTh: '大吉祥吸财聚财福禄宝葫芦 · เงินทองเข้าไม่รั่วไหล / Sacred Wealth-Attracting Gourd B.E. 2552',
     url: 'https://dansiamamulets.com/product/namtao-dood-sup-maha-lap-luang-pu-tim-wat-phra-khao-2552',
     imgs: [
-      { src: '/amulets/namtao_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/namtao_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/namtao_detail.webp', label: 'โค้ดยันต์ (Sacred Code)' }
+      { src: '/amulets/talisman_namtao_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/talisman_namtao_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/talisman_namtao_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['namtao'],
     captionEn: `⭐ Consecrated Wealth-Attracting Talisman
@@ -80,9 +80,9 @@ Luang Pu Tim Attasanto was revered as the beloved "Saint of Loving-Kindness of A
     subTh: '坤平佛背金童古曼宝藏 · เมตตามหาเสน่ห์ ค้าขาย กุมารทองเรียกลูกค้า / Phra Khun Phaen Lang Kuman Sombat B.E. 2548',
     url: 'https://dansiamamulets.com/product/phra-khun-phaen-lang-kuman-sombat-luang-pho-pool-wat-phai-lom-2548',
     imgs: [
-      { src: '/amulets/khunphaen_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/khunphaen_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/khunphaen_detail.webp', label: 'ยันต์นะชาลีติ (Yant Detail)' }
+      { src: '/amulets/batch2_khunphaen_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/batch2_khunphaen_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/batch2_khunphaen_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['khunphaen'],
     captionEn: `⭐ Final Consecrated Masterpiece of Wat Phai Lom
@@ -114,9 +114,9 @@ Consecrated in B.E. 2548 by Luang Pho Pool, the legendary Abbot of Wat Phai Lom,
     subTh: '纯银双效金舌鸟符管配人缘金鸟油 · พูดจาเจรจาค้าขาย ปิดดีลธุรกิจ / Solid Silver Takrut Sarika Khu B.E. 2553',
     url: 'https://dansiamamulets.com/product/takrut-sarika-khu-baramee-silver-luang-pu-kambu-wat-kut-chomphu-2553',
     imgs: [
-      { src: '/amulets/takrut_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/takrut_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/takrut_detail.webp', label: 'ตัวตะกรุดในน้ำมัน (Detail)' }
+      { src: '/amulets/batch2_takrut_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/batch2_takrut_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/batch2_takrut_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['takrut'],
     captionEn: `⭐ Authentic Isan Silver Talisman
@@ -148,9 +148,9 @@ Consecrated in B.E. 2553 by the venerated master Luang Pu Kambu, celebrated keep
     subTh: '老瓦曼坤碰阿赞多老料龙婆托 · แคล้วคลาดปลอดภัยอันดับ 1 + ผงสมเด็จโต / Sacred Luang Pu Thuad Luang Ta Phan B.E. 2502',
     url: 'https://dansiamamulets.com/product/luang-pu-tuad-luang-ta-phan-wat-mai-amataros-2502-bang-khun-phrom',
     imgs: [
-      { src: '/amulets/lpthuat_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/lpthuat_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/lpthuat_detail.webp', label: 'มวลสารผงเก่า (Old Powder)' }
+      { src: '/amulets/batch2_lpthuat_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/batch2_lpthuat_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/batch2_lpthuat_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['lpthuat'],
     captionEn: `⭐ Historic Consecration Infused with Authentic Somdej Toh Powders
@@ -182,9 +182,9 @@ Following the historic 1957 (B.E. 2500) opening of the great Bang Khun Phrom pag
     subTh: '崇迪佛背猛虎跃腾印 · ราชาพระเครื่อง ผสาน มหาอำนาจข่มศัตรูคู่แข่ง / Phra Somdej Lang Suea Phern B.E. 2519',
     url: 'https://dansiamamulets.com/product/phra-somdej-lang-suea-phoen-luang-pho-thong-yu-wat-mai-nong-pha-ong-2519',
     imgs: [
-      { src: '/amulets/tiger_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/tiger_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/tiger_detail.webp', label: 'ยันต์เสือเผ่น (Leaping Tiger)' }
+      { src: '/amulets/batch2_tiger_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/batch2_tiger_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/batch2_tiger_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['tiger'],
     captionEn: `⭐ The King of Amulets Meets the Fierce Leaping Tiger
@@ -216,9 +216,9 @@ Consecrated in B.E. 2519 by Luang Pho Thong Yu, close Dhamma friend of Somdej Ph
     subTh: '神木辟邪招财巴拉吉 · ยอดเครื่องรางค้าขาย ดูดเงินดูดทอง กันคุณไสย / Sacred Palad Khik Luang Pu Mek',
     url: 'https://dansiamamulets.com/product/plad-khik-dead-wood-takrud-luang-pu-mek-wat-lam-kradan',
     imgs: [
-      { src: '/amulets/paladkhik_front.webp', label: 'มุมบน (Top)' },
-      { src: '/amulets/paladkhik_back.webp', label: 'มุมข้าง (Side)' },
-      { src: '/amulets/paladkhik_detail.webp', label: 'ตะกรุดไม้ฝัง (Takrut Detail)' }
+      { src: '/amulets/batch2_paladkhik_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/batch2_paladkhik_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/batch2_paladkhik_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['paladkhik'],
     captionEn: `⭐ Legendary Trade & Metta Talisman of Bangkok
@@ -250,9 +250,9 @@ Luang Pu Mek of Wat Lam Kradan was celebrated throughout Thailand for his miracu
     subTh: '护宅辟邪神牛 · เฝ้าบ้าน เฝ้าโรงงาน ป้องกันโจรขโมย ปัดเป่าคุณไสย / Sacred Guardian Bull Wua Thanu B.E. 2538',
     url: 'https://dansiamamulets.com/product/wua-thanu-krang-phutsa-luang-pho-phut-wat-klang-bang-phra-2538',
     imgs: [
-      { src: '/amulets/wuathanu_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/wuathanu_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/wuathanu_detail.webp', label: 'เนื้อครั่งพุทรา (Krang Texture)' }
+      { src: '/amulets/talisman_wuathanu_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/talisman_wuathanu_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/talisman_wuathanu_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['wuathanu'],
     captionEn: `⭐ Ancient Siamese Territorial Guardian Bull
@@ -284,9 +284,9 @@ Consecrated in B.E. 2538 by Luang Pho Phut, direct lineage heir to Luang Phor No
     subTh: '白法正统天童古曼 · กึ่งพุทธกาล สายขาวแท้ เตือนภัย เรียกลูกค้า / White Wicha Guman Thong B.E. 2500',
     url: 'https://dansiamamulets.com/product/guman-thong-din-chet-pacha-luang-pho-pin-wat-ubon-2500',
     imgs: [
-      { src: '/amulets/guman_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/guman_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/guman_detail.webp', label: 'เนื้อดินโบราณ (Ancient Clay)' }
+      { src: '/amulets/talisman_guman_1.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/talisman_guman_2.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/talisman_guman_3.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['guman'],
     captionEn: `⭐ 25th Buddhist Century Pure White Wicha Guman Thong
@@ -318,9 +318,9 @@ Consecrated in B.E. 2500 (1957) during the sacred 25th Buddhist Century grand Ju
     subTh: '桌腿座崇迪佛 · ผสมผงเก่าสมเด็จโต วัดระฆังแท้ๆ ยอดนิยมสูงสุด / Phra Somdej Thaan Kha To B.E. 2495',
     url: 'https://dansiamamulets.com/product/phra-somdej-thaan-kha-to-luang-pu-nak-wat-rakang-2495',
     imgs: [
-      { src: '/amulets/somdej_nak_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/somdej_nak_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/somdej_nak_detail.webp', label: 'เนื้อผงเก่า (Sacred Powder)' }
+      { src: '/amulets/somdej_nak_front.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/somdej_nak_back.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/somdej_nak_side.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['somdej_nak'],
     captionEn: `⭐ Authentic Wat Rakang Masterpiece with Somdej Toh Powders
@@ -352,9 +352,9 @@ Consecrated in B.E. 2495 by Luang Pu Nak, celebrated Abbot of Wat Rakang Kositar
     subTh: '大东座大佛主尊崇迪 · หลวงพ่อแพโด่งดังที่สุดในเอเชีย / Phra Somdej Phra Prathan Luang Pho Pae B.E. 2514',
     url: 'https://dansiamamulets.com/product/phra-somdej-phra-prathan-wat-muang-luang-pho-pae-wat-pikul-thong-2514',
     imgs: [
-      { src: '/amulets/somdej_pae_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/somdej_pae_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/somdej_pae_detail.webp', label: 'เนื้อผงพุทธคุณ (Sacred Texture)' }
+      { src: '/amulets/somdej_pae_front.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/somdej_pae_back.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/somdej_pae_side.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['somdej_pae'],
     captionEn: `⭐ Master Consecration by Asia's Legend Luang Pho Pae
@@ -386,9 +386,9 @@ Empowered in B.E. 2514 by Phra Thammaratthanon (Luang Pho Pae) of Wat Pikul Thon
     subTh: '金达玛尼草药符管必打佛 · เมตตา โชคลาภ แคล้วคลาด กันคุณไสย / Phra Pidta Wan Jindamanee B.E. 2520',
     url: 'https://dansiamamulets.com/product/phra-pidta-wan-jindamanee-takrut-luang-pho-thong-yu-wat-tha-sao-2520',
     imgs: [
-      { src: '/amulets/pidta_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/pidta_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/pidta_detail.webp', label: 'ตะกรุดฝังด้านหลัง (Takrut Detail)' }
+      { src: '/amulets/pidta_jindamanee_front.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/pidta_jindamanee_back.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/pidta_jindamanee_side.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['pidta'],
     captionEn: `⭐ Sacred Jindamanee Medicine Formula Phra Pidta
@@ -420,9 +420,9 @@ Consecrated in B.E. 2520 by Luang Pho Thong Yu, inheritor of the legendary Wat K
     subTh: '女王佛 · 乘倍发财/倍增福禄 · ยุคทองปี 2517 โชคลาภทวีคูณ / Phra Nang Phaya Koon Lap B.E. 2517',
     url: 'https://dansiamamulets.com/product/phra-nang-phaya-koon-lap-luang-pho-koon-wat-ban-rai-2517',
     imgs: [
-      { src: '/amulets/koon_front.webp', label: 'ด้านหน้า (Front)' },
-      { src: '/amulets/koon_back.webp', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/koon_detail.webp', label: 'เนื้อผงว่านเกสร (Sacred Texture)' }
+      { src: '/amulets/koon_front.jpg', label: 'ด้านหน้า (Front)' },
+      { src: '/amulets/koon_back.jpg', label: 'ด้านหลัง (Back)' },
+      { src: '/amulets/koon_side.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['koon'],
     captionEn: `⭐ Golden Era B.E. 2517 Consecration by the Living Arhat
@@ -456,7 +456,7 @@ Blessed in B.E. 2517, the most celebrated and highly sought-after vintage era of
     imgs: [
       { src: '/amulets/turtle_front.jpg', label: 'ด้านหน้า (Front)' },
       { src: '/amulets/turtle_back.jpg', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/turtle_detail.jpg', label: 'คราบน้ำมนต์ (Holy Water Patina)' }
+      { src: '/amulets/turtle_detail.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['turtle'],
     captionEn: `⭐ The Undisputed #1 Wealth Turtle Master of Thailand
@@ -490,7 +490,7 @@ Consecrated in B.E. 2535 on the auspicious occasion of Luang Pu Liu's 84th birth
     imgs: [
       { src: '/amulets/rahu_front.jpg', label: 'ด้านหน้า (Front)' },
       { src: '/amulets/rahu_back.jpg', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/rahu_detail.jpg', label: 'รอยจารึกยันต์ (Hand Inscription)' }
+      { src: '/amulets/rahu_detail.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['rahu'],
     captionEn: `⭐ The Pinnacle Heritage of Wat Srisathorn
@@ -524,7 +524,7 @@ Wat Srisathorn is universally recognized as the primordial birthplace of Phra Ra
     imgs: [
       { src: '/amulets/tigertakrut_front.jpg', label: 'ด้านหน้า (Front)' },
       { src: '/amulets/tigertakrut_back.jpg', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/tigertakrut_detail.jpg', label: 'ลายถักและหนังเสือ (Pelt & Cord)' }
+      { src: '/amulets/tigertakrut_detail.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['tigertakrut'],
     captionEn: `⭐ Ferocious Authority of Ancient Khmer Wicha
@@ -558,7 +558,7 @@ Consecrated in B.E. 2539 by Luang Pho Thiang, legendary master of the extinct vo
     imgs: [
       { src: '/amulets/garuda_front.jpg', label: 'ด้านหน้า (Front)' },
       { src: '/amulets/garuda_back.jpg', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/garuda_detail.jpg', label: 'โค้ดและกล่องเดิม (Box & Code)' }
+      { src: '/amulets/garuda_detail.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['garuda'],
     captionEn: `⭐ Thailand's Undisputed #1 Living Master of Garuda
@@ -593,7 +593,7 @@ Chao Khun Luang Pho Vrah of Wat Bodhi Thong is universally recognized by the Tha
     imgs: [
       { src: '/amulets/biagae_front.jpg', label: 'ด้านหน้า (Front)' },
       { src: '/amulets/biagae_back.jpg', label: 'ด้านหลัง (Back)' },
-      { src: '/amulets/biagae_detail.jpg', label: 'ตะกั่วผนึก (Lead Seal Detail)' }
+      { src: '/amulets/biagae_detail.jpg', label: 'ซูมลายละเอียด (Detail)' }
     ],
     captionZh: zhCaptions['biagae'],
     captionEn: `⭐ The Historic #1 Bia Gae Sanctuary of Siam
