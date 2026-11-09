@@ -1,17 +1,30 @@
 import { NextResponse } from 'next/server';
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient, requireAdmin } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+function isValidCronSecret(req: Request): boolean {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret) return false;
+  const authHeader = req.headers.get('authorization') ?? '';
+  const expected = `Bearer ${cronSecret}`;
+  const enc = new TextEncoder();
+  const a = enc.encode(authHeader.padEnd(expected.length));
+  const b = enc.encode(expected.padEnd(authHeader.length));
+  let mismatch = a.length !== b.length;
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    mismatch = ((a[i] ?? 0) ^ (b[i] ?? 0)) !== 0 || mismatch;
+  }
+  return !mismatch;
+}
+
 export async function GET(req: Request) {
   try {
-    // 1. Authenticate cron job if CRON_SECRET is set
-    const cronSecret = process.env.CRON_SECRET;
-    if (cronSecret) {
-      const authHeader = req.headers.get('authorization');
-      const url = new URL(req.url);
-      if (url.searchParams.get('test') !== 'true' && authHeader !== `Bearer ${cronSecret}`) {
+    // 1. Authenticate cron job via CRON_SECRET or authenticated Admin session
+    if (!isValidCronSecret(req)) {
+      const adminCtx = await requireAdmin();
+      if (!adminCtx) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
     }

@@ -5,19 +5,27 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 export const runtime = 'nodejs';
 
 import { cookies } from 'next/headers';
+import { verifyStaffSession, isAllowedStaffEmail } from '@/lib/staff-auth';
 
 async function requireAdmin() {
   const cookieStore = cookies();
-  if (cookieStore.get('staff_auth')?.value === 'true') {
+  const staffToken = cookieStore.get('staff_token')?.value;
+  if (verifyStaffSession(staffToken)) {
     return { user: { id: 'staff' }, admin: createAdminClient() };
   }
 
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return null;
-  // Bypass strict admin check temporarily since we lack service role key
-  // and RLS prevents reading the admins table with the anon key.
   const admin = createAdminClient();
+  if (isAllowedStaffEmail(user.email)) {
+    return { user, admin };
+  }
+  const query = user.email
+    ? admin.from('admins').select('role').or(`user_id.eq.${user.id},email.eq.${user.email}`).maybeSingle()
+    : admin.from('admins').select('role').eq('user_id', user.id).maybeSingle();
+  const { data: adminRecord } = await query;
+  if (!adminRecord) return null;
   return { user, admin };
 }
 

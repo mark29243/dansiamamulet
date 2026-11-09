@@ -72,12 +72,19 @@ export default function LabelMakerPage() {
     }
   }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === '454545') {
-      setIsAuthenticated(true);
-    } else {
-      alert('รหัสผ่านไม่ถูกต้อง');
+    try {
+      const res = await authFetch('/api/tools/label-contacts');
+      if (res.ok) {
+        setIsAuthenticated(true);
+      } else if (res.status === 429) {
+        alert('ลองผิดเกินจำนวนครั้งที่กำหนด กรุณารอสักครู่แล้วลองใหม่');
+      } else {
+        alert('รหัสผ่านไม่ถูกต้อง');
+      }
+    } catch {
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
   };
 
@@ -94,7 +101,7 @@ export default function LabelMakerPage() {
         sender = { id: 'custom', ...customSender };
       }
 
-      const res = await fetch('/api/print-custom', {
+      const res = await authFetch('/api/print-custom', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

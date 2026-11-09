@@ -1,10 +1,26 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+
+    // Verify LINE webhook signature when LINE_CHANNEL_SECRET is configured
+    const channelSecret = process.env.LINE_CHANNEL_SECRET;
+    if (channelSecret) {
+      const signature = req.headers.get('x-line-signature') || '';
+      const expectedSig = crypto
+        .createHmac('SHA256', channelSecret)
+        .update(rawBody)
+        .digest('base64');
+      if (!signature || signature !== expectedSig) {
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+      }
+    }
+
+    const body = JSON.parse(rawBody);
     const events = body.events;
 
     if (!events || events.length === 0) {
@@ -13,8 +29,13 @@ export async function POST(req: Request) {
 
     const event = events[0];
     
-    // We only care about message events
+    // Only reply with chat ID when explicitly requested via "!id" or "/id"
     if (event.type === 'message' && event.message.type === 'text') {
+      const text = (event.message.text || '').trim().toLowerCase();
+      if (text !== '!id' && text !== '/id') {
+        return NextResponse.json({ ok: true });
+      }
+
       const replyToken = event.replyToken;
       const source = event.source;
       
@@ -32,9 +53,8 @@ export async function POST(req: Request) {
         targetType = 'User ID';
       }
 
-      const replyText = `[บอทแจ้งเตือน] รหัส ${targetType} ของแชทนี้คือ:\n${targetId}\n\nคุณมาร์คก๊อปปี้รหัสนี้ไปใส่ใน Vercel (ช่อง LINE_USER_ID) ได้เลยครับ!`;
+      const replyText = `[บอทแจ้งเตือน] รหัส ${targetType} ของแชทนี้คือ:\n${targetId}`;
 
-      // Reply to the chat
       const lineToken = process.env.LINE_MESSAGING_TOKEN;
       if (lineToken && replyToken) {
         await fetch('https://api.line.me/v2/bot/message/reply', {

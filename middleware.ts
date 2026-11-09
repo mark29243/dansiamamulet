@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
     const isStaffStockApi = pathname.startsWith('/api/admin/shopee-stock') || 
                              pathname.startsWith('/api/admin/june-stock') || 
                              pathname.startsWith('/api/admin/mark-stock');
-    const hasStaffCookie = request.cookies.get('staff_auth')?.value === 'true' || !!request.cookies.get('staff_token')?.value;
+    const hasStaffCookie = !!request.cookies.get('staff_token')?.value;
 
     if (!user && !(isStaffStockApi && hasStaffCookie)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

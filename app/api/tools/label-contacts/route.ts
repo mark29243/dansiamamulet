@@ -1,33 +1,49 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { rateLimit, getIp } from '@/lib/rate-limit';
+import { isAllowedStaffEmail } from '@/lib/staff-auth';
 
 export const dynamic = 'force-dynamic';
 
-async function verifyAuth(req: Request) {
-  // Check header passcode
-  const passcode = req.headers.get('x-label-passcode');
-  const expectedPasscode = process.env.LABEL_TOOL_PASSCODE || '454545';
-  if (passcode && passcode === expectedPasscode) {
-    return true;
+function timingSafeCompare(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
+async function verifyAuth(req: Request): Promise<'ok' | 'rate_limited' | 'unauthorized'> {
+  const ip = getIp(req);
+  if (!(await rateLimit(`label-contacts:${ip}`, 15, 60_000))) {
+    return 'rate_limited';
   }
 
-  // Check admin session
+  // Check header passcode (timing-safe)
+  const passcode = req.headers.get('x-label-passcode');
+  const expectedPasscode = process.env.LABEL_TOOL_PASSCODE || '454545';
+  if (passcode && timingSafeCompare(passcode, expectedPasscode)) {
+    return 'ok';
+  }
+
+  // Check admin/staff session
   try {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return false;
+    if (!user) return 'unauthorized';
+    if (isAllowedStaffEmail(user.email)) return 'ok';
     const admin = createAdminClient();
     const { data } = await admin.from('admins').select('role').eq('user_id', user.id).maybeSingle();
-    return !!data;
+    return data ? 'ok' : 'unauthorized';
   } catch {
-    return false;
+    return 'unauthorized';
   }
 }
 
 export async function GET(req: Request) {
-  if (!(await verifyAuth(req))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await verifyAuth(req);
+  if (auth === 'rate_limited') return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  if (auth !== 'ok') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const supabase = createAdminClient();
   const { data, error } = await supabase.from('label_contacts').select('*').order('created_at', { ascending: true });
@@ -47,9 +63,9 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  if (!(await verifyAuth(req))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await verifyAuth(req);
+  if (auth === 'rate_limited') return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  if (auth !== 'ok') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const supabase = createAdminClient();
   const body = await req.json();
@@ -81,9 +97,9 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (!(await verifyAuth(req))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const auth = await verifyAuth(req);
+  if (auth === 'rate_limited') return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  if (auth !== 'ok') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const supabase = createAdminClient();
   const { searchParams } = new URL(req.url);

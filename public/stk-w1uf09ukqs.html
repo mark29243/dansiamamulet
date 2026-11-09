@@ -614,6 +614,7 @@
       }
 
       var token = hashParams.get('access_token');
+      var refreshToken = hashParams.get('refresh_token');
       if (token) {
         var parts = token.split('.');
         if (parts.length === 3) {
@@ -623,6 +624,13 @@
           if (ALLOWED_EMAILS.indexOf(email) !== -1) {
             localStorage.setItem('dansiam_stock_user_email', email);
             localStorage.setItem('dansiam_stock_token', token);
+            if (refreshToken) {
+              localStorage.setItem('dansiam_stock_refresh_token', refreshToken);
+            }
+            var client = getSupabase();
+            if (client && refreshToken) {
+              try { client.auth.setSession({ access_token: token, refresh_token: refreshToken }); } catch (e) {}
+            }
             window.history.replaceState(null, '', window.location.pathname);
             showMain(email);
             return true;
@@ -638,13 +646,22 @@
     return false;
   }
 
-  // 2. ตรวจสอบ Session ที่เคยล็อกอินไว้แล้วในเครื่อง
+  // 2. ตรวจสอบ Session ที่เคยล็อกอินไว้แล้วในเครื่อง (ต้องมี JWT Token ที่ตรงกับอีเมลที่อนุญาต)
   function checkSavedSession() {
     try {
-      var savedEmail = localStorage.getItem('dansiam_stock_user_email');
-      if (savedEmail && ALLOWED_EMAILS.indexOf(savedEmail.toLowerCase().trim()) !== -1) {
-        showMain(savedEmail);
-        return true;
+      var savedEmail = (localStorage.getItem('dansiam_stock_user_email') || '').toLowerCase().trim();
+      var savedToken = localStorage.getItem('dansiam_stock_token') || '';
+      if (savedEmail && savedToken && ALLOWED_EMAILS.indexOf(savedEmail) !== -1) {
+        var parts = savedToken.split('.');
+        if (parts.length === 3) {
+          var payloadStr = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
+          var payload = JSON.parse(decodeURIComponent(escape(payloadStr)));
+          var tokenEmail = (payload.email || '').toLowerCase().trim();
+          if (tokenEmail === savedEmail && ALLOWED_EMAILS.indexOf(tokenEmail) !== -1) {
+            showMain(savedEmail);
+            return true;
+          }
+        }
       }
     } catch (e) {}
     return false;
@@ -660,6 +677,9 @@
           var email = session.user.email.toLowerCase().trim();
           if (ALLOWED_EMAILS.indexOf(email) !== -1) {
             localStorage.setItem('dansiam_stock_user_email', email);
+            if (session.access_token) {
+              localStorage.setItem('dansiam_stock_token', session.access_token);
+            }
             showMain(email);
           } else {
             authError.textContent = 'อีเมล ' + email + ' ไม่มีสิทธิ์เข้าใช้งานระบบสต็อกนี้';
@@ -682,6 +702,9 @@
           var email = data.session.user.email.toLowerCase().trim();
           if (ALLOWED_EMAILS.indexOf(email) !== -1) {
             localStorage.setItem('dansiam_stock_user_email', email);
+            if (data.session.access_token) {
+              localStorage.setItem('dansiam_stock_token', data.session.access_token);
+            }
             showMain(email);
             return;
           }
@@ -720,6 +743,7 @@
       try {
         localStorage.removeItem('dansiam_stock_user_email');
         localStorage.removeItem('dansiam_stock_token');
+        localStorage.removeItem('dansiam_stock_refresh_token');
       } catch (e) {}
       var client = getSupabase();
       if (client) {
@@ -738,13 +762,41 @@
     };
   }
 
+  async function getValidAccessToken() {
+    try {
+      var client = getSupabase();
+      if (client) {
+        var { data } = await client.auth.getSession();
+        if (data && data.session && data.session.access_token) {
+          localStorage.setItem('dansiam_stock_token', data.session.access_token);
+          return data.session.access_token;
+        }
+      }
+    } catch (e) {}
+    try {
+      var savedToken = localStorage.getItem('dansiam_stock_token');
+      if (savedToken) {
+        var parts = savedToken.split('.');
+        if (parts.length === 3) {
+          var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+          // Only use saved JWT as Bearer if it has not expired yet; otherwise fall back to SUPABASE_KEY so PostgREST does not reject with PGRST301
+          if (!payload.exp || (payload.exp * 1000 > Date.now() + 5000)) {
+            return savedToken;
+          }
+        }
+      }
+    } catch (e) {}
+    return SUPABASE_KEY;
+  }
+
   async function rpcCall(fnName, params) {
+    var bearerToken = await getValidAccessToken();
     var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fnName, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY
+        'Authorization': 'Bearer ' + bearerToken
       },
       body: JSON.stringify(params)
     });
@@ -949,9 +1001,13 @@
                   : 'https://dansiamamulets.com/api/notify-sold';
 
                 try {
+                  var staffJwt = localStorage.getItem('dansiam_stock_token') || '';
                   await fetch(notifyUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': 'Bearer ' + staffJwt
+                    },
                     body: JSON.stringify({ product_id: parseInt(id) })
                   });
                 } catch (err) {

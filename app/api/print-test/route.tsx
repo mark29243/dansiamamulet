@@ -62,10 +62,16 @@ const addresses = [
   "30. รับเอง: ไม่ประสงค์ออกนาม\nมารับเองหน้าโรงงาน"
 ];
 
+import { requireAdmin } from '@/lib/supabase/server';
+
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
+  const adminCtx = await requireAdmin();
+  if (!adminCtx) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   try {
     const pages = addresses.map((rawText, index) => {
       let text = rawText || '';

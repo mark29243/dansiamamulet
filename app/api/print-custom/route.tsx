@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { createElement } from 'react';
 import { renderToBuffer } from '@react-pdf/renderer';
 import { LabelPDF, registerSarabunFont } from '@/app/api/print/[id]/LabelPDF';
+import { requireAdmin } from '@/lib/supabase/server';
+import { rateLimit, getIp } from '@/lib/rate-limit';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dansiamamulets.com';
 registerSarabunFont(SITE + '/fonts');
@@ -9,8 +12,28 @@ registerSarabunFont(SITE + '/fonts');
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+function isValidPasscode(req: NextRequest): boolean {
+  const passcode = req.headers.get('x-label-passcode');
+  const expected = process.env.LABEL_TOOL_PASSCODE || '454545';
+  if (!passcode) return false;
+  const bufA = Buffer.from(passcode);
+  const bufB = Buffer.from(expected);
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
 export async function POST(req: NextRequest) {
   try {
+    if (!(await rateLimit(`print-custom:${getIp(req)}`, 20, 60_000))) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+    if (!isValidPasscode(req)) {
+      const adminCtx = await requireAdmin();
+      if (!adminCtx) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
+
     const body = await req.json();
     const { orderNo, senderName, senderPhone, senderAddress, receiverText, isCod } = body;
 
