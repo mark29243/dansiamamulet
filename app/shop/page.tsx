@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import type { Product } from '@/lib/types';
 import HomeShop from '../HomeShop';
 
-export const revalidate = 60;
+// ISR: Cache shop page on Edge CDN for 24 hours to maximize performance & save Vercel CPU quota
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: 'Shop Thai Amulets · พระเครื่องทุกประเภท · 所有佛牌',

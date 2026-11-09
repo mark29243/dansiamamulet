@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import BlogPostClient from './BlogPostClient';
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 

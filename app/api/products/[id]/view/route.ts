@@ -7,8 +7,15 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   if (!Number.isInteger(productId) || productId < 1) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
-  // Rate limit: max 30 view events per IP per minute (prevents view-count inflation)
-  if (!(await rateLimit(`view:${getIp(req)}`, 30, 60_000))) {
+
+  // Filter out automated bots, crawlers, and headless previews from consuming serverless CPU
+  const ua = (req.headers.get('user-agent') || '').toLowerCase();
+  if (/bot|crawl|spider|slurp|facebookexternalhit|bingpreview|headless|chrome-lighthouse|google|baidu|yandex/i.test(ua)) {
+    return NextResponse.json({ ok: true, skipped: 'bot' });
+  }
+
+  // Rate limit: max 20 view events per IP per minute (prevents view-count inflation)
+  if (!(await rateLimit(`view:${getIp(req)}`, 20, 60_000))) {
     return NextResponse.json({ ok: false }, { status: 429 });
   }
 
@@ -20,22 +27,10 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   ]);
 
   if (rpcRes.error) {
-    console.error('[view-counter] Error in increment_product_views RPC:', rpcRes.error);
-    // Fallback: direct increment to guarantee views are never stuck even if RPC has schema/overload issues
-    const { data: prod } = await admin
-      .from('products')
-      .select('views')
-      .eq('id', productId)
-      .single();
-    if (prod) {
-      await admin
-        .from('products')
-        .update({ views: (prod.views ?? 0) + 1 })
-        .eq('id', productId);
-    }
+    console.warn('[view-counter] Warning in increment_product_views RPC:', rpcRes.error.message);
   }
   if (insertRes.error) {
-    console.error('[view-counter] Error in product_view_events insert:', insertRes.error);
+    console.warn('[view-counter] Warning in product_view_events insert:', insertRes.error.message);
   }
 
   return NextResponse.json({ ok: true });

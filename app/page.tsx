@@ -4,7 +4,8 @@ import HomeHero from './HomeHero';
 import HomeShop from './HomeShop';
 import ReviewsSection from '@/components/ReviewsSection';
 
-export const revalidate = 60; // ISR: re-fetch every 60s
+// ISR: Cache homepage on Edge CDN for 24 hours to maximize performance & save Vercel CPU quota
+export const revalidate = 86400;
 
 async function getProducts(): Promise<Product[]> {
   const supabase = createClient();
@@ -23,7 +24,7 @@ async function getProducts(): Promise<Product[]> {
 
 async function getHomepageSettings(): Promise<Record<string, string>> {
   try {
-    const res = await fetch('https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/homepage-settings.json', { next: { revalidate: 60 } });
+    const res = await fetch('https://pub-37c44db5189443e5945025e6f5b8855f.r2.dev/homepage-settings.json', { next: { revalidate: 86400 } });
     if (!res.ok) return {};
     return await res.json();
   } catch (e) {

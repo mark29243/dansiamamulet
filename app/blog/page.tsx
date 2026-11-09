@@ -4,7 +4,7 @@ import './blog.css';
 import BlogGrid from './BlogGrid';
 import BlogHeader from './BlogHeader';
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
 export const metadata: Metadata = {
   title: 'Blog · ความรู้พระเครื่อง · 佛牌知识',

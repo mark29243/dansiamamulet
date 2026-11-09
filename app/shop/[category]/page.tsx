@@ -5,7 +5,7 @@ import type { Product } from '@/lib/types';
 import { VIRTUES, isVirtueSlug, filterProductsByVirtue } from '@/lib/virtues';
 import HomeShop from '../../HomeShop';
 
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 

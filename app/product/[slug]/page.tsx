@@ -8,7 +8,7 @@ import ViewTracker from './ViewTracker';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
 // ISR: Cache product page for 60 seconds on CDN to prevent crawler query storms
-export const revalidate = 60;
+export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
 // Deduplicate query so generateMetadata and ProductPage share the exact same fetch
 const getProduct = cache(async (slug: string): Promise<Product | null> => {
