@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import type { Product } from '@/lib/types';
@@ -242,7 +242,7 @@ export default async function CategoryPage({ params }: { params: { category: str
 
   if (!isVirtue && (!meta || !catTh)) notFound();
 
-  const supabase = createClient();
+  const supabase = createPublicClient();
   // Get all products with only required display columns (saves egress)
   const { data: rawProducts } = await supabase
     .from('products')

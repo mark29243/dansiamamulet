@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import type { Product } from '@/lib/types';
 import ProductDetail from './ProductDetail';
@@ -12,7 +12,7 @@ export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
 // Deduplicate query so generateMetadata and ProductPage share the exact same fetch
 const getProduct = cache(async (slug: string): Promise<Product | null> => {
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from('products')
     .select('*')
@@ -57,7 +57,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
   const p = await getProduct(params.slug);
   if (!p) notFound();
 
-  const supabase = createClient();
+  const supabase = createPublicClient();
 
   const price = (p.sale_price ?? p.price) / 100;
 

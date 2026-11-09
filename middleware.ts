@@ -3,6 +3,15 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Only authenticate on admin routes.
+  // Public storefront & blogs must NEVER invoke Supabase Auth in middleware,
+  // allowing Vercel Edge CDN to serve cached pages with 0ms CPU and maximum speed.
+  const isAdminRoute = pathname.startsWith('/admin') || pathname.startsWith('/api/admin');
+  if (!isAdminRoute) {
+    return NextResponse.next({ request: { headers: request.headers } });
+  }
+
   let response = NextResponse.next({ request: { headers: request.headers } });
 
   const supabase = createServerClient(
@@ -48,8 +57,6 @@ export async function middleware(request: NextRequest) {
       signIn.searchParams.set('next', pathname);
       return NextResponse.redirect(signIn);
     }
-    // Admin authorisation is checked inside the layout (DB lookup),
-    // so we only need to confirm the user is signed in here.
   }
 
   return response;

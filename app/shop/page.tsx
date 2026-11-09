@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/server';
 import type { Metadata } from 'next';
 import type { Product } from '@/lib/types';
 import HomeShop from '../HomeShop';
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 async function getProducts(): Promise<Product[]> {
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const { data } = await supabase
     .from('products')
     .select('id, slug, name, name_th, name_zh, category, price, sale_price, stock, short, images, is_featured')

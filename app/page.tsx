@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/server';
 import type { Product } from '@/lib/types';
 import HomeHero from './HomeHero';
 import HomeShop from './HomeShop';
@@ -8,7 +8,7 @@ import ReviewsSection from '@/components/ReviewsSection';
 export const revalidate = 86400;
 
 async function getProducts(): Promise<Product[]> {
-  const supabase = createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from('products')
     .select('id, slug, name, name_th, name_zh, category, price, sale_price, stock, short, images, is_featured')

@@ -2,7 +2,16 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
-// SSR client — uses cookies, respects RLS as the user
+// Static / Public client — does NOT read cookies(), allows Next.js ISR and CDN caching!
+export function createPublicClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  );
+}
+
+// SSR client — uses cookies, respects RLS as the user (use only when user session is needed)
 export function createClient() {
   const cookieStore = cookies();
   return createServerClient(
