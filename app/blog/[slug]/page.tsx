@@ -8,6 +8,12 @@ import BlogPostClient from './BlogPostClient';
 
 export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
+export async function generateStaticParams() {
+  const admin = createAdminClient();
+  const { data: posts } = await admin.from('blog_posts').select('slug').eq('published', true);
+  return (posts || []).map((p) => ({ slug: p.slug }));
+}
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com';
 
 const getBlogPost = cache(async (slug: string) => {

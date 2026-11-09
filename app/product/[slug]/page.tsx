@@ -10,6 +10,12 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dansiamamulets.com'
 // ISR: Cache product page for 60 seconds on CDN to prevent crawler query storms
 export const revalidate = 86400; // 24 hours (served from Vercel Edge CDN)
 
+export async function generateStaticParams() {
+  const supabase = createPublicClient();
+  const { data: products } = await supabase.from('products').select('slug').eq('published', true);
+  return (products || []).filter((p) => p && p.slug && p.slug.trim().length > 0).map((p) => ({ slug: p.slug.trim() }));
+}
+
 // Deduplicate query so generateMetadata and ProductPage share the exact same fetch
 const getProduct = cache(async (slug: string): Promise<Product | null> => {
   const supabase = createPublicClient();
