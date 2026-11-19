@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import SafeImage from '@/components/SafeImage';
+import SwipeableGallery from '@/components/SwipeableGallery';
 import Link from 'next/link';
 import { useLang } from '@/components/LangProvider';
 import { useCart } from '@/components/CartProvider';
@@ -10,7 +11,7 @@ import { getDict, getCatName } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 import LocalPrice from '@/components/LocalPrice';
 import type { Product } from '@/lib/types';
-import { IcoAmulet, IcoSearch, IcoCheck, IcoWarning, IcoCart, IcoShieldCheck, IcoGlobe } from '@/components/icons';
+import { IcoSearch, IcoCheck, IcoWarning, IcoCart, IcoShieldCheck, IcoGlobe } from '@/components/icons';
 import WishlistButton from '@/components/WishlistButton';
 import RecentlyViewedRow from '@/components/RecentlyViewedRow';
 import { useRecentlyViewed } from '@/components/RecentlyViewedProvider';
@@ -26,6 +27,7 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
   const [zoomOpen, setZoomOpen] = useState(false);
   const [zoomedIn, setZoomedIn] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
+  const zoomTouchStartX = useRef<number | null>(null);
 
   // Track this product in recently viewed history
   useEffect(() => { addToHistory(p.id); }, [p.id]);
@@ -130,28 +132,24 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }} className="detail-grid">
             {/* Gallery */}
             <div className="animate-fade-in">
-              <div
-                onClick={() => p.images[activeImg] && setZoomOpen(true)}
-                style={{
-                  width: '100%', aspectRatio: '4/3',
-                  background: 'linear-gradient(135deg, var(--cream-dark), var(--cream-darker))',
-                  overflow: 'hidden', marginBottom: 12, position: 'relative',
-                  cursor: p.images[activeImg] ? 'zoom-in' : 'default',
-                  borderRadius: 'var(--radius-lg)',
-                }}
-              >
-                {p.images[activeImg] ? (
-                  <SafeImage src={p.images[activeImg]} alt={p.name} fill sizes="(max-width: 768px) 100vw, 500px" style={{ objectFit: 'contain' }} priority />
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                    <IcoAmulet size={80} />
-                  </div>
-                )}
-                {p.images[activeImg] && (
-                  <div className="serif" style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(255,255,255,0.9)', padding: '4px 10px', fontSize: 10, letterSpacing: 1.5, color: 'var(--text-muted)', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <IcoSearch size={11} /> {lang === 'th' ? 'คลิกเพื่อขยาย' : lang === 'zh' ? '点击放大' : 'Click to zoom'}
-                  </div>
-                )}
+              <div style={{ marginBottom: 12 }}>
+                <SwipeableGallery
+                  images={p.images}
+                  alt={p.name}
+                  activeIndex={activeImg}
+                  onChangeIndex={setActiveImg}
+                  onImageClick={() => p.images[activeImg] && setZoomOpen(true)}
+                  aspectRatio="4/3"
+                  borderRadius="var(--radius-lg)"
+                  cursor={p.images[activeImg] ? 'zoom-in' : 'default'}
+                  overlay={
+                    p.images[activeImg] ? (
+                      <div className="serif" style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(255,255,255,0.9)', padding: '4px 10px', fontSize: 10, letterSpacing: 1.5, color: 'var(--text-muted)', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 4, pointerEvents: 'none' }}>
+                        <IcoSearch size={11} /> {lang === 'th' ? 'คลิกเพื่อขยาย' : lang === 'zh' ? '点击放大' : 'Click to zoom'}
+                      </div>
+                    ) : null
+                  }
+                />
               </div>
               {p.images.length > 1 && (
                 <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
@@ -344,8 +342,24 @@ export default function ProductDetail({ product: p, related = [] }: { product: P
             onMouseMove={(e) => {
               if (zoomedIn) setZoomOrigin(pointerOrigin(e, e.currentTarget));
             }}
+            onTouchStart={(e) => {
+              if (!zoomedIn && e.touches.length === 1) {
+                zoomTouchStartX.current = e.touches[0].clientX;
+              }
+            }}
             onTouchMove={(e) => {
               if (zoomedIn) setZoomOrigin(pointerOrigin(e, e.currentTarget));
+            }}
+            onTouchEnd={(e) => {
+              if (zoomedIn || zoomTouchStartX.current === null || p.images.length <= 1) {
+                zoomTouchStartX.current = null;
+                return;
+              }
+              const dx = e.changedTouches[0].clientX - zoomTouchStartX.current;
+              zoomTouchStartX.current = null;
+              if (Math.abs(dx) > 40) {
+                setActiveImg((prev) => dx < 0 ? Math.min(p.images.length - 1, prev + 1) : Math.max(0, prev - 1));
+              }
             }}
             style={{ overflow: 'hidden', maxWidth: '90vw', maxHeight: '90vh', cursor: zoomedIn ? 'zoom-out' : 'zoom-in', touchAction: zoomedIn ? 'none' : 'auto' }}
           >

@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import SafeImage from './SafeImage';
+import SwipeableGallery from './SwipeableGallery';
 import Link from 'next/link';
 import { useLang } from './LangProvider';
 import { useCart } from './CartProvider';
 import { useToast } from './ToastProvider';
 import { getDict } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
-import { IcoAmulet } from './icons';
 import WishlistButton from './WishlistButton';
 import type { Product } from '@/lib/types';
 
@@ -119,18 +119,15 @@ export default function QuickView({ product, onClose }: { product: Product | nul
           {/* Gallery */}
           <div style={{ background: 'var(--cream-dark)', display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1, position: 'relative', minHeight: 320, overflow: 'hidden' }}>
-              {product.images[imgIdx] ? (
-                <SafeImage
-                  src={product.images[imgIdx]}
-                  alt={product.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 500px"
-                  style={{ objectFit: 'contain' }}
-                  priority
-                />
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--gold-dark)', opacity: 0.4 }}><IcoAmulet size={80} /></div>
-              )}
+              <SwipeableGallery
+                images={product.images.slice(0, 5)}
+                alt={product.name}
+                activeIndex={imgIdx}
+                onChangeIndex={setImgIdx}
+                minHeight={320}
+                background="var(--cream-dark)"
+                cursor="grab"
+              />
             </div>
             {product.images.length > 1 && (
               <div style={{ display: 'flex', gap: 6, padding: 8, background: 'rgba(0,0,0,0.06)', overflowX: 'auto' }}>
