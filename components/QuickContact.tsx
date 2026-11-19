@@ -1,9 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useLang } from './LangProvider';
 
 export default function QuickContact() {
   const { lang } = useLang();
+  const pathname = usePathname();
+  const hasStickyBar = pathname?.startsWith('/product/');
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(true);
   const [showQR, setShowQR] = useState(false);
@@ -59,7 +62,7 @@ export default function QuickContact() {
 
       {/* Contact options */}
       <div
-        className="quick-contact-options"
+        className={`quick-contact-options${hasStickyBar ? ' has-sticky-bar' : ''}`}
         style={{
           position: 'fixed', bottom: 90, right: 24,
           display: 'flex', flexDirection: 'column', gap: 8, zIndex: 90,
@@ -126,7 +129,7 @@ export default function QuickContact() {
 
       {/* Trigger button */}
       <button
-        className="quick-contact-trigger"
+        className={`quick-contact-trigger${hasStickyBar ? ' has-sticky-bar' : ''}`}
         onClick={() => setOpen(!open)}
         aria-label="Contact us"
         aria-expanded={open}
@@ -153,6 +156,14 @@ export default function QuickContact() {
       </button>
 
       <style>{`
+        @media (max-width: 768px) {
+          .quick-contact-trigger.has-sticky-bar {
+            bottom: 86px !important;
+          }
+          .quick-contact-options.has-sticky-bar {
+            bottom: 150px !important;
+          }
+        }
         @media (max-width: 480px) {
           .quick-contact-trigger {
             right: 16px !important;
@@ -160,10 +171,16 @@ export default function QuickContact() {
             width: 50px !important;
             height: 50px !important;
           }
+          .quick-contact-trigger.has-sticky-bar {
+            bottom: 84px !important;
+          }
           .quick-contact-options {
             right: 16px !important;
             bottom: 74px !important;
             max-width: calc(100vw - 32px) !important;
+          }
+          .quick-contact-options.has-sticky-bar {
+            bottom: 142px !important;
           }
         }
       `}</style>
